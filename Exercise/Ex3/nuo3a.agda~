@@ -1,0 +1,54 @@
+{-#  OPTIONS --type-in-type #-}
+module nuo3a where
+
+-- http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.39.1953&rep=rep1&type=pdf
+
+open import Data.Empty
+open import Data.Unit
+open import Data.Bool
+
+data set : Set where
+  emb : Set → set
+
+data Tree : Set where
+  node : (I : Set) → (I → Tree) → Tree
+
+infix 4 _∈_
+
+data _∈_ : Tree → Tree → Set where
+  inn : (I : Set)(f : I → Tree)(i : I) → f i ∈ node I f
+
+[] : Tree
+[] = node ⊥ (λ ())
+
+[[]] : Tree
+[[]] = node ⊤ (λ _ → [])
+
+[[[]],[]] : Tree
+[[[]],[]] = node Bool (λ b → if b then [] else [[]])
+
+{- Encode classical set theory in type theory using this idea.
+   Due to Peter Aczel. http://www.springerlink.com/content/jkt3tlf6kdh8la8b/fulltext.pdf
+-}
+
+data GoodTree : Set where
+  good : (t : Tree) → (t ∈ t → ⊥) → GoodTree
+
+pr : GoodTree → Tree
+pr (good t _) = t
+
+Russell : Tree
+Russell = node GoodTree pr
+
+lem1 : Russell ∈ Russell → Russell ∈ Russell → ⊥
+lem1 p q = {!!}
+
+lem2 : (Russell ∈ Russell → ⊥) → Russell ∈ Russell
+lem2 p = {!!}
+
+{-
+http://www.amazon.co.uk/Logicomix-Search-Truth-Apostolos-Doxiadis/dp/0747597200/ref=sr_1_1?ie=UTF8&qid=1288259778&sr=8-1
+-}
+pcf : ⊥
+pcf = {!!}
+

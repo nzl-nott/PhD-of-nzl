@@ -1,5 +1,6 @@
 module Palmgren where
 
+open import Data.Product
 open import Relation.Binary.Core
 open import Relation.Nullary.Core
 
@@ -90,9 +91,48 @@ dici A di x y u v = collaps (Id A x y)
 
 -- 2. Axiomatizing UIP
 
+
 K : {A : Set}{D : (x : A)(z : Id A x x) → Set}
-    (d : (x : A) → D x (refl x))(a : A)(c : Id A a a) → D a c
+    (d : (x : A) → D x (refl x))
+    (a : A)(c : Id A a a) → D a c
 K d a (refl .a) = d a
 
-J² : {A : Set}{C : (x y : A)(u v : Id A x y) → Set}(d : (x : A) → C x x (refl x) (refl x)) → (a b : A) → (c c' : Id A a b) → C a b c c'
-J² d a b c c' = {!!}
+-- J + K ⇨ J²
+
+D : {A : Set}{C : (x y : A)(u v : Id A x y) → Set}(x : A)(v : Id A x x) → Set
+D {A} {C} x v = C x x (refl x) v
+
+E : {A : Set}{C : (x y : A)(u v : Id A x y) → Set}(x y : A)(z : Id A x y) → Set
+E {A} {C} x y z = (w : Id A x y) → C x y z w 
+
+J² : {A : Set}{C : (x y : A)(u v : Id A x y) → Set}
+     (d : (x : A) → C x x (refl x) (refl x)) →
+     (a b : A) → (c c' : Id A a b) → C a b c c'
+J² {A} {C} d = J A (λ a b c → (c' : Id A a b) → C a b c c') (K {A} {λ x → C x x (refl x)} d)
+
+
+-- J² {A} {C} d a b c c' = J A (λ a b c → (c' : Id A a b) → C a b c c') (λ a c' → K {A} {λ x c' → C x x (refl x) c'} d a c') a b c c'
+
+-- J² {A} {C} d a b c c' = J A (λ a b c → E {A} {C} a b c) (λ a x → K {A} {λ x z → C x x (refl x) z} d a x) a b c c'
+
+-- J² ⇨ J
+
+JJ² : {A : Set}{C : (x y : A)(u : Id A x y) → Set}
+     (d : (x : A) → C x x (refl x)) →
+     (a b : A) → (c : Id A a b) → C a b c
+JJ² {A} {C} d a b c = J² {A} {λ x y u _ → C x y u} d a b c c
+
+-- J² ⇨ K
+
+UIP-J² : {A : Set}(x y : A)(u v : Id A x y) → Id (Id A x y) u v
+UIP-J² {A} = J² (λ x' → refl (refl x'))
+
+subst² : {A : Set}{B : A → Set}(a b : A)(c : Id A a b) → B a → B b
+subst² {A} {B} a b c  = J² {A} {λ x y u v → B x → B y} (λ _ x' → x') a b c c
+
+KJ² : {A : Set}{D : (x : A)(z : Id A x x) → Set}
+    (d : (x : A) → D x (refl x))
+    (a : A)(c : Id A a a) → D a c
+KJ² {A} {D} d a c = JJ² {Id A a a} {λ x y _ → D a x → D a y} (λ _ x' → x') (refl a) c (UIP-J² a a (refl a) c) (d a)
+
+-- subst² {Id A a a} {D a} (refl a) c (UIP-J² a a (refl a) c) (d a)

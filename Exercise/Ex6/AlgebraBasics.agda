@@ -44,11 +44,16 @@ record Ωnumb : Set₁ where
 ΩnumbInt : Ωnumb
 ΩnumbInt = record { carrier = ℤ; zero = + 0 ; one = + 1; _+_ = ℤ._+_; _×_ = ℤ._*_ }
 
-mod2 : ℕ → ℕ
-mod2 0 = 0
-mod2 1 = 1
-mod2 (suc (suc n)) = mod2 n
 
+record Opt (from to : Set)  : Set where
+  constructor opt
+  field
+    pr : from → to
+    ij : to → from
+
+
+bint : {from to : Set} → Opt from to → Op 2 from → Op 2 to
+bint (opt pr ij) op = λ a b → pr (op (ij a) (ij b))
 
 data Mod4 : Set where
   zero : Mod4
@@ -69,8 +74,34 @@ inj one = 1
 inj two = 2
 inj three = 3
 
+mapn4 = opt mod4 inj
+
 ΩnumbMod4 : Ωnumb
-ΩnumbMod4 = record { carrier = Mod4; zero = zero; one = one; _+_ = λ x y → mod4 (ℕ._+_ (inj x) (inj y)); _×_ = λ x y → mod4 (_*_ (inj x) (inj y)) }
+ΩnumbMod4 = record { carrier = Mod4; zero = zero; one = one; _+_ = bint mapn4 ℕ._+_ ; _×_ = bint mapn4 ℕ._*_ }
+
+
+data Mod2 : Set where
+  zero : Mod2
+  one : Mod2
+
+mod2 : ℕ → Mod2
+mod2 0 = zero
+mod2 1 = one
+mod2 (suc (suc n)) = mod2 n
+
+inj2 : Mod2 → ℕ
+inj2 zero = 0
+inj2 one = 1
+
+
+f42 : Mod4 → Mod2
+f42 n = mod2 (inj n)
+
+mapn2 = opt mod2 inj2
+
+ΩnumbMod2 : Ωnumb
+ΩnumbMod2 = record { carrier = Mod2; zero = zero; one = one; _+_ = bint mapn2 ℕ._+_ ; _×_ = bint mapn2 ℕ._*_ }
+
 
 record HomSet (A B : Set) : Set where
   field
@@ -140,3 +171,18 @@ ml (suc a) b = {!!}
 
 ha : HomAlg ΩnumbNat ΩnumbMod4 mod4
 ha = record { z = refl; o = refl; p = pl; m = ml }
+
+inv2 : ∀ b → b ≡ mod2 (inj2 b)
+inv2 zero = refl
+inv2 one = refl
+
+pl2 : (a b : Mod4) →
+      mod2 (inj (mod4 (inj a ℕ+ inj b))) ≡
+      mod2 (inj2 (mod2 (inj a)) ℕ+ inj2 (mod2 (inj b)))
+pl2 zero b = cong (mod2 ∘ inj) [ inv b ] >=< inv2 (mod2 (inj b))
+pl2 one b = {!b!}
+pl2 two b = {!!}
+pl2 three b = {!!}
+
+ha2 :  HomAlg ΩnumbMod4 ΩnumbMod2 f42
+ha2 = record { z = refl; o = refl; p = {!!} ; m = {!!} }

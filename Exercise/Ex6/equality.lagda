@@ -33,10 +33,12 @@ data Id (A : Set) : A → A → Set where
 \end{code}
 
 This one was first
-proposed by Per Martin-Löf as intentional equality\cite{nord}.
+proposed by Per Martin-Löf as intensional equality\cite{nord}.
+\txa{rather propositional}
 There is one instance for each element.
 We can treat equality relation as | (a , b) ∈ Id A |. We can describe it in
 another way: it is a partition of the set |A x A|. 
+\txa{This is not the right place to compare Type Theory with set theory.}
 
 \txa{As proposed Martin-Löf}
 \item[As a predicate]
@@ -87,7 +89,7 @@ J' A .b P m b refl = m
 The |P| and |m| are now bounded by the same |a| as the the identity
 predicate. |P| and |m| here can be viewed as |P [a]|
 and |m [a]|. Therefore, the elimination rule is all about eliminate
-the predicate |Id ' A a| rather than the binary equivalence relation
+the predicate |Id' A a| rather than the binary equivalence relation
 |Id' A|.
  
 |J'| actually maps  \[|P a refl| \Rightarrow |(b : A)(p : Id' A a b) → P b p|\].

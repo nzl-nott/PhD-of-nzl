@@ -66,7 +66,7 @@ J : (A : Set)(P : (a b : A) → Id A a b → Set)
     → (a b : A)(p : Id A a b) → P a b p
 J A P m .b b (refl .b) = m b
 \end{code}
-The |P| and |m| are not bounded by any value. |P| is actually a ternary
+The |P| and |m| are not bound by any value. |P| is actually a ternary
 relation.
 \txa{Use doublebar for all the inlined Agda code!}
 

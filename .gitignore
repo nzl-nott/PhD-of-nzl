@@ -1,5 +1,6 @@
 # Lines starting with '#' are considered comments.
 *.agdai
+*.agda~
 *.aux
 *.log
 *.ptb

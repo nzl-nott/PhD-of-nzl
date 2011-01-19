@@ -1,0 +1,59 @@
+module Eq where
+
+open import Data.Nat
+open import Data.Unit
+open import Data.Empty
+open import Data.Bool
+
+{- assume we don't have equality. -}
+
+EqœôõÕ : œôõÕ œôöò œôõÕ œôöò Set
+EqœôõÕ zero zero = œôùä
+EqœôõÕ zero (suc n) = œôùå
+EqœôõÕ (suc n) zero = œôùå
+EqœôõÕ (suc n) (suc m) = EqœôõÕ n m
+
+reflœôõÕ : (n : œôõÕ) œôöò EqœôõÕ n n
+reflœôõÕ zero = _
+reflœôõÕ (suc n) = reflœôõÕ n
+
+substœôõÕ : (m n : œôõÕ) œôöò EqœôõÕ m n œôöò (P : œôõÕ œôöò Set) œôöò P m œôöò P n
+substœôõÕ zero zero p P x = x
+substœôõÕ zero (suc n) () P x
+substœôõÕ (suc m) zero () P x
+substœôõÕ (suc m) (suc n) p P x = substœôõÕ m n p (œô§» i œôöò P (suc i)) x
+
+{- prove J for this type -}
+
+EqœôõÕœôöòœôõÕ : (œôõÕ œôöò œôõÕ) œôöò (œôõÕ œôöò œôõÕ) œôöò Set
+EqœôõÕœôöòœôõÕ f g = (n : œôõÕ) œôöò EqœôõÕ (f n) (g n)
+
+reflœôõÕœôöòœôõÕ : (f : œôõÕ œôöò œôõÕ) œôöò EqœôõÕœôöòœôõÕ f f
+reflœôõÕœôöòœôõÕ f = œô§» n œôöò reflœôõÕ (f n)
+
+substœôõÕœôöòœôõÕ : (f g : œôõÕ œôöò œôõÕ) œôöò EqœôõÕœôöòœôõÕ f g œôöò (P : (œôõÕ œôöò œôõÕ) œôöò Set) œôöò P f œôöò P g
+substœôõÕœôöòœôõÕ f g p P x = {!!} -- unprovable
+
+{- exercise: Define EqBool and EqBoolœôöòBool -}
+
+EqBool : Bool œôöò Bool œôöò Set EqBool true true = {!!}  EqBool true false
+= {!!}  EqBool false c = {!!}  {- + refl, subst -}
+
+BoolœôöòBool : Set
+BoolœôöòBool = {!!}
+
+app : BoolœôöòBool œôöò Bool œôöò Bool
+app f x = {!!}
+
+abs : (Bool œôöò Bool) œôöò BoolœôöòBool
+abs f = {!!}
+
+œô§²Bool : (f : Bool œôöò Bool)(x : Bool) œôöò EqBool (app (abs f) x) (f x)
+œô§²Bool f x = {!!}
+
+EqBoolœôöòBool : (BoolœôöòBool) œôöò (BoolœôöòBool) œôöò Set
+EqBoolœôöòBool f g = (n : Bool) œôöò EqBool (app f n) (app g n)
+
+{- define refl and subst -}
+
+{- But does the same work for Nat? -}

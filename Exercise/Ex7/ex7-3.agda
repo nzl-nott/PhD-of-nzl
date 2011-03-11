@@ -60,5 +60,3 @@ C {A} {a} {b} {p} = subst {Q A b} (b , refl) (a , p) (qeq a b p) (uncurry (λ a 
 
 C' : {A : Set}{a b : A}{p : Id A a b} → Id (Id A a a) (p >=< [ p ]) refl
 C' {A} {a} {b} {p} = subst {Q A b} (b , refl) (a , p) (qeq a b p) (uncurry (λ a p → Id (Id A a a) (p >=< [ p ]) refl)) refl
-
-≅

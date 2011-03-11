@@ -1,0 +1,23 @@
+module J2J'
+ where
+
+open import Data.Product
+
+infix 4 _פש¡_ 
+
+data _פש¡_ {A : Set} : A פצע A פצע Set where
+    refl : {a : A} פצע a פש¡ a
+
+J : {A : Set}(P : {x y : A} פצע x פש¡ y פצע Set)
+    פצע ({x : A} פצע P (refl {a = x})) 
+    פצע {a b : A}(p : a פש¡ b) פצע P p
+J P m refl = m
+
+subst : {A : Set}(P : A פצע Set){a b : A} פצע a פש¡ b פצע P a פצע P b
+subst P ab = J (פ§» {x} {y} _ פצע P x פצע P y) (פ§» p פצע p) ab
+
+ 
+J' : {A : Set}{a : A}(Q : {x : A} פצע a פש¡ x פצע Set) פצע Q {a} refl פצע {b :
+    A}(ab : a פש¡ b) פצע Q {b} ab J' {A} {a} Q q ab = subst {פ§£ A (פ§» z פצע a
+    פש¡ z)} (פ§» p פצע Q (projפפ¢ p)) (J (פ§» {x} {y} p פצע _פש¡_ {פ§£ A (פ§» z פצע x פש¡
+    z)} (x , refl) (y , p)) refl ab) q

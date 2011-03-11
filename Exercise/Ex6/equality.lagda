@@ -13,8 +13,10 @@
 \usepackage{color}
 \newcommand{\txa}[1]{\textcolor{red}{\textbf{Thorsten:~}#1}}
 
+\newcommand{\nzl}[1]{\textcolor{green}{\textbf{Nuo:~}#1}}
+
 \author{Li Nuo}
-\title{Two presentations of equality}
+\title{Two presentations of equality in dependently typed languages}
 
 \begin{document}
 
@@ -22,11 +24,11 @@
 
 \section{Background}
 
-Intentional equality (establish equality based on identity) can be defined in two ways: either defined as an inductive
+In intensional type theory, propositional equality (establish equality based on identity) can be defined in two ways: either defined as an inductive
 relation or as a parameterized inductive predicate:
 
 \begin{description}
-\item[As a binary relation]
+\item[As a binary relation] \hspace*{\fill} \\
 
 \begin{code}
 data Id (A : Set) : A → A → Set where
@@ -34,78 +36,68 @@ data Id (A : Set) : A → A → Set where
 \end{code}
 
 This one was first
-proposed by Per Martin-Löf as intensional equality rather than
-propositional equality\cite{Nord}.
-There is exactly one member in set | Id A a a | namely|refl a| where
-|a : A|.
+proposed by Per Martin-Löf as propositional equality\cite{Nord}. |refl| here is a function which creates a single equality term for each element of A.
 
-\item[As a predicate]
+
+\item[As a predicate] \hspace*{\fill} \\
+
 
 \begin{code}
 data Id' (A : Set)(a : A) : A → Set where
   refl : Id' A a a
 \end{code}
-This version is used in the Agda standard library. Only with dependent
-type feature it can be defined. |Id A
-a| is a predicate of whether some | x : A | is the same as
-|a| in the type declaration. The difference here is we cannot show
-what is the |a| in the constant |refl| which is unique
-for each |Id A a|.
-This one was proposed by Christine Paulin-Mohring \cite{coq}.
-\txa{proposed by Christine Paulin-Mohring http://coq.inria.fr/refman/Reference-Manual005.html}
+This version was proposed by Christine Paulin-Mohring \cite{coq} and is adopted in the Agda standard library. The formalisation of this identity type requires the equated value.
+|Id' A a| can be seen as a predicate of whether some | x : A | is the same as
+|a| in the type declaration. Since the equated value has been determined within the type, we only need an unique proof |refl|.
+
 \end{description}
 
-For each of them, we have a corresponding elimination rule. It was
-called |idpeel| \cite{Nord} but we rename it as |J| here. It is defined as
+In intensional type theory, we have a corresponding elimination rule for each of them. It was
+called |idpeel| in \cite{Nord} but we use the common name |J| here. We can easily define it using pattern matching in Agda as below.
 
 \begin{description}
-\item[As a binary relation]
+\item[As a binary relation] \hspace*{\fill} \\
+
 
 \begin{code}
 J : (A : Set)(P : (a b : A) → Id A a b → Set)
     → (m : (a : A) → P a a (refl a))
     → (a b : A)(p : Id A a b) → P a b p
-J A P m .b b (refl .b) = m b
+J A P m a .a (refl .a) = m a
 \end{code}
-We need to give constants |P| and |m| to eliminate the defined equality.
+|P| is the proposition dependent on the equality. |m| is function to create inhabitant for this proposition when we we know the two sides of the identity term are definitionally equal. Using pattern matching we can easily derive that the equality term must only be constructed by the function |refl| and if it is inhabitant, the two sides must be identical. Then |P a b p| can be turned into |P a a (refl a)| so that we can trivially formalise it using |m a|. 
 
-|m| can be seen as an introduction rule for |P|. For all |a|, |(a , a, refl a)| is
-inhabited in |P|. And the result is a more general
-property, For all |a| |b|, |(a , b, x : Id A a b)| is inhabited in |P|.
+The main ingredient of |J| is pattern matching |(a , b , p : Id A a b)| with |(b , b , refl b)|.
 
+\item[As a predicate] \hspace*{\fill} \\
 
-|J| actually maps \[ |∀ (a : A) → P a a (refl a)|
-\Rightarrow |∀ (a b : A)(p : Id A a b) → P a b p| \].
-
-\item[As a predicate]
 
 \begin{code}
 J' : (A : Set)(a : A) 
   → (P : (b : A) → Id' A a b → Set)
   → (m : P a refl)
   → (b : A)(p : Id' A a b) → P b p
-J' A .b P m b refl = m
+J' A .a P m a refl = m
 \end{code}
-|P|, |m| and |p| now share the same free variable |a|. |P| and |m| here can be viewed as |P [a]|
-and |m [a]|. Therefore, the elimination rule here is parameterized by
-|a| to eliminate the identity judgement corresponding to
-the predicate |Id' A a| rather than the binary equivalence relation
-|Id' A|. We need a specially defined |P| and |m| for certain |a|.
- 
-|J'| actually maps  \[|P a refl| \Rightarrow |(b : A)(p : Id' A a b) → P b p|\].
-|m|! can be seen as the only object in |P| and the result is used to unify
-elements equal to a (a constant) to get the unique object.
+For |Id' A a|, since the type formalisation requires one side of the equality, we treat it as a predicate on the other side of the equality. Therefore, within the elimination rule, |Id' A a| is fixed, which means |P|, |m| and |p| now share the same free variable |a| as in |Id' A a|. Then |m| becomes the proof that P is only valid when the other side is the same as |a|. Also with pattern matching, |(b , p : Id' A a b)| is identified with |(a , refl : Id' A a a)|. Hence, |P b p| can be turned into |P a refl| which is just |m|. 
+
 \end{description}
 
-\section{The Problem}
-Now the problem is: how to implement |J| using only |J'| (also we use the
-equality |Id'|) and vice versa? We will still use corresponding equality for each
-elimination rule, otherwise it cannot eliminate the identity.
+These two formalisation of equality can be used alternatively in many places. They should be ispomorphic in intensional type theory. We can easily prove it as below. 
 
-\section{Solution}
 
-From |J'| to |J| is quite simple. We have more general |P| and |m| so
-that we only need to bound them with the same |a| as in |p|.
+\txa{Compare with the construction of the isomorphism.}
+\nzl{I need to rewrite it in Agda}
+
+What is more interesting is the question below.
+
+\section{The Question}
+Now the question is: how to implement |J| using only |J'| and vice versa? We will still use corresponding equality to be used by each
+elimination rule.
+
+\section{The Solution}
+
+From |J'| to |J| is quite simple. If we assume a is the left hand side, and we rename |P a| with |P'|, then |J' A a P' (m a)| can turn |P' b p| for some |b| into |P' a refl| which is just |m a|.
 
 \begin{code}
 JId' : (A : Set)(P : (a b : A) → Id' A a b → Set)
@@ -114,11 +106,9 @@ JId' : (A : Set)(P : (a b : A) → Id' A a b → Set)
 JId' A P m a = J' A a (P a) (m a)
 \end{code}
 
-\txa{Check that |JId' A P m .b b (refl .b) = m b| holds definitionally.}
+We can easily verfiy it by definitionally expanding J'.
 
-The other direction is more tricky, because we only have |P| and |m|
-which is bound by the |a| in |p|, but when we use |J| we need to
-formalise new |P| and |m| which are not restricted by the |a| in |p|.
+The other direction is more tricky, because for |J'| we have proposition |P|, proof term |m| and equality term |p| dependent on the same value |a| which is not trivially suited for |J|. We must try to devise other ways to solve it.
 
 We first define |subst| from |J|
 
@@ -127,10 +117,6 @@ We first define |subst| from |J|
 subst : (A : Set)(a b : A)(p : Id A a b)
         (B : A → Set) → B a → B b
 subst A a b p B = J A (λ a' b' _ → B a' → B b') (λ _ x → x) a b p
-\end{code}
-
-Then to prove |J'| from |J| and |Id|,
-\begin{code}
 
 Q : (A : Set)(a : A) → Set
 Q A a = Σ A (λ b → Id A a b)
@@ -139,30 +125,20 @@ J'Id : (A : Set)(a : A) → (P : (b : A) → Id A a b → Set)
   → P a (refl a)
   → (b : A)(p : Id A a b) → P b p
 J'Id A a P m b p = subst (Q A a) (a , refl a) (b , p)
-  (J A (λ a' b' x → Id (Q A a') (a' , refl a') (b' , x))
+  (J A (λ a' b' p' → Id (Q A a') (a' , refl a') (b' , p'))
   (λ a' → refl (a' , refl a')) a b p) (uncurry P) m
 \end{code}
-We can not just use |J| to eliminate the identity because |J| requires
-more general |P| and |m|.
-We need to formalise the result |P b p| from |P a (refl a)|. We cannot
-substitute |a| or |refl a| separately because the second argument is
-dependent on the first argument. So when we substitute we should reveal
-the dependent relation. 
-\txa{Or : Instead we are going to substitute them simultanously using a dependent product.}
+The idea behind it is that we need to identify |P b p| with |P a refl|. We cannot
+substitute |b| with |a| or |p| with |refl a| independently because the second argument is
+dependent on the first argument. we must substitute them simultaneously. Therefore it is natural to use a dependent product.
+It happens simultaneously when we use pattern match to prove it.
 
-We could use dependent productr to do this work. In this way, we can
-substitute them simultaneously. The problem now becomes substitute in
-\begin{code} P ((λ a : A p : Id A a b → (a , p)) a (refl a)) \end{code} to \begin{code} P ((λ a : A p : Id A a b → (a , p)) b p) \end{code}
+We use a function |Q| to form the dependent product. To substitute |(b , p)| with |(a , refl a)| we must have the equality term |Id (Q a) (a , refl a) (b , p)|.
+We can easily get this term using |J|. So we have done the proof. Also we can expand it definitionally to verfy it.
 
-From |J|, we have |Id (Q a) (a , refl a) (b , x : Id a b)| so that we can
-prove |P' (b , p)| from |P' (a , refl a)| using subst. Because |P' ( b
-, p)| is namely |P b p|, we have proved.
-
-\txa{Check that |J'Id A b P m b refl = m| holds definitionally!}
+The question shows that no matter which formulation of equality and which elimination rule we have, we can prove the other elimination rule for the other formulation of equality.
 
 \txa{Add some references. For Id refer to the Nordstroem et al book, Thomas Streicher habil, Palmgren}
-
-\txa{Compare with the construction of the isomorphism.}
 
 
 \bibliography{equality1}{}

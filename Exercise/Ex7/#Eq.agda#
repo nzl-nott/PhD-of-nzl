@@ -4,6 +4,7 @@ open import Data.Nat
 open import Data.Unit
 open import Data.Empty
 open import Data.Bool
+open import Data.Product
 
 {- assume we don't have equality. -}
 
@@ -36,24 +37,61 @@ substœôõÕœôöòœôõÕ f g p P x = {!!} -- unprovable
 
 {- exercise: Define EqBool and EqBoolœôöòBool -}
 
-EqBool : Bool œôöò Bool œôöò Set EqBool true true = {!!}  EqBool true false
-= {!!}  EqBool false c = {!!}  {- + refl, subst -}
+EqBool : Bool œôöò Bool œôöò Set
+EqBool true true = œôùä
+EqBool true false = œôùå
+EqBool false true = œôùå
+EqBool false false = œôùä
+{- + refl, subst -}
 
-BoolœôöòBool : Set
-BoolœôöòBool = {!!}
+reflB : (b : Bool) œôöò EqBool b b
+reflB true = tt
+reflB false = tt
+
+substB : (b c : Bool) œôöò EqBool b c œôöò (P : Bool œôöò Set) œôöò P b œôöò P c
+substB true true p P x = x
+substB true false () P x
+substB false true () P x
+substB false false p P x = x
+
+BoolœôöòBool : Set BoolœôöòBool = Bool × Bool
 
 app : BoolœôöòBool œôöò Bool œôöò Bool
-app f x = {!!}
+app (t , f) true = t
+app (t , f) false = f
 
 abs : (Bool œôöò Bool) œôöò BoolœôöòBool
-abs f = {!!}
+abs f = f true , f false
 
 œô§²Bool : (f : Bool œôöò Bool)(x : Bool) œôöò EqBool (app (abs f) x) (f x)
-œô§²Bool f x = {!!}
+œô§²Bool f true = reflB (f true)
+œô§²Bool f false = reflB (f false)
 
 EqBoolœôöòBool : (BoolœôöòBool) œôöò (BoolœôöòBool) œôöò Set
 EqBoolœôöòBool f g = (n : Bool) œôöò EqBool (app f n) (app g n)
 
 {- define refl and subst -}
+
+reflBoolœôöòBool : (f : BoolœôöòBool) œôöò EqBoolœôöòBool f f
+reflBoolœôöòBool f = œô§» b œôöò reflB (app f b)
+
+EqBoolœôöòBool' : (BoolœôöòBool) œôöò (BoolœôöòBool) œôöò Set
+EqBoolœôöòBool' (ft , ff) (gt , gf) = EqBool ft gt × EqBool ff gf
+
+BB' : (b c : BoolœôöòBool) œôöò EqBoolœôöòBool b c œôöò EqBoolœôöòBool' b c
+BB' b c p = p true , p false
+
+substBoolœôöòBool :  (b c : BoolœôöòBool) œôöò EqBoolœôöòBool b c œôöò (P : BoolœôöòBool œôöò Set) œôöò P b œôöò P c
+substBoolœôöòBool b c p P x with BB' b c p
+substBoolœôöòBool (true , true) (true , true) p P x | t , f = x
+substBoolœôöòBool (true , true) (true , false) p P x | t , ()
+substBoolœôöòBool (true , false) (true , true) p P x | t , ()
+substBoolœôöòBool (true , false) (true , false) p P x | t , f = x
+substBoolœôöòBool (true , y) (false , y') p P x | () , f
+substBoolœôöòBool (false , y) (true , y') p P x | () , f
+substBoolœôöòBool (false , true) (false , true) p P x | t , f = x
+substBoolœôöòBool (false , true) (false , false) p P x | t , ()
+substBoolœôöòBool (false , false) (false , true) p P x | t , ()
+substBoolœôöòBool (false , false) (false , false) p P x | t , f = x
 
 {- But does the same work for Nat? -}

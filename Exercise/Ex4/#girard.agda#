@@ -1,0 +1,137 @@
+{-#  OPTIONS --type-in-type #-}
+module girard where
+
+{- Girard's paradox with Type : Type
+   even though it only needs two impredicative levels.
+
+Impredicativity for Setפפ  means that given F : Setפפ¡ פצע Setפפ  there
+is (A : Setפפ¡) פצע F A : Setפפ , e.g.
+This corresponds to Fפ§ֹ and Calculus of Constructions (= Fפ§ֹ + dependent types).
+
+There is a systematic formulation of Type Theories which only have Pi-types
+but can have lots of universes (called sorts): the theory of PTS = Pure Type Systems.
+http://en.wikipedia.org/wiki/Pure_type_system
+Http://dare.ubn.kun.nl/dspace/bitstream/2066/17240/1/13256.pdf
+ftp://ftp.cs.kun.nl/pub/CompMath.Found/HBKJ.ps.Z
+Http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.56.7045&rep=rep1&type=pdf (Chapter 4).
+-}
+
+PolyId : Set
+PolyId = (X : Set) פצע X פצע X
+
+pid : PolyId
+pid = פ§» X x פצע x
+
+{- Impredicative encondings -}
+
+Nat : Set
+Nat = (X : Set) פצע (X -> X) פצע X פצע X
+
+zero : Nat
+zero = פ§» X s z פצע z
+
+succ : Nat פצע Nat
+succ n = פ§» X s z פצע s (n X s z)
+
+plus : Nat פצע Nat פצע Nat
+plus m n = פ§» X s z פצע m X s (n X s z) 
+
+mult :  Nat פצע Nat פצע Nat
+mult m n = פ§» X s z פצע m X (n X s) z
+
+-- impossible for pow
+
+pow :  Nat פצע Nat פצע Nat
+pow m n = פ§» X s z פצע n X (פ§» x פצע m X ({!!}) z) (s z)
+
+{- we cannot prove induction (or dependent elimination).
+   we can derive primitive recursion: -}
+
+prec : (X : Set) פצע X פצע (Nat פצע X פצע X) פצע Nat פצע X
+prec X z s n = n X (s n) z
+-- wrong?
+
+{- but it doesn't satisfy the equations:
+
+prec X z s 0 = z
+prec X z s (succ m) = s m (prec X z s m)
+
+-}
+
+{- one level of impredicativity give you a very strong system
+    (much stronger than Type Theory with universes).
+   two levels of impredicativity are inconsistent! 
+
+Impredicativity for Setפפ  as above +
+Impredicativity for Setפפ¡, that is given F : Setפפ¢ פצע Setפפ¡ there
+is (A : Setפפ¢) פצע F A : Setפפ¡,
+
+is inconsistent, and this is Girard's paradox. This Type Theory is called U-.
+
+The idea is:
+  we cannot have a (X : Setפפ¡) and an injective function 
+
+  f : ((X פצע Setפפ¡) פצע Setפפ¡) פצע X
+
+  Read X פצע Setפפ¡ as the power set. To prove this we need impredicativity for Setפפ .
+
+  On the other hand using impredicativity at Setפפ¡ we can construct a X : Setפפ¡ s.t.
+
+  X ~ (X פצע Setפפ¡) פצע Setפפ¡
+
+Hurken developed a simple version of Girard's paradox.
+see Http://www-2.cs.cmu.edu/afs/cs.cmu.edu/user/kw/www/scans/hurkens95tlca.pdf
+there is also a version for Coq and Agda
+but maybe rather try to understand it and do it yourself.
+
+-}
+
+* = Set
+ע¡ב = Set
+ע¡ף = Set
+
+-- Power set
+
+פץ״ : ע¡ב -> ע¡ב
+פץ״ S = S -> ע¡ב
+
+פץ״פץ״ : ע¡ב פצע ע¡ב
+פץ״פץ״ S = פץ״ (פץ״ S)
+
+פשו : *
+פשו = פר  (p : *) פצע p
+
+¬_ : * -> *
+¬ פ§ֶ = פ§ֶ -> פשו
+
+-- universe
+
+U : *
+U = פר  (X : ע¡ב) פצע (((פץ״פץ״ X) פצע X) פצע (פץ״פץ״ X))
+
+פ§ִ : פץ״פץ״ U -> U
+פ§ִ t = \X f p -> t \x -> p (f (x X f))
+
+פ§ֳ : U -> פץ״פץ״ U
+פ§ֳ s = s U \t -> פ§ִ t
+
+פ¦פ : פץ״ U
+פ¦פ = \y -> ¬ (פר  (p : פץ״ U) -> פ§ֳ y p -> p (פ§ִ (פ§ֳ y)))
+
+פ§© : U
+פ§© = פ§ִ \p -> פר  (x : U) -> פ§ֳ x p -> p x
+
+D : Set
+D = פר  (p : פץ״ U) -> פ§ֳ פ§© p -> p (פ§ִ (פ§ֳ פ§©))
+
+lemפפ  : פר  (p : פץ״ U) -> (פר  (x : U) -> פ§ֳ x p -> p x) -> p פ§©
+lemפפ  p H1 = H1 פ§© \x -> H1 (פ§ִ (פ§ֳ x))
+
+lemפפ¢ : ¬ D
+lemפפ¢ = lemפפ  פ¦פ \x H2 H3 -> H3 פ¦פ H2 \p -> H3 \y -> p (פ§ִ (פ§ֳ y))
+
+lemפפ£ : D
+lemפפ£ p = lemפפ  \y -> p (פ§ִ (פ§ֳ y))
+
+loop : פשו
+loop = lemפפ¢ lemפפ£

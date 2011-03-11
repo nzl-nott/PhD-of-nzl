@@ -1,5 +1,4 @@
-module J2J'
- where
+module J2J' where
 
 open import Data.Product
 
@@ -22,3 +21,5 @@ J' : {A : Set}{a : A}(Q : {x : A} → a ≡ x → Set)
 J' {A} {a} Q q ab = subst {Σ A (λ z → a ≡ z)} 
                           (λ p → Q (proj₂ p)) 
                           (J (λ {x} {y} p → _≡_ {Σ A (λ z → x ≡ z)} (x , refl) (y , p)) refl ab) q
+
+

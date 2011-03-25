@@ -23,7 +23,7 @@ subst A a b p B = J A (λ a' b' _ → B a' → B b') (λ _ a → a) a b p
 --Identity mapping -- mapI
 
 resp : (A B : Set) → (f : A → B) → (a b : A) → Id A a b → Id B (f a) (f b)
-resp A B f a b p = J A (λ a' b' _ → Id B (f a') (f b')) (λ a' → refl (f a')) a b p
+resp A B f = J A (λ a' b' _ → Id B (f a') (f b')) (λ a' → refl (f a'))
 
 -- Identity composition -- cmpI
 

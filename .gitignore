@@ -4,3 +4,6 @@
 *.aux
 *.log
 *.ptb
+*.blg
+*.tex
+*.dvi

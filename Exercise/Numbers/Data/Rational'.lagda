@@ -1,0 +1,255 @@
+--------------------------------------------------
+
+Rational number
+
+--------------------------------------------------
+
+\begin{code}
+
+module Data.Rational' where
+
+open import Algebra.FunctionProperties.Core
+open import Data.Nat as ℕ using (ℕ ; suc)
+  renaming ( _+_ to _ℕ+_ ;  _∸_ to _ℕ-_ ; _*_ to _ℕ*_)
+open import Data.Integer' as ℤ using (ℤ ; +_ ; -suc_)
+  renaming (-_ to ℤ-_; _+_ to _ℤ+_; _-_ to _ℤ-_;_*_ to _ℤ*_;
+  _≤_ to _ℤ≤_; _<_ to _ℤ<_; _◃_ to _ℤ◃_)
+open import Data.Product public
+open import Data.Sign as Sign using (Sign) renaming (_*_ to _S*_)
+open import Level
+open import Relation.Binary.Core
+
+\end{code}
+
+1. Definition of ℚ₀
+
+To construct the rational numbers in the fractional form could represent all the rational numbers compared to the decimal form.
+There are several choice to represent the fractional:
+1. pair of ℤ
+2. pair of ℕ with symbol
+3. ℤ × ℕ
+
+*** We use ℕ to represent positive natural numbers through the mapping ...
+
+*** ℕ+ ≡ ℕ
+
+O is easier to excluded for ℕ so I choose to use 
+
+Numerator : ℤ
+Denominator : positive ℕ (n : ℕ to represent the suc n : ℕ)
+
+\begin{code}
+
+data ℚ₀ : Set where
+  _/suc_ : (n : ℤ) → (d : ℕ) → ℚ₀
+
+
+data ℚ₀* : Set where
+  _/suc_ : (n : ℕ) → (d : ℕ) → ℚ₀*
+
+\end{code}
+
+The extraction functions
+
+\begin{code}
+
+num : ℚ₀ → ℤ
+num (n /suc _) = n
+
+den : ℚ₀ → ℕ
+den (_ /suc d) = suc d
+
+\end{code}
+
+2. Representative 0 and 1
+
+Because this is also a setoid definition, there are many ℚ₀ represents 0 the sam
+e for 1.
+I gives the basic representative ones with the name 'qzero' and 'qone'.
+To use the same representation is consistent.
+
+\begin{code}
+
+qzero : ℚ₀
+qzero = + 0 /suc 0
+
+qone : ℚ₀
+qone = + 1 /suc 0
+
+\end{code}
+
+3. Equivalence relation
+
+n1/d2 ∼ n2/d2 if d2*n1 = d1*n2
+
+\begin{code}
+
+_ℤ*ℕ_ : ℤ → ℕ → ℤ
+z ℤ*ℕ n = z ℤ* ℤ.i n 
+
+infixl 2 _∼_
+
+_∼_   : Rel ℚ₀ zero
+n1 /suc d1 ∼ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ≡ n2 ℤ*ℕ suc d1
+
+\end{code}
+
+4. Ordering
+
+\begin{code}
+
+infix 4 _≤_ _<_ _≥_ _>_
+
+_≤_   : Rel ℚ₀ zero
+n1 /suc d1 ≤ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ℤ≤ n2 ℤ*ℕ suc d1
+
+_<_   : Rel ℚ₀ zero
+n1 /suc d1 < n2 /suc d2 =  n1 ℤ*ℕ suc d2 ℤ< n2 ℤ*ℕ suc d1
+
+_≥_   : Rel ℚ₀ zero
+m ≥ n = n ≤ m
+
+_>_ : Rel ℚ₀ zero
+m > n = n < m
+
+\end{code}
+
+5. Conversion between ℚ₀ and ℤ₀
+
+injection: ℤ ⊂ ℚ₀
+
+\begin{code}
+
+i   : ℤ → ℚ₀
+i z = z /suc 0 
+
+\end{code}
+
+6. Abbreviation for some conditions
+
+\begin{code}
+
+is0      : ℚ₀ → Set
+is0 (y /suc _) = y ≡ + 0
+
+¬0   : ℚ₀ → Set
+¬0 (y /suc _) = y ≢ + 0 
+
+is+ : ℚ₀ → Set
+is+ (y /suc _) = ∀ {n} → y ≡ + suc n
+
+\end{code}
+
+7. Sign
+
+Gives the sign.
+
+\begin{code}
+
+sign            : ℚ₀ → Sign
+sign (y /suc _) = ℤ.sign y
+
+infix 5 _◃_
+
+_◃_               : Sign → ℚ₀* → ℚ₀
+sign ◃ (y /suc d) = (sign ℤ◃ y) /suc d
+
+\end{code}
+
+8. Operation
+
+a) absolute value
+
+∣ n / posℕ ∣ = ∣ n ∣ / posℕ
+
+\begin{code}
+
+∣_∣           : Op₁ ℚ₀
+∣ m /suc n ∣  =  ℤ.∣_∣ m /suc n
+
+∣_∣₂          : ℚ₀ → ℚ₀*
+∣ m /suc n ∣₂ =  ℤ.p m /suc n
+
+\end{code}
+
+b) negation
+- n / posℕ = (- n) / posℕ
+
+\begin{code}
+
+-_           : Op₁ ℚ₀
+- (m /suc n) = (ℤ- m) /suc n
+
+\end{code}
+
+c) Inverse
+
+Note: only q ≢ 0 has inverse
+
+\begin{code}
+
+inverse       : (q : ℚ₀) → {p : ¬0 q} → ℚ₀
+inverse (+ 0 /suc _) {nz} with nz refl
+... | ()
+inverse (+ suc n /suc d) = (+ suc d) /suc n
+inverse (-suc n /suc d)  = -suc d /suc n
+
+\end{code}
+
+d* is used to deal with the denominator multiplication
+
+\begin{code}
+
+_d*_ : Op₂ ℕ
+m d* n = n ℕ+ m ℕ* suc n
+
+\end{code}
+
+d) Addition : (a / b) + (c / d) = (ad + bc) / bd
+
+\begin{code}
+
+infixl 6 _+_ _-_
+
+_+_   : Op₂ ℚ₀
+n1 /suc d1 + n2 /suc d2 =
+  (n1 ℤ*ℕ suc d2 ℤ+ n2 ℤ*ℕ suc d1) /suc (d1 d* d2)
+
+\end{code}
+
+e) minus : (a / b) - (c / d) = (ad - bc) / bd
+
+\begin{code}
+
+_-_   : Op₂ ℚ₀
+n1 /suc d1 - n2 /suc d2 =
+  (n1 ℤ*ℕ suc d2 ℤ- n2 ℤ*ℕ suc d1) /suc (d1 d* d2)
+
+\end{code}
+
+f) multiplication: (a / b) * (c / d) = ac / bd
+
+\begin{code}
+
+infixl 7 _*_
+
+_*_   : Op₂ ℚ₀
+n1 /suc d1 * n2 /suc d2 = (n1 ℤ* n2) /suc (d1 d* d2)
+
+\end{code}
+
+g) division :
+
+We can define the division of ℚ₀ because the result of devision of ℕ or ℤ and ℚ₀ are always ℚ₀
+
+\begin{code}
+
+infix 7 _÷_
+
+_÷_         : (a b : ℚ₀) → {p : ¬0 b} → ℚ₀
+_÷_ _ ((+ 0) /suc _) {nz} with nz refl
+... | ()
+n1 /suc d1 ÷ (+ suc n2) /suc d2 = (n1 ℤ*ℕ suc d2) /suc (d1 d* n2)
+n1 /suc d1 ÷ -suc n2 /suc d2  = - ((n1 ℤ*ℕ suc d2) /suc (d1 d* n2))
+
+\end{code}

@@ -1,0 +1,26 @@
+\contentsline {section}{\numberline {1}Introduction and Motivation}{3}
+\contentsline {section}{\numberline {2}What is Agda?}{5}
+\contentsline {section}{\numberline {3}What are numbers in regular mathematics?}{8}
+\contentsline {section}{\numberline {4}What are differences of numbers in computer science?}{9}
+\contentsline {section}{\numberline {5}How to define numbers in Agda?}{10}
+\contentsline {section}{\numberline {6}Related work}{17}
+\contentsline {subsection}{\numberline {6.1}The integers and rational numbers in Coq}{17}
+\contentsline {subsection}{\numberline {6.2}The real numbers in Coq}{18}
+\contentsline {subsection}{\numberline {6.3}The real numbers in other languages}{19}
+\contentsline {section}{\numberline {7}The design of this project}{19}
+\contentsline {subsection}{\numberline {7.1}Definition part}{20}
+\contentsline {subsection}{\numberline {7.2}Properties part}{22}
+\contentsline {subparagraph}{Basic properties.}{22}
+\contentsline {subparagraph}{Commutative Ring (or Field)}{23}
+\contentsline {subparagraph}{Advanced Properties}{25}
+\contentsline {subparagraph}{Properties combined}{25}
+\contentsline {section}{\numberline {8}Implementation}{26}
+\contentsline {subsection}{\numberline {8.1}Proving theorems in Agda}{26}
+\contentsline {subsection}{\numberline {8.2}Problems and Changes}{27}
+\contentsline {subparagraph}{Efficiency Problem}{27}
+\contentsline {subparagraph}{Stuck in difficult theorems}{28}
+\contentsline {subparagraph}{Other problems}{29}
+\contentsline {section}{\numberline {9}Evaluation}{30}
+\contentsline {subsection}{\numberline {9.1}How to use the code}{30}
+\contentsline {subsection}{\numberline {9.2}Feedback}{30}
+\contentsline {section}{\numberline {10}Summary and future work}{31}

@@ -1,0 +1,247 @@
+--------------------------------------------------
+(ℤ, +, *, 0, 1) is a Commutative Ring
+
+\begin{code}
+module Data.Integer.Properties.CommutativeRing where
+
+open import Algebra
+open import Algebra.Structures
+open import Data.Function
+open import Data.Product
+open import Data.Integer.Definition
+open import Data.Integer.Properties.BasicProp
+open import Data.Integer.Setoid.Properties as ℤ₀ using (zrefl ; zsym ; _>∼<_)
+import Data.Nat.Properties+ as ℕ
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong; cong₂)
+import Algebra.FunctionProperties as P; open P _≡_
+open import Relation.Binary.Core
+open import Relation.Binary.PropositionalEquality.Core
+open import Symbols
+
+\end{code}
+
+1. + Identity
+
+a) zero is left neutral (left identity) for addition
+0 + z = z
+
+\begin{code}
+
+0+z≡z   : LeftIdentity (+ 0) _+_
+0+z≡z (+ n)    = refl
+0+z≡z (-suc n) = refl
+
+\end{code}
+
+b) zero is right neutral (right identity) for addition
+z + 0 = z
+
+\begin{code}
+
+z+0≡z : RightIdentity (+ 0) _+_
+z+0≡z (+ n)    = +_ ⋆ ℕ.n+0≡n
+z+0≡z (-suc n) = -suc_ ⋆ ℕ.n+0≡n
+
++-identity : Identity (+ 0) _+_
++-identity = 0+z≡z , z+0≡z
+
+\end{code}
+
+2. + Commutativity
+
+m * n = n * m
+
+\begin{code}
+
++-comm : Commutative _+_
++-comm m n = sound $ ℤ₀.+-comm ⌜ m ⌝ ⌜ n ⌝
+
+\end{code}
+
+3. + Associativity
+
+(a + b) + c = a + (b + c)
+\begin{code}
+
++-assoc : Associative _+_
++-assoc a b c = sound $ ℤ₀.+-cong compl zrefl >∼< 
+                        ℤ₀.+-assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong zrefl compl'
+\end{code}
+
+4. (_+_, -_, 0) Inverse
+
+a) right inverse
+x + (- x) = 0
+
+\begin{code}
+
++-rightInverse : RightInverse (+ 0) -_ _+_
++-rightInverse z = sound (ℤ₀.+-cong zrefl compl >∼< ℤ₀.+-rightInverse ⌜ z ⌝)
+
+\end{code}
+
+b) left inverse
+(- x) + x = 0
+
+\begin{code}
+
++-leftInverse : LeftInverse (+ 0) -_ _+_
++-leftInverse z = sound (ℤ₀.+-cong compl zrefl >∼< ℤ₀.+-leftInverse ⌜ z ⌝)
+
++-inverse : Inverse (+ 0) -_ _+_
++-inverse = +-leftInverse , +-rightInverse
+
+\end{code}
+
+5. * Zero
+
+a) 0 * z = 0
+
+\begin{code}
+
+0*z≡0 : LeftZero (+ 0) _*_
+0*z≡0 (+ n)    = refl
+0*z≡0 (-suc n) = refl
+
+\end{code}
+
+b) z * 0 = 0
+
+\begin{code}
+
+z*0≡0 : RightZero (+ 0) _*_
+z*0≡0 z = sound (ℤ₀.z*0~0 ⌜ z ⌝)
+
+*-zero : Zero  (+ 0) _*_
+*-zero = 0*z≡0 , z*0≡0
+
+\end{code}
+
+6. * Identity
+
+\begin{code}
+
+1*z≡z : LeftIdentity (+ 1) _*_
+1*z≡z z = sound (ℤ₀.1*z~z ⌜ z ⌝) >≡< stable 
+
+z*1≡z : RightIdentity (+ 1) _*_
+z*1≡z z = sound (ℤ₀.z*1~z ⌜ z ⌝) >≡< stable
+
+*-identity : Identity (+ 1) _*_
+*-identity = 1*z≡z , z*1≡z
+
+\end{code}
+
+7. * Commutativity
+
+a * b = b * a
+
+\begin{code}
+
+*-comm :  Commutative _*_
+*-comm m n = sound (ℤ₀.*-comm ⌜ m ⌝ ⌜ n ⌝)
+
+\end{code}
+
+8. * Assocciativity
+
+(a * b) * c = a * (b * c)
+
+\begin{code}
+
+*-assoc : Associative _*_
+*-assoc a b c = sound $ ℤ₀.*-cong compl zrefl >∼< 
+                        ℤ₀.*-assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.*-cong zrefl compl'
+
+\end{code}
+
+9. * + Distributivity
+
+a) left distributivity
+a * (b + c) = a * b + a * c
+
+\begin{code}
+
+distˡ :  _*_ DistributesOverˡ _+_
+distˡ a b c = sound $ ℤ₀.*-cong zrefl compl >∼< 
+                      ℤ₀.distˡ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong compl' compl'
+
+\end{code}
+
+b) right distributivity
+(b + c) * a = b * a + c * a
+
+\begin{code}
+
+distʳ : _*_ DistributesOverʳ _+_
+distʳ a b c = sound $ ℤ₀.*-cong compl zrefl >∼< ℤ₀.distʳ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼<
+                      ℤ₀.+-cong compl' compl'
+
+distrib-*-+ : _*_ DistributesOver _+_
+distrib-*-+ = distˡ , distʳ
+
+\end{code} 
+
+14. (ℤ, +, *, 0, 1) is a Commutative Ring
+
+\begin{code}
+
++-cong : _+_ Preserves₂ _≡_ ⟶ _≡_ ⟶ _≡_
++-cong = cong₂ _+_
+
+*-cong : _*_ Preserves₂ _≡_ ⟶ _≡_ ⟶ _≡_
+*-cong = cong₂ _*_
+
+isCommutativeRing : IsCommutativeRing _≡_ _+_ _*_ -_ (+ 0) (+ 1)
+isCommutativeRing = record
+  { isRing = record
+    { +-isAbelianGroup = record
+      { isGroup = record
+        { isMonoid = record
+          { isSemigroup = record
+            { isEquivalence = isEquivalence
+            ; assoc         = +-assoc
+            ; ∙-cong        = cong₂ _+_
+            }
+          ; identity = +-identity
+          }
+        ; inverse = +-inverse
+        ; ⁻¹-cong = cong -_
+        }
+        ; comm = +-comm
+     }
+    ; *-isMonoid = record
+        { isSemigroup = record
+          { isEquivalence = isEquivalence
+          ; assoc         = *-assoc
+          ; ∙-cong        = cong₂ _*_
+          }
+        ; identity = *-identity
+        }
+    ; distrib = distrib-*-+
+    }
+  ; *-comm = *-comm
+  }
+
+commutativeRing : CommutativeRing
+commutativeRing = record
+  { _+_                   = _+_
+  ; _*_                   = _*_
+  ; -_                    = -_
+  ; 0#                    = (+ 0)
+  ; 1#                    = (+ 1)
+  ; isCommutativeRing = isCommutativeRing
+  }
+
+\end{code}
+
+15. The ring solver for ℤ
+
+\begin{code}
+
+import Algebra.RingSolver.Simple as Solver
+import Algebra.RingSolver.AlmostCommutativeRing as ACR
+module RingSolver =
+  Solver (ACR.fromCommutativeRing commutativeRing)
+
+\end{code}

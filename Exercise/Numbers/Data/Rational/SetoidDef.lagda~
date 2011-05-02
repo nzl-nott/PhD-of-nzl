@@ -1,0 +1,229 @@
+\begin{code}
+
+module Rational.SetoidDef where
+
+open import Algebra.FunctionProperties.Core
+open import Data.Nat as ℕ using (ℕ ; suc) renaming ( _+_ to _ℕ+_ ;  _∸_ to _ℕ-_ ; _*_ to _ℕ*_)
+open import Data.Product public
+open import Integer.Definition as ℤ using (ℤ ; +_ ; -[1+_]) renaming (-_ to ℤ-_ ; _+_ to _ℤ+_; _-_ to _ℤ-_ ;_*_ to _ℤ*_ ; _≤_ to _ℤ≤_ ; ∣_∣ to ℤ∣_∣ ; _<_ to _ℤ<_ ; _≥_ to _ℤ≥_  ; _>_ to _ℤ>_ ; i to ℕtoℤ ; p to ℤtoℕ)
+open import Data.Sign as Sign using (Sign) renaming (_*_ to _S*_)
+open import Relation.Binary.Core
+open import NatPropertiesExtra using ()
+
+\end{code}
+
+1. Definition of ℚ₀
+
+We represent the rational numbers in the fractional form
+we can use two ℤ to form the ℚ₀
+
+But because we can not put 0 in the denominator, I choose to use 
+
+Numerator : ℤ
+Denominator : posℕ
+
+as my definition.
+
+the posℕ is positive ℕ and map [0 , ∞) to [1 , ∞)
+
+The benefit of defining a new type is that we do not have to check whether the denominator is zero
+every time.
+We can just use natural numbers but it may lead to misunderstanding.
+
+\begin{code}
+data ℚ₀ : Set where
+  _/suc_ : ℤ → ℕ → ℚ₀
+
+\end{code}
+
+4. Conversion between ℚ₀ and ℤ₀
+
+injection
+ℤ ⊂ ℚ₀
+we choose the one with denominator 1 as the result
+
+\begin{code}
+
+i   : ℤ → ℚ₀
+i z = z /suc 0 
+
+\end{code}
+
+5. Equivalence relation
+
+a. ℕ*ℤ
+ℕtoℤ (nsuc d2) ℤ*
+
+\begin{code}
+
+_ℤ*ℕ_ : ℤ → ℕ → ℤ
+z ℤ*ℕ n = z ℤ* ℕtoℤ n 
+
+\end{code}
+
+
+b) equivalence relation
+
+n1/d2 ≡ n2/d2 if d2*n1 = d1*n2
+
+\begin{code}
+
+infixl 2 _∼_
+
+_∼_   : Rel ℚ₀ _
+n1 /suc d1 ∼ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ≡ n2 ℤ*ℕ suc d1
+
+\end{code}
+
+6. Representative 0 and 1
+
+Because this is also a setoid definition, so their are many ℚ₀ represents 0 of the normal rational number, so as 1.
+Therefore I gives the basic representative ones the name 'qzero' and 'qone'.
+It will make the proving parts consistent.
+
+a) the representative zero
+
+\begin{code}
+
+qzero : ℚ₀
+qzero = + 0 /suc 0
+
+\end{code}
+
+b) the representative one
+
+\begin{code}
+
+qone : ℚ₀
+qone = + 1 /suc 0
+
+\end{code}
+
+7. Justification: ℚ₀ is (not) zero
+
+\begin{code}
+
+is0      : ℚ₀ → Set
+is0 (y /suc _) = y ≡ + 0
+
+¬0   : ℚ₀ → Set
+¬0 (y /suc _) = y ≢ + 0 
+
+\end{code}
+
+8. Operation
+
+a) absolute value
+
+∣ n / posℕ ∣ = ∣ n ∣ / posℕ
+
+\begin{code}
+
+∣_∣                  : Op₁ ℚ₀
+∣ m /suc n ∣            =  ℤ∣ m ∣ /suc n
+
+\end{code}
+
+b) negation
+-  n / posℕ = (- n) / posℕ
+\begin{code}
+
+-_                    : Op₁ ℚ₀
+- (m /suc n)             = (ℤ- m) /suc n
+
+\end{code}
+
+c) Inverse
+
+inversion with an implicit test of the condition q ≢ 0
+
+\begin{code}
+inverse       : (q : ℚ₀) → {p : ¬0 q} → ℚ₀
+inverse (+ 0 /suc _) {nz} with nz refl
+... | ()
+inverse (+ suc n /suc d) = (+ suc d) /suc n
+inverse (-[1+ n ] /suc d) = -[1+ d ] /suc n
+
+\end{code}
+
+The new function for rational number is 'Inverse'. In mathematics, to get a inverse we just need to swap the numerator and the denominator. But there are two points to notice when defining the inverse function:
+1. 0 has no inverse
+2. Because the types of the numerator and denominator are different, we have to keep the sign on the top, project ℤ on the top to ℕ then posℕ and inject posℕ on the bottom to ℤ. When we inject ℕ to posℕ, we need to give the proof that it is not zero which can be transformed from the premise using the 'inverse-lem'.
+
+\end{code}
+
+d) addition : (a / b) + (c / d) = (ad + bc) / bd
+
+\begin{code}
+
+infixl 6 _+_ _-_
+
+den* : Op₂ ℕ
+den* m n = n ℕ+ m ℕ* suc n
+
+_+_   : Op₂ ℚ₀
+n1 /suc d1 + n2 /suc d2 = ((n1 ℤ*ℕ (suc d2)) ℤ+ (n2 ℤ*ℕ (suc d1))) /suc (den* d1 d2)
+
+\end{code}
+
+e) minus : (a / b) - (c / d) = (ad - bc) / bd
+
+\begin{code}
+
+_-_   : Op₂ ℚ₀
+n1 /suc d1 - n2 /suc d2 = (n1 ℤ*ℕ suc d2 ℤ- n2 ℤ*ℕ suc d1) /suc (den* d1 d2)
+
+\end{code}
+
+f) multiplication: (a / b) * (c / d) = ac / bd
+
+\begin{code}
+
+infixl 7 _*_
+
+_*_   : Op₂ ℚ₀
+n1 /suc d1 * n2 /suc d2 = (n1 ℤ* n2) /suc (den* d1 d2)
+
+\end{code}
+
+g) division :
+
+Now we can define the division of ℚ₀ because the result of devision of ℕ or ℤ and ℚ₀ are always ℚ₀
+ 
+
+(a / b) ÷ (c / d) = (a / b) * (d / c)
+here I use m / n = m / (inverse of n)
+
+\begin{code}
+
+infix 7 _÷_
+
+_÷_         : (a b : ℚ₀) → {p : ¬0 b} → ℚ₀
+_÷_ _ ((+ 0) /suc _) {nz} with nz refl
+... | ()
+n1 /suc d1 ÷ (+ suc n2) /suc d2 = (n1 ℤ*ℕ suc d2) /suc (den* d1 n2)
+n1 /suc d1 ÷ -[1+ n2 ] /suc d2  = - ((n1 ℤ*ℕ suc d2) /suc (den* d1 n2))
+
+-- m * (inverse n {p})
+
+\end{code}
+
+9. Ordering
+
+\begin{code}
+
+infix 4 _≤_ _<_ _≥_ _>_
+
+_≤_   : Rel ℚ₀ _
+n1 /suc d1 ≤ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ℤ≤ n2 ℤ*ℕ suc d1
+
+_<_   : Rel ℚ₀ _
+n1 /suc d1 < n2 /suc d2 =  n1 ℤ*ℕ suc d2 ℤ< n2 ℤ*ℕ suc d1
+
+_≥_   : Rel ℚ₀ _
+m ≥ n = n ≤ m
+
+_>_ : Rel ℚ₀ _
+m > n = n < m
+
+\end{code}

@@ -1,0 +1,17 @@
+1. Revise all the code, proving using simpler way which increase effciency a lot.
+2. Add some new properties.
+3. Reorganise the structure of files.
+4. using some comprehensive symbols.
+5. using quotient definition for integers and thinking of define normal form of rational numbers.
+
+Wed 18/11 at 13:30
+
+Goal: to show that the reals are a field.
+
+ideally one would like to show that they are a "Real closed field"
+this is too hard, but show that there is a solution to x^2 - 2 = 0.
+
+Algebraically closed field (like the complex numbers).
+
+Cheers,
+Thorsten

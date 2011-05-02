@@ -1,0 +1,38 @@
+@inproceedings{CRC,
+ author = {Geuvers, Herman and Niqui, Milad},
+ title = {Constructive Reals in Coq: Axioms and Categoricity},
+ booktitle = {TYPES '00: Selected papers from the International Workshop on Types for Proofs and Programs},
+ year = {2002},
+ isbn = {3-540-43287-6},
+ pages = {79--95},
+ publisher = {Springer-Verlag},
+ address = {London, UK},
+ }
+
+@inproceedings{field,
+  author = {Delahaye, David and Mayero, Micaela},
+  title = {{\tt Field}: une proc\'edure de d\'ecision pour les nombres
+           r\'eels en {C}oq},
+  booktitle = {{J}ourn\'ees {F}rancophones des {L}angages {A}pplicatifs,
+              Pontarlier},
+  publisher = {INRIA},
+  month = {Janvier},
+  year = {2001},
+  http = {http://www-lipn.univ-paris13.fr/~mayero/publis/field.ps.gz}
+}
+
+
+@misc{wiki:Lazy_evaluation,
+   author = "Wikipedia",
+   title = "Lazy evaluation --- {W}ikipedia{,} The Free Encyclopedia",
+   year = "2010",
+   url = "http://en.wikipedia.org/wiki/Lazy_evaluation",
+   note = "[Online; accessed 20-April-2010]"
+ }
+
+@unpublished{tutorial, 
+author = {Ulf Norell}, 
+Title = {Dependently typed programming in agda}, 
+Note = "Available at: http://www.cse.chalmers.se/~ulfn/papers/afp08tutorial.pdf"
+YEAR = 2008, 
+} 

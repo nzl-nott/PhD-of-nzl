@@ -1,0 +1,6 @@
+\begin{code}
+module Rational.Properties where
+
+open import Rational.Properties.BasicProp public
+open import Rational.Properties.Field public
+\end{code}

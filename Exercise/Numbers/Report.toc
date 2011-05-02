@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}Motivation}{3}
+\contentsline {section}{\numberline {3}What is Agda?}{3}
+\contentsline {section}{\numberline {4}What are numbers?}{5}
+\contentsline {section}{\numberline {5}How to define numbers in Agda?}{5}
+\contentsline {section}{\numberline {6}What to define in Agda?}{5}
+\contentsline {section}{\numberline {7}Related work}{5}
+\contentsline {section}{\numberline {8}Proving using Agda}{5}
+\contentsline {section}{\numberline {9}The detailed explanation of code}{5}
+\contentsline {section}{\numberline {10}How to use the code}{5}
+\contentsline {section}{\numberline {11}Problems and changes}{5}
+\contentsline {section}{\numberline {12}Evaluation}{5}
+\contentsline {section}{\numberline {13}Summary}{5}
+\contentsline {section}{\numberline {14}Future work}{5}

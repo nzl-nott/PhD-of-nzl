@@ -1,0 +1,69 @@
+
+\begin{code}
+
+module Data.Power where
+
+open import Data.Empty
+open import Data.Nat as ℕ using (ℕ ; suc)
+  renaming ( _+_ to _ℕ+_ ;  _∸_ to _ℕ-_ ; _*_ to _ℕ*_)
+open import Data.Integer' as ℤ using (ℤ ; +_ ; -suc_)
+  renaming (-_ to ℤ-_; _+_ to _ℤ+_; _-_ to _ℤ-_;_*_ to _ℤ*_;
+  _≤_ to _ℤ≤_; _<_ to _ℤ<_; _◃_ to _ℤ◃_)
+import Data.Integer.Properties' as ℤ
+open import Data.Integer.Setoid
+open import Data.Rational'
+
+open import Relation.Binary.Core
+open import Relation.Nullary.Core
+
+infixl 8 _ℕ^_
+
+lnz : ∀ {a} {p : Set} → ¬ ( × p)
+lnz (() , y)
+
+_ℕ^_ : (a : ℕ) → (b : ℕ) → {p : ¬ (a ≡ 0 × b ≡ 0)} → ℕ
+_ℕ^_ 0 0 {p} with p (refl , refl)
+... | ()
+0 ℕ^ suc b = 0
+suc a ℕ^ 0 = suc 0
+suc a ℕ^ suc b = suc a ℕ* (_ℕ^_ (suc a) b {lnz})
+
+infixl 8 _ℤ₀^_
+
+_ℤ₀^_ : ℤ₀ → ℤ₀ → ℚ₀
+a ℤ₀^ (x , y) = {!!}
+
+infixl 8 _ℤ^ℕ_
+
+_ℤ^ℕ_ : (a : ℤ) → (b : ℕ) → {p : ¬ (a ≡ + 0 × b ≡ 0)} → ℤ
+_ℤ^ℕ_ (+ 0) 0 {p} with p (refl , refl)
+... | ()
++ 0 ℤ^ℕ suc b = + 0
+z ℤ^ℕ 0 = + suc 0
++ suc z ℤ^ℕ suc n = + suc z ℤ* (_ℤ^ℕ_ (+ suc z) n {{!lnz!}})
+-suc z ℤ^ℕ suc n = {!!} -- z ℤ* (_ℤ^ℕ_ z n {{!!}})
+
+infixl 8 _ℤ÷_
+
+_ℤ÷_ : (n : ℤ) → (d : ℤ) → {p : ℤ.is+ d} → ℚ₀
+_ℤ÷_ n (+ ℕ.zero) {x , ()}
+n ℤ÷ + suc d = n /suc d
+n ℤ÷ -suc d = (ℤ- n) /suc d
+
+infixl 8 _ℤ^ℤ₀_
+
+_ℤ^ℤ₀_ : ℤ → ℤ₀ → ℚ₀
+a ℤ^ℤ₀ (x , y) =  _ℤ÷_ (a ℤ^ℕ x) (a ℤ^ℕ y) {{!!}}
+
+infixl 8 _ℤ^ℚ_
+
+_ℤ^ℚ_ : ℤ → ℚ₀ → ℚ₀
+z ℤ^ℚ n2 /suc d2 = {!!}
+
+
+infixl 8 _^_
+
+_^_ : ℚ₀ → ℚ₀ → ℚ₀ 
+n1 /suc d1 ^ n2 /suc d2 = {!!}
+
+\end{code}

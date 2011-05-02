@@ -1,0 +1,104 @@
+1. Revise all the code, proving using simpler way which increase effciency a lot.
+2. Add some new properties.
+3. Reorganise the structure of files.
+4. using some comprehensive symbols.
+5. using quotient definition for integers and thinking of define normal form of rational numbers.
+
+I don't have much spare time, so it would be better if you could adapt
+it for me.
+
+If you want me to use the code, please send it as a patch. In other
+words, download the library using darcs, add your code to the library,
+record your changes using darcs record, and email me the result of
+running "darcs send -O".
+
+Furthermore you need to agree to release the patches you send me under
+the library's licence, see
+http://www.cs.nott.ac.uk/~nad/repos/lib/LICENCE.
+
+It would be great if you could perform the following changes before
+sending me the code:
+
+• Choose module names which match the choices made in the library
+  better. Integer.Definition → Data.Integer, for instance.
+
+• When appropriate, merge your code with existing library code
+  (NatPropertiesExtra could be merged with Data.Nat.Properties, for
+  instance). Please record a separate patch (using darcs record) for
+  free-standing changes.
+
+• It would be nice if you could ensure that most lines are shorter than
+  ∼80 characters. HTML code is generated automatically from sources, and
+  all Agda code is put in <pre> blocks which I believe prevent automatic
+  wrapping of long lines (in some browsers). Shorter lines are often
+  easier to read. This recommendation can be broken when a longer line
+  would improve readability, though. (I often use long lines in proofs
+  which use equational reasoning.)
+
+• It would be good if you could also follow the layout of the library
+  code. Every file must start with a header of (more or less) the
+  following form:
+
+  ------------------------------------------------------------------------
+  -- Description of the module
+  ------------------------------------------------------------------------
+
+  (This is used to generate a file which provides an overview of the
+  library.) Individual sections in a file have section headers of the
+  following form:
+
+  ------------------------------------------------------------------------
+  -- Section title
+
+  If you add such descriptive headers I think it would be easier to get
+  an overview of the code.
+
+• When defining a data type, please name every constructor argument.
+  Example:
+
+    data ℕ : Set where
+      zero : ℕ
+      suc  : (n : ℕ) → ℕ
+
+  The suc constructor is not dependent, but the argument's name is used
+  by the case-split feature (C-c C-c in Emacs).
+
+• If you want to make your code more accessible, consider writing some
+  modules which provide short, illustrative examples. So far I have only
+  written one such module myself (README.Nat), but more (README.Integer
+  and README.Rational) would be great.
+
+I hope the list above does not put you off. It is great to receive
+contributions from others.
+
+--
+/NAD
+
+
+The final year dissertation should be based on your report of you 
+summer internship, extending it in the following ways:
+
+- Improve the presentation, use lagda
+- make it available as an Agda library, get other people to use it and 
+comment
+- complete any missing developments
+- try to use the general theory of quotients developed by Thomas and 
+me (see attached file)
+- if you have time: start to develop the theory of the Real numbers as 
+a setoid
+   (or maybe we can postulate it as a quotient)
+
+
+
+
+Wed 18/11 at 13:30
+
+Goal: to show that the reals are a field.
+
+ideally one would like to show that they are a "Real closed field"
+this is too hard, but show that there is a solution to x^2 - 2 = 0.
+
+Algebraically closed field (like the complex numbers).
+
+Cheers,
+Thorsten

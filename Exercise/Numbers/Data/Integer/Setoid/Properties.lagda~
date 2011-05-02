@@ -1,0 +1,9 @@
+\begin{code}
+
+module Integer.Setoid.Properties where
+
+open import Integer.Setoid.BasicProp public
+open import Integer.Setoid.CommutativeRing public
+open import Integer.Setoid.AdvancedProp public
+
+\end{code}

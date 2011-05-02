@@ -1,0 +1,85 @@
+--------------------------------------------------
+The advanced properties include the other properties that should be proved after proving the commutative ring
+
+\begin{code}
+
+module Data.Integer.Setoid.AdvancedProp where
+
+open import Data.Function using (_$_ ; _∘_)
+
+open import Data.Integer.Setoid.Definition
+open import Data.Integer.Setoid.BasicProp
+open import Data.Integer.Setoid.CommutativeRing
+
+open import Data.Nat hiding (_≤_ ; decTotalOrder)
+  renaming (_≟_ to _ℕ≟_ ;  _+_ to _ℕ+_ ; _*_ to _ℕ*_ ; _≤?_ to _ℕ≤?_)
+open import Data.Nat.Properties+ as ℕ using (_+=_)
+open import Data.Product
+
+open import Relation.Binary.Core
+open import Symbols
+
+\end{code}
+
+b) integrity of ℤ₀
+if a is not 0 and a * m ∼ a * n then m ∼ n
+
+\begin{code}
+
+i-lem : ∀ {p q m} → p ∼ q → p * m ∼ q * m
+i-lem p∼q = *-cong p∼q zrefl
+
+integrity : ∀ {m n} a → (p : ¬0 a) → a * m ∼ a * n → m ∼ n
+integrity {_} {_} (zero , zero) prf a*≡ with prf refl
+... | ()
+
+integrity {m+ , m- } {n+ , n- } (zero , suc a-) _ a*≡ =
+  ℕ.integrity a- $ ℕ.ℤ₀i-lem₂ m+ n- a- >≡<
+  ⟨ a*≡ ⟩ >≡< ⟨ ℕ.ℤ₀i-lem₂ n+ m- a- ⟩
+
+integrity {m+ , m- } {n+ , n- } (suc a+ , zero) _ a*≡ = 
+  ℕ.integrity a+ $ ⟨ ℕ.ℤ₀i-lem₁ m+ n- a+ ⟩ >≡<
+  a*≡ >≡< ℕ.ℤ₀i-lem₁ n+ m- a+
+
+integrity (suc a+ , suc a-) prf a*≡ = 
+  integrity (a+ , a-) (λ x → prf (suc ⋆ x))
+  (i-lem ⟨ ℕ.sm+n≡m+sn a+ a- ⟩ >∼< a*≡ >∼< 
+  i-lem (ℕ.sm+n≡m+sn a+ a-))
+
+\end{code}
+
+left cancellation of +
+
+\begin{code}
+
++l-cancel : ∀ {m n} x → x + m ∼ x + n → m ∼ n
++l-cancel {m+ , m- } {n+ , n- } (x+ , x-) eqt = 
+  ℕ.+l-cancel (x+ ℕ+ x-) $
+  ℕ.exchange₃ x+ x- m+ n- >≡< eqt >≡<
+  ℕ.exchange₃ x+ n+ x- m-
+
+\end{code}
+
+if m * n ∼ 0 and m is not 0 then n must be 0
+
+\begin{code}
+
+solve0 : ∀ m {n} → (p : ¬0 m) → m * n ∼ (0 , 0) → n ∼ (0 , 0)
+solve0 m p eqt = integrity m p (eqt >∼< zsym (z*0~0 m))
+
+\end{code}
+
+* preserves ≤ 
+if n is non-negative a ≤ b → n * a ≤ n * b
+
+\begin{code}
+
+*-pres′ : ∀ {a b} n → a ≤ b → (n , 0) * a ≤ (n , 0) * b
+*-pres′ {a1 , a2} {b1 , b2} n a≤b  = 
+  ℕ.r-≤resp ( ℕ.distˡ n a1 b2 >≡<
+  (ℕ.+-comm 0 (n ℕ* a1) +=  ℕ.+-comm 0 (n ℕ* b2)) ) $
+  ℕ.l-≤resp ( ℕ.distˡ n b1 a2 >≡<
+  (ℕ.+-comm 0 (n ℕ* b1) +=  ℕ.+-comm 0 (n ℕ* a2)) ) $
+  ℕ.*-pres′ n a≤b
+ 
+\end{code}

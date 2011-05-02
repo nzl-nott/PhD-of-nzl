@@ -278,14 +278,14 @@ Then it is natural to form the setoid
 \end{code}
 
 However these definition are just setoid and to form a quotient type,
-we need more structure. For example, we need a representative for each
+we need more structure. For definable quotient types, we need a representative of each
 equivalence class, we may have a set which is isomorphic to the set of
-equivalence classes. Moreover, If we abstract the structure, we can
+equivalence classes, namely the normal form of the quotient type. Moreover, If we abstract the structure, we can
 prove some general properites for definable quotient types.
 
 \section{The general structure of definable quotient types}
 
-I will use the code written by Thomas Amberree in this part. We need
+I will use the interfaces written by Thomas Amberree in this part. We need
 to first establish the quotient signature.
 
 \begin{code}
@@ -298,19 +298,22 @@ record QuSig (S : Setoid zero zero) : Set₁ where
 \end{code}
 
 In this type signature, for certain setoid we have a type represent
-the set of the normal form, a map function, and the proof
-that it two elements in the |Carrier S|  equal, then they point to the
-same element in |Q|.
+the set of the normal form, a normalisation function, and the proof
+that two elements in the same equivalence class normalised to the
+same form. With soundness, we can say normalisation is a function if we treat S as the set of equivalence classes.
 
-However, there is no surjective requirements for the map in this signature. If
-means we can use the same type for |Carrier S| and |Q|. For example,
+However, there is no surjective requirements for the map in this signature. It
+means that the set of equivalence classes are not isomorphic to the set |Q|.
+
+
+Actually, we can use the same type for |Carrier S| and |Q|. For example,
 for Setoid |ℤ₀, ∼|, we can build a quotient siganature by giving |ℤ₀|
 and the endomap normalisation function.
 
 
 Now, using the quotient signature if we can prove that any function of
 type | S → B | respects the equivalence relation, then we can lift it to be
-a function of type | Q → B |. Notice that |B| depends on |Q|. Of course we need to prove that it is
+a function of type | Q → B |. Of course we need to prove that it is
 lift function. With the lift function we have the first definition of quotient.
 
 \begin{code}
@@ -337,10 +340,11 @@ record Qu { S : Setoid zero zero} (QS : QuSig S) : Set₁ where
 In my opinion the proof irrelevance of lift operations are
 unecessary since |lifeok| implies it.
 
-If we have the proof of completeness we know that if two elements in
-|S| mapped to the same element in |Q|, they belong to the same
-equivalence class. Hence the set of equivalence classes are injective
-with respect to the set |Q|. It is an efficient definition of quotient.
+
+However, there can be more than one equivalence classes normalised to the same form. Therefore the normal form do
+not fully contain the information of quotient type. If we can prove the completeness \nzl{I don't think this is completeness, it is only injective},
+ namely two elements normalised to the same form must be in the same equivalence class. they belong to the same
+equivalence class. Hence the normalisation is injective from the set of equivalence classes to the set of normal forms.
 
 \begin{code}
 record QuE {S : Setoid zero zero} {QS : QuSig S} (QU : Qu QS) : Set₁ where
@@ -355,15 +359,15 @@ record QuE {S : Setoid zero zero} {QS : QuSig S} (QU : Qu QS) : Set₁ where
 
 \end{code}
 
+Even if we prove the normalisation to be injective, we still not require it to be surjective. Then |Q| may have some redundance. Therefore
+we need more efficient quotient type. 
 
-Otherwise, if we have a embedding function used to choose a representative for
-each equivalence class, we can find out the normal form of elements in
-|Carrier S|. The proof of stability shows that |emb| is a section of
-normalisation function. Since all elements in |Q| fulfill the stability,
-the |[_]| must be surjective. The proof |compl| shows that the
+In |Nf| we have a embedding function used to choose a representative for
+each equivalence class. The proof of stability shows that |emb| is a section of
+normalisation function. Since all elements in |Q| can be the result of the normalisation, it must be surjective. The proof |compl| shows that the
 representative is in the same equivalence class hence we can prove the
-completeness using transitivity. In this definition of quotient, the
-set of all equivalence classes are isomorphic to the set |Q|.
+completeness as well. In this definition of quotient, the
+set of all equivalence classes are in fact isomorphic to the set |Q|.
 
 \begin{code}
 record Nf {S : Setoid zero zero} (QS : QuSig S) : Set₁ where
@@ -377,10 +381,7 @@ record Nf {S : Setoid zero zero} (QS : QuSig S) : Set₁ where
          stable : ∀ x → [ emb x ]  ≡ x
 \end{code}
 
-A quotient with normal form must be efficient. So we can easily
-establish the function transforming the |Nf| to |QuE|. The idea to
-prove complete is to simply use transitivity to compose the two
-|compl| for |a| and |b| .
+We can easily establish the function transforming the |Nf| to |QuE|, since completeness can be derived from compl.
 
 \begin{code}
 
@@ -404,9 +405,11 @@ nf2quE {S} {QS} {QU} nf =
 
 \end{code}
 
-We can also establish non-dependent lift version of quotients. We need to prove quotient
+We can also define non-dependent lift version of quotients. We need to prove quotient
 induction when we have uniqueness of proof for certain proposition
 dependent on |Q|.
+
+\nzl{Why we need qind?}
 
 \begin{code}
 record QuH { S : Setoid zero zero} (QS : QuSig S) : Set₁ where   
@@ -429,8 +432,7 @@ record QuH { S : Setoid zero zero} (QS : QuSig S) : Set₁ where
                        → (∀ {x} → P x )
 \end{code}
 
-The normal form definition also implies that we can lift the function
-from S to Q.
+If we have the normal form definition, we can lift the function easily.
 
 
 \begin{code}
@@ -495,6 +497,34 @@ liftop n (Q , [_] , sound) § op § (emb , compl , stable) = § auxf n
 We can lift operators of any order within the normal form definition
 of quotient type.
 According to this, lift the general properties are also possible.
+
+
+
+\section{The undefinable quotient types}
+All of integers, rational numbers and the congurence class of modulo
+have definable normal form or canonical form. However real numbers is not belonging to
+this group. It does not have normal forms. We can use cauchy sequences or signed digits to represent real
+numbers. They are obvious quotient sets isomorphic to the true real numbers, but we cannot use the interface
+introduced above. We can only postulate it in Agda. Moreover the equivalence relation is undecidable.
+For these kinds of quotient types, we call them axiomatised quotient
+types.
+
+This could be a cauchy sequence used to represent real numbers,
+
+
+\begin{code}
+
+
+record cauℝ : Set where
+  field
+    f : ℕ → ℚ₀
+    p : (n : ℕ) → ∀ (m : ℕ) → (n ℕ< m) → ((+ 1) /suc pred (2 ^ n)) ℚ₀< ∣ (f m) - (f n) ∣
+
+
+\end{code}
+
+a function to generate the sequence of numbers and a proof that the
+sequence are bounded.
 
 
 \section{Conclusion}

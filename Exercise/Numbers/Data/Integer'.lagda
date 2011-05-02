@@ -1,0 +1,236 @@
+--------------------------------------------------
+
+Integer
+
+--------------------------------------------------
+\begin{code}
+
+module Data.Integer' where
+
+open import Algebra.FunctionProperties.Core
+open import Data.Nat' as ℕ using (ℕ)
+open import Data.Sign as Sign using (Sign)
+  renaming (_*_ to _S*_)
+open import Data.Product
+open import Data.Integer.Setoid as ℤ₀ using (ℤ₀)
+  renaming (_+_ to _ℤ₀+_ ; _-_ to _ℤ₀-_ ; _*_ to _ℤ₀*_ ;
+  _≤_ to _ℤ₀≤_; _<_ to _ℤ₀<_)
+open import Relation.Binary.Core
+
+infixl 7 _*_
+infixl 6 _+_ _-_
+infix 4 _≤_ _<_ _≥_ _>_
+
+\end{code}
+
+1. Definition of ℤ
+
+\begin{code}
+
+data ℤ : Set where
+  +_    : (n : ℕ) → ℤ
+  -suc_ : (n : ℕ) → ℤ
+
+\end{code}
+
+There are two ways to construct ℤ, both constructors use natural numbers. +_ maps natural numbers to [0 ∼ +∞) and -suc maps natural numbers to [-1 ∼ -∞).
+
+2. Normalisation
+
+a) normalise the setoid integer to normal form e.g. (3 , 2) → + 1
+
+\begin{code}
+
+[_]                   : ℤ₀ → ℤ
+[ m , 0 ]             = + m
+[ 0 , ℕ.suc n ]       = -suc n
+[ ℕ.suc m , ℕ.suc n ] = [ m , n ]
+
+\end{code}
+
+b) denormalise the normal integer to one representative setoid integer e.g. + 1 → (3 , 2) ∼ [(1 , 0)]₌
+(type using \c with left ⌜ and right ⌝)
+
+\begin{code}
+
+⌜_⌝        : ℤ → ℤ₀
+⌜ + n ⌝    = n , 0
+⌜ -suc n ⌝ = 0 , ℕ.suc n
+
+\end{code}
+
+These two functions are quite important in the mechanism between ℤ and ℤ₀. They map one to the other so that we could define all the functions of ℤ from the ones of the ℤ₀. The situation looks similar as before (ℤ₀ and ℕ), but requires some auxiliary functions to eliminate these two functions.
+
+\end{code}
+
+3. Ordering
+
+\begin{code}
+
+_≤_   : Rel ℤ _
+m ≤ n = ⌜ m ⌝ ℤ₀≤ ⌜ n ⌝
+
+_<_ : Rel ℤ _
+m < n = ⌜ m ⌝ ℤ₀< ⌜ n ⌝
+
+_≥_ : Rel ℤ _
+m ≥ n = n ≤ m
+
+_>_ : Rel ℤ _
+m > n = n < m
+
+\end{code}
+
+4. Sign
+
+a) decomposition
+Gives the sign. For zero the sign is arbitrarily chosen to be +.
+
+\begin{code}
+
+sign          : ℤ → Sign
+sign (+ n)    = Sign.+
+sign (-suc n) = Sign.-
+
+\end{code}
+
+b) composition
+
+\begin{code}
+
+infix 5 _◃_
+
+_◃_              : Sign → ℕ → ℤ
+Sign.+ ◃ n       = + n
+Sign.- ◃ ℕ.zero  = + 0
+Sign.- ◃ ℕ.suc n = -suc n
+
+\end{code}
+
+5. Conversion with ℕ
+
+a) projection
+
+\begin{code}
+
+p          : ℤ → ℕ
+p (+ n)    = n
+p (-suc n) = ℕ.suc n
+
+\end{code}
+
+b) injection
+
+\begin{code}
+
+i : ℕ → ℤ
+i = +_
+
+\end{code}
+
+c) ℕ to positive ℤ
+
+\begin{code}
+
++suc : ℕ → ℤ
++suc n = + ℕ.suc n
+
+\end{code}
+
+6. Abbreviation for some conditions
+
+\begin{code}
+
+is0        : ℤ → Set
+is0 z      = z ≡ + 0
+
+¬0     : ℤ → Set
+¬0 z   = z ≢ + 0
+
+is+   : ℤ → Set
+is+ z = ∃ λ n → z ≡ + ℕ.suc n
+
+\end{code}
+
+7. Operators
+
+a)  Generalisation of operators:
+the generalisation of the conversion from the operators for the ℤ₀ to the ones for the ℤ
+
+\begin{code}
+
+⟦_⟧      : Op₁ ℤ₀ → Op₁ ℤ
+⟦ f ⟧ = λ n → [ f ⌜ n ⌝ ]
+
+⟦_⟧₂      : Op₂ ℤ₀ → Op₂ ℤ
+⟦ _∼_ ⟧₂ = λ m n → [ ⌜ m ⌝ ∼ ⌜ n ⌝ ]
+
+\end{code}
+
+b) negation
+
+\begin{code}
+
+-_ : Op₁ ℤ
+-_ =  ⟦ ℤ₀.-_ ⟧
+
+\end{code}
+
+c) absolute value
+
+\begin{code}
+
+∣_∣          : Op₁ ℤ
+∣ + n ∣      = + n
+∣ -suc n ∣ = + ℕ.suc n
+
+\end{code}
+
+d) successor
+
+\begin{code}
+
+suc : Op₁ ℤ
+suc (+ n)          = + ℕ.suc n
+suc (-suc 0)       = + 0
+suc (-suc ℕ.suc n) = -suc n
+
+\end{code}
+
+e) predecessor
+
+\begin{code}
+
+pred : Op₁ ℤ
+pred (+ ℕ.zero)  = -suc ℕ.zero
+pred (+ ℕ.suc n) = + n
+pred (-suc n)    = -suc ℕ.suc n
+
+\end{code}
+
+f) addition
+
+\begin{code}
+
+_+_ : Op₂ ℤ
+_+_ = ⟦ _ℤ₀+_ ⟧₂
+
+\end{code}
+
+g) minus
+
+\begin{code}
+
+_-_ : Op₂ ℤ
+_-_ = ⟦ _ℤ₀-_ ⟧₂
+
+\end{code}
+
+h) multiplication
+
+\begin{code}
+
+_*_   : Op₂ ℤ
+_*_  = ⟦ _ℤ₀*_ ⟧₂
+
+\end{code}

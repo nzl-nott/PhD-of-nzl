@@ -1,0 +1,236 @@
+\begin{code}
+module Rational.Properties.Field2 where
+
+open import Algebra
+open import Algebra.Structures
+open import Data.Nat using (suc) renaming (_*_ to _ℕ*_)
+open import Data.Function
+open import Integer.Definition using (+_; -[1+_]; [_]; ⌜_⌝; +suc)
+  renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_; -_ to ℤ-_)
+open import Integer.Properties as ℤ using (_*⋆_ ; _⋆*_)
+open import NatPropertiesExtra as ℕ using (_+⋆_) renaming (_⋆*_ to _ℕ⋆*_ ; _*⋆_ to  _ℕ*⋆_)
+open import Rational.SetoidDef
+open import Rational.Properties.BasicProp
+open import Rational.Properties.Field1
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+
+open import Symbols
+
+import Algebra.FunctionProperties as P; open P _∼_
+
+\end{code}
+
+5. * zero
+
+a) 0 * q = 0
+
+\begin{code}
+
+0*q≡0 : LeftZero qzero _*_
+0*q≡0 (a /suc ad) = ℤ.0*z≡0 a ⋆* (+ 1)
+
+\end{code}
+
+b) q * 0 = 0
+
+\begin{code}
+
+q*0≡0 : RightZero qzero _*_
+q*0≡0 (a /suc ad) = ℤ.z*0≡0 a ⋆* (+ 1)
+
+*-zero : Zero  qzero _*_
+*-zero = 0*q≡0 , q*0≡0
+
+\end{code}
+
+6. * identity
+
+a) 1 * q = q
+
+\begin{code}
+
+1*q≡q : LeftIdentity qone _*_
+1*q≡q (a /suc ad) = ℤ.*-cong (ℤ.1*z≡z a) $ +suc ⋆ ⟨ ℕ.n+0≡n ⟩
+
+\end{code}
+
+b) q * 1 = q
+
+\begin{code}
+
+q*1≡q : RightIdentity qone _*_
+q*1≡q (a /suc ad) = ℤ.*-cong (ℤ.z*1≡z a) $ +suc ⋆ ⟨ ℕ.n*1≡n ad ⟩
+
+*-identity : Identity qone _*_
+*-identity = 1*q≡q , q*1≡q
+
+\end{code}
+
+7. * Commutativity
+
+a * b = b * a
+
+\begin{code}
+
+*-comm :  Commutative _*_
+*-comm (a /suc ad) (b /suc bd) = ℤ.*-cong (ℤ.*-comm a b) $
+  +_ ⋆ ℕ.*-comm (suc bd) (suc ad)
+
+\end{code}
+
+8. * Assocciativity
+
+(a * b) * c = a * (b * c)
+
+\begin{code}
+
+*-assoc : Associative _*_
+*-assoc (a /suc ad) (b /suc bd) (c /suc cd) = ℤ.*-cong (ℤ.*-assoc a b c) $
+  +_ ⋆ ⟨ ℕ.*-assoc (suc ad) (suc bd) (suc cd) ⟩
+
+\end{code}
+
+9. (ℚ₀, *, +) Distributivity
+
+b) left distributivity
+a * (b + c) = a * b + a * c
+
+\begin{code}
+
+
+dis-lem1 : ∀ a b c d → a ℤ* (b ℤ* (+ c)) ℤ* (+ d) ≡ (a ℤ* b) ℤ* (+ (d ℕ* c))
+dis-lem1  a b c d = ⟨ ℤ.*-assoc a b (+ c) ⟩ ⋆* (+ d) >≡<
+  ℤ.*-assoc (a ℤ* b) (+ c) (+ d) >≡<
+  (a ℤ* b) *⋆ ( ℤ.*-comm (+ c) (+ d) >≡< ℤ.*+-simp d c )
+
+distˡ :  _*_ DistributesOverˡ _+_
+distˡ (a /suc ad) (b /suc bd) (c /suc cd) = ℤ.*-cong (ℤ.distˡ a (b ℤ* +suc cd) (c ℤ* +suc bd))
+  (+_ ⋆ (ℕ.*-exchange₃ (suc ad) (suc bd) (suc ad) (suc cd) >≡<
+  ℕ.*-assoc (suc ad) (suc ad) ((suc bd) ℕ* (suc cd))) >≡<
+  ⟨ ℤ.*+-simp (suc ad) ((suc ad) ℕ* ((suc bd) ℕ* (suc cd))) ⟩ ) >≡<
+  ⟨ ℤ.*-assoc (a ℤ* (b ℤ* +suc cd) ℤ+ a ℤ* (c ℤ* +suc bd)) (+suc ad) (+ ((suc ad) ℕ* ((suc bd) ℕ* (suc cd)))) ⟩ >≡<
+  (ℤ.distʳ (+suc ad) (a ℤ* (b ℤ* +suc cd)) (a ℤ* (c ℤ* +suc bd)) >≡<  (ℤ.+-cong (dis-lem1 a b (suc cd) (suc ad))
+  (dis-lem1 a c (suc bd) (suc ad)))) ⋆* (+ (suc ad ℕ* (suc bd ℕ* suc cd)))
+
+\end{code}
+
+c) right distributivity
+(b + c) * a = b * a + c * a
+
+\begin{code}
+
+
+dis-lem2 : ∀ a b c d → (a ℤ* (+ b)) ℤ* c ℤ* (+ d) ≡ (a ℤ* c) ℤ* (+ (b ℕ* d))
+dis-lem2  a b c d = (ℤ.*-ex₂ a (+ b) c) ⋆* (+ d) >≡<
+  ℤ.*-assoc (a ℤ* c) (+ b) (+ d) >≡<
+  (a ℤ* c) *⋆ ( ℤ.*+-simp b d )
+
+distʳ : _*_ DistributesOverʳ _+_
+distʳ (a /suc ad) (b /suc bd) (c /suc cd) = ℤ.*-cong (ℤ.distʳ a (b ℤ* +suc cd) (c ℤ* +suc bd))
+  (+_ ⋆ ((ℕ.*-comm (suc bd) (suc ad)) ℕ⋆* ((suc cd) ℕ* (suc ad)) >≡<
+  ℕ.*-assoc (suc ad) (suc bd) ((suc cd) ℕ* (suc ad)) 
+  >≡< (suc ad) ℕ*⋆ ⟨ ℕ.*-assoc (suc bd) (suc cd) (suc ad) ⟩ ) >≡<
+  ⟨ ℤ.*+-simp (suc ad) (((suc bd) ℕ* (suc cd)) ℕ* (suc ad)) ⟩ ) >≡<
+  ⟨ ℤ.*-assoc ((b ℤ* +suc cd) ℤ* a ℤ+ (c ℤ* +suc bd) ℤ* a) (+suc ad) (+ (((suc bd) ℕ* (suc cd)) ℕ* (suc ad))) ⟩ >≡<
+  (ℤ.distʳ (+suc ad) ((b ℤ* +suc cd) ℤ* a) ((c ℤ* +suc bd) ℤ* a) >≡<  (ℤ.+-cong (dis-lem2 b (suc cd) a (suc ad))
+  (dis-lem2 c (suc bd) a (suc ad)))) ⋆* (+ (((suc bd) ℕ* (suc cd)) ℕ* (suc ad)))
+
+
+distrib-*-+ : _*_ DistributesOver _+_
+distrib-*-+ = distˡ , distʳ
+
+\end{code}
+
+
+13. * preserves ≡
+
+
+b) a = b → c = d → a * c = b * d
+
+\begin{code}
+
+*-cong : ∀ {a b c d} → a ∼ b → c ∼ d → a * c ∼ b * d
+*-cong {a /suc ad} {b /suc bd} {c /suc cd} {d /suc dd} a=b c=d = 
+  (a ℤ* c) *⋆ ⟨ ℤ.*+-simp (suc bd) (suc dd) ⟩ >≡<
+  ℤ.*-exchange₃ a c (+suc bd) (+suc dd) >≡<
+  ℤ.*-cong a=b c=d >≡<
+  ℤ.*-exchange₃ b (+suc ad) d (+suc cd) >≡<
+  (b ℤ* d) *⋆ ℤ.*+-simp (suc ad) (suc cd)
+
+\end{code}
+
+14. * Inverse
+
+b) right inverse
+a ≠ 0 → a * 1/a = 1
+
+\begin{code}
+
+*-rightInverse : ∀ x → {p : ¬0 x} → (x * (inverse x {p})) ∼ qone
+*-rightInverse ((+ 0) /suc qd) {p} with p refl
+... | ()
+*-rightInverse ((+ suc q) /suc qd) = ℤ.*-ex₃ (+suc q) (+suc qd) (+ 1) >≡<
+  (+ 1) *⋆ (ℤ.*+-simp (suc qd) (suc q))
+*-rightInverse (-[1+ q ] /suc qd) = ℤ.*-ex₃ (-[1+ q ]) (-[1+ qd ]) (+ 1) >≡<
+  (+ 1) *⋆ (ℤ.-*cong (-[1+ qd ]) (-[1+ q ]) >≡<
+  ℤ.*+-simp (suc qd) (suc q))
+
+\end{code}
+
+c) left inverse
+a ≠ 0 → 1/a * a = 1
+
+\begin{code}
+
+*-leftInverse : ∀ x → {p : ¬0 x} → ((inverse x {p}) * x) ∼ qone
+*-leftInverse (a /suc ad) {p} = qtrans (*-comm (inverse (a /suc ad)) (a /suc ad))
+  $ *-rightInverse (a /suc ad) {p}
+
+\end{code}
+
+Because the inverse is not defined on 0, so we cannot combine them into the inverse properties for 'All' ℚ₀
+
+
+15. (ℚ₀, +, *, qzero, qone) is a Commutative Ring (it is even a Field)
+
+\begin{code}
+
+isCommutativeRing : IsCommutativeRing _∼_ _+_ _*_ -_ qzero qone
+isCommutativeRing = record
+  { isRing = record
+    { +-isAbelianGroup = +-isAbelianGroup
+    ; *-isMonoid = record
+        { isSemigroup = record
+          { isEquivalence = isEquivalenceℚ₀
+          ; assoc         = *-assoc
+          ; ∙-cong       = *-cong
+          }
+        ; identity = *-identity
+        }
+    ; distrib = distrib-*-+
+    }
+  ; *-comm = *-comm
+  }
+
+commutativeRing : CommutativeRing
+commutativeRing = record
+  { _+_                   = _+_
+  ; _*_                   = _*_
+  ; -_                    = -_
+  ; 0#                    = qzero
+  ; 1#                    = qone
+  ; isCommutativeRing = isCommutativeRing
+  }
+
+\end{code}
+
+16. The ring solver for ℚ₀
+
+\begin{code}
+
+import Algebra.RingSolver.Simple as Solver
+import Algebra.RingSolver.AlmostCommutativeRing as ACR
+module RingSolver =
+  Solver (ACR.fromCommutativeRing commutativeRing)
+
+\end{code}

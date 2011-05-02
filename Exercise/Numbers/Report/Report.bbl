@@ -1,0 +1,140 @@
+\begin{thebibliography}{10}
+
+\bibitem{alti:pisigma-new}
+Thorsten Altenkirch, Nils~Anders Danielsson, Andres L\"oh, and Nicolas Oury.
+\newblock Pisigma: Dependent types without the sugar.
+\newblock submitted for publication, November 2009.
+
+\bibitem{alti:ydtm}
+Thorsten Altenkirch, Conor McBride, and James McKinna.
+\newblock Why dependent types matter.
+\newblock Manuscript, available online, April 2005.
+
+\bibitem{bishop}
+Errett Bishop and Douglas Bridges.
+\newblock {\em Constructive Analysis}.
+\newblock Springer-Verlag, Berlin, Heidelberg, 1985.
+
+\bibitem{dtw}
+Ana Bove and Peter Dybjer.
+\newblock {\em Dependent Types at Work}.
+\newblock Springer-Verlag, Berlin, Heidelberg, 2009.
+
+\bibitem{aboa}
+Ana Bove, Peter Dybjer, and Ulf Norell.
+\newblock A brief overview of agda --- a functional language with dependent
+  types.
+\newblock In {\em TPHOLs '09: Proceedings of the 22nd International Conference
+  on Theorem Proving in Higher Order Logics}, pages 73--78, Berlin, Heidelberg,
+  2009. Springer-Verlag.
+
+\bibitem{Bridges199995}
+Douglas~S. Bridges.
+\newblock Constructive mathematics: a foundation for computable analysis.
+\newblock {\em Theoretical Computer Science}, 219(1-2):95 -- 109, 1999.
+
+\bibitem{cantor}
+Georg Cantor.
+\newblock On a property of the collection of all real algebraic numbers.
+\newblock {\em English translation: Ewald 1996}, pages 840 -- 843, 1874.
+
+\bibitem{howe}
+Jawahar Chirimar and Douglas~J. Howe.
+\newblock Implementing constructive real analysis: Preliminary report.
+\newblock In {\em Constructivity in Computer Science, Summer Symposium}, pages
+  165--178, London, UK, 1992. Springer-Verlag.
+
+\bibitem{Ciaffaglione200639}
+Alberto Ciaffaglione and Pietro~Di Gianantonio.
+\newblock A certified, corecursive implementation of exact real numbers.
+\newblock {\em Theoretical Computer Science}, 351(1):39 -- 51, 2006.
+\newblock Real Numbers and Computers.
+
+\bibitem{pdg}
+Pietro Di~Gianantonio.
+\newblock Real number computability and domain theory.
+\newblock {\em Inf. Comput.}, 127(1):11--25, 1996.
+
+\bibitem{CRC}
+Herman Geuvers and Milad Niqui.
+\newblock Constructive reals in coq: Axioms and categoricity.
+\newblock In {\em TYPES '00: Selected papers from the International Workshop on
+  Types for Proofs and Programs}, pages 79--95, London, UK, 2002.
+  Springer-Verlag.
+
+\bibitem{jones}
+Claire Jones.
+\newblock Completing the rationals and metric spaces in lego.
+\newblock In {\em Papers presented at the second annual Workshop on Logical
+  environments}, pages 297--316, New York, NY, USA, 1993. Cambridge University
+  Press.
+
+\bibitem{itt}
+Per Martin-Löf.
+\newblock {\em Intuitionistic Type Theory}.
+\newblock Bibliopolis, Napoli, 1984.
+
+\bibitem{nps}
+B.~Nordström, K.~Petersson, and J.~M. Smith.
+\newblock Martin löf's type theory, 1990.
+
+\bibitem{tutorial}
+Ulf Norell.
+\newblock Dependently typed programming in agda.
+\newblock Available at:
+  http://www.cse.chalmers.se/~ulfn/papers/afp08tutorial.pdf, 2008.
+
+\bibitem{oconnor}
+Russell O'Connor.
+\newblock Certified exact transcendental real number computation in coq.
+\newblock In {\em TPHOLs '08: Proceedings of the 21st International Conference
+  on Theorem Proving in Higher Order Logics}, pages 246--261, Berlin,
+  Heidelberg, 2008. Springer-Verlag.
+
+\bibitem{agdawiki:main}
+The~Agda Wiki.
+\newblock Main page, 2010.
+\newblock [Online; accessed 13-April-2010].
+
+\bibitem{agdawiki:up}
+The~Agda Wiki.
+\newblock Universe polymorphism, 2010.
+\newblock [Online; accessed 30-April-2010].
+
+\bibitem{wiki:Coinduction}
+Wikipedia.
+\newblock Coinduction --- {W}ikipedia{,} the free encyclopedia, 2010.
+\newblock [Online; accessed 20-April-2010].
+
+\bibitem{wiki:Real}
+Wikipedia.
+\newblock Construction of the real numbers --- {W}ikipedia{,} the free
+  encyclopedia, 2010.
+\newblock [Online; accessed 20-April-2010].
+
+\bibitem{wiki:Coq}
+Wikipedia.
+\newblock Coq --- {W}ikipedia{,} the free encyclopedia, 2010.
+\newblock [Online; accessed 20-April-2010].
+
+\bibitem{wiki:4colour}
+Wikipedia.
+\newblock Four color theorem --- {W}ikipedia{,} the free encyclopedia, 2010.
+\newblock [Online; accessed 26-April-2010].
+
+\bibitem{wiki:Lazy_evaluation}
+Wikipedia.
+\newblock Lazy evaluation --- {W}ikipedia{,} the free encyclopedia, 2010.
+\newblock [Online; accessed 20-April-2010].
+
+\bibitem{wiki:Pattern}
+Wikipedia.
+\newblock Pattern matching --- {W}ikipedia{,} the free encyclopedia, 2010.
+\newblock [Online; accessed 26-April-2010].
+
+\bibitem{wiki:TS}
+Wikipedia.
+\newblock Taylor series --- {W}ikipedia{,} the free encyclopedia, 2010.
+\newblock [Online; accessed 20-April-2010].
+
+\end{thebibliography}

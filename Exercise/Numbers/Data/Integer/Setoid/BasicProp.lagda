@@ -4,24 +4,26 @@ The basic properties of setoid integers
 \begin{code}
 module Data.Integer.Setoid.BasicProp where
 
+open import Algebra
+open import Algebra.Structures
 open import Data.Integer.Setoid
 open import Function using (_$_ ; _∘_)
-open import Data.Nat' hiding (decTotalOrder) 
+open import Data.Nat hiding (decTotalOrder) 
   renaming (_≟_ to _ℕ≟_; _+_ to _ℕ+_; _*_ to _ℕ*_ ;
   _≤?_ to _ℕ≤?_; _≤_ to _ℕ≤_)
-open import Data.Nat.Properties+ as ℕ
-  using (_+=_; _+≤_; _+⋆_; _⋆+_; _*⋆_)
+open import Data.Nat.Properties
+open import Data.Nat.Properties+ as ℕ+ hiding (+l-cancel′ ; integrity′)
 open import Data.Product
 open import Data.Sign as Sign using (Sign)
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality as PE
 open import Relation.Nullary.Core
 open import Symbols
 
-module ℕO = DecTotalOrder Data.Nat.decTotalOrder
+
+open IsCommutativeSemiring isCommutativeSemiring hiding (refl ; sym) renaming (zero to mzero)
 
 infixl 40 _>∼<_
-infixl 40 _>≤<_
 
 \end{code}
 
@@ -48,7 +50,7 @@ invertibility n = refl
 \begin{code}
 
 -cong : ∀ {x y} → x ∼ y → - x ∼ - y
--cong {a , b} {c , d} eqt = ℕ.+-comm b c >≡< ⟨ eqt ⟩ >≡< ℕ.+-comm a d
+-cong {a , b} {c , d} eqt = +-comm b c >≡< ⟨ eqt ⟩ >≡< +-comm a d
 
 \end{code}
 
@@ -59,8 +61,8 @@ helpful lemma for proving the properties of ℚ₀
 \begin{code}
 
 -out : ∀ x y → - x * y ∼ - (x * y)
--out (a , b) (c , d) = (ℕ.+-comm (b ℕ* c) (a ℕ* d)) +=
-                         (ℕ.+-comm (a ℕ* c) (b ℕ* d))
+-out (a , b) (c , d) = (+-comm (b ℕ* c) (a ℕ* d)) +=
+                         (+-comm (a ℕ* c) (b ℕ* d))
 
 \end{code}
 
@@ -91,8 +93,8 @@ c) transitivity:  ∀ a b c → a ∼ b /\ b ∼ c → a ∼ c
 
 _>∼<_ : Transitive _∼_
 _>∼<_ { x+ , x- } { y+ , y- } { z+ , z- } x=y y=z =
-  cancel-+-left (y+ ℕ+ y-) $ ℕ.exchange₁ y+ y- x+ z- >≡<
-  (y=z += x=y) >≡< ℕ.exchange₂ z+ y- y+ x-
+  cancel-+-left (y+ ℕ+ y-) $ exchange₁ y+ y- x+ z- >≡<
+  (y=z += x=y) >≡< exchange₂ z+ y- y+ x-
 
 \end{code}
 
@@ -141,8 +143,8 @@ _≟_   : Decidable _∼_
 
 ¬0? : ∀ z → Dec (¬0 z)
 ¬0? z with 0? z
-¬0? (.y , y) | yes refl = no (λ p → p refl)
-¬0? (x , y) | no ¬p     = yes ¬p
+¬0? z | yes p = no (λ x → x p)
+¬0? z | no ¬p = yes ¬p
 
 \end{code}
 
@@ -157,10 +159,9 @@ refl' refl = zrefl
 
 _∼_isPreorder : IsPreorder _≡_ _∼_
 _∼_isPreorder =  record
-  { isEquivalence = isEquivalence
+  { isEquivalence = PE.isEquivalence
   ; reflexive     = refl'
   ; trans         = _>∼<_
-  ; ∼-resp-≈      = resp₂ _∼_
   }
 
 _∼_preorder : Preorder _ _ _
@@ -180,7 +181,7 @@ sign◃ : ∀ n → sign n ◃ p n ∼ n
 sign◃ (zero , zero)   = refl
 sign◃ (zero , suc n)  = refl
 sign◃ (suc m , zero)  = refl
-sign◃ (suc m , suc n) = (sign◃ (m , n)) >∼< ⟨ ℕ.sm+n≡m+sn m n ⟩
+sign◃ (suc m , suc n) = (sign◃ (m , n)) >∼< ⟨ sm+n≡m+sn m n ⟩
 
 ◃-cong-lem : ∀ {m n} → sign m ≡ sign n → p m 
   ≡ p n → sign m ◃ p m ≡ sign n ◃ p n
@@ -197,8 +198,8 @@ sign◃ (suc m , suc n) = (sign◃ (m , n)) >∼< ⟨ ℕ.sm+n≡m+sn m n ⟩
 \begin{code}
 
 eqℕ*ℤ : ∀ n x → n ℕ*ℤ₀ x ∼ n ℕ*ℤ₀' x
-eqℕ*ℤ n (x+ , x-) = (n ℕ* x+) +⋆ ℕ.n+0≡n  >≡<
-  ⟨ ℕ.n+0≡n {n ℕ* x+} ⟩ ⋆+ (n ℕ* x-)
+eqℕ*ℤ n (x+ , x-) = (n ℕ* x+) +⋆ n+0≡n  >≡<
+  ⟨ n+0≡n {n ℕ* x+} ⟩ ⋆+ (n ℕ* x-)
 
 \end{code}
 
@@ -222,17 +223,8 @@ b) (ℤ₀, ∼, ≤) is preorder
   { isEquivalence = _∼_isEquivalence
   ; reflexive     = refl′
   ; trans         = trans′
-  ; ∼-resp-≈      = ≤resp
   }
   where
-\end{code}
-
-reflexivity: a ∼ b → a ≤ b
-
-\begin{code}
-
-  refl′ : _∼_ ⇒ _≤_
-  refl′ {a , b} {c , d} = ℕO.reflexive
 
 \end{code}
 
@@ -243,9 +235,9 @@ a ≤ b → b ≤ c → a ≤ c
 
   trans′ : Transitive _≤_
   trans′ {a , b} {c , d} {e , f} a+d≤c+b c+f≤e+d =
-    ℕ.+l-cancel′ (c ℕ+ d) $
-    ℕ.r-≤resp (ℕ.exchange₂ a d c f) $
-    ℕ.l-≤resp (ℕ.exchange₁ c b e d) $
+    ℕ+.+l-cancel′ (c ℕ+ d) $
+    r-≤resp (exchange₂ a d c f) $
+    l-≤resp (exchange₁ c b e d) $
     a+d≤c+b +≤ c+f≤e+d
 
 \end{code}
@@ -265,9 +257,6 @@ b = c → b ≤ a → c ≤ a
 The symbol of transitivity of ≤
 
 \begin{code}
-
-_>≤<_ : Transitive _≤_
-_>≤<_  = IsPreorder.trans ≤isPreorder
 
 \end{code}
 
@@ -322,8 +311,8 @@ a ≤ b → c ≤ d → a + c ≤ b + d
 
 +-pres₂′ : ∀ {a b c d} → a ≤ b → c ≤ d → a + c ≤ b + d
 +-pres₂′ {a1 , a2} {b1 , b2} {c1 , c2} {d1 , d2} a≤b c≤d = 
-  ℕ.r-≤resp (ℕ.exchange₃ a1 b2 c1 d2) $ 
-  ℕ.l-≤resp (ℕ.exchange₃ b1 a2 d1 c2) $
+  r-≤resp (exchange₃ a1 b2 c1 d2) $ 
+  l-≤resp (exchange₃ b1 a2 d1 c2) $
   a≤b +≤ c≤d
 
 \end{code}
@@ -335,9 +324,9 @@ a + b ≤ a + c → b ≤ c
 
 +l-cancel′ : ∀ a {b c} → a + b ≤ a + c → b ≤ c
 +l-cancel′ (a1 , a2) {b1 , b2} {c1 , c2} = 
-  ℕ.+l-cancel′ (a1 ℕ+ a2) ∘
-  ℕ.r-≤resp (ℕ.exchange₃ a1 b1 a2 c2) ∘
-  ℕ.l-≤resp (ℕ.exchange₃ a1 c1 a2 b2)
+  ℕ+.+l-cancel′ (a1 ℕ+ a2) ∘
+  r-≤resp (exchange₃ a1 b1 a2 c2) ∘
+  l-≤resp (exchange₃ a1 c1 a2 b2)
 
 
 \end{code}
@@ -351,8 +340,8 @@ a + b ≤ a + c → b ≤ c
 integrity′ : ∀ {a b} c → (suc c , 0) * a
   ≤ (suc c , 0) * b → a ≤ b
 integrity′ {a1 , a2} {b1 , b2} c = 
-  ℕ.integrity′ c ∘ 
-  ℕ.r-≤resp (ℕ.ℤ₀i-lem₁ a1 b2 c) ∘
-  ℕ.l-≤resp (ℕ.ℤ₀i-lem₁ b1 a2 c)
+  ℕ+.integrity′ c ∘ 
+  r-≤resp (ℤ₀i-lem₁ a1 b2 c) ∘
+  l-≤resp (ℤ₀i-lem₁ b1 a2 c)
 
 \end{code}

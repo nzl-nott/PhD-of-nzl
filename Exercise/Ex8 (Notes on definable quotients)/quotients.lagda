@@ -506,10 +506,10 @@ have definable normal form or canonical form. However real numbers is not belong
 this group. It does not have normal forms. We can use cauchy sequences or signed digits to represent real
 numbers. They are obvious quotient sets isomorphic to the true real numbers, but we cannot use the interface
 introduced above. We can only postulate it in Agda. Moreover the equivalence relation is undecidable.
-For these kinds of quotient types, we call them axiomatised quotient
+For these kinds of quotient types, for which we do not have normal form, we call them axiomatised quotient
 types.
 
-This could be a cauchy sequence used to represent real numbers,
+This could be a cauchy sequence used to represent real numbers (Simplified for readability),
 
 
 \begin{code}
@@ -517,15 +517,25 @@ This could be a cauchy sequence used to represent real numbers,
 
 record cauℝ : Set where
   field
-    f : ℕ → ℚ₀
-    p : (n : ℕ) → ∀ (m : ℕ) → (n ℕ< m) → ((+ 1) /suc pred (2 ^ n)) ℚ₀< ∣ (f m) - (f n) ∣
-
+    f : ℕ → ℚ
+    p : (n : ℕ) → ∀ (m : ℕ) → (n < m) → ∣ (f m) - (f n) ∣ < (1 / 2 ^ n)
 
 \end{code}
 
-a function to generate the sequence of numbers and a proof that the
-sequence are bounded.
+It contains a function to generate the sequence of numbers and a proposition that the
+sequence converges by bounded rate.
 
+For example we can embedding rational numbers easily,
+
+
+\begin{code}
+
+emb : ℚ₀ → ℝ
+emb q = f: (λ _ → q) p: λ n m n<m → (s≤s z≤n) resp (abscanc q)
+
+\end{code}
+
+But for irrational numbers we have to use different ways to generate the sequences. For square root, we can use Taylor series.
 
 \section{Conclusion}
 Here, we only talk about definable quotient types within Agda. The

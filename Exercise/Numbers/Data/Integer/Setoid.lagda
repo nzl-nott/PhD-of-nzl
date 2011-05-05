@@ -9,7 +9,7 @@ module Data.Integer.Setoid where
 
 open import Algebra.FunctionProperties.Core
 open import Function using (_∘_)
-open import Data.Nat' as ℕ using (ℕ ; suc)
+open import Data.Nat as ℕ using (ℕ ; suc)
   renaming (_≟_ to _ℕ≟_ ; _+_ to _ℕ+_ ; _*_ to _ℕ*_ ;
             _≤_ to _ℕ≤_; _<_ to _ℕ<_)
 open import Data.Product

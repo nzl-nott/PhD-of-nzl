@@ -1,7 +1,7 @@
 \begin{code}
 module Rational.Properties.BasicProp where
 
-open import Data.Function
+open import Function
 open import Data.Nat using (suc) renaming (_+_ to _ℕ+_ ; _*_ to _ℕ*_)
 open import Integer.Setoid.Properties as ℤ₀ using () renaming (_>≤<_ to _ℤ₀>≤<_) 
 open import Integer.Definition using (+_ ; -[1+_]; [_]; ⌜_⌝; +suc)

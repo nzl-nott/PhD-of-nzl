@@ -5,14 +5,14 @@ module Data.Nat.Properties+ where
 open import Algebra
 open import Algebra.Structures
 open import Function
-open import Data.Nat'
-open import Data.Nat.Properties'
+open import Data.Nat
+open import Data.Nat.Properties
 open import Data.Product
 open import Relation.Binary
 open import Relation.Binary.Core
 open import Symbols
 
-open module ℕ = IsCommutativeSemiring isCommutativeSemiring public hiding (refl ; zero)
+open IsCommutativeSemiring isCommutativeSemiring hiding (refl) renaming (zero to mzero)
 module ℕO = DecTotalOrder decTotalOrder
  
 infixr 42  _*⋆_
@@ -33,7 +33,7 @@ n+0+0≡n : ∀ {n} → n + 0 + 0 ≡ n
 n+0+0≡n {zero} = refl
 n+0+0≡n {suc n} = suc ⋆ n+0+0≡n
 
-n*0≡0 = proj₂ ℕ.zero
+n*0≡0 = proj₂ mzero
 
 n*0+0=0 : ∀ {n} → n * 0 + 0 ≡ 0
 n*0+0=0 {zero} = refl
@@ -65,8 +65,8 @@ _⋆+_ refl _ = refl
 ex :  ∀ a b c → a + (b + c) ≡ b + (a + c)
 ex a b c = ⟨ +-assoc a b c ⟩ >≡< +-comm a b ⋆+ c >≡< +-assoc b a c
 
-exchange : ∀ m n p q → (m + n) + (p + q) ≡ (m + q) + (p + n)
-exchange m n p q = +-assoc m n (p + q) >≡< m +⋆ ( ⟨ +-assoc n p q ⟩ >≡<
+exchange₁ : ∀ m n p q → (m + n) + (p + q) ≡ (m + q) + (p + n)
+exchange₁ m n p q = +-assoc m n (p + q) >≡< m +⋆ ( ⟨ +-assoc n p q ⟩ >≡<
   (+-comm (n + p) q >≡<
   q +⋆ +-comm n p)) >≡<
   ⟨ +-assoc m q (p + n) ⟩
@@ -90,9 +90,9 @@ exchange₄ m n p q = +-assoc m n (p + q) >≡<
 suc-elim      : ∀ {m n} → suc m ≡ suc n → m ≡ n
 suc-elim refl = refl
 
-suc-move           : ∀ m n → suc m + n ≡ m + suc n
-suc-move zero n    = refl
-suc-move (suc m) n = suc ⋆ (suc-move m n)
+sm+n≡m+sn           : ∀ m n → suc m + n ≡ m + suc n
+sm+n≡m+sn zero n    = refl
+sm+n≡m+sn (suc m) n = suc ⋆ (sm+n≡m+sn m n)
 
 distˡ = proj₁ distrib
 
@@ -125,13 +125,13 @@ distˡʳ a b c = *-comm a (b + c) >≡< distʳ a b c
 
 *-cong-lem₁ : ∀ a b c d e f g h → 
   a + b + (c + d) + (e + f + (g + h)) ≡ a + d + (f + g) + (b + c + (e + h))
-*-cong-lem₁ a b c d e f g h = exchange a b c d += exchange₂ e f g h >≡< 
+*-cong-lem₁ a b c d e f g h = exchange₁ a b c d += exchange₂ e f g h >≡< 
   (exchange₃ (a + d) (c + b) (g + f) (e + h) >≡< 
   ((a + d) +⋆ +-comm g f += +-comm c b ⋆+ (e + h)))
 
 *-cong-lem₂ : ∀ a b c d e f g h → 
   a + b + (c + d) + ((e + f) + (g + h)) ≡ e + h + (c + b) + ((g + f) + (a + d))
-*-cong-lem₂ a b c d e f g h = exchange a b c d += exchange e f g h >≡< 
+*-cong-lem₂ a b c d e f g h = exchange₁ a b c d += exchange₁ e f g h >≡< 
   exchange₂ (a + d) (c + b) (e + h) (g + f) 
   >≡< (e + h + (c + b)) +⋆ +-comm (a + d) (g + f)
 
@@ -183,6 +183,7 @@ integrity a {m} {n}               a*≡ = cancel-*-right m n (*-comm m (suc a) >
 
 refl′ : _≡_ ⇒ _≤_
 refl′ = ℕO.reflexive
+
 
 +l-cancel′ : ∀ a {b c} → a + b ≤ a + c → b ≤ c
 +l-cancel′ zero ue = ue

@@ -167,6 +167,9 @@ a) absolute value
 ∣_∣           : Op₁ ℚ₀
 ∣ m /suc n ∣  =  ℤ.∣_∣ m /suc n
 
+abszero : ∣ qzero ∣ ≡ qzero
+abszero = refl
+
 ∣_∣₂          : ℚ₀ → ℚ₀*
 ∣ m /suc n ∣₂ =  ℤ.p m /suc n
 
@@ -224,6 +227,13 @@ e) minus : (a / b) - (c / d) = (ad - bc) / bd
 _-_   : Op₂ ℚ₀
 n1 /suc d1 - n2 /suc d2 =
   (n1 ℤ*ℕ suc d2 ℤ- n2 ℤ*ℕ suc d1) /suc (d1 d* d2)
+
+
+postulate sameDen : ∀ m n d → m /suc d - n /suc d ≡ (m ℤ- n) /suc d
+
+postulate canc : ∀ q → q - q ≡ qzero
+
+postulate abscanc : ∀ q → ∣ q - q ∣ ≡ qzero
 
 \end{code}
 

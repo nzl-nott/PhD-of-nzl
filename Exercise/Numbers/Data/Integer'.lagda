@@ -8,7 +8,7 @@ Integer
 module Data.Integer' where
 
 open import Algebra.FunctionProperties.Core
-open import Data.Nat' as ℕ using (ℕ)
+open import Data.Nat as ℕ using (ℕ)
 open import Data.Sign as Sign using (Sign)
   renaming (_*_ to _S*_)
 open import Data.Product

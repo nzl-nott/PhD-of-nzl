@@ -30,29 +30,32 @@
 \maketitle
 
 \section{Background}
-Quotient generally means the the result of the division. More
-abstractly, it represents the result of the partition of sets based on
-certain equivalence relation on them. Then can both written as $A/B$,
-both of them means divide A by B equally. Similarly, in type theory,
-have quotient types. Quotient types are created by dividing types by an equivalence relation.
+Quotient generally means the the result of the division. Not only numbers can
+be divided, sets can also divided into small sets. Numbers are divided by numbers, sets can be
+divided by certain equivalence relations. Similarly, The result is called quotient sets. Then can both in the form of |A / B|. The canonical form of quotient for numbers are just numbers, however for quotient sets, the results are the sets of equivalence classes. We can use a set usually denoted by |Q|, which is isomorphic to the results to name or represent every equivalence class. 
 
-However in Agda which is the type theory we will talk about cannot
-form axiomatic quotient types. But we can still implement the
-quotients as setoids containing the carrier the equivalence relation
-and the proof of it. We call them definable quotient types and I will
-present some examples from my definition for numbers in Agda \cite{myself} to illustrate the ideas.
+In type theory like Agda, we also have quotient types. Quotient types can be defined as types formed by a type and an equivalence relation on this type.
+\begin{code}
+Q = S/~
+\end{code}
+Here we call the raw type |S| and the quotient type  |Q|. Of course quotient types can be defined on many levels. For simplicity, we only talk quotient types for |Set|, such as the pair of integers for rational numbers. Just as quotient sets, we can find a type |Q'| isomorphic to |Q| to represent  the normal forms of |Q|. 
+|Q'| can be seen as the normal forms for |S / ~|. These quotients types can be named as definable quotient types. We will see some examples later.
+Sometimes we can't find such a type. That means the normal forms can be defined constructively. We call them axiomatised quotient types. Therefore generally we use |S / ~| to represent the result of dividing |S| by |~|.
+
+For definable quotient types, we can define them in another way but we may need the ease of defining types on |S|. For axiomatised quotient types, we can only define them in this way. Hence we should focus on |S|. We can only define functions for |S|. functions on |S/~| can be lifted from functions on |S|. But not all of them can be lifted. Only functions respects |~| can be lifted. Actually, functions on |S/~| can be seen as the combinition of functions on |S| and congruence rules for them. It reflects the idea that the elements of quotient types are similar to black boxes hiding the information of |S| so that the functions which do not have access to the internal structure are defined for quotient types.
+
+I will then present some examples from my definition for numbers in Agda \cite{myself} to illustrate these ideas.
 
 
 \section{Quotient definition of Integers}
-The integers were invented to represent all the result of subtraction
-between natural numbers. Therefore it is naturally to define a pair of
-natural numbers to be the result of the subtraction. Hence we can use a pair of natural nubmers as carrier |ℤ₀|.
+All the result of subtraction between natural numbers are integers. Therefore it is naturally to define a pair of
+natural numbers to represent integers. Hence we can use a pair of natural nubmers as raw type |ℤ₀|.
 
 \begin{code}
 ℤ₀ = ℕ × ℕ
 \end{code}
 
-When |n1 - n2 = n3 - n4| we can say the quotients |(n1, n2)| and |(n3, n4)| represent the same integer. We can transform the equation to be |n1 + n4 = n3 + n2| so that it becomes a valid judgemental equality between natura numbers. Therefore we can define the equivalence relation of quotient integer as below,
+Mathematically, for two elements of |(n1, n2)| and |(n3, n4)|, when |n1 + n4 = n3 + n2|, they represent the same result of subtraction , namely the same integer. By these definition, we can define for an equivalence relation for |ℕ × ℕ|, when we want to use |ℕ × ℕ| to represent integers,
 
 
 \begin{code}
@@ -62,11 +65,10 @@ _∼_ : Rel ℤ₀ zero
 
 \end{code}
 
-With the euquivalence relation, the set of all pairs of natural
+With this equivalence relation, the set of all pairs of natural
 numbers are divided into equivalence classes. For each equivalence class
-we need a representative. We can define a normalisation function to
-normalise the pair of natural numbers until either of the natural
-numbers becomes zero.
+we can choose a representative, namely choosing the normal form within |ℤ₀|.
+We call the function used to choose normal forms as normalisation. The one below is one of the canonical normalisation within the |ℤ₀|.
 
 \begin{code}
 
@@ -81,8 +83,15 @@ numbers becomes zero.
 For example,  |(3 , 2)| can be normalised to |(2 , 1)|, then to |(1 ,
 0)|. 
 
+To prove it is normalisation we should prove the result is still in the same equivalence classes. And the normal form should be unique.
 
-As soon as we have the normalisation functions, we can use another
+\begin{code}
+normal-ok : ∀ a → [ a ] ∼ a
+
+normal-unique : ∀ a b → a ∼ b → [ a ] ≡ [ b ]
+\end{code}
+
+As soon as we have the normalisation, we can use another
 more general way to define equivalence relation, namely just identify
 their normal form.
 

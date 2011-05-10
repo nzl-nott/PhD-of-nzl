@@ -344,4 +344,32 @@ integrity′ {a1 , a2} {b1 , b2} c =
   r-≤resp (ℤ₀i-lem₁ a1 b2 c) ∘
   l-≤resp (ℤ₀i-lem₁ b1 a2 c)
 
+
+normal-ok : ∀ a → [ a ] ∼ a
+normal-ok (_ , 0) = refl
+normal-ok (0 , suc n) = refl
+normal-ok (suc a , suc a') = ⟨ sm+n≡m+sn (proj₁ [ a , a' ]) a' ⟩ >≡< cong suc (normal-ok (a , a'))
+
+
+
+normal-unique : ∀ a b → a ∼ b → [ a ] ≡ [ b ]
+normal-unique (zero , a') (zero , .a') refl = refl
+normal-unique (zero , a') (suc n , zero) ()
+normal-unique (zero , a') (suc n , suc n') eq = normal-unique (zero , a') (n , n') {!!}
+normal-unique (suc n , zero) (zero , b') ()
+normal-unique (suc n , zero) (suc n' , zero) eq = {!eq!}
+normal-unique (suc n , zero) (suc n' , suc n0) eq = normal-unique (suc n , zero) (n' , n0) {!!}
+normal-unique (suc n , suc n') b eq = normal-unique (n , n') b {!!}
+
+{-
+normal-unique (ℕ.zero , a') (ℕ.zero , .a') refl = refl
+normal-unique (ℕ.zero , a') (suc n , ℕ.zero) ()
+normal-unique (ℕ.zero , a') (suc n , suc .(n ℕ+ a')) refl = normal-unique (ℕ.zero , a') (n , n ℕ+ a') refl
+normal-unique (suc n , ℕ.zero) (ℕ.zero , b') ()
+normal-unique (suc n , ℕ.zero) (suc n' , b') eq = {!b'!}
+normal-unique (suc n , suc n') (b , b') eq = normal-unique (n , n') (b , b') {!!}
+-}
+
+
+
 \end{code}

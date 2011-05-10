@@ -2,7 +2,7 @@ module ThomasProperties where
 -- name to be changed, this is a bunch of auxiliary definitions added by need.
 
 open import Algebra
-open import Data.Function
+open import Function
 open import Data.Nat
 open import Data.Nat.Properties as Nat
 private

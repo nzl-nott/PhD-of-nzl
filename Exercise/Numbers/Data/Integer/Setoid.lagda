@@ -39,6 +39,11 @@ infixl 2 _∼_
 _∼_ : Rel ℤ₀ zero
 (x+ , x-) ∼ (y+ , y-) = (x+ ℕ+ y-) ≡ (y+ ℕ+ x-)
 
+
+[_]                   : ℤ₀ → ℤ₀
+[ m , 0 ]             = m , 0
+[ 0 , suc n ]       = 0 , suc n
+[ suc m , suc n ] = [ m , n ]
 \end{code}
 
 2. Ordering

@@ -6,7 +6,7 @@ The basic properties of integers
 module Data.Integer.Properties.BasicProp where
 
 open import Function
-open import Data.Nat' using (ℕ) renaming (suc to nsuc; pred to npre)
+open import Data.Nat using (ℕ) renaming (suc to nsuc; pred to npre)
 open import Data.Product
 open import Data.Sign as Sign using (Sign)
 open import Data.Integer'

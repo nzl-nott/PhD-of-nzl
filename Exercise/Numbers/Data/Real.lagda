@@ -6,7 +6,7 @@ open import Data.Empty
 open import Data.Nat using (ℕ ; fold ; pred ; s≤s ; z≤n) renaming (_<_ to _ℕ<_ ; _*_ to _ℕ*_)
 open import Data.Product
 open import Data.Integer' using (ℤ ; +_)
-open import Data.Rational' using (ℚ₀ ; _/suc_ ; _∼_ ; abscanc) renaming (_+_ to _ℚ₀+_ ; ∣_∣ to ℚ₀∣_∣ ; _-_ to _ℚ₀-_; _≤_ to _ℚ₀≤_ ; _<_ to _ℚ₀<_)
+open import Data.Rational' using (ℚ₀ ; _/suc_ ; _∼_ ; abscanc) renaming (_+_ to _ℚ₀+_; ∣_∣ to ℚ₀∣_∣ ; _-_ to _ℚ₀-_; _≤_ to _ℚ₀≤_ ; _<_ to _ℚ₀<_)
 
 open import Relation.Binary.Core
 
@@ -114,6 +114,6 @@ changeR = {!!}
  
 
 _+_ : ℝ → ℝ → ℝ
-(f: f p: p) + (f: f' p: p') = f: (λ x → f x ℚ₀+ f' x) p: λ n m x → trans' (abs-out (f m) (f' m) (f n) (f' n)) (changeR {!!} (add-pre (p n m x) (p' n m x)))
+(f: f p: p) + (f: f' p: p') = f: (λ x → f (2 ℕ* x) ℚ₀+ f' (2 ℕ* x)) p: λ n m x → {!!} -- trans' (abs-out (f (2 ℕ* m)) (f' (2 ℕ* m)) (f (2 ℕ* n)) (f' (2 ℕ* n))) (changeR {!!} (add-pre (p n m x) (p' n m x)))
 
 \end{code}

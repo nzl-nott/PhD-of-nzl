@@ -1,3 +1,6 @@
+
+{-# OPTIONS --universe-polymorphism #-}
+
 module Quotient where
 
 open import Relation.Binary
@@ -10,7 +13,7 @@ open import Data.Nat.Properties
 
 open import Data.Product
 
-open import Level using (zero)
+open import Level using (Level ; zero)
 
 open import Relation.Binary.PropositionalEquality
 open ≡-Reasoning
@@ -22,8 +25,8 @@ open import ThomasProperties
 -- 
 -- Quotient signature
 --
-
 record QuSig (S : Setoid zero zero) : Set₁ where
+             constructor Q:_[]:_sound:_
              field
                 Q     : Set
                 [_]   : Carrier S → Q        -- [_] is not required to be surjective.
@@ -57,7 +60,8 @@ open QuSig
 -- Quotient by dependent lifting
 --
 -- if ~ is a congruence for f : S → B then f can be lifted to Q → B
-record Qu { S : Setoid zero zero} (QS : QuSig S) : Set₁ where   
+record Qu { S : Setoid zero zero} (QS : QuSig S) : Set₁ where
+              constructor lift:_Ok:_Irr:_
               private S₀      = Carrier S
                       _∼_     = _≈_ S
                       Q₀      = Q QS
@@ -71,7 +75,15 @@ record Qu { S : Setoid zero zero} (QS : QuSig S) : Set₁ where
                         → (c : Q₀) → B c
                 liftok  : ∀ {B a f q}    → lift {B} f q [ a ]₀  ≡ f a
                 liftIrr : ∀ {B a f q q'} → lift {B} f q [ a ]₀  ≡ lift {B} f q' [ a ]₀
-            
+
+
+-- proof liftok -> liftIrr
+
+prfokIrr : {S : Setoid zero zero}{QS : QuSig S}(x : Qu QS) → (∀ {B a f q q'} → Qu.lift x {B} f q ( [_] QS a )  ≡ Qu.lift x {B} f q' ([_] QS a ))
+prfokIrr x {B} {a} {f} {q} {q'} = trans (Qu.liftok x {B} {a} {f} {q}) (sym (Qu.liftok x {B} {a} {f} {q'}))
+
+-- conclusion ∀ x : Qu, liftok -> liftIrr
+
 open Qu
 
 -- 2.2
@@ -86,7 +98,7 @@ record QuE {S : Setoid zero zero} {QS : QuSig S} (QU : Qu QS) : Set₁ where
                sound₀  : ∀ { a b : S₀} → (a ∼ b) → [ a ]₀ ≡ [ b ]₀
                sound₀  = sound QS
        field
-         complete : ∀ {a b : S₀} → [ a ]₀ ≡ [ b ]₀ → a ∼ b   -- provable from compl in Nf but not provable so far.
+         exactness : ∀ {a b : S₀} → [ a ]₀ ≡ [ b ]₀ → a ∼ b   -- provable from compl in Nf but not provable so far.
 open QuE
 
 -- 2.3
@@ -107,7 +119,7 @@ open Nf
 -- Non-dependent lift à la Hofmann
 --
 
-record QuH { S : Setoid zero zero} (QS : QuSig S) : Set₁ where   
+record QuH {S : Setoid zero zero} (QS : QuSig S) : Set₁ where   
               private S₀      = Carrier S
                       _∼_     = _≈_ S
                       Q₀      = Q QS
@@ -135,7 +147,7 @@ open QuH
 
 
 nf2quE : {S : Setoid zero zero} → {QS : QuSig S} → {QU : Qu QS} → (Nf QS) → (QuE QU)
-nf2quE {S} {QS} {QU} nf = record { complete =  λ {a} {b} [a]≡[b] → ⟨ compl₀ a ⟩₀    ▶₀    subst (λ x → x ∼ b) (emb₀ ⋆ ⟨ [a]≡[b] ⟩) (compl₀ b) }
+nf2quE {S} {QS} {QU} nf = record { exactness =  λ {a} {b} [a]≡[b] → ⟨ compl₀ a ⟩₀    ▶₀    subst (λ x → x ∼ b) (emb₀ ⋆ ⟨ [a]≡[b] ⟩) (compl₀ b) }
                           where
                           private S₀      = Carrier S
                                   _∼_     = _≈_ S
@@ -224,3 +236,13 @@ quH2qu {S} {QS} quh =
                                                             (proj₂ {zero} {zero} {Q₀} {B} (liftH₁ f q a)))
                                                        (cong-proj₂ {Q₀} {B} (liftH₁ f q a) (indep f a) liftHok₀ )
 
+
+qu2quHl : ∀ {a p : Level}{c d : Set a}(x : c ≡ d)(B : Set p)(p : B) → subst (λ _ → B) x p ≡ p
+qu2quHl refl B p' = refl
+
+
+qu2quH : {S : Setoid zero zero} → {QS : QuSig S} → (Qu QS) → (QuH QS)
+qu2quH {S} {Q: Q []: [_] sound: sound} (lift: lift Ok: ok Irr: irr) = record {
+              liftH = λ {B} f x x' → lift {λ _ → B} f (λ a a' p → trans {!qu2quHl!} (x a a' p)) x';
+              liftHok = {!!};
+              qind = {!!} }

@@ -1,7 +1,7 @@
 \documentclass{article}
 \def\textmu{}
 \author{Li Nuo}
-\title{Representing numbers and in Agda}
+\title{Representing numbers in Agda}
 \usepackage{dsfont}
 \usepackage{amsthm}
 
@@ -21,6 +21,7 @@
 
 \begin{document}
 
+\date{May 4, 2010}
 \maketitle
 
 \newpage

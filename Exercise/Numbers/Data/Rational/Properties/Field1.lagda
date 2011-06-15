@@ -1,15 +1,15 @@
 \begin{code}
-module Rational.Properties.Field1 where
+module Data.Rational.Properties.Field1 where
 
 open import Algebra.Structures
 open import Data.Nat using (suc) renaming (_*_ to _ℕ*_)
-open import Data.Function
-open import Integer.Definition using (+_; -[1+_]; [_]; ⌜_⌝; +suc)
+open import Function
+open import Data.Integer' using (+_; -suc_; [_]; ⌜_⌝; +suc)
   renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_; -_ to ℤ-_)
-open import Integer.Properties as ℤ using (_*⋆_ ; _⋆*_)
-open import NatPropertiesExtra as ℕ using (_+⋆_)
-open import Rational.Definition
-open import Rational.Properties.BasicProp
+open import Data.Integer.Properties' as ℤ using (_*⋆_ ; _⋆*_)
+open import Data.Nat.Properties+ as ℕ using (_+⋆_)
+open import Data.Rational'
+open import Data.Rational.Properties.BasicProp
 open import Relation.Binary.Core using (_≡_)
 
 import Algebra.FunctionProperties as P; open P _∼_

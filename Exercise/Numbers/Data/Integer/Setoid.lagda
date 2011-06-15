@@ -7,15 +7,16 @@ Integer (setoid)
 \begin{code}
 module Data.Integer.Setoid where
 
+open import Data.Bool
 open import Algebra.FunctionProperties.Core
 open import Function using (_∘_)
 open import Data.Nat as ℕ using (ℕ ; suc)
   renaming (_≟_ to _ℕ≟_ ; _+_ to _ℕ+_ ; _*_ to _ℕ*_ ;
             _≤_ to _ℕ≤_; _<_ to _ℕ<_)
-open import Data.Product
 open import Data.Sign hiding (_*_)
 open import Level using (zero)
 open import Relation.Binary.Core
+open import Relation.Nullary
 
 \end{code}
 
@@ -26,7 +27,16 @@ a. Integers can be defined as pairs of natural numbers:
 
 \begin{code}
 
-ℤ₀ = ℕ × ℕ
+infix 4 _,_
+
+data ℤ₀ : Set where
+  _,_ : ℕ → ℕ → ℤ₀
+
+proj₁ : ℤ₀ → ℕ
+proj₁ (a , _) = a
+
+proj₂ : ℤ₀ → ℕ
+proj₂ (_ , b) = b
 
 \end{code}
 
@@ -99,7 +109,7 @@ is0   : ℤ₀ → Set
 is0 (a , b) = a ≡ b
 
 ¬0   : ℤ₀ → Set
-¬0 (a , b) = a ≢ b
+¬0 z = ¬ (is0 z)
 
 is+ : ℤ₀ → Set
 is+ (a , b) = b ℕ< a
@@ -156,7 +166,7 @@ c) negation : - (3 - 2) = 2 - 3
 \begin{code}
 
 -_  : Op₁ ℤ₀
--_  = swap
+- (x , y)  = (y , x)
 
 \end{code}
 
@@ -221,5 +231,17 @@ n ℕ*ℤ₀ (z+ , z-) = n ℕ* z+ , n ℕ* z-
 
 _ℕ*ℤ₀'_   : ℕ → ℤ₀ → ℤ₀
 n ℕ*ℤ₀' z = i n * z
+
+-- Greater or equal?
+
+
+ℕGE : ℕ → ℕ → Bool
+ℕGE 0 0 = true
+ℕGE 0 (suc n) = false
+ℕGE (suc n) 0 = true
+ℕGE (suc n) (suc n') = ℕGE n n'
+
+GE : ℤ₀ → ℤ₀ → Bool
+GE (a , a') (b , b') = ℕGE (a ℕ+ b') (b ℕ+ a')
 
 \end{code}

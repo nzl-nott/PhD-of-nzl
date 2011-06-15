@@ -9,8 +9,9 @@ Rational number
 module Data.Rational' where
 
 open import Algebra.FunctionProperties.Core
+open import Data.Bool
 open import Data.Nat as ℕ using (ℕ ; suc)
-  renaming ( _+_ to _ℕ+_ ;  _∸_ to _ℕ-_ ; _*_ to _ℕ*_)
+  renaming (_+_ to _ℕ+_ ;  _∸_ to _ℕ-_ ; _*_ to _ℕ*_ ; _≤_ to _ℕ≤_; _<_ to _ℕ<_)
 open import Data.Integer' as ℤ using (ℤ ; +_ ; -suc_)
   renaming (-_ to ℤ-_; _+_ to _ℤ+_; _-_ to _ℤ-_;_*_ to _ℤ*_;
   _≤_ to _ℤ≤_; _<_ to _ℤ<_; _◃_ to _ℤ◃_)
@@ -98,7 +99,7 @@ n1 /suc d1 ∼ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ≡ n2 ℤ*ℕ suc d1
 
 \begin{code}
 
-infix 4 _≤_ _<_ _≥_ _>_
+infix 4 _≤_ _<_ _≥_ _>_ _≤'_ _<'_ _≥'_ _>'_
 
 _≤_   : Rel ℚ₀ zero
 n1 /suc d1 ≤ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ℤ≤ n2 ℤ*ℕ suc d1
@@ -111,6 +112,19 @@ m ≥ n = n ≤ m
 
 _>_ : Rel ℚ₀ zero
 m > n = n < m
+
+
+_≤'_   : Rel ℚ₀* zero
+n1 /suc d1 ≤' n2 /suc d2 = n1 ℕ* suc d2 ℕ≤ n2 ℕ* suc d1
+
+_<'_   : Rel ℚ₀* zero
+n1 /suc d1 <' n2 /suc d2 = n1 ℕ* suc d2 ℕ< n2 ℕ* suc d1
+
+_≥'_   : Rel ℚ₀* zero
+m ≥' n = n ≤' m
+
+_>'_ : Rel ℚ₀* zero
+m >' n = n <' m
 
 \end{code}
 
@@ -199,6 +213,20 @@ inverse (-suc n /suc d)  = -suc d /suc n
 
 \end{code}
 
+
+d) divide by 2
+
+\begin{code}
+
+_/2 : Op₁ ℚ₀
+(n /suc d) /2 = n /suc ℕ.pred (d ℕ+ d)
+
+_/2' : Op₁ ℚ₀*
+(n /suc d) /2' = n /suc ℕ.pred (d ℕ+ d)
+
+
+\end{code}
+
 d* is used to deal with the denominator multiplication
 
 \begin{code}
@@ -261,5 +289,9 @@ _÷_ _ ((+ 0) /suc _) {nz} with nz refl
 ... | ()
 n1 /suc d1 ÷ (+ suc n2) /suc d2 = (n1 ℤ*ℕ suc d2) /suc (d1 d* n2)
 n1 /suc d1 ÷ -suc n2 /suc d2  = - ((n1 ℤ*ℕ suc d2) /suc (d1 d* n2))
+
+
+GE : ℚ₀ → ℚ₀ → Bool
+GE (n /suc d) (n' /suc d') = ℤ.GE (n ℤ*ℕ suc d') (n' ℤ*ℕ suc d)
 
 \end{code}

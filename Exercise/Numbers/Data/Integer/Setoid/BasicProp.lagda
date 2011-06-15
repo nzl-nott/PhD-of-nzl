@@ -12,8 +12,8 @@ open import Data.Nat hiding (decTotalOrder)
   renaming (_≟_ to _ℕ≟_; _+_ to _ℕ+_; _*_ to _ℕ*_ ;
   _≤?_ to _ℕ≤?_; _≤_ to _ℕ≤_)
 open import Data.Nat.Properties
-open import Data.Nat.Properties+ as ℕ+ hiding (+l-cancel′ ; integrity′)
-open import Data.Product
+open import Data.Nat.Properties+ as ℕ+ hiding (+l-cancel′ ; integrity′ ; sym ; _>≤<_)
+open import Data.Product hiding (proj₁)
 open import Data.Sign as Sign using (Sign)
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality as PE
@@ -21,7 +21,6 @@ open import Relation.Nullary.Core
 open import Symbols
 
 
-open IsCommutativeSemiring isCommutativeSemiring hiding (refl ; sym) renaming (zero to mzero)
 
 infixl 40 _>∼<_
 
@@ -73,7 +72,7 @@ a) reflexivity: ∀ a → a ∼ a
 \begin{code}
 
 zrefl : Reflexive _∼_
-zrefl {x+ , x- } = refl
+zrefl {x+ , x-} = refl
 
 \end{code}
 
@@ -189,7 +188,7 @@ sign◃ (suc m , suc n) = (sign◃ (m , n)) >∼< ⟨ sm+n≡m+sn m n ⟩
 
 ◃-cong : ∀ {m n} → sign m ≡ sign n → p m ≡ p n → m ∼ n
 ◃-cong {m} {n} sign-≡ abs-≡ =
-  (zsym (sign◃ m)) >∼< (refl' (◃-cong-lem sign-≡ abs-≡)) >∼< sign◃ n
+  (zsym (sign◃ m)) >∼< (refl' (◃-cong-lem {m} {n} sign-≡ abs-≡)) >∼< sign◃ n
 
 \end{code}
 
@@ -215,13 +214,18 @@ _≤?_ : Decidable _≤_
 \end{code}
 
 b) (ℤ₀, ∼, ≤) is preorder
- 
+
 \begin{code}
+
+
+ref≤ : {i j : ℤ₀} → i ∼ j → i ≤ j
+ref≤ {y , y'} {y0 , y1} = refl′
+
 
 ≤isPreorder : IsPreorder _∼_ _≤_
 ≤isPreorder =  record
   { isEquivalence = _∼_isEquivalence
-  ; reflexive     = refl′
+  ; reflexive     = ref≤
   ; trans         = trans′
   }
   where
@@ -242,6 +246,7 @@ a ≤ b → b ≤ c → a ≤ c
 
 \end{code}
 
+
 ≤ Respects₂ ∼:
 a = b → c ≤ a → c ≤ b
 b = c → b ≤ a → c ≤ a
@@ -249,14 +254,19 @@ b = c → b ≤ a → c ≤ a
 \begin{code}
 
   ≤resp : _≤_ Respects₂ _∼_
-  ≤resp = (λ a∼b c≤a → trans′ c≤a (refl′ a∼b)) ,
-          (λ b∼c b≤a → trans′ (refl′ (zsym b∼c)) b≤a)
+  ≤resp = (λ a∼b c≤a → trans′ c≤a (ref≤ a∼b)) ,
+          (λ b∼c b≤a → trans′ (ref≤ (zsym b∼c)) b≤a)
 
 \end{code}
 
 The symbol of transitivity of ≤
 
 \begin{code}
+
+infixl 40 _>≤<_
+
+_>≤<_ : Transitive _≤_
+_>≤<_ = IsPreorder.trans ≤isPreorder 
 
 \end{code}
 
@@ -348,28 +358,19 @@ integrity′ {a1 , a2} {b1 , b2} c =
 normal-ok : ∀ a → [ a ] ∼ a
 normal-ok (_ , 0) = refl
 normal-ok (0 , suc n) = refl
-normal-ok (suc a , suc a') = ⟨ sm+n≡m+sn (proj₁ [ a , a' ]) a' ⟩ >≡< cong suc (normal-ok (a , a'))
+normal-ok (suc a , suc a') = normal-ok (a , a') >∼< ⟨ sm+n≡m+sn a a' ⟩ 
 
-
+nm-lem : ∀ n n' → suc (n ℕ+ 0) ≡ suc (n' ℕ+ 0) → n ≡ n'
+nm-lem n n' eq = ⟨ n+0≡n ⟩ >≡< (cong pred eq >≡< n+0≡n)
 
 normal-unique : ∀ a b → a ∼ b → [ a ] ≡ [ b ]
 normal-unique (zero , a') (zero , .a') refl = refl
 normal-unique (zero , a') (suc n , zero) ()
-normal-unique (zero , a') (suc n , suc n') eq = normal-unique (zero , a') (n , n') {!!}
+normal-unique (zero , a') (suc n , suc n') eq = normal-unique (zero , a') (n , n') (cong pred eq)
 normal-unique (suc n , zero) (zero , b') ()
-normal-unique (suc n , zero) (suc n' , zero) eq = {!eq!}
-normal-unique (suc n , zero) (suc n' , suc n0) eq = normal-unique (suc n , zero) (n' , n0) {!!}
-normal-unique (suc n , suc n') b eq = normal-unique (n , n') b {!!}
-
-{-
-normal-unique (ℕ.zero , a') (ℕ.zero , .a') refl = refl
-normal-unique (ℕ.zero , a') (suc n , ℕ.zero) ()
-normal-unique (ℕ.zero , a') (suc n , suc .(n ℕ+ a')) refl = normal-unique (ℕ.zero , a') (n , n ℕ+ a') refl
-normal-unique (suc n , ℕ.zero) (ℕ.zero , b') ()
-normal-unique (suc n , ℕ.zero) (suc n' , b') eq = {!b'!}
-normal-unique (suc n , suc n') (b , b') eq = normal-unique (n , n') (b , b') {!!}
--}
-
-
+normal-unique (suc n , zero) (suc n' , zero) eq with nm-lem n n' eq
+normal-unique (suc .n' , zero) (suc n' , zero) eq | refl = refl
+normal-unique (suc n , zero) (suc n' , suc n0) eq = normal-unique (suc n , zero) (n' , n0) (sm+n≡m+sn n n0 >≡< cong pred eq)
+normal-unique (suc n , suc n') b eq = normal-unique (n , n') b (⟨ sm+n≡m+sn n n' ⟩ >∼< eq)
 
 \end{code}

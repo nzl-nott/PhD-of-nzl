@@ -32,29 +32,32 @@ la = 2 , f
     f zero = 1
     f (suc i) = 2
 
--- lb = {2, 1}
+-- lb = {2, 2, 1}
 
 lb : List ℕ
 lb = 2 , f
   where
-    f : Fin 2 → ℕ
+    f : Fin 3 → ℕ
     f zero = 2
-    f (suc i) = 1
+    f (suc zero) = 2
+    f (suc (suc i)) = 1
 
 la~lb : la ~ lb
-la~lb = (φ , perm1) , φ , perm2
+la~lb = (φ1 , p1) , φ2 , p2
   where
-    φ : Fin 2 → Fin 2
-    φ zero = suc zero
-    φ (suc i) = zero
-
-    perm1 : ∀ (n : Fin 2) →
-           (proj₂ lb) (φ n) ≡ (proj₂ la) n
-    perm1 zero = refl
-    perm1 (suc i) = refl
+    φ1 : Fin 2 → Fin 3
+    φ1 zero = suc zero
+    φ1 (suc i) = zero
 
     
-    perm2 : ∀ (n : Fin 2) →
+
+    p1 : ∀ (n : Fin 2) →
+           (proj₂ lb) (φ n) ≡ (proj₂ la) n
+    p1 zero = refl
+    p1 (suc i) = refl
+
+    
+    p2 : ∀ (n : Fin 2) →
            (proj₂ la) (φ n) ≡ (proj₂ lb) n
-    perm2 zero = refl
-    perm2 (suc i) = refl
+    p2 zero = refl
+    p2 (suc i) = refl

@@ -10,7 +10,7 @@ open import Data.Nat using (ℕ) renaming (suc to nsuc; pred to npre)
 open import Data.Product
 open import Data.Sign as Sign using (Sign)
 open import Data.Integer'
-open import Data.Integer.Setoid using (_∼_)
+open import Data.Integer.Setoid using (ℤ₀; _,_ ; _∼_)
   renaming (_+_ to _ℤ₀+_; _◃_ to _ℤ₀◃_; _*_ to _ℤ₀*_; -_ to ℤ₀-_
   ; _≤_ to _ℤ₀≤_; ¬0 to ℤ₀¬0)
 open import Data.Integer.Setoid.Properties as ℤ₀
@@ -99,6 +99,9 @@ compl' = zsym compl
 ... | ()
 ⌞_⌟  { -suc i } { -suc j } eqt = -suc_ ⋆ npre ⋆ ⟨ eqt ⟩
 
+sound' : ∀ {i j} → i ∼ ⌜ j ⌝  → [ i ] ≡ j
+sound' eq = ⌞ (compl >∼< eq) ⌟
+
 \end{code}
 
 c) soundness:
@@ -135,8 +138,23 @@ c) The quotient definition for ℤ
 
 ℤ-QuE = nf2quE {_} {_} {ℤ-Qu} ℤ-Nf
 
+ℤ-QuH = Nf2QuH ℤ-Nf
+
 complete : ∀ {a b} → [ a ] ≡ [ b ] → a ∼ b
-complete = QuE.complete ℤ-QuE
+complete = QuE.exactness ℤ-QuE
+
+lift : { B : ℤ → Set } →
+       (f : (a : ℤ₀) → (B [ a ])) →
+       ((a a' : ℤ₀) → (p : a ∼ a') →
+       subst B (sound p)  (f a)  ≡  f a') →
+       (c : ℤ) → B c
+lift {B} = Qu.lift ℤ-Qu {B}
+
+liftH : { B : Set } →
+        (f : ℤ₀ → B) →
+        ((a a' : ℤ₀) → (a ∼ a') →  (f a)  ≡  f a') →
+        ℤ → B
+liftH = QuH.liftH ℤ-QuH
 
 \end{code}
 
@@ -177,23 +195,27 @@ The integrity of ℤ
 
 Helpful functions for the proving the properties of rational numbers
 
+
 \begin{code}
 
+
 [-out]     : ∀ a → [ ℤ₀- a ] ≡ - [ a ]
-[-out] (0 , 0)           = refl
-[-out] (0 , nsuc n)      = refl
-[-out] (nsuc m , 0)      = refl
-[-out] (nsuc m , nsuc n) = [-out] (m , n)
+[-out] a = sound {ℤ₀- a} (ℤ₀.⁻¹-cong compl')
 
 -inv : ∀ {z} → - - z ≡ z
 -inv {+ 0} = refl
 -inv {+ nsuc n} = refl
 -inv { -suc n} = refl
 
--out         : ∀ a b → (- a) * b ≡ - (a * b) 
--out a b     = sound (ℤ₀.*-cong compl zrefl >∼<
-  (ℤ₀.-out ⌜ a ⌝ ⌜ b ⌝)) >≡< [-out] (⌜ a ⌝ ℤ₀* ⌜ b ⌝)
+{-
+liftTest : ∀ a op₀ → (P : (A : Set) → (A → A → Set) → (Op 1 A) → A → Set) → P ℤ₀ _∼_ op₀ ⌜ a ⌝ → P ℤ _≡_ (liftOp 1 op₀) a
+liftTest a op₀ P from = {!a!}
 
+-inv {z} = liftTest z ℤ₀-_ (λ A _∼_ op x → op (op x) ∼ x) ℤ₀.-inv
+-}-- how to transform (- a) * b to (ℤ₀-_ ⌜ a ⌝) ℤ₀*  ⌜ b ⌝
+
+-out : ∀ a b → (- a) * b ≡ - (a * b) 
+-out a b = sound (ℤ₀.*-cong (compl {ℤ₀- ⌜ a ⌝ }) (zrefl {⌜ b ⌝}) >∼< ℤ₀.-out ⌜ a ⌝ ⌜ b ⌝) >≡< [-out] (⌜ a ⌝ ℤ₀* ⌜ b ⌝)
 
 \end{code}
 
@@ -246,7 +268,7 @@ decTotalOrder = record
                   { isEquivalence = isEquivalence
                   ; reflexive     = refl′
                   ; trans         = ℤ₀O.trans
-                  ; ∼-resp-≈      = resp₂ _≤_
+--                  ; ∼-resp-≈      = resp₂ _≤_
                   }
               ; antisym  = antisym
               }
@@ -288,8 +310,8 @@ _>≤<_  = ℤ₀O.trans
 
 \begin{code}
 
-*-pres′ : ∀ {a b} n → a ≤ b → (+ n) * a ≤ (+ n) * b
-*-pres′ n = +compl≤' ∘ ℤ₀.*-pres′ n
+*-cong′ : ∀ {a b} n → a ≤ b → (+ n) * a ≤ (+ n) * b
+*-cong′ n = +compl≤' ∘ ℤ₀.*-pres′ n
 
 \end{code}
 

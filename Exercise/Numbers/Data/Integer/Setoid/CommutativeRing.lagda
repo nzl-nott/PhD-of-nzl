@@ -8,14 +8,15 @@ module Data.Integer.Setoid.CommutativeRing where
 
 open import Algebra 
 open import Algebra.Structures
-open import Data.Integer.Setoid.Definition 
+open import Data.Integer.Setoid 
 open import Data.Integer.Setoid.BasicProp  
-open import Data.Nat renaming (_+_ to _ℕ+_ ;  _*_ to _ℕ*_)
+open import Data.Nat using () renaming (_+_ to _ℕ+_ ;  _*_ to _ℕ*_)
 open import Data.Nat.Properties+ as ℕ using (_+=_; _*⋆_)
 open import Data.Product
 open import Relation.Binary.Core 
 import Algebra.FunctionProperties as P; open P _∼_
 open import Symbols
+
 
 \end{code}
 
@@ -287,7 +288,7 @@ isCommutativeRing = record
   ; *-comm = *-comm
   }
 
-commutativeRing : CommutativeRing
+commutativeRing : CommutativeRing _ _
 commutativeRing = record
   { _+_                   = _+_
   ; _*_                   = _*_

@@ -12,7 +12,7 @@ open import Relation.Binary
 open import Relation.Binary.Core
 open import Symbols
 
-open IsCommutativeSemiring isCommutativeSemiring hiding (refl) renaming (zero to mzero)
+open IsCommutativeSemiring isCommutativeSemiring public hiding (refl) renaming (zero to mzero)
 module ℕO = DecTotalOrder decTotalOrder
  
 infixr 42  _*⋆_

@@ -6,13 +6,13 @@ The advanced properties for ℤ₀
 module Data.Integer.Properties.AdvancedProp where
 
 open import Algebra
-open import Data.Function
+open import Function
 open import Data.Nat using ()
   renaming (suc to nsuc; _+_ to  _ℕ+_;  _*_ to  _ℕ*_)
-open import Data.Integer.Definition
+open import Data.Integer'
 open import Data.Integer.Properties.BasicProp
 open import Data.Integer.Properties.CommutativeRing
-import Data.Integer.Setoid.Properties as ℤ₀
+open import Data.Integer.Setoid.Properties as ℤ₀ using (_>∼<_)
 open import Data.Nat.Properties+ as ℕ using (_+=_; _+⋆_)
 open import Relation.Binary.PropositionalEquality
 open import Symbols
@@ -115,11 +115,10 @@ useful functions for rational numbers
 \begin{code}
 
 *+-simp' : ∀ a b → (+suc a) * (+suc b) ≡ + ((nsuc a) ℕ* (nsuc b))
-*+-simp' a b = sound $ nsuc ⋆ 
-  (ℕ.n+0≡n {b ℕ+ a ℕ* nsuc b} += ⟨ ℕ.n*0+0=0 {a} ⟩)
+*+-simp' a b = sound' $ nsuc ⋆ (ℕ.n+0≡n {b ℕ+ a ℕ* nsuc b} += ⟨ ℕ.n*0+0=0 {a} ⟩)
 
 *+-simp : ∀ a b → (+ a) * (+ b) ≡ + (a ℕ* b)
-*+-simp a b = sound $ ℕ.n+0≡n {a ℕ* b} += ⟨ ℕ.n*0+0=0 {a} ⟩
+*+-simp a b = sound' $ ℕ.n+0≡n {a ℕ* b} += ⟨ ℕ.n*0+0=0 {a} ⟩
 
 -*cong : ∀ m n → m * n ≡ (- m) * (- n)
 -*cong m n = ⟨ -out m (- n) >≡< -_ ⋆ (*-comm m (- n) >≡<

@@ -1,13 +1,12 @@
 \begin{code}
-module Rational.Properties.BasicProp where
+module Data.Rational.Properties.BasicProp where
 
 open import Function
 open import Data.Nat using (suc) renaming (_+_ to _ℕ+_ ; _*_ to _ℕ*_)
-open import Integer.Setoid.Properties as ℤ₀ using () renaming (_>≤<_ to _ℤ₀>≤<_) 
-open import Integer.Definition using (+_ ; -[1+_]; [_]; ⌜_⌝; +suc)
-  renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_ ; _≤_ to _ℤ≤_)
-open import Integer.Properties as ℤ using (_⋆*_; _*⋆_) renaming (_≟_ to _ℤ≟_; _≤?_ to _ℤ≤?_ )
-open import Rational.Definition
+open import Data.Integer.Setoid.Properties as ℤ₀ using () renaming (_>≤<_ to _ℤ₀>≤<_) 
+open import Data.Integer' using (+_ ; -suc_; [_]; ⌜_⌝; +suc) renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_ ; _≤_ to _ℤ≤_)
+open import Data.Integer.Properties' as ℤ using (_⋆*_; _*⋆_) renaming (_≟_ to _ℤ≟_; _≤?_ to _ℤ≤?_ )
+open import Data.Rational'
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary.Core
@@ -197,7 +196,7 @@ d) (ℚ₀, ∼, ≤) is preorder
   { isEquivalence = isEquivalenceℚ₀
   ; reflexive     = refl′
   ; trans         = λ {a} → trans′ {a}
-  ; ∼-resp-≈      = ≤resp
+--   ; ∼-resp-≈      = ≤resp
   }
 
 

@@ -7,12 +7,13 @@ Integer
 
 module Data.Integer' where
 
+open import Data.Bool
 open import Algebra.FunctionProperties.Core
 open import Data.Nat as ℕ using (ℕ)
 open import Data.Sign as Sign using (Sign)
   renaming (_*_ to _S*_)
 open import Data.Product
-open import Data.Integer.Setoid as ℤ₀ using (ℤ₀)
+open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _,_)
   renaming (_+_ to _ℤ₀+_ ; _-_ to _ℤ₀-_ ; _*_ to _ℤ₀*_ ;
   _≤_ to _ℤ₀≤_; _<_ to _ℤ₀<_)
 open import Relation.Binary.Core
@@ -154,10 +155,18 @@ is+ z = ∃ λ n → z ≡ + ℕ.suc n
 
 7. Operators
 
-a)  Generalisation of operators:
+a)  Generalisation of operators (lifting operators):
 the generalisation of the conversion from the operators for the ℤ₀ to the ones for the ℤ
 
 \begin{code}
+
+Op : ℕ → (A : Set) → Set
+Op 0 A = A
+Op (ℕ.suc n) A = A → Op n A
+
+liftOp : ∀ n → Op n ℤ₀ → Op n ℤ
+liftOp 0 op = [ op ]
+liftOp (ℕ.suc n) op = λ x → liftOp n (op ⌜ x ⌝)
 
 ⟦_⟧      : Op₁ ℤ₀ → Op₁ ℤ
 ⟦ f ⟧ = λ n → [ f ⌜ n ⌝ ]
@@ -171,8 +180,8 @@ b) negation
 
 \begin{code}
 
--_ : Op₁ ℤ
--_ =  ⟦ ℤ₀.-_ ⟧
+-_ : Op 1 ℤ
+-_ = liftOp 1 ℤ₀.-_
 
 \end{code}
 
@@ -213,7 +222,7 @@ f) addition
 \begin{code}
 
 _+_ : Op₂ ℤ
-_+_ = ⟦ _ℤ₀+_ ⟧₂
+_+_ = liftOp 2 _ℤ₀+_
 
 \end{code}
 
@@ -222,7 +231,7 @@ g) minus
 \begin{code}
 
 _-_ : Op₂ ℤ
-_-_ = ⟦ _ℤ₀-_ ⟧₂
+_-_ = liftOp 2 _ℤ₀-_
 
 \end{code}
 
@@ -231,6 +240,15 @@ h) multiplication
 \begin{code}
 
 _*_   : Op₂ ℤ
-_*_  = ⟦ _ℤ₀*_ ⟧₂
+_*_  = liftOp 2 _ℤ₀*_
+
+\end{code}
+
+
+\begin{code}
+
+GE : ℤ → ℤ → Bool
+GE a b = ℤ₀.GE ⌜ a ⌝ ⌜ b ⌝
+
 
 \end{code}

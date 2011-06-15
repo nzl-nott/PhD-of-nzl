@@ -105,6 +105,7 @@ open QuE
 -- Normal forms
 -- 
 record Nf {S : Setoid zero zero} (QS : QuSig S) : Set₁ where
+       constructor emb:_compl:_stable:_
        private S₀      = Carrier S
                _∼_     = _≈_ S
                Q₀      = Q QS
@@ -160,7 +161,8 @@ nf2quE {S} {QS} {QU} nf = record { exactness =  λ {a} {b} [a]≡[b] → ⟨ c
                                   _▶₀_    : Transitive _∼_
                                   _▶₀_    = transitive S 
 
--- Remark that stability would be a consequence of the surjectivity of [_], soundness and completeness. However, the map [_] is not required to be surjective.
+-- Remark that stability would be a consequence of the surjectivity of [_], soundness and completeness. However, the map [_] is not required to be surjective. (So Qu2nf is wrong?)
+
 nf2qu : {S : Setoid zero zero} → {QS : QuSig S} → (Nf QS) → (Qu QS)
 nf2qu {S} {QS} nf = 
         record {
@@ -237,12 +239,54 @@ quH2qu {S} {QS} quh =
                                                        (cong-proj₂ {Q₀} {B} (liftH₁ f q a) (indep f a) liftHok₀ )
 
 
-qu2quHl : ∀ {a p : Level}{c d : Set a}(x : c ≡ d)(B : Set p)(p : B) → subst (λ _ → B) x p ≡ p
-qu2quHl refl B p' = refl
+Nf2QuH : {S : Setoid zero zero} → {QS : QuSig S} → (Nf QS) → (QuH QS)
+Nf2QuH {S} {Q: Q []: [_] sound: sound} (emb: ⌜_⌝ compl: compl stable: stable) = 
+  record { liftH = λ f x x' → f ⌜ x' ⌝
+         ; liftHok = λ {B} {a} {f} {q} → q  ⌜ [ a ] ⌝ a (compl a)
+         ; qind = λ P x x' → λ {x0} → subst P (stable x0) x' 
+         }
 
 
+
+
+
+
+
+
+
+
+{-
+
+It is impossible : qu to quH
+
+subFix : ∀ {A : Set}{c d : A}(x : c ≡ d)(B : Set)(p : B) → subst (λ _ → B) x p ≡ p
+subFix refl B p' = refl
+
+sFlem : ∀ {A : Set}(P : A → Set)(a : A)(eq : a ≡ a)(x : P a) → subst P eq x ≡ x
+sFlem P a refl x = refl
+
+
+subst' : ∀ {A : Set}{a b : A}(P : A → Set)(eq : a ≡ b) → P a → P b
+subst' P refl p = p
+
+-- We need embedding function (Split)
+
+subFix' : ∀ (S : Setoid zero zero)(Q : Set)([_] : Carrier S → Q)(a a' : Carrier S)(P : Q → Set)(p : [ a ] ≡ [ a' ])(x' : {a0 : Carrier S} → P [ a0 ]) → subst P p (x' {a}) ≡ x' {a'}
+subFix' S Q [_] a a' P p x' = subst' {Σ[ x ∶ Carrier S ] [ x ] ≡ [ a' ]} {a' , refl} {a , p} (uncurry (λ x y → subst P y (x' {x}) ≡ x' {a'})) {!!} (sFlem P [ a' ] refl (x' {a'}))
+
+-- (p : (S ≈ a) a')(sound : {a0 b : Carrier S} → (S ≈ a0) b → [ a0 ] ≡ [ b ])(x' : {a0 : Carrier S} → P [ a0 ])
 qu2quH : {S : Setoid zero zero} → {QS : QuSig S} → (Qu QS) → (QuH QS)
 qu2quH {S} {Q: Q []: [_] sound: sound} (lift: lift Ok: ok Irr: irr) = record {
-              liftH = λ {B} f x x' → lift {λ _ → B} f (λ a a' p → trans {!qu2quHl!} (x a a' p)) x';
-              liftHok = {!!};
-              qind = {!!} }
+              liftH = λ {B} f x x' → lift {λ _ → B} f (λ a a' p → trans (subFix (sound p) B (f a)) (x a a' p)) x';
+              liftHok = λ {B} {a} {f} {q} → ok {λ _ → B} {a} {f} {λ a' a0 p → trans (subFix (sound p) B (f a')) (q a' a0 p)};
+              qind = λ P x x' → λ {x0} → lift {P} (λ a → x' {a}) (λ a a' p → {!trans ()!}) x0}
+
+{-
+                liftH    : { B : Set }
+                        → (f : S₀ → B)                                                   -- B does not depent on a : S₀
+                        → ((a a' : S₀) → (a ∼ a') →  (f a)  ≡  f a')
+                        → Q₀ → B
+-}
+-- lift {P} (λ a → x') (λ a a' p → {!!}) x0
+
+-}

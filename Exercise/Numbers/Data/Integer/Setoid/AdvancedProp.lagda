@@ -5,13 +5,13 @@ The advanced properties include the other properties that should be proved after
 
 module Data.Integer.Setoid.AdvancedProp where
 
-open import Data.Function using (_$_ ; _∘_)
+open import Function using (_$_ ; _∘_)
 
-open import Data.Integer.Setoid.Definition
+open import Data.Integer.Setoid
 open import Data.Integer.Setoid.BasicProp
 open import Data.Integer.Setoid.CommutativeRing
 
-open import Data.Nat hiding (_≤_ ; decTotalOrder)
+open import Data.Nat using (zero ; suc)
   renaming (_≟_ to _ℕ≟_ ;  _+_ to _ℕ+_ ; _*_ to _ℕ*_ ; _≤?_ to _ℕ≤?_)
 open import Data.Nat.Properties+ as ℕ using (_+=_)
 open import Data.Product
@@ -80,6 +80,6 @@ if n is non-negative a ≤ b → n * a ≤ n * b
   (ℕ.+-comm 0 (n ℕ* a1) +=  ℕ.+-comm 0 (n ℕ* b2)) ) $
   ℕ.l-≤resp ( ℕ.distˡ n b1 a2 >≡<
   (ℕ.+-comm 0 (n ℕ* b1) +=  ℕ.+-comm 0 (n ℕ* a2)) ) $
-  ℕ.*-pres′ n a≤b
+  ℕ.*-cong′ n a≤b
  
 \end{code}

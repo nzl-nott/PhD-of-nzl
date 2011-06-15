@@ -15,6 +15,8 @@ List : Set → Set
 List A = Σ[ n ∶ ℕ ] (Fin n → A)
 
 
+-- It is split rather than surjection
+
 Surjection : {A B : Set} → (φ : A → B) → Set
 Surjection {A} {B} φ = ∃ λ (ψ : B → A) →
                        ∀ (b : B) → φ (ψ b) ≡ b

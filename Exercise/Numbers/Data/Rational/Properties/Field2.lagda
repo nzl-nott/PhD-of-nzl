@@ -1,17 +1,17 @@
 \begin{code}
-module Rational.Properties.Field2 where
+module Data.Rational.Properties.Field2 where
 
 open import Algebra
 open import Algebra.Structures
 open import Data.Nat using (suc) renaming (_*_ to _ℕ*_)
-open import Data.Function
-open import Integer.Definition using (+_; -[1+_]; [_]; ⌜_⌝; +suc)
+open import Function
+open import Data.Integer' using (+_; -suc_; [_]; ⌜_⌝; +suc)
   renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_; -_ to ℤ-_)
-open import Integer.Properties as ℤ using (_*⋆_ ; _⋆*_)
-open import NatPropertiesExtra as ℕ using (_+⋆_) renaming (_⋆*_ to _ℕ⋆*_ ; _*⋆_ to  _ℕ*⋆_)
-open import Rational.Definition
-open import Rational.Properties.BasicProp
-open import Rational.Properties.Field1
+open import Data.Integer.Properties' as ℤ using (_*⋆_ ; _⋆*_)
+open import Data.Nat.Properties+ as ℕ using (_+⋆_) renaming (_⋆*_ to _ℕ⋆*_ ; _*⋆_ to  _ℕ*⋆_)
+open import Data.Rational'
+open import Data.Rational.Properties.BasicProp
+open import Data.Rational.Properties.Field1
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Symbols
@@ -171,8 +171,8 @@ a ≠ 0 → a * 1/a = 1
 ... | ()
 *-rightInverse ((+ suc q) /suc qd) = ℤ.*-ex₃ (+suc q) (+suc qd) (+ 1) >≡<
   (+ 1) *⋆ (ℤ.*+-simp (suc qd) (suc q))
-*-rightInverse (-[1+ q ] /suc qd) = ℤ.*-ex₃ (-[1+ q ]) (-[1+ qd ]) (+ 1) >≡<
-  (+ 1) *⋆ (ℤ.-*cong (-[1+ qd ]) (-[1+ q ]) >≡<
+*-rightInverse (-suc q /suc qd) = ℤ.*-ex₃ (-suc q) (-suc qd) (+ 1) >≡<
+  (+ 1) *⋆ (ℤ.-*cong (-suc qd) (-suc q) >≡<
   ℤ.*+-simp (suc qd) (suc q))
 
 \end{code}
@@ -212,7 +212,7 @@ isCommutativeRing = record
   ; *-comm = *-comm
   }
 
-commutativeRing : CommutativeRing
+commutativeRing : CommutativeRing _ _
 commutativeRing = record
   { _+_                   = _+_
   ; _*_                   = _*_

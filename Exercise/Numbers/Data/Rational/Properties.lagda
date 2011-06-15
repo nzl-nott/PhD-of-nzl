@@ -1,7 +1,7 @@
 \begin{code}
-module Rational.Properties where
+module Data.Rational.Properties where
 
-open import Rational.Properties.BasicProp public
-open import Rational.Properties.Field1 public
-open import Rational.Properties.Field2 public
+open import Data.Rational.Properties.BasicProp public
+open import Data.Rational.Properties.Field1 public
+open import Data.Rational.Properties.Field2 public
 \end{code}

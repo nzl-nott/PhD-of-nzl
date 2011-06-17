@@ -1,7 +1,7 @@
 
 {-# OPTIONS --universe-polymorphism #-}
 
-module Quotient where
+module Quotient'' where
 
 open import Relation.Binary renaming (Setoid to Setoid')
 open import Relation.Binary.Core
@@ -22,15 +22,20 @@ open ≡-Reasoning
 open import ThomasProperties
 
 
--- To have shorter notation
+-- Li Nuo's transformed version of congurence laws
 
-Setoid = Setoid' zero zero
+_by_ : ∀{p q}{A : Set p}{B : Set q}{a b : A} → a ≡ b → (f : A → B) → f a ≡ f b
+refl by f = refl
+
 
 -- 2.1,2,3
 -- 
--- Prequotient
+-- Quotient signature
 --
 
+-- To have shorter notation
+
+Setoid = Setoid' zero zero
 
 record PreQu (S : Setoid) : Set₁ where
              constructor
@@ -50,10 +55,17 @@ open PreQu renaming (Q to Q' ; [_] to [_]' ; sound to sound')
 -- Different quotient definitions over a quotient signature
 --
 
+
 -- 2.4
 -- Quotient by dependent lifting
 --
 -- if ~ is a congruence for f : S → B then f can be lifted to Q → B
+
+Sound : {S : Setoid} (QS : PreQu S) → (Q' QS → Set) → Set
+Sound {S} (Q: Q []: [_] sound: sound) B = Σ[ f ∶ ((a : A) → B [ a ]) ] ((a b : A) → (p : a ∼ b) → subst B (sound p) (f a)  ≡  f b)
+  where
+    A      = Carrier S
+    _∼_    = _≈_ S
 
 record Qu {S : Setoid} (QS : PreQu S) : Set₁ where
               constructor
@@ -67,17 +79,16 @@ record Qu {S : Setoid} (QS : PreQu S) : Set₁ where
                 sound  = sound' QS
               field
                 qelim   : {B : Q → Set}
-                        → (f : (a : A) → B [ a ])
-                        → ((a b : A) → (p : a ∼ b) → subst B (sound p) (f a)  ≡  f b) -- sound of f
+                        → Sound QS B
                         → (q : Q) → B q
-                qelim-β : ∀ {B a f q} → qelim {B} f q [ a ]  ≡ f a -- β-law
+                qelim-β : ∀ {B a f q} → qelim {B} (f , q) [ a ]  ≡ f a -- β-law
+
+-- proof qelim-β -> qelimIrr _≅_
 
 open Qu
 
--- The proof irrelevance of qelim
-
 qelimIrr : {S : Setoid}{PQ : PreQu S}(x : Qu PQ) 
-         → (∀ {B a f q q'} → qelim x {B} f q ([_]' PQ a) ≡ qelim x {B} f q' ([_]' PQ a ))
+         → (∀ {B a f q q'} → qelim x {B} (f , q) ([_]' PQ a) ≡ qelim x {B} (f , q') ([_]' PQ a ))
 qelimIrr x {B} {a} {f} {q} {q'} = (qelim-β x {B} {a} {f} {q}) ▶ (sym (qelim-β x {B} {a} {f} {q'}))
 
 
@@ -86,8 +97,6 @@ qelimIrr x {B} {a} {f} {q} {q'} = (qelim-β x {B} {a} {f} {q}) ▶ (sym (qelim-�
 --
 
 record QuE {S : Setoid} {PQ : PreQu S} (QU : Qu PQ) : Set₁ where
-       constructor
-         exact:_
        private 
          A      = Carrier S
          _∼_    = _≈_ S
@@ -99,7 +108,7 @@ open QuE
 
 
 -- 2.4
--- Non-dependent eliminator - à la Hofmann
+-- Non-dependent lift à la Hofmann
 --
 
 record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
@@ -118,9 +127,9 @@ record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
          lift-β : ∀ {B a f q} → lift {B} f q [ a ]  ≡ f a -- β law
          -- quotient induction
          qind : (P : Q → Set)  
-              → (∀ x → (p p' : P x) → p ≡ p') -- Proof-irrelevance - Namely P is Q → Prop
+              → (∀ x → (p p' : P x) → p ≡ p') -- Namely P is Q → Prop
               → (∀ a → P [ a ]) 
-              → (∀ x → P x)
+              → (∀ x → P x )
 
 open QuH renaming (lift to lift' ; lift-β to lift-β')
 
@@ -136,9 +145,9 @@ record QuD {S : Setoid}(PQ : PreQu S) : Set₁ where
          Q     = Q' PQ
          [_]   = [_]' PQ
        field
-         emb    : Q → A                    -- embedding, choice of a representative for each class
-         compl  : ∀ a → emb [ a ] ∼ a      -- completeness (because it implies the implication: [a]≡[b] ⇒ a∼b and, in presence of stability, is equivalent to it)
-         stable : ∀ q → [ emb q ] ≡ q      -- stability
+         emb    : Q → A                        -- embedding, choice of a representative for each class
+         compl  : ∀ a → emb [ a ] ∼ a          -- completeness (because it implies the implication: [a]≡[b] ⇒ a∼b and, in presence of stability, is equivalent to it)
+         stable : ∀ q → [ emb q ]  ≡ q         -- stability
 open QuD
 
 -- SECTION 3
@@ -149,7 +158,7 @@ open QuD
 
 nf2quE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} → (QuD PQ) → (QuE QU)
 nf2quE {S} {Q: Q []: [_] sound: _} (emb: emb compl: compl stable: _) =
-  record { exact =  λ {a} {b} [a]≡[b] → ⟨ compl a ⟩₀ ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (compl b)}
+  record { exact =  λ {a} {b} [a]≡[b] → ⟨ compl a ⟩₀   ▶₀    subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (compl b) }
                           where
                           private A      = Carrier S
                                   _∼_    = _≈_ S

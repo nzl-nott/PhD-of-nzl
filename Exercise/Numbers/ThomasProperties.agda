@@ -30,6 +30,9 @@ subst∘const refl = refl
 cong_,_ : {A : Set } {B : A → Set} → (a a' : A) → (p : a ≡ a') →  (b : B a)  →  _,_ {A = A} {B = B} a b  ≡ a' , subst B p b
 cong_,_ a .a refl b = refl  
 
+congΣ : {A : Set} {B : A → Set}(a a' : A)(p : a ≡ a')(f : (a : A) → B a) → _≡_ {_} {Σ A B} (a , f a) (a' , subst B p (f a))
+congΣ .a' a' refl f = refl
+
 cong'_,_ : {A : Set } {B : A → Set} → (a : A) →  (b b' : B a) → ( q : b ≡ b') →  _,_ {A = A} {B = B} a b  ≡ a , b'
 cong'_,_ a b .b refl = refl
 
@@ -52,8 +55,8 @@ cong-proj₂ .x' x' refl = refl
 
 
 
-substIrr : {A : Set} → {a a' : A} → (B : A → Set) → ( p p' : a ≡ a') → (x : B a) → subst B p x ≡ subst B p' x
-substIrr B0 refl refl x = refl
+substIrr : {A : Set} → {a a' : A} → (P : A → Set) → ( p p' : a ≡ a') → (x : P a) → subst P p x ≡ subst P p' x
+substIrr P refl refl x = refl
 
 -- Some notation to shorten simple proofs or make them more human readable without using heavy  equational reasoning (begin ... ) 
 infixr 41  _⋆_

@@ -145,8 +145,8 @@ open QuD
 -- QuD → Qu   
 -- QuD → QuH (Also a consequence of QuD → Qu and Qu → QuH)
 
-nf2quE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} → (QuD PQ) → (QuE QU)
-nf2quE {S} {Q: Q []: [_] sound: _} (emb: emb complete: complete stable: _) =
+QuD→QuE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} → (QuD PQ) → (QuE QU)
+QuD→QuE {S} {Q: Q []: [_] sound: _} (emb: emb complete: complete stable: _) =
   record { exact =  λ {a} {b} [a]≡[b] → ⟨ complete a ⟩₀ ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (complete b)}
                           where
                           private A      = Carrier S
@@ -158,8 +158,8 @@ nf2quE {S} {Q: Q []: [_] sound: _} (emb: emb complete: complete stable: _) =
 
 -- Remark that stability would be a consequence of the surjectivity of [_], soundness and completeness. However, the map [_] is not required to be surjective.
 
-qud2qu : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (Qu PQ)
-qud2qu {S} {Q: Q []: [_] sound: sound} (emb: emb complete: complete stable: stable) = 
+QuD→Qu : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (Qu PQ)
+QuD→Qu   {S} {Q: Q []: [_] sound: sound} (emb: emb complete: complete stable: stable) = 
         record 
         { qelim   = λ {B} f _ a⁻ → subst B (stable a⁻) (f (emb a⁻))
         ; qelim-β = λ {B} {a} {f} {q} → substIrr B (stable [ a ]) (sound (complete a))  (f (emb [ a ])) ▶ q _ _ (complete a)

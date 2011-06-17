@@ -21,16 +21,11 @@ open ≡-Reasoning
 -- Project modules
 open import ThomasProperties
 
-
--- To have shorter notation
-
 Setoid = Setoid' zero zero
 
--- 2.1,2,3
 -- 
--- Prequotient
+-- Prequotients
 --
-
 
 record PreQu (S : Setoid) : Set₁ where
              constructor
@@ -45,43 +40,37 @@ record PreQu (S : Setoid) : Set₁ where
               
 open PreQu renaming (Q to Q' ; [_] to [_]' ; sound to sound')
 
-
 -- 
--- Different quotient definitions over a quotient signature
+-- Quotients as prequotients with a dependent eliminator.
 --
+-- If ~ is a congruence for f : S → B then f can be lifted to Q → B.
 
--- 2.4
--- Quotient by dependent lifting
---
--- if ~ is a congruence for f : S → B then f can be lifted to Q → B
-
-record Qu {S : Setoid} (QS : PreQu S) : Set₁ where
+record Qu {S : Setoid} (PQ : PreQu S) : Set₁ where
               constructor
                 qelim:_qelim-β:_
               private 
                 A      = Carrier S
                 _∼_    = _≈_ S
-                Q      = Q' QS
-                [_]    = [_]' QS
+                Q      = Q' PQ
+                [_]    = [_]' PQ
                 sound  : ∀ {a b : A} → (a ∼ b) → [ a ] ≡ [ b ]
-                sound  = sound' QS
+                sound  = sound' PQ
               field
                 qelim   : {B : Q → Set}
                         → (f : (a : A) → B [ a ])
-                        → ((a b : A) → (p : a ∼ b) → subst B (sound p) (f a)  ≡  f b) -- sound of f
+                        → ((a b : A) → (p : a ∼ b) → subst B (sound p) (f a)  ≡  f b)
                         → (q : Q) → B q
                 qelim-β : ∀ {B a f q} → qelim {B} f q [ a ]  ≡ f a -- β-law
 
 open Qu
 
--- The proof irrelevance of qelim
-
+-- Proof irrelevance of qelim
 qelimIrr : {S : Setoid}{PQ : PreQu S}(x : Qu PQ) 
          → (∀ {B a f q q'} → qelim x {B} f q ([_]' PQ a) ≡ qelim x {B} f q' ([_]' PQ a ))
 qelimIrr x {B} {a} {f} {q} {q'} = (qelim-β x {B} {a} {f} {q}) ▶ (sym (qelim-β x {B} {a} {f} {q'}))
 
 
--- 2.5
+-- 
 -- Exact quotients
 --
 
@@ -98,8 +87,9 @@ record QuE {S : Setoid} {PQ : PreQu S} (QU : Qu PQ) : Set₁ where
 open QuE
 
 
--- 2.4
--- Non-dependent eliminator - à la Hofmann
+-- 
+-- Quotients as prequotients with a non-dependent eliminator (lift).
+-- (As in Hofmann's PhD dissertation.)
 --
 
 record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
@@ -118,38 +108,46 @@ record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
          lift-β : ∀ {B a f q} → lift {B} f q [ a ]  ≡ f a -- β law
          -- quotient induction
          qind : (P : Q → Set)  
-              → (∀ x → (p p' : P x) → p ≡ p') -- Proof-irrelevance - Namely P is Q → Prop
+              → (∀ x → (p p' : P x) → p ≡ p') -- Proof-irrelevance, because we cannot define P : Q → Prop here
               → (∀ a → P [ a ]) 
               → (∀ x → P x)
 
 open QuH renaming (lift to lift' ; lift-β to lift-β')
 
--- 2.3
--- Definable quotients
 -- 
+-- Definable quotients
+--
+ 
 record QuD {S : Setoid}(PQ : PreQu S) : Set₁ where
        constructor
-         emb:_compl:_stable:_
+         emb:_complete:_stable:_
        private 
          A     = Carrier S
          _∼_   = _≈_ S
          Q     = Q' PQ
          [_]   = [_]' PQ
        field
-         emb    : Q → A                    -- embedding, choice of a representative for each class
-         compl  : ∀ a → emb [ a ] ∼ a      -- completeness (because it implies the implication: [a]≡[b] ⇒ a∼b and, in presence of stability, is equivalent to it)
-         stable : ∀ q → [ emb q ] ≡ q      -- stability
+         emb       : Q → A
+         complete  : ∀ a → emb [ a ] ∼ a
+         stable    : ∀ q → [ emb q ] ≡ q
 open QuD
 
--- SECTION 3
---
--- Translation between quotient definitions
---
 
+--
+-- Relations between types of quotients:
+--
+-- Below, we show the following, where the arrow → means "gives rise to" :
+--
+-- QuH → Qu (Proposition 3 in the paper)
+-- Qu → QuH (Reverse of Proposition 3)
+--
+-- QuD → QuE (A definable quotient is always exact)
+-- QuD → Qu   
+-- QuD → QuH (Also a consequence of QuD → Qu and Qu → QuH)
 
 nf2quE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} → (QuD PQ) → (QuE QU)
-nf2quE {S} {Q: Q []: [_] sound: _} (emb: emb compl: compl stable: _) =
-  record { exact =  λ {a} {b} [a]≡[b] → ⟨ compl a ⟩₀ ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (compl b)}
+nf2quE {S} {Q: Q []: [_] sound: _} (emb: emb complete: complete stable: _) =
+  record { exact =  λ {a} {b} [a]≡[b] → ⟨ complete a ⟩₀ ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (complete b)}
                           where
                           private A      = Carrier S
                                   _∼_    = _≈_ S
@@ -161,10 +159,10 @@ nf2quE {S} {Q: Q []: [_] sound: _} (emb: emb compl: compl stable: _) =
 -- Remark that stability would be a consequence of the surjectivity of [_], soundness and completeness. However, the map [_] is not required to be surjective.
 
 qud2qu : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (Qu PQ)
-qud2qu {S} {Q: Q []: [_] sound: sound} (emb: emb compl: compl stable: stable) = 
+qud2qu {S} {Q: Q []: [_] sound: sound} (emb: emb complete: complete stable: stable) = 
         record 
         { qelim   = λ {B} f _ a⁻ → subst B (stable a⁻) (f (emb a⁻))
-        ; qelim-β = λ {B} {a} {f} {q} → substIrr B (stable [ a ]) (sound (compl a))  (f (emb [ a ])) ▶ q _ _ (compl a)
+        ; qelim-β = λ {B} {a} {f} {q} → substIrr B (stable [ a ]) (sound (complete a))  (f (emb [ a ])) ▶ q _ _ (complete a)
         }
 
 
@@ -223,10 +221,10 @@ quH2qu {S} {Q: Q []: [_] sound: sound} (lift: lift lift-β: β qind: qind) =
 
 
 QuD2QuH : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (QuH PQ)
-QuD2QuH {S} {Q: Q []: [_] sound: sound} (emb: ⌜_⌝ compl: compl stable: stable) = 
-  record { lift = λ f _ x' → f ⌜ x' ⌝
-         ; lift-β = λ {B} {a} {f} {q} → q  ⌜ [ a ] ⌝ a (compl a)
-         ; qind = λ P irr f → λ x0 → subst P (stable x0) (f ⌜ x0 ⌝) 
+QuD2QuH {S} {Q: Q []: [_] sound: sound} (emb: ⌜_⌝ complete: complete stable: stable) = 
+  record { lift = λ f _ q → f ⌜ q ⌝
+         ; lift-β = λ {B} {a} {f} {soundf} → soundf  ⌜ [ a ] ⌝ a (complete a)
+         ; qind = λ P irr f → {!!} -- λ x → subst P (stable x) (f ⌜ x ⌝) 
          }
 
 

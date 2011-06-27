@@ -1,27 +1,33 @@
 
-{-# OPTIONS --universe-polymorphism #-}
-
 module Quotient where
 
-open import Relation.Binary renaming (Setoid to Setoid')
 open import Relation.Binary.Core
-open Setoid renaming (refl to reflexive; sym to symmetric; trans to transitive)
-open import Relation.Binary.PropositionalEquality.Core
-
 open import Data.Nat
 open import Data.Nat.Properties
 
 open import Data.Product
 
-open import Level using (Level ; zero)
-
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding (isEquivalence)
 open ≡-Reasoning
 
 -- Project modules
 open import ThomasProperties
 
-Setoid = Setoid' zero zero
+Prp = Set
+
+postulate unique : ∀ (A : Prp) → ∀ (a b : A) → a ≡ b
+
+
+record Setoid : Set₁ where
+  infix 4 _≈_
+  field
+    Carrier       : Set
+    _≈_           : Carrier → Carrier → Set
+    isEquivalence : IsEquivalence _≈_
+  open IsEquivalence isEquivalence public
+
+open Setoid renaming (refl to reflexive; sym to symmetric; trans to transitive)
+
 
 -- 
 -- Prequotients
@@ -58,16 +64,17 @@ record Qu {S : Setoid} (PQ : PreQu S) : Set₁ where
               field
                 qelim   : {B : Q → Set}
                         → (f : (a : A) → B [ a ])
-                        → ((a b : A) → (p : a ∼ b) → subst B (sound p) (f a)  ≡  f b)
+                        → ((a b : A) → (p : a ∼ b) → subst B (sound p) (f a) ≡ f b)
                         → (q : Q) → B q
-                qelim-β : ∀ {B a f q} → qelim {B} f q [ a ]  ≡ f a -- β-law
+                qelim-β : ∀ {B a f} q → qelim {B} f q [ a ]  ≡ f a -- β-law
 
 open Qu
 
 -- Proof irrelevance of qelim
+
 qelimIrr : {S : Setoid}{PQ : PreQu S}(x : Qu PQ) 
-         → (∀ {B a f q q'} → qelim x {B} f q ([_]' PQ a) ≡ qelim x {B} f q' ([_]' PQ a ))
-qelimIrr x {B} {a} {f} {q} {q'} = (qelim-β x {B} {a} {f} {q}) ▶ (sym (qelim-β x {B} {a} {f} {q'}))
+         → ∀ {B a f q q'} → qelim x {B} f q ([_]' PQ a) ≡ qelim x {B} f q' ([_]' PQ a)
+qelimIrr x {B} {a} {f} {q} {q'} = (qelim-β x {B} {a} {f} q) ▶ ⟨ qelim-β x {B} {a} {f} q' ⟩
 
 
 -- 
@@ -145,32 +152,13 @@ open QuD
 -- QuD → Qu   
 -- QuD → QuH (Also a consequence of QuD → Qu and Qu → QuH)
 
-QuD→QuE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} → (QuD PQ) → (QuE QU)
-QuD→QuE {S} {Q: Q []: [_] sound: _} (emb: emb complete: complete stable: _) =
-  record { exact =  λ {a} {b} [a]≡[b] → ⟨ complete a ⟩₀ ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (complete b)}
-                          where
-                          private A      = Carrier S
-                                  _∼_    = _≈_ S
-                                  ⟨_⟩₀    : Symmetric _∼_
-                                  ⟨_⟩₀    = symmetric S
-                                  _▶₀_    : Transitive _∼_
-                                  _▶₀_    = transitive S 
-
--- Remark that stability would be a consequence of the surjectivity of [_], soundness and completeness. However, the map [_] is not required to be surjective.
-
-QuD→Qu : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (Qu PQ)
-QuD→Qu   {S} {Q: Q []: [_] sound: sound} (emb: emb complete: complete stable: stable) = 
-        record 
-        { qelim   = λ {B} f _ a⁻ → subst B (stable a⁻) (f (emb a⁻))
-        ; qelim-β = λ {B} {a} {f} {q} → substIrr B (stable [ a ]) (sound (complete a))  (f (emb [ a ])) ▶ q _ _ (complete a)
-        }
 
 
-quH2qu : {S : Setoid} → {PQ : PreQu S} → (QuH PQ) → (Qu PQ)
-quH2qu {S} {Q: Q []: [_] sound: sound} (lift: lift lift-β: β qind: qind) = 
+QuH→Qu : {S : Setoid} → {PQ : PreQu S} → (QuH PQ) → (Qu PQ)
+QuH→Qu {S} {Q: Q []: [_] sound: sound} (lift: lift lift-β: β qind: qind) = 
         record 
         { qelim   = λ {B} → qelim₁ {B}
-        ; qelim-β = λ {B} {a} {f} {q} → qelim-β₁ {B} a f q
+        ; qelim-β = λ {B} {a} {f} → qelim-β₁ {B} a f
         }
              where
                -- notation
@@ -187,7 +175,7 @@ quH2qu {S} {Q: Q []: [_] sound: sound} (lift: lift lift-β: β qind: qind) =
                        → (a a' : A) 
                        → (a ∼ a') 
                        → indep {B} f a  ≡  indep f a'          
-               indepok {B} f q a a' p = (cong_,_ [ a ] [ a' ] (sound p) (f a)) ▶ (cong (λ b → [ a' ] , b) (q a a' p))
+               indepok {B} f q a a' p = (cong_,_ [ a ] [ a' ] (sound p) (f a)) ▶ ((λ b → [ a' ] , b) ⋆ (q a a' p))
 
                -- quotient induction                     
                qind₁   :  {B : Q → Set}
@@ -201,7 +189,7 @@ quH2qu {S} {Q: Q []: [_] sound: sound} (lift: lift lift-β: β qind: qind) =
                          heredity : ∀ x → (p p' : P x) → p ≡ p' 
                          heredity     x    p p'          = ≡-prfIrr ((lift (indep f) (indepok f q) x)₁) x p p'  
                          base : ∀ a → P [ a ]
-                         base a = cong proj₁ β
+                         base a = proj₁ ⋆ β
 
 
                lift₁ : {B : Q → Set} → (f : (a : A) → (B [ a ])) → ((a a' : A) → (p : a ∼ a') → subst B (sound p)  (f a)  ≡  f a') → A → Σ Q B 
@@ -216,29 +204,57 @@ quH2qu {S} {Q: Q []: [_] sound: sound} (lift: lift lift-β: β qind: qind) =
                qelim-β₁  : ∀ {B} a f q → qelim₁ {B} f q [ a ]  ≡ f a
                qelim-β₁ {B} a f q = (substIrr B (qind₁ f q [ a ]) 
                                               (cong-proj₁ {Q} {B} (lift₁ f q a) (indep f a) β) 
-                                              (proj₂ {zero} {zero} {Q} {B} (lift₁ f q a))) ▶
+                                              (proj₂ {_} {_} {Q} {B} (lift₁ f q a))) ▶
                                     (cong-proj₂ {Q} {B} (lift₁ f q a) (indep f a) β )
+
+
+
+
+
+
+Qu→QuH : {S : Setoid} → {PQ : PreQu S} → (Qu PQ) → (QuH PQ)
+Qu→QuH {S} {Q: Q []: [_] sound: sound} (qelim: qelim qelim-β: β) =
+  record 
+  { lift = λ {B} f s → qelim {λ _ → B} f (λ a b p 
+           → (subFix (sound p) B (f a)) ▶ (s a b p))
+  ; lift-β = λ {B} {a} {f} {q} → β {λ _ → B} {a} {f} (λ b c p 
+             → (subFix (sound p) B (f b)) ▶ (q b c p))
+  ; qind = λ P irr f → λ x
+           → qelim {P} f (λ a b p → irr [ b ] (subst P (sound p) (f a)) (f b)) x
+  }
+  where
+    subFix : ∀ {A : Set}{c d : A}(x : c ≡ d)(B : Set)(p : B) → subst (λ _ → B) x p ≡ p
+    subFix refl _ _ = refl
+    
+
+
+QuD→QuE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} → (QuD PQ) → (QuE QU)
+QuD→QuE {S} {Q: Q []: [_] sound: _} (emb: emb complete: complete stable: _) =
+  record { exact =  λ {a} {b} [a]≡[b] → ⟨ complete a ⟩₀ ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (complete b)}
+                          where
+                          private A      = Carrier S
+                                  _∼_    = _≈_ S
+                                  ⟨_⟩₀    : Symmetric _∼_
+                                  ⟨_⟩₀    = symmetric S
+                                  _▶₀_    : Transitive _∼_
+                                  _▶₀_    = transitive S 
+
+-- Remark that stability would be a consequence of the surjectivity of [_], soundness and completeness. However, the map [_] is not required to be surjective.
+
+QuD→Qu : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (Qu PQ)
+QuD→Qu   {S} {Q: Q []: [_] sound: sound} (emb: emb complete: complete stable: stable) = 
+  record 
+  { qelim   = λ {B} f _ a⁻ → subst B (stable a⁻) (f (emb a⁻))
+  ; qelim-β = λ {B} {a} {f} q → substIrr B (stable [ a ]) (sound (complete a))  (f (emb [ a ])) 
+              ▶ q _ _ (complete a)
+  }
 
 
 QuD2QuH : {S : Setoid} → {PQ : PreQu S} → (QuD PQ) → (QuH PQ)
 QuD2QuH {S} {Q: Q []: [_] sound: sound} (emb: ⌜_⌝ complete: complete stable: stable) = 
-  record { lift = λ f _ q → f ⌜ q ⌝
-         ; lift-β = λ {B} {a} {f} {soundf} → soundf  ⌜ [ a ] ⌝ a (complete a)
-         ; qind = λ P irr f → {!!} -- λ x → subst P (stable x) (f ⌜ x ⌝) 
-         }
+  record 
+  { lift   = λ f _ q → f ⌜ q ⌝
+  ; lift-β = λ {B} {a} {f} {s} → s ⌜ [ a ] ⌝ a (complete a)
+  ; qind   = λ P irr f → λ x → subst P (stable x) (f ⌜ x ⌝) 
+  }
 
-
-
-subFix : ∀ {A : Set}{c d : A}(x : c ≡ d)(B : Set)(p : B) → subst (λ _ → B) x p ≡ p
-subFix refl B p' = refl
-
-
-qu2quH : {S : Setoid} → {PQ : PreQu S} → (Qu PQ) → (QuH PQ)
-qu2quH {S} {Q: Q []: [_] sound: sound} (qelim: qelim qelim-β: β) = record 
-              { lift = λ {B} f x x' → qelim {λ _ → B} f (λ a a' p 
-              → trans (subFix (sound p) B (f a)) (x a a' p)) x'
-              ; lift-β = λ {B} {a} {f} {q} → β {λ _ → B} {a} {f} {λ a' a0 p 
-              → trans (subFix (sound p) B (f a')) (q a' a0 p)}
-              ; qind = λ P irr f → λ x0 
-              → qelim {P} (λ a → f a) (λ a b p → irr [ b ] (subst P (sound p) (f a)) (f b)) x0
-              } 

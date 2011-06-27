@@ -555,6 +555,7 @@ then the definitional equality between different elements in same
 equivalence class will be present.
 
 
+
 \bibliography{quotients}{}
 \bibliographystyle{plain}
 

@@ -68,7 +68,7 @@ _▶_ = trans
 ⟨_⟩ :  {a : Set} → Symmetric {A = a} _≡_
 ⟨_⟩ = sym
 
-Congruential : ({a : Set} → Rel a zero) → Set1
+Congruential : ({a : Set} → (a → a → Set)) → Set1
 Congruential ∼ = ∀ {a b} → (f : a → b) → f Preserves ∼ ⟶ ∼
 
 _⋆_ : Congruential _≡_
@@ -85,13 +85,13 @@ _≡∷≡_ = cong₂ _∷_
 _, : {A : Set} → {B : Set} → B → A →  A × B
 _, = flip _,_ 
 
-≡⇒≈ : {A : Set} → {_≈_ : Rel A zero}  → {p : Reflexive _≈_} → _≡_ ⇒ _≈_
+≡⇒≈ : {A : Set} → {_≈_ : A → A → Set}  → {p : Reflexive _≈_} → _≡_ ⇒ _≈_
 ≡⇒≈ {A} {_≈_} {p} refl = p
 
-_Preserves'_ : ∀ {a} → (a → a) → Rel a zero → Set
+_Preserves'_ : ∀ {a} → (a → a) → (a → a → Set) → Set
 f Preserves' ∼ = f Preserves ∼ ⟶ ∼ 
 
-_Preserves₂'_ : ∀ {a} → (a → a → a) → Rel a zero → Set
+_Preserves₂'_ : ∀ {a} → (a → a → a) → (a → a → Set) → Set
 + Preserves₂' ∼  = + Preserves₂ ∼ ⟶ ∼ ⟶ ∼
 
 _₁ : ∀ {A B} → Σ A B → A

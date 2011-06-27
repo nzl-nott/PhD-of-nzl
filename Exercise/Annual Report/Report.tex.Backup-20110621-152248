@@ -1,0 +1,45 @@
+\documentclass{article}
+\author{Li Nuo}
+\title{First Year Annual Report}
+\usepackage{dsfont}
+\usepackage{amsthm}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\tableofcontents
+
+\newpage
+\begin{abstract}
+
+\end{abstract}
+
+
+\section{Introduction}
+
+\subsection{Background}
+
+\subsection{Literature Reviews}
+
+\section{Aims and Objectives of the Project}
+
+\section{Theoretical Methods}
+
+\section{Results and Discussion}
+
+\section{Conclusion}
+
+\newpage
+\bibliography{myref}
+\bibliographystyle{plain}
+
+\end{document}

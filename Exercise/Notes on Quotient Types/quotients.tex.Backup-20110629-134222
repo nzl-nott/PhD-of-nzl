@@ -1,0 +1,1326 @@
+\documentclass[a4paper,12pt]{article}
+\def\textmu{}
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+%
+\ReadOnlyOnce{agda.fmt}%
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8x]{inputenc}
+\RequirePackage{ucs}
+\RequirePackage{amsfonts}
+
+\providecommand\mathbbm{\mathbb}
+
+% TODO: Define more of these ...
+\DeclareUnicodeCharacter{737}{\textsuperscript{l}}
+\DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
+\DeclareUnicodeCharacter{8759}{::}
+\DeclareUnicodeCharacter{9669}{\ensuremath{\triangleleft}}
+\DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{\scriptscriptstyle ?}{=}}}
+\DeclareUnicodeCharacter{10214}{\ensuremath{\llbracket}}
+\DeclareUnicodeCharacter{10215}{\ensuremath{\rrbracket}}
+
+% TODO: This is in general not a good idea.
+\providecommand\textepsilon{$\epsilon$}
+\providecommand\textmu{$\mu$}
+
+
+%Actually, varsyms should not occur in Agda output.
+
+% TODO: Make this configurable. IMHO, italics doesn't work well
+% for Agda code.
+
+\renewcommand\Varid[1]{\mathord{\textsf{#1}}}
+\let\Conid\Varid
+\newcommand\Keyword[1]{\textsf{\textbf{#1}}}
+\EndFmtInput
+
+
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{cite}
+\usepackage{MnSymbol}
+
+
+%\DeclareUnicodeCharacter{"2237}{\ensuremath{::}}
+\DeclareUnicodeCharacter{"03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{"03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{"03C6}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{"03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{"231C}{\ensuremath{\ulcorner}}
+\DeclareUnicodeCharacter{"231D}{\ensuremath{\urcorner}}
+\DeclareUnicodeCharacter{"25B6}{\ensuremath{\filledmedtriangleright}}
+
+\usepackage{color}
+\newcommand{\txa}[1]{\textcolor{red}{\textbf{Thorsten:~}#1}}
+
+\newcommand{\nzl}[1]{\textcolor{green}{\textbf{Nuo:~}#1}}
+
+\author{Li Nuo}
+\title{Investigation into definable quotient types}
+
+\begin{document}
+
+\maketitle
+
+\section{Background}
+Quotient generally means the the result of the division. Not only numbers can
+be divided, sets can also divided into small sets. Numbers are divided by numbers, sets can be
+divided by certain equivalence relations. Similarly, The result is called quotient sets. Then can both in the form of \ensuremath{\Conid{A}\;\mathbin{/}\;\Conid{B}}. The canonical form of quotient for numbers are just numbers, however for quotient sets, the results are the sets of equivalence classes. We can use a set usually denoted by \ensuremath{\Conid{Q}}, which is isomorphic to the results to name or represent every equivalence class. 
+
+In type theory like Agda, we also have quotient types. Quotient types can be defined as types formed by a type and an equivalence relation on this type.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{Q}\;\mathrel{=}\;\Conid{S/\char126 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Here we call the raw type \ensuremath{\Conid{S}} and the quotient type  \ensuremath{\Conid{Q}}. Of course quotient types can be defined on many levels. For simplicity, we only talk quotient types for \ensuremath{\Conid{Set}}, such as the pair of integers for rational numbers. Just as quotient sets, we can find a type \ensuremath{\Conid{Q'}} isomorphic to \ensuremath{\Conid{Q}} to represent  the normal forms of \ensuremath{\Conid{Q}}. 
+\ensuremath{\Conid{Q'}} can be seen as the normal forms for \ensuremath{\Conid{S}\;\mathbin{/}\;\mathord{\sim}}. These quotients types can be named as definable quotient types. We will see some examples later.
+Sometimes we can't find such a type. That means the normal forms can be defined constructively. We call them axiomatised quotient types. Therefore generally we use \ensuremath{\Conid{S}\;\mathbin{/}\;\mathord{\sim}} to represent the result of dividing \ensuremath{\Conid{S}} by \ensuremath{\mathord{\sim}}.
+
+For definable quotient types, we can define them in another way but we may need the ease of defining types on \ensuremath{\Conid{S}}. For axiomatised quotient types, we can only define them in this way. Hence we should focus on \ensuremath{\Conid{S}}. We can only define functions for \ensuremath{\Conid{S}}. functions on \ensuremath{\Conid{S/\char126 }} can be lifted from functions on \ensuremath{\Conid{S}}. But not all of them can be lifted. Only functions respects \ensuremath{\mathord{\sim}} can be lifted. Actually, functions on \ensuremath{\Conid{S/\char126 }} can be seen as the combinition of functions on \ensuremath{\Conid{S}} and congruence rules for them. It reflects the idea that the elements of quotient types are similar to black boxes hiding the information of \ensuremath{\Conid{S}} so that the functions which do not have access to the internal structure are defined for quotient types.
+
+I will then present some examples from my definition for numbers in Agda \cite{myself} to illustrate these ideas.
+
+
+\section{Quotient definition of Integers}
+All the result of subtraction between natural numbers are integers. Therefore it is naturally to define a pair of
+natural numbers to represent integers. Hence we can use a pair of natural nubmers as raw type \ensuremath{\Conid{ℤ₀}}.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℤ₀}\;\mathrel{=}\;\Conid{ℕ}\;\Varid{×}\;\Conid{ℕ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Mathematically, for two elements of \ensuremath{(\Varid{n1},\Varid{n2})} and \ensuremath{(\Varid{n3},\Varid{n4})}, when \ensuremath{\Varid{n1}\;\Varid{+}\;\Varid{n4}\;\mathrel{=}\;\Varid{n3}\;\Varid{+}\;\Varid{n2}}, they represent the same result of subtraction , namely the same integer. By these definition, we can define for an equivalence relation for \ensuremath{\Conid{ℕ}\;\Varid{×}\;\Conid{ℕ}}, when we want to use \ensuremath{\Conid{ℕ}\;\Varid{×}\;\Conid{ℕ}} to represent integers,
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}\;\Varid{zero}{}\<[E]%
+\\
+\>[B]{}(\Varid{x+},\Varid{x-})\;\Varid{∼}\;(\Varid{y+},\Varid{y-})\;\mathrel{=}\;(\Varid{x+}\;\Conid{ℕ+}\;\Varid{y-})\;\Varid{≡}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{x-}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+With this equivalence relation, the set of all pairs of natural
+numbers are divided into equivalence classes. For each equivalence class
+we can choose a representative, namely choosing the normal form within \ensuremath{\Conid{ℤ₀}}.
+We call the function used to choose normal forms as normalisation. The one below is one of the canonical normalisation within the \ensuremath{\Conid{ℤ₀}}.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{m},\Varid{0}\mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Varid{m},\Varid{0}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{0},\Conid{ℕ.suc}\;\Varid{n}\mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Varid{0},\Conid{ℕ.suc}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Conid{ℕ.suc}\;\Varid{m},\Conid{ℕ.suc}\;\Varid{n}\mskip1.5mu]\;\mathrel{=}\;[\mskip1.5mu \Varid{m},\Varid{n}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+For example,  \ensuremath{(\Varid{3},\Varid{2})} can be normalised to \ensuremath{(\Varid{2},\Varid{1})}, then to \ensuremath{(\Varid{1},\Varid{0})}. 
+
+To prove it is normalisation we should prove the result is still in the same equivalence classes. And the normal form should be unique.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{normal-ok}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{∼}\;\Varid{a}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{normal-unique}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+As soon as we have the normalisation, we can use another
+more general way to define equivalence relation, namely just identify
+their normal form.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}\;\Varid{zero}{}\<[E]%
+\\
+\>[B]{}\Varid{x}\;\Varid{∼}\;\Varid{y}\;\mathrel{=}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{y}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The \ensuremath{[\mskip1.5mu \anonymous \mskip1.5mu]} is an endomap in the set \ensuremath{\Conid{ℤ₀}}, and the resulting
+subset is actually isomorphic to the set of integers. 
+However since we
+do not distinguish the types of the original form and the normal form,
+we lose the information that it has been normalised. Therefore we can
+define the type of the result to be the set of integers.
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{m},\Varid{0}\mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Varid{+}\;\Varid{m}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{0},\Conid{ℕ.suc}\;\Varid{n}\mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Varid{-suc}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Conid{ℕ.suc}\;\Varid{m},\Conid{ℕ.suc}\;\Varid{n}\mskip1.5mu]\;\mathrel{=}\;[\mskip1.5mu \Varid{m},\Varid{n}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+Then this is a retraction function for the normalisation function and
+we call it denormalisation function.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{⌜\char95 ⌝}\;{}\<[12]%
+\>[12]{}\mathbin{:}\;\Conid{ℤ}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}\Varid{⌜}\;\Varid{+}\;\Varid{n}\;\Varid{⌝}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{n},\Varid{0}{}\<[E]%
+\\
+\>[B]{}\Varid{⌜}\;\Varid{-suc}\;\Varid{n}\;\Varid{⌝}\;\mathrel{=}\;\Varid{0},\Conid{ℕ.suc}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+Firstly we need to prove \ensuremath{\Varid{∼}} is actually an equivalence
+relation.
+
+\emph{Reflexivity}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{zrefl}\;\mathbin{:}\;\Conid{Reflexive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{zrefl}\;\{\mskip1.5mu \Varid{x+},\Varid{x-}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Symmetry}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{zsym}\;\mathbin{:}\;\Conid{Symmetric}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{zsym}\;\{\mskip1.5mu \Varid{x+},\Varid{x-}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{y+},\Varid{y-}\mskip1.5mu\}\;\mathrel{=}\;\Varid{sym}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\emph{Transitivity}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{29}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 >∼<\char95 }\;\mathbin{:}\;\Conid{Transitive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{\char95 >∼<\char95 }\;\{\mskip1.5mu \Varid{x+},\Varid{x-}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{y+},\Varid{y-}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{z+},\Varid{z-}\mskip1.5mu\}\;\Varid{x=y}\;\Varid{y=z}\;\mathrel{=}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{cancel-+-left}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{y-})\;{}\<[29]%
+\>[29]{}(\Conid{ℕ.exchange₁}\;\Varid{y+}\;\Varid{y-}\;\Varid{x+}\;\Varid{z-}\;\Varid{>≡<}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{y=z}\;\Varid{+=}\;\Varid{x=y})\;\Varid{>≡<}\;\Conid{ℕ.exchange₂}\;\Varid{z+}\;\Varid{y-}\;\Varid{y+}\;\Varid{x-}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{ ∼ isEquivalence relation}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 isEquivalence}\;\mathbin{:}\;\Conid{IsEquivalence}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{\char95 ∼\char95 isEquivalence}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{refl}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{zrefl}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{sym}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{zsym}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{trans}\;\mathrel{=}\;\Varid{\char95 >∼<\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+Now we can prove that the \ensuremath{\Conid{ℤ₀}} and its equivalence relation \ensuremath{\Varid{∼}}
+form a setoid. 
+
+\emph{ (\ensuremath{\Conid{ℤ₀}}, ∼) is a setoid}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℤ-Setoid}\;\mathbin{:}\;\Conid{Setoid}\;\anonymous \;\anonymous {}\<[E]%
+\\
+\>[B]{}\Conid{ℤ-Setoid}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Conid{Carrier}\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{\char95 ≈\char95 }\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{isEquivalence}\;\mathrel{=}\;\Varid{\char95 ∼\char95 isEquivalence}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\section{Rational numbers}
+
+The quotient definition of rational number is more natural to
+understand and the normalisation is also commonly used in regular
+mathematics. We just use one integer and one natural number to
+represent a rational number. The reason is because it is hard to
+exclude the invalid denominator if we use integers, so I choose the
+natural numbers to represent positive natural number which are one bigger.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℚ₀}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{\char95 /suc\char95 }\;\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;(\Varid{d}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+and this is the equivalence relation for it
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;{}\<[7]%
+\>[7]{}\mathbin{:}\;\Conid{Rel}\;\Conid{ℚ₀}\;\Varid{zero}{}\<[E]%
+\\
+\>[B]{}\Varid{n1}\;\Varid{/suc}\;\Varid{d1}\;\Varid{∼}\;\Varid{n2}\;\Varid{/suc}\;\Varid{d2}\;\mathrel{=}\;{}\<[28]%
+\>[28]{}\Varid{n1}\;\Conid{ℤ*ℕ}\;\Varid{suc}\;\Varid{d2}\;\Varid{≡}\;\Varid{n2}\;\Conid{ℤ*ℕ}\;\Varid{suc}\;\Varid{d1}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Reflexivity}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{qrefl}\;\mathbin{:}\;\Conid{Reflexive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{qrefl}\;\{\mskip1.5mu \Varid{n}\;\Varid{/suc}\;\Varid{d}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{symmetry}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{qsym}\;\mathbin{:}\;\Conid{Symmetric}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{qsym}\;\{\mskip1.5mu \Varid{a}\;\Varid{/suc}\;\Varid{ad}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\;\Varid{/suc}\;\Varid{bd}\mskip1.5mu\}\;\mathrel{=}\;\Varid{sym}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{transitivity}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{qtrans}\;\mathbin{:}\;\Conid{Transitive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{qtrans}\;\{\mskip1.5mu \Varid{a}\;\Varid{/suc}\;\Varid{ad}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\;\Varid{/suc}\;\Varid{bd}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{c}\;\Varid{/suc}\;\Varid{cd}\mskip1.5mu\}\;\Varid{a=b}\;\Varid{b=c}\;\Keyword{with}\;\Conid{ℤ.0?}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{qtrans}\;\{\mskip1.5mu \Varid{a}\;\Varid{/suc}\;\Varid{ad}\mskip1.5mu\}\;\{\mskip1.5mu \mathbin{\circ}\;(\Varid{+}\;\Varid{0})\;\Varid{/suc}\;\Varid{bd}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{c}\;\Varid{/suc}\;\Varid{cd}\mskip1.5mu\}\;\Varid{a=b}\;\Varid{b=c}\;\mid \;\Varid{yes}\;\Varid{refl}\;\mathrel{=}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{ℤ.solve0'}\;(\Varid{+}\;\Varid{suc}\;\Varid{bd})\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;(\Varid{λ}\;())\;\Varid{a=b}\;\Varid{0}\;\mathord{\sim}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{ℤ.solve0'}\;(\Varid{+}\;\Varid{suc}\;\Varid{bd})\;\{\mskip1.5mu \Varid{c}\mskip1.5mu\}\;(\Varid{λ}\;())\;\Varid{⟨}\;\Varid{b=c}\;\Varid{⟩}{}\<[E]%
+\\
+\>[B]{}\Varid{qtrans}\;\{\mskip1.5mu \Varid{a}\;\Varid{/suc}\;\Varid{ad}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\;\Varid{/suc}\;\Varid{bd}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{c}\;\Varid{/suc}\;\Varid{cd}\mskip1.5mu\}\;\Varid{a=b}\;\Varid{b=c}\;\mid \;\Varid{no}\;\Varid{¬p}\;\mathrel{=}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{ℤ.l-integrity}\;(\Varid{b}\;\Conid{ℤ*}\;(\Varid{+}\;\Varid{suc}\;\Varid{bd}))\;(\Conid{ℤ.nz*}\;\Varid{b}\;(\Varid{+}\;\Varid{suc}\;\Varid{bd})\;\Varid{¬p}\;(\Varid{λ}\;()))\;({}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{ℤ.*-exchange₁}\;\Varid{b}\;(\Varid{+}\;\Varid{suc}\;\Varid{bd})\;\Varid{a}\;(\Varid{+}\;\Varid{suc}\;\Varid{cd})\;\Varid{>≡<}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Conid{ℤ.*-cong}\;\Varid{b=c}\;\Varid{a=b})\;\Varid{>≡<}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{ℤ.*-exchange₂}\;\Varid{c}\;(\Varid{+}\;\Varid{suc}\;\Varid{bd})\;\Varid{b}\;(\Varid{+}\;\Varid{suc}\;\Varid{ad})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\emph{ ∼ isEquivalence relation}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{isEquivalenceℚ₀}\;\mathbin{:}\;\Conid{IsEquivalence}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{isEquivalenceℚ₀}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{refl}\;\mathrel{=}\;\Varid{qrefl}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{sym}\;{}\<[10]%
+\>[10]{}\mathrel{=}\;\Varid{qsym}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{trans}\;\mathrel{=}\;\Varid{qtrans}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Then it is natural to form the setoid
+
+\emph{ (\ensuremath{\Conid{ℚ₀}}, ∼) is a setoid}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℚ₀setoid}\;\mathbin{:}\;\Conid{Setoid}\;\anonymous \;\anonymous {}\<[E]%
+\\
+\>[B]{}\Conid{ℚ₀setoid}\;\mathrel{=}\;\Keyword{record}\;\{\mskip1.5mu {}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Conid{Carrier}\;{}\<[15]%
+\>[15]{}\mathrel{=}\;\Conid{ℚ₀}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};{}\<[6]%
+\>[6]{}\Varid{\char95 ≈\char95 }\;{}\<[15]%
+\>[15]{}\mathrel{=}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{isEquivalence}\;\mathrel{=}\;\Varid{isEquivalenceℚ₀}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+However these definition are just setoid and to form a quotient type,
+we need more structure. For definable quotient types, we need a representative of each
+equivalence class, we may have a set which is isomorphic to the set of
+equivalence classes, namely the normal form of the quotient type. Moreover, If we abstract the structure, we can
+prove some general properites for definable quotient types.
+
+\section{The general structure of definable quotient types}
+
+I will use the interfaces written by Thomas Amberree in this part. We need
+to first establish the quotient signature.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{QuSig}\;(\Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{14}{}\<[14]%
+\>[14]{}\Keyword{field}{}\<[E]%
+\\
+\>[14]{}\hsindent{3}{}\<[17]%
+\>[17]{}\Conid{Q}\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
+\\
+\>[14]{}\hsindent{3}{}\<[17]%
+\>[17]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Conid{Carrier}\;\Conid{S}\;\Varid{→}\;\Conid{Q}{}\<[E]%
+\\
+\>[14]{}\hsindent{3}{}\<[17]%
+\>[17]{}\Varid{sound}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{Carrier}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;(\Varid{\char95 ≈\char95 }\;\Conid{S}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+In this type signature, for certain setoid we have a type represent
+the set of the normal form, a normalisation function, and the proof
+that two elements in the same equivalence class normalised to the
+same form. With soundness, we can say normalisation is a function if we treat S as the set of equivalence classes.
+
+However, there is no surjective requirements for the map in this signature. It
+means that the set of equivalence classes are not isomorphic to the set \ensuremath{\Conid{Q}}.
+
+
+Actually, we can use the same type for \ensuremath{\Conid{Carrier}\;\Conid{S}} and \ensuremath{\Conid{Q}}. For example,
+for Setoid \ensuremath{\Conid{ℤ₀},\Varid{∼}}, we can build a quotient siganature by giving \ensuremath{\Conid{ℤ₀}}
+and the endomap normalisation function.
+
+
+Now, using the quotient signature if we can prove that any function of
+type \ensuremath{\Conid{S}\;\Varid{→}\;\Conid{B}} respects the equivalence relation, then we can lift it to be
+a function of type \ensuremath{\Conid{Q}\;\Varid{→}\;\Conid{B}}. Of course we need to prove that it is
+lift function. With the lift function we have the first definition of quotient.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{64}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{75}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{82}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{85}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{Qu}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;(\Conid{QS}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\Keyword{private}\;\Conid{S}\;{}\<[30]%
+\>[30]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Varid{\char95 ∼\char95 }\;{}\<[31]%
+\>[31]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Conid{Q}\;{}\<[30]%
+\>[30]{}\mathrel{=}\;\Conid{Q}\;\Conid{QS}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[30]%
+\>[30]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Conid{QS}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Varid{sound}\;{}\<[30]%
+\>[30]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{S₀}\mskip1.5mu\}\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Varid{sound}\;{}\<[30]%
+\>[30]{}\mathrel{=}\;\Varid{sound}\;\Conid{QS}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\Keyword{field}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\Varid{lift}\;{}\<[25]%
+\>[25]{}\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[25]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{S})\;\Varid{→}\;(\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]))\;{}\<[E]%
+\\
+\>[25]{}\Varid{→}\;((\Varid{a}\;\Varid{a'}\;\mathbin{:}\;\Conid{S})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{a'})\;\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;{}\<[75]%
+\>[75]{}(\Varid{f}\;\Varid{a})\;{}\<[82]%
+\>[82]{}\Varid{≡}\;{}\<[85]%
+\>[85]{}\Varid{f}\;\Varid{a'})\;{}\<[E]%
+\\
+\>[25]{}\Varid{→}\;(\Varid{c}\;\mathbin{:}\;\Conid{Q})\;\Varid{→}\;\Conid{B}\;\Varid{c}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\Varid{liftok}\;{}\<[25]%
+\>[25]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\;\Varid{a}\;\Varid{f}\;\Varid{q}\mskip1.5mu\}\;{}\<[42]%
+\>[42]{}\Varid{→}\;\Varid{lift}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;{}\<[64]%
+\>[64]{}\Varid{≡}\;\Varid{f}\;\Varid{a}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\Varid{liftIrr}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\;\Varid{a}\;\Varid{f}\;\Varid{q}\;\Varid{q'}\mskip1.5mu\}\;\Varid{→}\;\Varid{lift}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;{}\<[64]%
+\>[64]{}\Varid{≡}\;\Varid{lift}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q'}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+In my opinion the proof irrelevance of lift operations are
+unecessary since \ensuremath{\Varid{lifeok}} implies it.
+
+
+However, there can be more than one equivalence classes normalised to the same form. Therefore the normal form do
+not fully contain the information of quotient type. If we can prove the completeness \nzl{I don't think this is completeness, it is only injective},
+ namely two elements normalised to the same form must be in the same equivalence class. they belong to the same
+equivalence class. Hence the normalisation is injective from the set of equivalence classes to the set of normal forms.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{QuE}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{QS}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S}\mskip1.5mu\}\;(\Conid{QU}\;\mathbin{:}\;\Conid{Qu}\;\Conid{QS})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Keyword{private}\;\Conid{S}\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}\Varid{\char95 ∼\char95 }\;{}\<[24]%
+\>[24]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}\Conid{Q}\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Conid{Q}\;\Conid{QS}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Conid{QS}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}\Varid{sound}\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}\Varid{sound}\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Varid{sound}\;\Conid{QS}{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Keyword{field}{}\<[E]%
+\\
+\>[8]{}\hsindent{2}{}\<[10]%
+\>[10]{}\Varid{complete}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Even if we prove the normalisation to be injective, we still not require it to be surjective. Then \ensuremath{\Conid{Q}} may have some redundance. Therefore
+we need more efficient quotient type. 
+
+In \ensuremath{\Conid{Nf}} we have a embedding function used to choose a representative for
+each equivalence class. The proof of stability shows that \ensuremath{\Varid{emb}} is a section of
+normalisation function. Since all elements in \ensuremath{\Conid{Q}} can be the result of the normalisation, it must be surjective. The proof \ensuremath{\Varid{compl}} shows that the
+representative is in the same equivalence class hence we can prove the
+completeness as well. In this definition of quotient, the
+set of all equivalence classes are in fact isomorphic to the set \ensuremath{\Conid{Q}}.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{36}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{Nf}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;(\Conid{QS}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Keyword{private}\;\Conid{S}\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}\Varid{\char95 ∼\char95 }\;{}\<[22]%
+\>[22]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}\Conid{Q}\;{}\<[22]%
+\>[22]{}\mathrel{=}\;\Conid{Q}\;\Conid{QS}{}\<[E]%
+\\
+\>[8]{}\hsindent{8}{}\<[16]%
+\>[16]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[23]%
+\>[23]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Conid{QS}{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Keyword{field}{}\<[E]%
+\\
+\>[8]{}\hsindent{2}{}\<[10]%
+\>[10]{}\Varid{emb}\;{}\<[17]%
+\>[17]{}\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{S}{}\<[E]%
+\\
+\>[8]{}\hsindent{2}{}\<[10]%
+\>[10]{}\Varid{compl}\;{}\<[17]%
+\>[17]{}\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{→}\;\Varid{emb}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{∼}\;\Varid{a}{}\<[E]%
+\\
+\>[8]{}\hsindent{2}{}\<[10]%
+\>[10]{}\Varid{stable}\;\mathbin{:}\;\Varid{∀}\;\Varid{x}\;\Varid{→}\;[\mskip1.5mu \Varid{emb}\;\Varid{x}\mskip1.5mu]\;{}\<[36]%
+\>[36]{}\Varid{≡}\;\Varid{x}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+We can easily establish the function transforming the \ensuremath{\Conid{Nf}} to \ensuremath{\Conid{QuE}}, since completeness can be derived from compl.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{35}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{43}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{51}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{nf2quE}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{QS}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{QU}\;\mathbin{:}\;\Conid{Qu}\;\Conid{QS}\mskip1.5mu\}\;\Varid{→}\;(\Conid{Nf}\;\Conid{QS})\;\Varid{→}\;(\Conid{QuE}\;\Conid{QU}){}\<[E]%
+\\
+\>[B]{}\Varid{nf2quE}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{QS}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{QU}\mskip1.5mu\}\;\Varid{nf}\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Keyword{record}\;\{\mskip1.5mu {}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{complete}\;\mathrel{=}\;{}\<[19]%
+\>[19]{}\Varid{λ}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\mskip1.5mu\}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]\;\Varid{→}\;{}\<[E]%
+\\
+\>[19]{}\hsindent{2}{}\<[21]%
+\>[21]{}\Varid{⟨}\;\Varid{compl}\;\Varid{a}\;\Varid{⟩}\;\Varid{▶}\;\Varid{subst}\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x}\;\Varid{∼}\;\Varid{b})\;(\Varid{emb}\;\Varid{⋆}\;\Varid{⟨}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]\;\Varid{⟩})\;(\Varid{compl}\;\Varid{b}){}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[7]{}\hsindent{20}{}\<[27]%
+\>[27]{}\Keyword{where}{}\<[E]%
+\\
+\>[7]{}\hsindent{20}{}\<[27]%
+\>[27]{}\Keyword{private}\;\Conid{S}\;{}\<[42]%
+\>[42]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{\char95 ∼\char95 }\;{}\<[43]%
+\>[43]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Conid{Q}\;{}\<[42]%
+\>[42]{}\mathrel{=}\;\Conid{Q}\;\Conid{QS}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[42]%
+\>[42]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Conid{QS}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{emb}\;{}\<[42]%
+\>[42]{}\mathrel{=}\;\Varid{emb}\;\Varid{nf}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{compl}\;{}\<[42]%
+\>[42]{}\mathrel{=}\;\Varid{compl}\;{}\<[51]%
+\>[51]{}\Varid{nf}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{⟨\char95 ⟩}\;{}\<[42]%
+\>[42]{}\mathbin{:}\;\Conid{Symmetric}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{⟨\char95 ⟩}\;{}\<[42]%
+\>[42]{}\mathrel{=}\;\Varid{symmetric}\;\Conid{S}{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{\char95 ▶\char95 }\;{}\<[42]%
+\>[42]{}\mathbin{:}\;\Conid{Transitive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[27]{}\hsindent{8}{}\<[35]%
+\>[35]{}\Varid{\char95 ▶\char95 }\;{}\<[42]%
+\>[42]{}\mathrel{=}\;\Varid{transitive}\;\Conid{S}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+We can also define non-dependent lift version of quotients. We need to prove quotient
+induction when we have uniqueness of proof for certain proposition
+dependent on \ensuremath{\Conid{Q}}.
+
+\nzl{Why we need qind?}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{43}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{53}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{60}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{63}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{66}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{QuH}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;(\Conid{QS}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\Keyword{private}\;\Conid{S}\;{}\<[27]%
+\>[27]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Varid{\char95 ∼\char95 }\;{}\<[30]%
+\>[30]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Conid{Q}\;{}\<[30]%
+\>[30]{}\mathrel{=}\;\Conid{Q}\;\Conid{QS}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[31]%
+\>[31]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Conid{QS}{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Varid{sound}\;{}\<[30]%
+\>[30]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[15]{}\hsindent{8}{}\<[23]%
+\>[23]{}\Varid{sound}\;{}\<[30]%
+\>[30]{}\mathrel{=}\;\Varid{sound}\;\Conid{QS}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\Keyword{field}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\Varid{liftH}\;{}\<[26]%
+\>[26]{}\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[17]{}\hsindent{8}{}\<[25]%
+\>[25]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;\Conid{S}\;\Varid{→}\;\Conid{B})\;{}\<[E]%
+\\
+\>[17]{}\hsindent{8}{}\<[25]%
+\>[25]{}\Varid{→}\;((\Varid{a}\;\Varid{a'}\;\mathbin{:}\;\Conid{S})\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{a'})\;\Varid{→}\;{}\<[53]%
+\>[53]{}(\Varid{f}\;\Varid{a})\;{}\<[60]%
+\>[60]{}\Varid{≡}\;{}\<[63]%
+\>[63]{}\Varid{f}\;\Varid{a'})\;{}\<[E]%
+\\
+\>[17]{}\hsindent{8}{}\<[25]%
+\>[25]{}\Varid{→}\;\Conid{Q}\;\Varid{→}\;\Conid{B}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\Varid{liftHok}\;{}\<[26]%
+\>[26]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\;\Varid{a}\;\Varid{f}\;\Varid{q}\mskip1.5mu\}\;{}\<[43]%
+\>[43]{}\Varid{→}\;\Varid{liftH}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;{}\<[66]%
+\>[66]{}\Varid{≡}\;\Varid{f}\;\Varid{a}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\mbox{\onelinecomment  quotient induction}{}\<[E]%
+\\
+\>[15]{}\hsindent{2}{}\<[17]%
+\>[17]{}\Varid{qind}\;\mathbin{:}\;(\Conid{P}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set})\;{}\<[E]%
+\\
+\>[17]{}\hsindent{7}{}\<[24]%
+\>[24]{}\Varid{→}\;(\Varid{∀}\;\{\mskip1.5mu \Varid{x}\mskip1.5mu\}\;\Varid{→}\;(\Varid{p}\;\Varid{p'}\;\mathbin{:}\;\Conid{P}\;\Varid{x})\;\Varid{→}\;\Varid{p}\;\Varid{≡}\;\Varid{p'})\;{}\<[E]%
+\\
+\>[17]{}\hsindent{7}{}\<[24]%
+\>[24]{}\Varid{→}\;(\Varid{∀}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\Varid{→}\;\Conid{P}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
+\\
+\>[17]{}\hsindent{7}{}\<[24]%
+\>[24]{}\Varid{→}\;(\Varid{∀}\;\{\mskip1.5mu \Varid{x}\mskip1.5mu\}\;\Varid{→}\;\Conid{P}\;\Varid{x}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+If we have the normal form definition, we can lift the function easily.
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{54}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{nf2qu}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{QS}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;(\Conid{Nf}\;\Conid{QS})\;\Varid{→}\;(\Conid{Qu}\;\Conid{QS}){}\<[E]%
+\\
+\>[B]{}\Varid{nf2qu}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{QS}\mskip1.5mu\}\;\Varid{nf}\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Keyword{record}\;\{\mskip1.5mu {}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{lift}\;{}\<[17]%
+\>[17]{}\mathrel{=}\;{}\<[20]%
+\>[20]{}\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;\Varid{a⁻}\;\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{stable₀}\;\Varid{a⁻})\;(\Varid{f}\;(\Varid{emb₀}\;\Varid{a⁻}));{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{liftok}\;{}\<[17]%
+\>[17]{}\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{q}\mskip1.5mu\}\;\Varid{→}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{substIrr}\;\Conid{B}\;(\Varid{stable}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;(\Varid{sound}\;(\Varid{compl}\;\Varid{a}))\;{}\<[54]%
+\>[54]{}(\Varid{f}\;(\Varid{emb}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]))\;\Varid{▶}\;\Varid{q}\;\anonymous \;\anonymous \;(\Varid{compl}\;\Varid{a});{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{liftIrr}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Keyword{where}\;{}\<[17]%
+\>[17]{}\Conid{S}\;{}\<[24]%
+\>[24]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[17]{}\Varid{\char95 ∼\char95 }\;{}\<[25]%
+\>[25]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[17]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[24]%
+\>[24]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Conid{QS}{}\<[E]%
+\\
+\>[17]{}\Varid{sound}\;{}\<[24]%
+\>[24]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{S}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[17]{}\Varid{sound}\;{}\<[24]%
+\>[24]{}\mathrel{=}\;\Varid{sound}\;{}\<[33]%
+\>[33]{}\Conid{QS}{}\<[E]%
+\\
+\>[17]{}\Varid{compl}\;{}\<[24]%
+\>[24]{}\mathrel{=}\;\Varid{compl}\;{}\<[33]%
+\>[33]{}\Varid{nf}{}\<[E]%
+\\
+\>[17]{}\Varid{stable}\;\mathrel{=}\;\Varid{stable}\;\Varid{nf}{}\<[E]%
+\\
+\>[17]{}\Varid{emb}\;{}\<[24]%
+\>[24]{}\mathrel{=}\;\Varid{emb}\;{}\<[33]%
+\>[33]{}\Varid{nf}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\section{The properties of definable quotient types}
+
+Not only the predicate can be lifted, but also the operators can be
+lifted.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{Op}\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{Set}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Conid{Op}\;\Varid{0}\;\mathrel{=}\;\Varid{λ}\;\Varid{t}\;\Varid{→}\;\Varid{t}{}\<[E]%
+\\
+\>[B]{}\Conid{Op}\;(\Varid{suc}\;\Varid{n})\;\mathrel{=}\;\Varid{λ}\;\Varid{t}\;\Varid{→}\;(\Varid{t}\;\Varid{→}\;\Conid{Op}\;\Varid{n}\;\Varid{t}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{record}\;\Conid{SetoidOp}\;(\Conid{St}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero})\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;\Varid{§\char95 §}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{S}\;\mathrel{=}\;\Conid{Setoid.Carrier}\;\Conid{St}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{n}\;\Conid{S}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{record}\;\Conid{QuotientOp}\;\{\mskip1.5mu \Conid{St}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{12}{}\<[12]%
+\>[12]{}\{\mskip1.5mu \Conid{Qs}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{St}\mskip1.5mu\}\;(\Varid{nf}\;\mathbin{:}\;\Conid{Nf}\;\Conid{Qs})\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;\Varid{§\char95 §}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{3}{}\<[6]%
+\>[6]{}\Conid{Q}\;\mathrel{=}\;\Conid{QuSig.Q}\;\Conid{Qs}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{3}{}\<[6]%
+\>[6]{}\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{n}\;\Conid{Q}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{auxf}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\Conid{Q}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;([\mskip1.5mu \anonymous \mskip1.5mu]\;\mathbin{:}\;\Conid{S}\;\Varid{→}\;\Conid{Q})\;(\Varid{emb}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{S})\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}\Conid{Op}\;\Varid{n}\;\Conid{S}\;\Varid{→}\;\Conid{Op}\;\Varid{n}\;\Conid{Q}{}\<[E]%
+\\
+\>[B]{}\Varid{auxf}\;\Varid{zero}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{emb}\;\Varid{op}\;\mathrel{=}\;[\mskip1.5mu \Varid{op}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{auxf}\;(\Varid{suc}\;\Varid{n})\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{emb}\;\Varid{op}\;\mathrel{=}\;\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{auxf}\;\Varid{n}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{emb}\;(\Varid{op}\;(\Varid{emb}\;\Varid{x})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{liftop}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\;\Varid{zero}\;\Varid{zero}\mskip1.5mu\}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;(\Conid{Qs}\;\mathbin{:}\;\Conid{QuSig}\;\Conid{S})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{13}{}\<[13]%
+\>[13]{}(\Conid{So}\;\mathbin{:}\;\Conid{SetoidOp}\;\Conid{S}\;\Varid{n})\;(\Varid{nf}\;\mathbin{:}\;\Conid{Nf}\;\Conid{Qs})\;\Varid{→}\;\Conid{QuotientOp}\;\Varid{nf}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{liftop}\;\Varid{n}\;(\Conid{Q},[\mskip1.5mu \anonymous \mskip1.5mu],\Varid{sound})\;\Varid{§}\;\Varid{op}\;\Varid{§}\;(\Varid{emb},\Varid{compl},\Varid{stable})\;\mathrel{=}\;\Varid{§}\;\Varid{auxf}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{emb}\;\Varid{op}\;\Varid{§}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+We can lift operators of any order within the normal form definition
+of quotient type.
+According to this, lift the general properties are also possible.
+
+
+
+\section{The undefinable quotient types}
+All of integers, rational numbers and the congurence class of modulo
+have definable normal form or canonical form. However real numbers is not belonging to
+this group. It does not have normal forms. We can use cauchy sequences or signed digits to represent real
+numbers. They are obvious quotient sets isomorphic to the true real numbers, but we cannot use the interface
+introduced above. We can only postulate it in Agda. Moreover the equivalence relation is undecidable.
+For these kinds of quotient types, for which we do not have normal form, we call them axiomatised quotient
+types.
+
+This could be a cauchy sequence used to represent real numbers (Simplified for readability),
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Varid{cauℝ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{f}\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℚ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{p}\;\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Varid{∀}\;(\Varid{m}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;(\Varid{n}\;\Varid{<}\;\Varid{m})\;\Varid{→}\;\Varid{∣}\;(\Varid{f}\;\Varid{m})\;\Varid{-}\;(\Varid{f}\;\Varid{n})\;\Varid{∣}\;\Varid{<}\;(\Varid{1}\;\mathbin{/}\;\Varid{2}\;\mathbin{\uparrow}\;\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+It contains a function to generate the sequence of numbers and a proposition that the
+sequence converges by bounded rate.
+
+For example we can embedding rational numbers easily,
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{emb}\;\mathbin{:}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{ℝ}{}\<[E]%
+\\
+\>[B]{}\Varid{emb}\;\Varid{q}\;\mathrel{=}\;\Varid{f:}\;(\Varid{λ}\;\anonymous \;\Varid{→}\;\Varid{q})\;\Varid{p:}\;\Varid{λ}\;\Varid{n}\;\Varid{m}\;\Varid{n<m}\;\Varid{→}\;(\Varid{s≤s}\;\Varid{z≤n})\;\Varid{resp}\;(\Varid{abscanc}\;\Varid{q}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+But for irrational numbers we have to use different ways to generate the sequences. For square root, we can use Taylor series.
+
+\section{Conclusion}
+Here, we only talk about definable quotient types within Agda. The
+quotient is a setoid and the elements in an euqivalence classes are
+not definitionally equal. However, if we axiomatize the type form of
+quotient type and let the Agda automatically normalise the carrier,
+then the definitional equality between different elements in same
+equivalence class will be present.
+
+
+\bibliography{quotients}{}
+\bibliographystyle{plain}
+
+\end{document}

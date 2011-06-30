@@ -1,9 +1,38 @@
 \begin{thebibliography}{1}
 
+\bibitem{aan}
+Thorsten Altenkirch, Thomas Anberr\'{e}e, and Nuo Li.
+\newblock Definable quotients in type theory.
+\newblock 2011.
+
+\bibitem{bis:85}
+Errett Bishop and Douglas Bridges.
+\newblock {\em Constructive Analysis}.
+\newblock Springer, New York, 1985.
+
+\bibitem{cou:01}
+Pierre Courtieu.
+\newblock \textbf{Normalized types}.
+\newblock In {\em Proceedings of CSL2001}, volume 2142 of {\em Lecture Notes in
+  Computer Science}, 2001.
+
 \bibitem{hof:phd}
 Martin Hofmann.
 \newblock {\em Extensional concepts in intensional type theory}.
-\newblock PhD thesis, 1995.
+\newblock PhD thesis, School of Informatics., 1995.
+
+\bibitem{hof:95:sm}
+Martin Hofmann.
+\newblock A simple model for quotient types.
+\newblock In {\em Proceedings of TLCA'95, volume 902 of Lecture Notes in
+  Computer Science}, pages 216--234. Springer, 1995.
+
+\bibitem{hof:95:con}
+Martin Hofmann.
+\newblock Conservativity of equality reflection over intensional type theory.
+\newblock In {\em Selected papers from the International Workshop on Types for
+  Proofs and Programs}, TYPES '95, pages 153--164, London, UK, 1996.
+  Springer-Verlag.
 
 \bibitem{hom}
 Peter~V. Homeier.
@@ -14,5 +43,10 @@ Peter~V. Homeier.
 Bengt Nordstr\"{o}m, Kent Petersson, and Jan~M. Smith.
 \newblock {\em Programming in Martin-L\"{o}f's type theory: an introduction}.
 \newblock Clarendon Press, New York, NY, USA, 1990.
+
+\bibitem{nuo:10}
+Li~Nuo.
+\newblock Representing numbers in agda.
+\newblock 2010.
 
 \end{thebibliography}

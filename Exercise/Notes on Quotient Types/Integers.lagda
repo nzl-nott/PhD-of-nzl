@@ -22,30 +22,7 @@
 
 \newcommand{\nzl}[1]{\textcolor{green}{\textbf{Nuo:~}#1}}
 
-\author{Li Nuo}
-\title{Investigation into definable quotient types}
-
 \begin{document}
-
-\maketitle
-
-\section{Background}
-Quotient generally means the the result of the division. Not only numbers can
-be divided, sets can also divided into small sets. Numbers are divided by numbers, sets can be
-divided by certain equivalence relations. Similarly, The result is called quotient sets. Then can both in the form of |A / B|. The canonical form of quotient for numbers are just numbers, however for quotient sets, the results are the sets of equivalence classes. We can use a set usually denoted by |Q|, which is isomorphic to the results to name or represent every equivalence class. 
-
-In type theory like Agda, we also have quotient types. Quotient types can be defined as types formed by a type and an equivalence relation on this type.
-\begin{code}
-Q = S/~
-\end{code}
-Here we call the raw type |S| and the quotient type  |Q|. Of course quotient types can be defined on many levels. For simplicity, we only talk quotient types for |Set|, such as the pair of integers for rational numbers. Just as quotient sets, we can find a type |Q'| isomorphic to |Q| to represent  the normal forms of |Q|. 
-|Q'| can be seen as the normal forms for |S / ~|. These quotients types can be named as definable quotient types. We will see some examples later.
-Sometimes we can't find such a type. That means the normal forms can be defined constructively. We call them axiomatised quotient types. Therefore generally we use |S / ~| to represent the result of dividing |S| by |~|.
-
-For definable quotient types, we can define them in another way but we may need the ease of defining types on |S|. For axiomatised quotient types, we can only define them in this way. Hence we should focus on |S|. We can only define functions for |S|. functions on |S/~| can be lifted from functions on |S|. But not all of them can be lifted. Only functions respects |~| can be lifted. Actually, functions on |S/~| can be seen as the combinition of functions on |S| and congruence rules for them. It reflects the idea that the elements of quotient types are similar to black boxes hiding the information of |S| so that the functions which do not have access to the internal structure are defined for quotient types.
-
-I will then present some examples from my definition for numbers in Agda \cite{myself} to illustrate these ideas.
-
 
 \section{Quotient definition of Integers}
 All the result of subtraction between natural numbers are integers. Therefore it is naturally to define a pair of

@@ -1,0 +1,2043 @@
+\documentclass{article}
+\def\textmu{}
+\author{Li Nuo}
+\title{Representing numbers in Agda}
+\usepackage{dsfont}
+\usepackage{amsthm}
+
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+%
+\ReadOnlyOnce{agda.fmt}%
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8x]{inputenc}
+\RequirePackage{ucs}
+\RequirePackage{amsfonts}
+
+\providecommand\mathbbm{\mathbb}
+
+% TODO: Define more of these ...
+\DeclareUnicodeCharacter{737}{\textsuperscript{l}}
+\DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
+\DeclareUnicodeCharacter{8759}{::}
+\DeclareUnicodeCharacter{9669}{\ensuremath{\triangleleft}}
+\DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{\scriptscriptstyle ?}{=}}}
+\DeclareUnicodeCharacter{10214}{\ensuremath{\llbracket}}
+\DeclareUnicodeCharacter{10215}{\ensuremath{\rrbracket}}
+
+% TODO: This is in general not a good idea.
+\providecommand\textepsilon{$\epsilon$}
+\providecommand\textmu{$\mu$}
+
+
+%Actually, varsyms should not occur in Agda output.
+
+% TODO: Make this configurable. IMHO, italics doesn't work well
+% for Agda code.
+
+\renewcommand\Varid[1]{\mathord{\textsf{#1}}}
+\let\Conid\Varid
+\newcommand\Keyword[1]{\textsf{\textbf{#1}}}
+\EndFmtInput
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+
+\DeclareUnicodeCharacter{955}{$\lambda$}
+\DeclareUnicodeCharacter{8988}{$\ulcorner$}
+\DeclareUnicodeCharacter{8989}{$\urcorner$}
+\DeclareUnicodeCharacter{9666}{$\blacktriangleleft$}
+\DeclareUnicodeCharacter{9667}{$\triangleleft$}
+
+\begin{document}
+
+\date{May 4, 2010}
+\maketitle
+
+\newpage
+\tableofcontents
+
+\newpage
+\begin{abstract}
+Recent development of dependently typed languages like Coq, Agda and Epigram provide programmers as well as mathematicians to prove theorems by writing programs, or more appropirately, constructing proofs. Agda, as one of the latest functional programming languages, is a flexible and convenient proof assisstant equipped with interactive environment for writing and checking proofs. The current version of standard library which is mostly built by Danielsson has included Boolean, algebraic structures, sets, relations etc. However, to prove most of theorems for numbers, it requires more definitions of the numbers beyond natural numbers and more axioms and theorems.
+The work is motivated by the numerous good features which gives Agda potential to be a good theorem prover. I will talk about these later along with introducing my code.
+ An interesting discovery is that I can understand the natural of numbers more deeply when I use Agda to define numbers.
+ 
+To solve the problem, I start this project, in which I will define the numbers including integers, rational numbers, real numbers and complex numbers and prove the basic properties of them as the tools for theorem proving. There have been some researches in representing numbers especially exact real numbers in other languages, for example Geuvers and Niqui's construction of real numbers in Coq \cite{CRC}, Claire Jones's definition of real numbers in In LEGO \cite{jones}. In this project, I will explore more suitable ways to represent numbers in Agda and try to configure out the construction of real numbers based on Bishop's real number system \cite{bishop}. Although representing numbers in a programming languages must based on the ideas in mathematics, it still has quite a few differences. After we understand the numbers in programming languages, How to implement the definition of numbers in Agda? How to prove properties? What problems and issues that I addressed? What could be extended futher in the future?
+\end{abstract}
+
+
+\section{Introduction and Motivation}
+Mathematics is the foundation of computer science. We could find the highly correlation between computer science and mathematics from the word "computer". In fact, as the science and technology of computer are developing faster and faster, we can see that it could contribute to mathematics more than computing.
+
+Old chinese mathematicians using Counting rods to do computing and proving. The invention of more and more symbols for complex definitions increase the complexity of theorem proving exponentially. New inventions of tools such as paper, abacus and computer often strongly affect the development of mathematics. Before computer invented, mathematicians had to prove theorems on papers. The proofs always spread around a pile of papers. It is likely to make mistakes in proofs and it is hard for documentation. In order to eliminate mistakes, verification of proof is essential. However, even spending quite a long time on the verification, no one can ensure the correctness for complicated proofs. Some proofs had been believed to be correct were found incorrect after years later. In 1879 Alfred Bray Kempe announced that he had proved the Four Colour problem. Until 11 years later, Percy John Heawood published a paper proving Kempe was wrong \cite{wiki:4colour}. 
+
+The old ways to conduct proving is very inefficient. Computer changed all the aspects of humans' lives. Computer scientists has created a lot of implementation of the theorem proving by computer programs. With the dependently typed language, such as Coq, Agda and Epigram, mathematicians and programmers could formally prove theorems by writing proofs as programs and the work of verification can be left to computers \cite{alti:ydtm}. Computer could ensure the correctness of proofs. If we believe in the languages, we can believe in the correctness of proofs. The proof assistants has revealed their power in recent years. In 2004, Georges Gonthier and Benjamin Werner have completed their proof of the four color theorem using Coq \cite{wiki:Coq}. Moreover computer could do some automated work which seems impossible to handle by hand.
+
+Agda is one of the proof assistants and it is one of the latest in a series of dependently typed programming languages \cite{aboa}. Unlike tactic-based proof assistant like Coq, it provides a more flexible way of constructing proofs \cite{alti:ydtm}. It has great potential in the field of theorem proving. However as Agda is at its the early stage, it requires contribution to the standard library of Agda. Some of the basic mathematical definitions has been included, such as sets, logic symbols, relations, algebraic structure. It is enough to define more concepts.
+
+For numbers, there are only natural numbers and part of integers defined in the standard library. However to prove most of the mathematical theorems, we need more definitions for other kinds of numbers, not only the integers but also rational numbers, real numbers and complex numbers. Their basic axioms like commutativity and associativity are essential as well.
+
+The project aims at representing the numbers in Agda. The main objective is to define those numbers in most proper ways and proving some basic properties of them that are essential for theorem proving. There are various ways to define each kind of numbers, so to compare, evaluate and make a decision of them are also objectives.
+
+The inner motivations to do this project are that I am interested in how mathematics can be translated into computer science, how to use computer science to help us solve mathematical problems and how to use mathematics to solve computer science problems. The interest in functional programming is also plays a quite important role. I had learnt to use Coq which is also a proof 	assistant like Agda to prove theorems using software tools. I found it interesting to formalise mathematics concepts and doing more than computations such as proving or facilitating calculations.
+
+After undertaking the project I also found it is beneficial for other people as some other students from Chalmers told me they could improve their code by using the library code of numbers. To develop a part of a library is a new challenge in which I could gain more experience and learn more skills. At the same time I could also develop the insight of representing numbers and proving theorems in Agda from doing this project. To do a comparably big research project will also benefit my futher study and career lifes.
+
+In this report, I will discuss from easy and familiar aspects to difficult and new aspects, from abstract concepts to concrete implementations and from the begin of the project to the future potential of the project. The codes of Agda in this report are pruned. I only leave the necessary parts of codes which is more readable but may not be executable.
+
+\section{What is Agda?}
+
+Agda is a dependently typed functional programming language. It is designed based on Per Martin-Löf Type Theory \cite{agdawiki:main}. We can find three key elements in the definition of Agda, the "functional programming language", "dependently typed" and "Per Martin-Löf Type Theory".
+
+\begin{itemize}
+\item \textit{Functional programming language}. As the name indicates that, functional programming languages emphasizes the application of functions rather than changing data in the imperative style like C++ and Java. The base of functional programming is lambda calculus. The key motivation to develop functional programmming language is to eliminating the side effects which means we can ensure the result will be the same no matter how many times we input the same data. There are several generations of functional programming languages, for example Lisp, Erlang, Haskell etc. Most of the applications of them are currently in the academic fields, however as the functional programming developed, more applications will be explored.
+
+\item \textit{Dependent type}. Dependent types are types that depends on values of other types \cite{dtw}. It is one of the most important features that makes Agda a proof assistant. In Haskell and other Hindley-Milner style languages, types and values are clearly distinct \cite{tutorial}, In Agda, we can define types depending on values which means the border between types and values is vague. To illustrate what this means, the most common example is \textbf{Vector A n}.
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{Vec}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}[\mskip1.5mu \mskip1.5mu]\;{}\<[8]%
+\>[8]{}\mathbin{:}\;\Conid{Vec}\;\Conid{A}\;\Varid{zero}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{\char95 ∷\char95 }\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;(\Varid{x}\;\mathbin{:}\;\Conid{A})\;(\Varid{xs}\;\mathbin{:}\;\Conid{Vec}\;\Conid{A}\;\Varid{n})\;\Varid{→}\;\Conid{Vec}\;\Conid{A}\;(\Varid{suc}\;\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+ It is a data type which represents a vector containing elements of type \textbf{A} and depends on a natural number \textbf{n} which is the length of the list. With the type checker of Agda, we can set more constraints in the type so that type-unmatched problems will always be detected by complier. Therefore we could define the function more precisely as there more partitions of types. For instance, to use the dependently typed vector, it could avoid defining a function which will cause exceptions like out of bounds in Java.
+
+\item \textit{Per Martin-Löf Type Theory}. It has different names like Intuitionistic type theory or Constructive type theory and is developed by Per Martin-Löf in 1980s. It associated functional programs with proofs of mathematical propositions written as dependent types. That means we can now represent propositions we want to prove as types in Agda by dependent types and Curry-Howard isomorphism \cite{aboa}. Then we only need to construct a program of the corresponding type to prove that propostion. For example:
+
+\begin{proposition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{n+0+0≡n}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{n}\;\Varid{+}\;\Varid{0}\;\Varid{+}\;\Varid{0}\;\Varid{≡}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{n+0+0≡n}\;\{\mskip1.5mu \Varid{zero}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{n+0+0≡n}\;\{\mskip1.5mu \Varid{suc}\;\Varid{n}\mskip1.5mu\}\;\mathrel{=}\;\Varid{suc}\;\Varid{n+0+0≡n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{proposition}
+
+As Nordström et al. \cite{nps} pointed out that we could express both specifications and programs at the same time when using the type theory to construct proofs using programs. The general approach to do theorem proving in Agda is as follows: First we give the name of the proposition and encode it as the type. Then we can gradually refine the goal to formalise a type-correct program namely the proof. There are no tactics like in Coq. However it is more flexible to construct a proof. The process of building proofs is very similar to the process of constructing proofs in regular mathematics. The logic behind it is that if we could construct an instance of the type (proposition), we prove it. It is actually the Curry-Howard isomorphism.
+
+\end{itemize}
+
+Agda is an extention of this type theory \cite{itt} with some nice features which could benefit the theorem proving,
+
+\begin{itemize}
+\item \textit{Pattern matching}. The mechanism for dependently typed pattern matching is very powerful \cite{alti:pisigma-new}. We could prove propositions case by case. In fact it is similar to the approach to prove propositions case by case in regular mathematics. We can also use view to pattern match a condition specially in Agda. For example,
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{half}\;\mathbin{:}\;\Conid{Nat}\;\to \;\Conid{Nat}{}\<[E]%
+\\
+\>[B]{}\Varid{half}\;\Varid{n}\;\Keyword{with}\;\Varid{parity}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{half}\;\mathbin{\circ}\;(\Varid{k}\;\Varid{*}\;\Varid{2})\;{}\<[19]%
+\>[19]{}\mid \;\Varid{even}\;\Varid{k}\;\mathrel{=}\;\Varid{k}{}\<[E]%
+\\
+\>[B]{}\Varid{half}\;\mathbin{\circ}\;(\Varid{1}\;\Varid{+}\;\Varid{k}\;\Varid{*}\;\Varid{2})\;\mid \;\Varid{odd}\;\Varid{k}\;\mathrel{=}\;\Varid{k}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Here the "parity" after with is a view function that allows us to pattern match on the result of it.
+
+\item \textit{Recursive definition}.The availability of recursive definition enables programmers to prove propositions in the same manner of mathematical induction.  Generally the natural numbers are defined inductively in fucntional programming languages. Then the program of natural numbers can be written using recursive style. There are a lot of types defined using recursive styles in Agda.
+
+\item \textit{Construction of functions}. The construction of functions makes the proving more flexible. We could prove lemmas as we do in maths and reuse them as functions.
+
+\item \textit{Lazy evaulation}. Lazy evaluation could eliminate unecessary operation because it is lazy to delay a computation until we need its result. It is often used to handle infinite data structures. \cite{wiki:Lazy_evaluation}
+
+\end{itemize}
+
+As Agda is primarily used to undertake theorem proofs tasks, the designer enhanced it to be more professional proof assistant. There are several beneficial features facilitating theorem proving,
+
+\begin{itemize}
+\item \textit{Type Checker}. Type checker is an essential part of Agda. It is the type checker that detect unmatched-type problem which means the proof is incorrect. It also shows the goals and the environment information related to a proof. Moreover a definition of function must cover all possible cases and must terminate as Agda are not allowed to crash \cite{tutorial}. The coverage checker makes sure that the patterns cover all possible cases \cite{aboa}. And the termination checker will warn possiblily non-terminated error. The missing cases error will be reported by type checker. The suspected non-terminated definition can not be used by other ones. The type checker then ensures that the proof is complete and not been proved by itself. Also we are forced to write the type signature due to the presence of type checker.
+ 
+\item \textit{Emacs interface}. It has a Emacs-based interface for interactively writing and verifying proofs. It allows programmers leaving part of the proof unfinished so that the type-checker will provide useful information of what is missing \cite{aboa}. Therefore programmers could gradually refine their incomplete proofs of correct types.
+
+
+\item \textit{Unicode support}. It supports Unicode identifiers and keywords like: $\forall$, $\exists$ etc. It also supports mixfix operators like: $+$ , $-$ etc. The benefits are obvious. Firstly we could define symbols which look the same and behave the same in mathematics. These are the expressions of commutativity for natural numbers, the first line is mathematical proposition and the second line is code in Agda:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{∀}\;\Varid{a}\;\Varid{b},{}\<[9]%
+\>[9]{}\Varid{a}\;\Varid{+}\;\Varid{b}\;\mathrel{=}\;\Varid{b}\;\Varid{+}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Varid{a}\;\Varid{+}\;\Varid{b}\;\mathrel{=}\;\Varid{b}\;\Varid{+}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Secondly we could use symbols to replace some common-used properties to simply the proofs a lot. The following code was simplied using several symbols,
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{37}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{⟨\char95 ⟩}\;\mathrel{=}\;\Varid{sym}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 >≡<\char95 }\;\mathrel{=}\;\Varid{trans}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 ⋆*\char95 }\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{b}\;\Varid{c}\mskip1.5mu\}\;\Varid{→}\;\Varid{b}\;\Varid{≡}\;\Varid{c}\;\Varid{→}\;(\Varid{a}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;{}\<[37]%
+\>[37]{}\Varid{b}\;\Varid{*}\;\Varid{a}\;\Varid{≡}\;\Varid{c}\;\Varid{*}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{*-ex}\;\mathbin{:}\;{}\<[9]%
+\>[9]{}\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{→}\;\Varid{a}\;\Varid{*}\;(\Varid{b}\;\Varid{*}\;\Varid{c})\;\Varid{≡}\;\Varid{b}\;\Varid{*}\;(\Varid{a}\;\Varid{*}\;\Varid{c}){}\<[E]%
+\\
+\>[B]{}\Varid{*-ex}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Varid{⟨}\;\Varid{*-assoc}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{⟩}\;\Varid{>≡<}\;\Varid{*-comm}\;\Varid{a}\;\Varid{b}\;\Varid{⋆*}\;\Varid{c}\;\Varid{>≡<}\;\Varid{*-assoc}\;\Varid{b}\;\Varid{a}\;\Varid{c}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Finally, we could use some other languages characters to define functions such as Chinese characters.
+
+\item \textit{Code navigation}. We can simply navigate to the definition of functions from our current code. It is a wonderful features for programmers as it alleviate a great deal of work to look up the library.
+
+\item \textit{Implicit arguments}. We could omit the arguments which could be inferred by the type-checker. In this way, we do not need to present obvious targets of some properties. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{n+0≡n}\;{}\<[11]%
+\>[11]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{n}\;\Varid{+}\;\Varid{0}\;\Varid{≡}\;\Varid{n}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{z*0\char126 0}\;(\Varid{x+},\Varid{x-})\;\mathrel{=}\;{}\<[20]%
+\>[20]{}\Varid{n+0≡n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The implicit argument in curly bracket is unnecessay to give explicitly when applying this property.
+
+
+\item \textit{Module system}. The mechanism of parametrised modules makes it possible to define generic operations and prove a whole set of generic properties.
+
+\item \textit{Coinduction}. We could define coinductive types like streams in Agda which are typically infinite data structures. It is a proof technique that could prove the equality satisfied all possible implementation of the specification defined in the codata. It is often used in conjunction with lazy evaluation. \cite{wiki:Coinduction}
+	
+\end{itemize} 
+
+With these helpful features, Agda has the potentional be a more powerful proof assisstant. Therefore, in order to provide the availability of all the numbers, this project should be beneficial. With the numbers defined and basic properties proven, mathematicians could prove some famous theorems like Fermat’s little theorem then.
+
+\section{What are numbers in regular mathematics?}
+To represent numbers, we should first make clear of the definitions of various kinds of numbers in regular mathematics. Numbers were invented to represent some quantity in the world,
+
+\begin{itemize}
+\item $\mathds{N}$ - \textit{Natural numbers}. Natural numbers are the basics of all the numbers. It was invented when people used their finger to count things like days and foods. It denotes the result of incrementing, one finger, add one more finger and so on. Therefore, it is natural to define natural numbers as zero namely no finger, and 'suc' namely add one finger so that we could represent two using suc (suc zero).
+
+\item $\mathds{Z}$ - \textit{Integers}. To count more easily people invented operations like addition and subtraction. However people found it was not enough to represent all the results of subtraction. Then the negatives of natural numbers were invented and the numbers were extended to integers. Therefore despite the normal definition of integers, a pair of natural numbers can also represent the result of subtraction between them.
+
+\item $\mathds{Q}$ - \textit{Rational numbers}. Similarly, rational numbers could represent all the results of division between integers and here fractional numbers are included.
+
+\item $\mathds{R}$ - \textit{Real numbers}. Real numbers represent values of something real and the name is invented correspond to imaginary numbers. The extension here is the irrational numbers which cannot be represented as fractional numbers such as $\sqrt{2}, \pi$ etc.
+
+\item $\mathds{C}$ - \textit{Complex numbers}. The invention of complex numbers enables us to solve all the polynomial equations. The imaginary numbers represent something unreal and their squares are negative real numbers. A complex number has a real part and an imaginary part. Therefore it can be simply represented by a pair of real numbers, one for the real part the the other for the imaginary part.
+	
+\end{itemize} 
+
+When doing calculation in regular life, we seldomly care about what kind of number that is. After being familiar with using the axioms like commutativity and associativity, we also use them for all kinds of numbers unconsciously. However as computer are more stupid or critic, the things are different here.
+
+\section{What are differences of numbers in computer science?}
+\begin{enumerate}
+\item In regular mathematics, each lower level numbers is a subset of the higher level ones. For example 3 is a natural number, but it is also a integer, a rational number, a real number and a complex number. In fact these kinds of types are a categorized subset of all of the numbers which have the same features.
+
+However in computer science, or we should say in most of the programming languages, different kinds of numbers are defined as different types. It means that 3 of type natural numbers is recognised as a different value to + 3 of type integers, although they refer to the same number in mathematics. Therefore we should define operators and prove properties for each kind of numbers. If you wonder why not just define all of the number as a single type, I think the answer is that there is dependence between lower level numbers and higher level ones, for example, it is more convenient to define integers based on natural numbers as it is an extention of natural numbers.
+Especially for real numbers, to precisely construct real numbers we have to use natural numbers and rational numbers and we will talk about it later.
+
+\item In regular mathematics, we postulate not only the existence of numbers but also some basic theorems as axioms like commutativity, associativity and distributivity. We can freely use them in computation for all kinds of numbers. We believe they are true from when we were young but we do not need to prove them to be true.
+
+However in programming languages, although these theorems looks trivial, as we construct the numbers from scratch, we do not have any proofs of these axioms. These axioms are actually provable. To enable users to prove more advanced properties, we have to figure out the proof of them based on the only postulate ’refl’ which means we only need to admit it is true that if two things are the same then they are equal.
+
+\item In regular mathematics, we could express numbers in different forms. For example, $\frac{1}{2}$ is the same as $0.5$ and both representations of rational numbers can be used simultaneously.
+However, in Agda, if we choose to represent rational numbers in fractional form, we could not mix it with the decimal representation except when we use polymorphism.
+
+Generally, the rules for numbers are more rigorous in computer science. What is postulate in Agda is limited.
+For equality we only postulate when two numbers are the same they are equal,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Varid{\char95 ≡\char95 }\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\;\Varid{a}\mskip1.5mu\}\;(\Varid{x}\;\mathbin{:}\;\Conid{A})\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{refl}\;\mathbin{:}\;\Varid{x}\;\Varid{≡}\;\Varid{x}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+For unequality,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{39}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Varid{\char95 ≤\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℕ}\;\Varid{zero}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{z≤n}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;{}\<[31]%
+\>[31]{}\Varid{→}\;\Varid{zero}\;{}\<[39]%
+\>[39]{}\Varid{≤}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{s≤s}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{m}\;\Varid{n}\mskip1.5mu\}\;(\Varid{m≤n}\;\mathbin{:}\;\Varid{m}\;\Varid{≤}\;\Varid{n})\;\Varid{→}\;\Varid{suc}\;\Varid{m}\;\Varid{≤}\;\Varid{suc}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+all the other axioms inregular mathematics requires to be defined or to be proved.
+\end{enumerate}
+
+\section{How to define numbers in Agda?}
+We have understood what are numbers in mathematics. Then we will discuss how to represent them in Agda. There are several choices of definitions, some are more intuitive to people and some are more meaningful mathematically.
+
+\begin{itemize}
+\item $\mathds{N}$ - \textit{Natural numbers.} In the base ten system, we can represent natural numbers by using digits from 0 to 9. However it is hard to write this definition in Agda as there are infinite digits. The inductive definition solves the problem efficiently.
+In Peano Arithmetic, the following inductive definition is widely used to define natural numbers and operations in programing languages like Haskell, Coq and Agda,
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℕ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{zero}\;\mathbin{:}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{suc}\;{}\<[8]%
+\>[8]{}\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℕ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+This can be seen as a natural definition because it simulates the process of incrementing numbers.
+
+\item $\mathds{Z}$ - \textit{Integers.} As we mentioned before, integers add negative numbers to natural numbers. To represent it normally, we only need to add a sign in front of natural numbers to differentiate positive and negative numbers,
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℤ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{+\char95 }\;{}\<[9]%
+\>[9]{}\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{zero}\;{}\<[9]%
+\>[9]{}\mathbin{:}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{-\char95 }\;{}\<[9]%
+\>[9]{}\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+But in this definition the definition is ambiguous. If "$+ 0$", "$- 0$" and "zero" all represent 0 then, the uniqueness of zero is lost and the basic definitional equality does not work for it. The definitional equality holds for two definitionally same elements. We can simply prove this equality by using "refl". If we need "$+ 0$" to represent "$+ 1$", it is better to define it like follows,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℤ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{+suc\char95 }\;{}\<[12]%
+\>[12]{}\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{zero}\;{}\<[12]%
+\>[12]{}\mathbin{:}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{-suc\char95 }\;{}\<[12]%
+\>[12]{}\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+Although definition looks symmetric and non-misleading, it has three patterns which increase the number of cases to pattern match when doing definition and theorem proving. For instance, when we prove the associativity for +,
+
+\begin{theorem}[Associativity]
+$\forall x y z, (x + y) + z = x + (y + z)$
+\end{theorem}
+
+In the worst case, we have to pattern match on each of the three numbers so that there will be 27 cases at most. To reduce cases, we could combine zero and positive integers,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℤ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{+\char95 }\;{}\<[9]%
+\>[9]{}\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{-suc\char95 }\;\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+This definition is my choice for normal integer in this project as there is less cases. The asymmetry does not make too much trouble.
+
+
+All the definition above are intuitive definitions and I call the last one normal definition in this project. 
+Alternatively, we could also use a pair of natural numbers to represent an intger as we discussed before,
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℤ₀}\;\mathrel{=}\;\Conid{ℕ}\;\Varid{×}\;\Conid{ℕ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+it represents the result of subtraction between the two numbers, and the single pattern shorten the proof. However it is an incomplete definition unless we combine a propositional equality with it. Propositional equality is a relation defined specially according to mathematics. Here, we could easily found that $(3, 2)$ and $(2, 1)$ both represent $+ 1$ but will not be treated equal by definition because they are not the same. To be isomorphic to the set of the integers we have to define the equivalence relation of it so that they could form a setoid.
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}\;\Varid{zero}{}\<[E]%
+\\
+\>[B]{}(\Varid{x+},\Varid{x-})\;\Varid{∼}\;(\Varid{y+},\Varid{y-})\;\mathrel{=}\;(\Varid{x+}\;\Conid{ℕ+}\;\Varid{y-})\;\Varid{≡}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{x-}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+We should firstly prove the relation is equvalence.
+
+a) reflexivity: ∀ a → a ∼ a
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{refl}\;\mathbin{:}\;\Conid{Reflexive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+b) symmetry: ∀ a b → a ∼ b → b ∼ a
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{sym}\;\mathbin{:}\;\Conid{Symmetric}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+c) transitivity:  ∀ a b c → a ∼ b /\ b ∼ c → a ∼ c
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{trans}\;\mathbin{:}\;\Conid{Transitive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Now with these three properties we could prove it is equivalence relation,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 isEquivalence}\;\mathbin{:}\;\Conid{IsEquivalence}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{\char95 ∼\char95 isEquivalence}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{refl}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{sym}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{sym}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{trans}\;\mathrel{=}\;\Varid{trans}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Then we can prove that (ℤ₀, ∼) is a setoid
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{isSetoid}\;\mathbin{:}\;\Conid{Setoid}\;\anonymous \;\anonymous {}\<[E]%
+\\
+\>[B]{}\Varid{isSetoid}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Conid{Carrier}\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{\char95 ≈\char95 }\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{isEquivalence}\;\mathrel{=}\;\Varid{\char95 ∼\char95 isEquivalence}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+I call this kind of integers as setoid integers in this project. The drawback of this representation is that it looks not intuitive to people so it is not a good choice for user. But the benefit for proving is precious so I explore the ways to define both normal definition and setoid one in this project and combine the advantage of both. The mechanism between the two definitions is to firstly define and prove properties for setoid integers and then define the operations of the normal definition on the setoid on using normalisation functions and denormalisation functions,
+
+\textbf{Normalisation}
+
+normalise the setoid integer to normal form
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[19]%
+\>[19]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{m},\Varid{0}\mskip1.5mu]\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Varid{+}\;\Varid{m}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{0},\Varid{suc}\;\Varid{n}\mskip1.5mu]\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Varid{-suc}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu \Varid{suc}\;\Varid{m},\Varid{suc}\;\Varid{n}\mskip1.5mu]\;\mathrel{=}\;[\mskip1.5mu \Varid{m},\Varid{n}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+denormalise the normal integer to one representative setoid integer
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{⌜\char95 ⌝}\;{}\<[12]%
+\>[12]{}\mathbin{:}\;\Conid{ℤ}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}\Varid{⌜}\;\Varid{+}\;\Varid{n}\;\Varid{⌝}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{n},\Varid{0}{}\<[E]%
+\\
+\>[B]{}\Varid{⌜}\;\Varid{-suc}\;\Varid{n}\;\Varid{⌝}\;\mathrel{=}\;\Varid{0},\Varid{suc}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Then we could prove the isomorphism of the setoid and the normal definition,
+
+a) stability:
+nf is left inverse of dn
+
+\begin{theorem}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{stable}\;{}\<[19]%
+\>[19]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;[\mskip1.5mu \Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]\;\Varid{≡}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{theorem}
+
+b) completeness:
+if it is true, then we can give the proof
+
+\begin{theorem}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{compl}\;{}\<[25]%
+\>[25]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{⌜}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{⌝}\;\Varid{∼}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{theorem}
+
+c) soundness:
+if we proved it, then it is true
+
+\begin{theorem}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{sound}\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{x}\;\Varid{y}\mskip1.5mu\}\;\Varid{→}\;\Varid{x}\;\Varid{∼}\;\Varid{y}\;\Varid{→}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{y}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{theorem}
+
+Using the setoid and the three theorems above, we could form the quotient type of integer.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℤ-QuSig}\;\mathbin{:}\;\Conid{QuSig}\;\Varid{isSetoid}{}\<[E]%
+\\
+\>[B]{}\Conid{ℤ-QuSig}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Conid{Q}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[13]%
+\>[13]{}\mathrel{=}\;[\mskip1.5mu \anonymous \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{sound}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{sound}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Conid{ℤ-Nf}\;\mathbin{:}\;\Conid{Nf}\;\Conid{ℤ-QuSig}{}\<[E]%
+\\
+\>[B]{}\Conid{ℤ-Nf}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{emb}\;{}\<[15]%
+\>[15]{}\mathrel{=}\;\Varid{⌜\char95 ⌝}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{compl}\;{}\<[15]%
+\>[15]{}\mathrel{=}\;\Varid{λ}\;\Varid{z}\;\Varid{→}\;\Varid{compl}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{stable}\;{}\<[15]%
+\>[15]{}\mathrel{=}\;\Varid{λ}\;\Varid{z}\;\Varid{→}\;\Varid{stable}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+The general quotient type theory was developed by Thomas Anberrée and Thorsten Altenkirch. It is a mechanism designed to simplify the theorem proof of the normal form by lifting the theorems of setoid form. However there is still some problems in applying the lift functions.
+
+\item $\mathds{Q}$ - \textit{Rational numbers.} Rational numbers as quotients of integers will be naturally defined as a pair of integers. The decimal representation which is more common is practice requires infinite digits which is inefficient and imprecise in computer science which use discrete mathematics in general.
+
+To construct the rational numbers in the fractional form, there are several choices:
+
+\begin{enumerate}
+\item a pair of ℤ
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℚ₀}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{\char95 /\char95 }\;\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;(\Varid{d}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+The benifit is the types of numerator and denominator are consistent. But the non-zero restriction of the denominator is hard to reflect in this definition.
+
+\item a pair of ℕ with symbol
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℚ₀*}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{\char95 /suc\char95 }\;\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;(\Varid{d}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℚ₀*}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{data}\;\Conid{ℚ₀}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{+\char95 }\;\mathbin{:}\;\Conid{ℚ₀*}\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{-\char95 }\;\mathbin{:}\;\Conid{ℚ₀*}\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+Compared to integers, to deal with lower natural numbers is simpler. However there are two cases which makes the definition of operatio ns and the proof much longer. Moreover, it makes little difference with the following definition,
+
+\item ℤ × ℕ
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℚ₀}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{\char95 /suc\char95 }\;\mathbin{:}\;(\Varid{n}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;(\Varid{d}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+Because O is easier to excluded for ℕ, we choose to combine the sign with the numerator. We only need to show that we use n to denote successor of n in the denominator. This is what I choose in my project. Also, it is a setoid definition so that we should define equivalence relation for it,
+\end{enumerate}
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;{}\<[7]%
+\>[7]{}\mathbin{:}\;\Conid{Rel}\;\Conid{ℚ₀}{}\<[E]%
+\\
+\>[B]{}\Varid{n1}\;\Varid{/suc}\;\Varid{d1}\;\Varid{∼}\;\Varid{n2}\;\Varid{/suc}\;\Varid{d2}\;\mathrel{=}\;{}\<[28]%
+\>[28]{}\Varid{n1}\;\Conid{ℤ*ℕ}\;\Varid{suc}\;\Varid{d2}\;\Varid{≡}\;\Varid{n2}\;\Conid{ℤ*ℕ}\;\Varid{suc}\;\Varid{d1}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+There is also normal definition of rational numbers. When we simplify the numerator and denominator to become coprime, then we can infer they are the same from equality. As the representative of for each rational numberis unique, we get definitional equality,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{ℚ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;\Varid{\char95 /suc\char95 },[\mskip1.5mu \anonymous \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{numerator}\;{}\<[17]%
+\>[17]{}\mathbin{:}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{denominator}\;\mathbin{:}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{isCoprime}\;{}\<[17]%
+\>[17]{}\mathbin{:}\;\Conid{Coprime}\;(\Conid{ℤtoℕ}\;\Varid{n})\;(\Varid{suc}\;\Varid{d}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+This normal definition has been available in the 0.3 version standard library. However there is limited amount of functions defined.
+
+\item $\mathds{R}$ - \textit{Real numbers.} To define real numbers is much more complicated work. In computer science we mostly deals with discrete mathematics, but real numbers is continuous. Therefore in most commercial used programming languages, programmer use types like double, float which have finite decimals to represent a real number for practical use as they are more efficient. However it is not precise to omit the the infinit tail of an irration number. If we want to prove properties for real numbers, we need to define ‘real’ real numbers.
+
+There are various ways to construct real numbers : Cauchy sequences of rational numbers, Dedekind cuts, decimal expansion and etc. \cite{wiki:Real}
+In this project we follow the development of Bishop \cite{bishop} to construct real numbers. It uses a Cauchy sequence, namely an infinite sequence of rational numbers whose elements become Arbitrarily close and converge to certain real number. 
+
+For example: To represent $\sqrt{2}$ we could use the sequence,
+
+\begin{center}
+$1, 1.4, 1.41, 1.414, 1.4142, 1.41421. . .$
+\end{center}
+
+To generate the sequence we could use general function and a proof of the elements in the sequence generated from the general function complete Cauchy sequence, namely the sequence converges,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{ℝ₀}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;\anonymous ,[\mskip1.5mu \anonymous \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{f}\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℚ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{p}\;\mathbin{:}\;\Varid{∀}\;\Varid{ε}\;\Varid{→}\;(\Varid{ε}\;\Varid{>}\;\Varid{0})\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Conid{N}\;\Varid{→}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}(\Varid{m}\;\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;(\Varid{m}\;\Varid{>}\;\Conid{N})\;\Varid{→}\;(\Varid{n}\;\Varid{>}\;\Conid{N})\;\Varid{→}\;\Varid{∣}\;(\Varid{f}\;\Varid{m})\;\Varid{-}\;(\Varid{f}\;\Varid{n})\;\Varid{∣<}\;\Varid{ε}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+or use a stream of rational numbers which is a coninductive type in Agda,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{ℝ₀}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;\anonymous ,[\mskip1.5mu \anonymous \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{s}\;\mathbin{:}\;\Conid{Stream}\;\Conid{ℚ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{p}\;\mathbin{:}\;\Varid{∀}\;\Varid{ε}\;\Varid{→}\;(\Varid{ε}\;\Varid{>}\;\Varid{0})\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Conid{N}\;\Varid{→}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}(\Varid{m}\;\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;(\Varid{m}\;\Varid{>}\;\Conid{N})\;\Varid{→}\;(\Varid{n}\;\Varid{>}\;\Conid{N})\;\Varid{→}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{∣}\;(\Varid{lookup}\;\Varid{m}\;\Varid{s})\;\Varid{-}\;(\Varid{lookup}\;\Varid{n}\;\Varid{s})\;\Varid{∣<}\;\Varid{ε}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+There are infinite number of Cauchy sequences representing the same real numbers, so this is also a setoid definition. Two Cauchy sequences (X and Y) are called equivalent if and only if for every positive rational number $\epsilon$, there exists an integer N such that $\vert X{n} - Y{n} \vert < \epsilon$ for all $n > N$. Hence the equivalence relation could be defined as,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;{}\<[7]%
+\>[7]{}\mathbin{:}\;\Conid{Rel}\;\Conid{ℝ₀}{}\<[E]%
+\\
+\>[B]{}\Conid{X},[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{∼}\;\Conid{Y},[\mskip1.5mu \anonymous \mskip1.5mu]\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{∀}\;\Varid{ε}\;\Varid{→}\;\Varid{is+}\;\Varid{ε}\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Conid{N}\;\Varid{→}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;(\Varid{n}\;\Varid{>}\;\Conid{N})\;\Varid{→}\;{}\<[30]%
+\>[30]{}\Varid{∣}\;(\Conid{X}\;\Varid{n})\;\Varid{-}\;(\Conid{Y}\;\Varid{n})\;\Varid{∣}\;\Varid{<}\;\Varid{ε}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+As we could not gives each of the infinite elements manually, Then the Taylor Series \cite{wiki:TS} should be used to generate a general functions of the sequence for different real numbers. It is better to define the real numbers as a general function rather than an infinite stream which may not contain the information of the general function. Therefore I use the first one in this project.
+
+Actually, unlike integers and rational numbers, real numbers have no normal forms. Georg Cantor has famously proved that the set of reals is uncountable infinite in his first uncountability proof\cite{cantor}. It means that the cardinality of reals, $\mathfrak{c}$, is strictly greater than the cardinality of the set of natural numbers, $\aleph_{0}$, which equals to the one of integers and the one of rational numbers,
+$\aleph_{0} < \mathfrak{c}$
+
+Another famous construction method is Dedekind cuts. It can be defined as a partition of an ordered field (A, B), such that A is closed downwards, B is closed upwards and both of them are non-empty. In fact as A determines B we can use only A to represent a real number.
+
+Intuitively, a real number is represented by all rational numbers which are less than it. It looks simpler than Cauchy sequence, but it is difficult to formlise a way to generate the dedekind cut in Agda. For example, if we want to represent $\sqrt{2}$,
+
+\begin{center}
+$A = \lbrace x \in \mathds{Q} : x < 0 \bigvee x \times x < 2 \rbrace $
+\end{center}
+There is no general way to construct a dedekind cut.
+
+
+\item $\mathds{C}$ - \textit{Complex numbers.} After defining real numbers, the complex numbers will be easy to define. It consists of a real part and an imaginary part whose coefficient is also a real number. Similarly we could represent it as a pair of real numbers but it is not a setoid definition as it is unique representation.
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℂ}\;\mathrel{=}\;\Conid{ℝ}\;\Varid{×}\;\Conid{ℝ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+\end{itemize}
+
+\section{Related work}
+
+\subsection{The integers and rational numbers in Coq}
+Coq which is also a proof assistant has developed a more completed library. There is a binary integer definition written by Pierre Crégut. The integer defines on a binary positive natural number as follows,
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{Inductive}\;\Varid{positive}\;\mathbin{:}\;\Conid{Set}\;\Conid{:=}{}\<[E]%
+\\
+\>[B]{}\mid \;\Varid{xI}\;\mathbin{:}\;\Varid{positive}\;\to \;\Varid{positive}{}\<[E]%
+\\
+\>[B]{}\mid \;\Varid{xO}\;\mathbin{:}\;\Varid{positive}\;\to \;\Varid{positive}{}\<[E]%
+\\
+\>[B]{}\mid \;\Varid{xH}\;\mathbin{:}\;\Varid{positive.}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+It defines positive natural numbers in binary notation. XH represents 1, XI p represents p 1, and XO represents p 0. For example, XI (XO XH) represents 101 binary number, namely 5.
+Then the integers could be defined as 
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{Inductive}\;\Conid{Z}\;\mathbin{:}\;\Conid{Set}\;\Conid{:=}{}\<[E]%
+\\
+\>[B]{}\mid \;\Conid{Z0}\;\mathbin{:}\;\Conid{Z}{}\<[E]%
+\\
+\>[B]{}\mid \;\Conid{Zpos}\;\mathbin{:}\;\Varid{positive}\;\to \;\Conid{Z}{}\<[E]%
+\\
+\>[B]{}\mid \;\Conid{Zneg}\;\mathbin{:}\;\Varid{positive}\;\to \;\Conid{Z.}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+This definition is symmetric. ZO is 0, Zpos maps positives just inject positive natural numbers to positive integers, and Zneg constructs negative integers from positives. The operations are defined based on the operation of binary numbers. It is quite different to what I do in this project although the definition looks similar. Alternatively, there are also 31-bits integers designed to achieve hardware-efficient computations encoded by A. Spiwack.
+
+In the definition of rational number, the advantage of define positives is enhanced as we only need a integer and positive to represent rational numbers in fractional forms. The other parts are quite similar to what I have done such as the definition of equivalence. Because the rational number is not in reduced form, it is also a setoid definition. The designer also prove the necessary properties for rational numbers. What is distinct is the field tactics are defined in the library. In addition there is a canonical representation of rational numbers which consists of the setoid definition and a proof that it is the same with its simplification. It is just an alternative way to write the normal form of rational numbers.
+
+
+\subsection{The real numbers in Coq}
+The construction of real numbers in Coq standard library are axiomatized (refer to the Coq standard library). It defines R as a parameter and the relations and operations based on the classical axioms of real numbers. Namely all the basic properties for proving are axioms like the regular mathematics.
+
+Geuvers and Niqui \cite{CRC} implements real numbers in a different way in Coq. Their work is backward developed. First they define real numbers and properties as axioms. Then they define rational numbers and real numbers based on the Cauchy sequence of $\mathds{Q}$. What they need to prove is this construction satisfy the set of axioms they defined. They also prove their axioms are equivalent to the ones in \cite{Bridges199995}.
+
+Another approach to define reals in Coq is introduced by A. Ciaffaglione and P. Di Gianantonio \cite{Ciaffaglione200639}. They construct the reals using infinite streams by coinductive approach which is also available in Agda. They put emphasis on the efficiency of implementation. 
+
+Russell O’Connor \cite{oconnor} also build real number constructively based on implementation of compelte metric spaces. The basic functions and proofs are also included. Finally he also implement an automatical proving tatic for strict inequalities for real numbers.
+
+\subsection{The real numbers in other languages}
+There are also some brilliant constructions in other type theoretic proof assistants such as LEGO and NuPrl. 
+\begin{itemize}
+
+\item In LEGO, Claire Jones \cite{jones} builds a real number as a collection of arbitrary small nested intervals with rational endpoints. It mainly focus two main areas, one is the construction of real numbers, the other is the compeletion of metric space. 
+
+\item In NuPrl, J Chirimar, D Howe \cite{howe} firstly defines rational number and then defines the reals using regular Cauchy sequences also following Bishop's construction \cite{bishop}. Finally they prove the Cauchy completeness of reals namely all Cauchy sequence converge.
+
+\item In HOL, John Harrison adopted another construction of real numbers, the dedekind cut. It has potential to be implented and tested in Agda to use dedekind cut method.
+
+\item Pietro Di Gianantonio \cite{pdg} proposed an implementation of the real numbers by using the feature of functional programming languages, lazy evaluation which is also available in Agda. It discuss the computability of real numbers represented by infinite digits and related it to the domain theory.
+
+\end{itemize}
+
+These definitions explore different ways to represent real numbers more deeply and widely. The construction of integers and rational numbers are mostly similar except the binary and inaccurate digits representations. For real numbers, the Cauchy sequence with metric space is choosen primarily. There is various implementation of real numbers in most of the theorem prover.
+
+\section{The design of this project}
+
+The project consists of several parts catogorised by different kinds of numbers, integers, rational numbers, real numbers and complex numbers. For each part, there will be one or more alternative definitions. For each definition there are
+several files containing the proofs of properties. The definition which is most convenient to use will be put in the primary file for each kind of numbers. The name convention and layout of code has been adapted to the standard library so that it is easy for add these codes into the standard library. User could import and make use of these numbers in a similar way as natural numbers. However, due to the existence of definitions of integers and rational numbers implemented by Nils Anders Danielsson, I have to change the name slightly to avoid ambiguity. I list the general definitions and properties I have done in this project below.
+
+\subsection{Definition part}
+\begin{enumerate}
+\item \textit{Definition of numbers.} The definition should be placed at very first. For setoid definitions, a equivalence relation should be defined as well for examples,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ℤ₀}\;\mathrel{=}\;\Conid{ℕ}\;\Varid{×}\;\Conid{ℕ}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item \textit{Ordering relations.} With the equivalence relation defined, we could prove the equality. Likewise, to enable Agda to prove unequality, we should define the unequality relations for numbers, or as the convention the ordering relations. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ≤\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 <\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 ≥\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 >\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item \textit{Sign functions.} There are negative numbers since integers. Therefore the sign function is necessary and useful in many proofs. For example,
+
+a) decomposition
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{sign}\;{}\<[15]%
+\>[15]{}\mathbin{:}\;\Conid{ℤ}\;\Varid{→}\;\Conid{Sign}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+b) composition
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{18}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ◃\char95 }\;{}\<[18]%
+\>[18]{}\mathbin{:}\;\Conid{Sign}\;\Varid{→}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+With the View "SignAbs",
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{SignAbs}\;\mathbin{:}\;\Conid{ℤ}\;\Varid{→}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{\char95 ◂\char95 }\;\mathbin{:}\;(\Varid{s}\;\mathbin{:}\;\Conid{Sign})\;(\Varid{n}\;\mathbin{:}\;\Conid{ℕ})\;\Varid{→}\;\Conid{SignAbs}\;(\Varid{s}\;\Varid{◃}\;\Varid{n}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{signAbs}\;\mathbin{:}\;\Varid{∀}\;\Varid{m}\;\Varid{→}\;\Conid{SignAbs}\;\Varid{m}{}\<[E]%
+\\
+\>[B]{}\Varid{signAbs}\;\Varid{m}\;\mathrel{=}\;\Varid{subst}\;\Conid{SignAbs}\;(\Varid{sign◃}\;\Varid{m})\;(\Varid{sign}\;\Varid{m}\;\Varid{◂}\;(\Varid{p}\;\Varid{m})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+we could use pattern match to decompose an integer to be a sign and a natural number.
+
+\item \textit{Abbreviation of conditions.} We often need these conditions in theorem proving. There are two advantages, first it makes the conditions consistent, second we do not need to unfold the definition since we can give the whole number to conditions. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{is0}\;{}\<[7]%
+\>[7]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Varid{is0}\;(\Varid{a},\Varid{b})\;\mathrel{=}\;\Varid{a}\;\Varid{≡}\;\Varid{b}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{¬0}\;{}\<[6]%
+\>[6]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Varid{¬0}\;(\Varid{a},\Varid{b})\;\mathrel{=}\;\Varid{a}\;\Varid{≢}\;\Varid{b}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{is+}\;\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Varid{is+}\;(\Varid{a},\Varid{b})\;\mathrel{=}\;\Varid{b}\;\Conid{ℕ<}\;\Varid{a}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{is-}\;\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Varid{is-}\;(\Varid{a},\Varid{b})\;\mathrel{=}\;\Varid{a}\;\Conid{ℕ<}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item \textit{Conversion functions.} We need to convert the current number to other type of number so that we can deal with the computation mixed with different types of numbers. For example,
+
+a) p - projection: absolute value but type is ℕ
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{projection}\;\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℕ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+b) i - injection: a representative ℤ₀ for ℕ $(ℕ ⊂ ℤ)$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{injection}\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item \textit{Arithmetic.} Then we should define the operations. Most definitions in this project do not have mixed types. There are two main kinds of elementary operations, unary and binary operations, For example,
+
+a) Successor
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{suc}\;{}\<[14]%
+\>[14]{}\mathbin{:}\;\Conid{Op₁}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+b) Predecessor
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pred}\;{}\<[14]%
+\>[14]{}\mathbin{:}\;\Conid{Op₁}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+c) Negation : $- (3 - 2) = 2 - 3$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{-\char95 }\;{}\<[5]%
+\>[5]{}\mathbin{:}\;\Conid{Op₁}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+d) Absolute value : ℤ₀
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{∣\char95 ∣}\;\mathbin{:}\;\Conid{Op₁}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+e) Addition : $ (a - b) + (c - d) = (a + c) - (b + d) $
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 +\char95 }\;\mathbin{:}\;\Conid{Op₂}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+f) Minus : (a - b) - (c - d) = (a + d) - (b + c)
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 -\char95 }\;\mathbin{:}\;\Conid{Op₂}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+g) Multiplication:
+  (x - y) * (m - n) = (x * m + y * n) - (x * n + y * m ))
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 *\char95 }\;\mathbin{:}\;\Conid{Op₂}\;\Conid{ℤ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+There are also operations with mixed types,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ℕ*ℤ₀\char95 }\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}\Varid{n}\;\Conid{ℕ*ℤ₀}\;(\Varid{z+},\Varid{z-})\;\mathrel{=}\;\Varid{n}\;\Conid{ℕ*}\;\Varid{z+},\Varid{n}\;\Conid{ℕ*}\;\Varid{z-}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+For rational numbers, there are more operations to be defined,
+
+Inverse function: It does not define on zero.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{inverse}\;{}\<[15]%
+\>[15]{}\mathbin{:}\;(\Varid{q}\;\mathbin{:}\;\Conid{ℚ₀})\;\Varid{→}\;\{\mskip1.5mu \Varid{p}\;\mathbin{:}\;\Varid{¬0}\;\Varid{q}\mskip1.5mu\}\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Division: We can define the division for ℚ₀ because the results of division of ℕ or ℤ and ℚ₀ are always ℚ₀
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ÷\char95 }\;{}\<[13]%
+\>[13]{}\mathbin{:}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{ℚ₀})\;\Varid{→}\;\{\mskip1.5mu \Varid{p}\;\mathbin{:}\;\Varid{¬0}\;\Varid{b}\mskip1.5mu\}\;\Varid{→}\;\Conid{ℚ₀}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{enumerate}
+
+For the power functions, as we have to use fractional forms, and even real numbers for the root functions, which is the reverse of power functions, I defined some of them in a separate files called "Power" which is defined after the rational numbers.
+
+
+\subsection{Properties part}
+
+Due to the inefficiency problem arose from too much code in one file, I separate the proofs of properties into several parts. The general catogorising approach of these properties are separate into three parts, basic properties which includes the basic properties which are essential for the second part which includes all the properties to form a commutative ring for integers or form a field for rational numbers. Finally, the advanced part contains some properties which can be proved after we proved the second part and usually include some lemmas for theorems of the higher level numbers.
+
+\subparagraph{Basic properties.} In the basic the common properties are:
+
+\begin{enumerate}
+\item \textit{some relations and conditions are decidable.} For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ≟\char95 }\;{}\<[7]%
+\>[7]{}\mathbin{:}\;\Conid{Decidable}\;\Varid{\char95 ≡\char95 }{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{0}\;\Varid{?}\;{}\<[6]%
+\>[6]{}\mathbin{:}\;\Varid{∀}\;\Varid{z}\;\Varid{→}\;\Conid{Dec}\;(\Varid{is0}\;\Varid{z}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{¬0?}\;\mathbin{:}\;\Varid{∀}\;\Varid{z}\;\Varid{→}\;\Conid{Dec}\;(\Varid{¬0}\;\Varid{z}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{is+?}\;\mathbin{:}\;\Varid{∀}\;\Varid{z}\;\Varid{→}\;\Conid{Dec}\;(\Varid{is+}\;\Varid{z}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 ≤?\char95 }\;\mathbin{:}\;\Conid{Decidable}\;\Varid{\char95 ≤\char95 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item \textit{$(Num, = , \leq)$ forms a total order.} For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{35}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{decTotalOrder}\;\mathbin{:}\;\Conid{DecTotalOrder}{}\<[E]%
+\\
+\>[B]{}\Varid{decTotalOrder}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Conid{Carrier}\;{}\<[21]%
+\>[21]{}\mathrel{=}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{\char95 ≈\char95 }\;{}\<[21]%
+\>[21]{}\mathrel{=}\;\Varid{\char95 ≡\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{\char95 ≤\char95 }\;{}\<[21]%
+\>[21]{}\mathrel{=}\;\Varid{\char95 ≤\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{isDecTotalOrder}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[3]{}\hsindent{4}{}\<[7]%
+\>[7]{}\{\mskip1.5mu \Varid{isTotalOrder}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[7]{}\hsindent{4}{}\<[11]%
+\>[11]{}\{\mskip1.5mu \Varid{isPartialOrder}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[11]{}\hsindent{4}{}\<[15]%
+\>[15]{}\{\mskip1.5mu \Varid{isPreorder}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{}\{\mskip1.5mu \Varid{isEquivalence}\;\mathrel{=}\;\Varid{isEquivalence}{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{};\Varid{reflexive}\;{}\<[35]%
+\>[35]{}\mathrel{=}\;\Varid{refl′}{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{};\Varid{trans}\;{}\<[35]%
+\>[35]{}\mathrel{=}\;\Varid{trans}{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{};\Varid{∼-resp-≈}\;{}\<[35]%
+\>[35]{}\mathrel{=}\;\Varid{resp₂}\;\Varid{\char95 ≤\char95 }{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[11]{}\hsindent{4}{}\<[15]%
+\>[15]{};\Varid{antisym}\;{}\<[26]%
+\>[26]{}\mathrel{=}\;\Varid{antisym}{}\<[E]%
+\\
+\>[11]{}\hsindent{4}{}\<[15]%
+\>[15]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[7]{}\hsindent{4}{}\<[11]%
+\>[11]{};\Varid{total}\;\mathrel{=}\;\Varid{total}{}\<[E]%
+\\
+\>[7]{}\hsindent{4}{}\<[11]%
+\>[11]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[3]{}\hsindent{4}{}\<[7]%
+\>[7]{};\Varid{\char95 ≟\char95 }\;{}\<[14]%
+\>[14]{}\mathrel{=}\;\Varid{\char95 ≟\char95 }{}\<[E]%
+\\
+\>[3]{}\hsindent{4}{}\<[7]%
+\>[7]{};\Varid{\char95 ≤?\char95 }\;\mathrel{=}\;\Varid{\char95 ≤?\char95 }{}\<[E]%
+\\
+\>[3]{}\hsindent{4}{}\<[7]%
+\>[7]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item \textit{some other properties for ordering functions.} For example,
+
++ preserves ≤
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{+-pres₂′}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{≤}\;\Varid{b}\;\Varid{→}\;\Varid{c}\;\Varid{≤}\;\Varid{d}\;\Varid{→}\;\Varid{a}\;\Varid{+}\;\Varid{c}\;\Varid{≤}\;\Varid{b}\;\Varid{+}\;\Varid{d}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
++ cancellation for ≤ 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{+-cancel′}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\{\mskip1.5mu \Varid{b}\;\Varid{c}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{+}\;\Varid{b}\;\Varid{≤}\;\Varid{a}\;\Varid{+}\;\Varid{c}\;\Varid{→}\;\Varid{b}\;\Varid{≤}\;\Varid{c}{}\<[E]%
+\\
+\>[B]{}\Varid{+-cancel′}\;\Varid{a}\;\mathrel{=}\;\Conid{ℤ₀.+l-cancel′}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{∘}\;\Varid{+compl≤}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Also the properties to form a setoid we mentioned before is also included in this file. The three basic thoerems which proves the equivalence relations, namely "reflexivity", "symmetry" and "transitivity" are widely used.
+
+\end{enumerate}
+
+\subparagraph{Commutative Ring (or Field)} In the second part, there are a lot of axioms for operations which we used a lot in computations. For example,
+
+\begin{enumerate}
+\item the identity of $+$ : $0 + z = z$ and $z + 0 = z$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{+-identity}\;\mathbin{:}\;\Conid{Identity}\;(\Varid{+}\;\Varid{0})\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{+-identity}\;\mathrel{=}\;\Varid{0}\;\Varid{+z≡z},\Varid{z+0≡z}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item The Commutativity of $+$: $m * n = n * m$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{+-comm}\;\mathbin{:}\;\Conid{Commutative}\;\Varid{\char95 +\char95 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item The Associativity of $+$: $(a + b) + c = a + (b + c)$
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{+-assoc}\;\mathbin{:}\;\Conid{Associative}\;\Varid{\char95 +\char95 }{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item $-\_$ is inverse:
+$x + (- x) = 0$ and
+$(- x) + x = 0$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{+-inverse}\;\mathbin{:}\;\Conid{Inverse}\;(\Varid{+}\;\Varid{0})\;\Varid{-\char95 }\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{+-inverse}\;\mathrel{=}\;\Varid{+-leftInverse},\Varid{+-rightInverse}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item zero times any number is still zero:
+
+$0 * z = 0$
+
+
+$z * 0 = 0$
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{*-zero}\;\mathbin{:}\;\Conid{Zero}\;{}\<[16]%
+\>[16]{}(\Varid{+}\;\Varid{0})\;\Varid{\char95 *\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{*-zero}\;\mathrel{=}\;\Varid{0}\;\Varid{*z≡0},\Varid{z*0≡0}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item The distributivity of $+$ and $*$ :
+
+$a * (b + c) = a * b + a * c$
+
+$(b + c) * a = b * a + c * a$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{distrib-*-+}\;\mathbin{:}\;\Varid{\char95 *\char95 }\;\Conid{DistributesOver}\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{distrib-*-+}\;\mathrel{=}\;\Varid{distˡ},\Varid{distʳ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{enumerate}
+
+There are more properties than which are similar to these and finally they could form a ring or even a field. for example,
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{commutativeRing}\;\mathbin{:}\;\Conid{CommutativeRing}{}\<[E]%
+\\
+\>[B]{}\Varid{commutativeRing}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{\char95 +\char95 }\;{}\<[27]%
+\>[27]{}\mathrel{=}\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{\char95 *\char95 }\;{}\<[27]%
+\>[27]{}\mathrel{=}\;\Varid{\char95 *\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{-\char95 }\;{}\<[27]%
+\>[27]{}\mathrel{=}\;\Varid{-\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{0}\;\Varid{\#}\;{}\<[27]%
+\>[27]{}\mathrel{=}\;(\Varid{+}\;\Varid{0}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{1}\;\Varid{\#}\;{}\<[27]%
+\>[27]{}\mathrel{=}\;(\Varid{+}\;\Varid{1}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{isCommutativeRing}\;\mathrel{=}\;\Varid{isCommutativeRing}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+With commutative ring we could build the ring solver which is an automatic prover and solver for simple propositions.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{import}\;\Conid{Algebra.RingSolver.Simple}\;\Varid{as}\;\Conid{Solver}{}\<[E]%
+\\
+\>[B]{}\Keyword{import}\;\Conid{Algebra.RingSolver.AlmostCommutativeRing}\;\Varid{as}\;\Conid{ACR}{}\<[E]%
+\\
+\>[B]{}\Keyword{module}\;\Conid{RingSolver}\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{Solver}\;(\Conid{ACR.fromCommutativeRing}\;\Varid{commutativeRing}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\subparagraph{Advanced Properties}The advanced properties part imports the second part so that some more advanced properties can be proved easier after we have the theorems proved before.
+
+\begin{enumerate}
+
+\item Integrity. The Integerity is the name for properties and it is also called mulitiplication cancellation fucntions. We need a non-zero condition for the cancelled term. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{l-integrity}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{m}\;\Varid{n}\mskip1.5mu\}\;\Varid{a}\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{¬0}\;\Varid{a})\;\Varid{→}\;\Varid{a}\;\Varid{*}\;\Varid{m}\;\Varid{≡}\;\Varid{a}\;\Varid{*}\;\Varid{n}\;\Varid{→}\;\Varid{m}\;\Varid{≡}\;\Varid{n}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item $*$ preserves $≤$, if n is non-negative in $a ≤ b → n * a ≤ n * b$
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{*-pres′}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\mskip1.5mu\}\;\Varid{n}\;\Varid{→}\;\Varid{a}\;\Varid{≤}\;\Varid{b}\;\Varid{→}\;(\Varid{n},\Varid{0})\;\Varid{*}\;\Varid{a}\;\Varid{≤}\;(\Varid{n},\Varid{0})\;\Varid{*}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item Solve an equation: if $m * n ∼ 0$ and m is not 0 then n must be 0
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{solve0}\;\mathbin{:}\;\Varid{∀}\;\Varid{m}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{¬0}\;\Varid{m})\;\Varid{→}\;\Varid{m}\;\Varid{*}\;\Varid{n}\;\Varid{≡}\;\Varid{+}\;\Varid{0}\;\Varid{→}\;\Varid{n}\;\Varid{≡}\;\Varid{+}\;\Varid{0}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{solve0'}\;\mathbin{:}\;\Varid{∀}\;\Varid{m}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{¬0}\;\Varid{m})\;\Varid{→}\;\Varid{n}\;\Varid{*}\;\Varid{m}\;\Varid{≡}\;\Varid{+}\;\Varid{0}\;\Varid{→}\;\Varid{n}\;\Varid{≡}\;\Varid{+}\;\Varid{0}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\item To simplfy some common actions to exchange the positions of some elements in polynomials when construct proof manually rather than using ring solvers, there is a set of exchange functions defined here. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{*-ex₁}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{→}\;\Varid{a}\;\Varid{*}\;(\Varid{b}\;\Varid{*}\;\Varid{c})\;\Varid{≡}\;\Varid{c}\;\Varid{*}\;(\Varid{b}\;\Varid{*}\;\Varid{a}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{*-exchange₁}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{→}\;(\Varid{a}\;\Varid{*}\;\Varid{b})\;\Varid{*}\;(\Varid{c}\;\Varid{*}\;\Varid{d})\;\Varid{≡}\;(\Varid{a}\;\Varid{*}\;\Varid{d})\;\Varid{*}\;(\Varid{c}\;\Varid{*}\;\Varid{b}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{*-exchange₂}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{→}\;(\Varid{a}\;\Varid{*}\;\Varid{b})\;\Varid{*}\;(\Varid{c}\;\Varid{*}\;\Varid{d})\;\Varid{≡}\;(\Varid{c}\;\Varid{*}\;\Varid{b})\;\Varid{*}\;(\Varid{a}\;\Varid{*}\;\Varid{d}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{enumerate}
+
+Besides these, when I need a lemma that seems useful generally or easier to prove in current number environment, I will also prove it in this part. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{*+-simp}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;(\Varid{+}\;\Varid{a})\;\Varid{*}\;(\Varid{+}\;\Varid{b})\;\Varid{≡}\;\Varid{+}\;(\Varid{a}\;\Conid{ℕ*}\;\Varid{b}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{-*cong}\;\mathbin{:}\;\Varid{∀}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;\Varid{m}\;\Varid{*}\;\Varid{n}\;\Varid{≡}\;(\Varid{-}\;\Varid{m})\;\Varid{*}\;(\Varid{-}\;\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subparagraph{Properties combined} After all, a single file called "Properties" which combine all the properties is necessary to provide a easy access to all these properties. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{module}\;\Conid{Data.Integer.Properties}\;\Keyword{where}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Data.Integer.Properties.BasicProp}\;\Keyword{public}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Data.Integer.Properties.CommutativeRing}\;\Keyword{public}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Data.Integer.Properties.AdvancedProp}\;\Keyword{public}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+It is also a better way to manage what properties to put in the whole properties file. After that we can add a set of properties without affecting the rest of properties if we put all properties in one single file.
+
+
+\section{Implementation}
+
+
+\subsection{Proving theorems in Agda}
+
+After getting the numbers defined, we will discuss the approaches and tools used to prove theorems in Agda. Computer-aid formal reasoning is different but has some similarity to the reasoning in regular mathematics. We could omit some common properties like "commutativity" and the target of what the properties are applied to. In the real world, verification is a big problem as everyone will make mistakes and no "checker" will warn you. However to prove theorems in programming languages, although the rules are much stricter so that we have to present each small property used, we will make less mistakes by writing more complete proofs and by using reliable checker who is in charge of verification. In my experience, when I implemented a piece of proof in Agda, I found that I ignored some steps which looks simple but is actually not been proved. However the approaches of proving in Agda are similar to mathematical reasoning. I summarized two ways to organise the proofs which can be mixed used,
+
+\begin{enumerate}
+\item \textit{Case analysis -- Pattern match.} For example, natual numbers have two cases, zero and successor of another natural number. In regular mathematics, we could prove proposition of natural numbers using inductive reasoning; In Agda we could use pattern match as below,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{n*0+0=0}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{n}\;\Varid{*}\;\Varid{0}\;\Varid{+}\;\Varid{0}\;\Varid{≡}\;\Varid{0}{}\<[E]%
+\\
+\>[B]{}\Varid{n*0+0=0}\;\{\mskip1.5mu \Varid{zero}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{n*0+0=0}\;\{\mskip1.5mu \Varid{suc}\;\Varid{n}\mskip1.5mu\}\;\mathrel{=}\;\Varid{n*0+0=0}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+You can see the pattern match is the implementation of case analysis in programming languages according to Curry-Howard correspondence \cite{wiki:Pattern}.
+
+\item \textit{Using lemmas -- Using auxiliary functions.} In regular mathematics, we often prove complicated theorems by proving small lemmas. In programming languages, we can implement this idea trivially by using auxiliary functions. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{ass-lem}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{e}\;\Varid{f}\;\Varid{→}\;(\Varid{a}\;\Varid{*}\;(\Varid{+suc}\;\Varid{b})\;\Varid{+}\;\Varid{c}\;\Varid{*}\;(\Varid{+suc}\;\Varid{d})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{+-assoc}\;\mathbin{:}\;\Conid{Associative}\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{+-assoc}\;(\Varid{a}\;\Varid{/suc}\;\Varid{ad})\;(\Varid{b}\;\Varid{/suc}\;\Varid{bd})\;(\Varid{c}\;\Varid{/suc}\;\Varid{cd})\;\mathrel{=}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{*-cong}\;(\Varid{ass-lem}\;\Varid{a}\;\Varid{bd}\;\Varid{b}\;\Varid{ad}\;\Varid{cd}\;\Varid{c})\;\Varid{\char92 \$}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{+\char95 }\;\Varid{⋆}\;\Varid{⟨}\;\Conid{ℕ.*-assoc}\;(\Varid{suc}\;\Varid{ad})\;(\Varid{suc}\;\Varid{bd})\;(\Varid{suc}\;\Varid{cd})\;\Varid{⟩}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{enumerate}
+
+To use lemmas not only divides huge tasks into small pieces that is easier to prove, but also helps us reduce repeated proofs.
+
+
+Proving in Agda also has some distinctions with proving in Coq. There is an impredicative universe \emph{Prop} in Coq but not in Agda. The pattern matching mechanism is more flexible in Agda\cite{tutorial}. While in Coq we have tactics to prove the theorems, in Agda we can only write proofs in the form of programs until now. When doing theorem proving we are also equipped with two useful tools,
+
+\begin{enumerate}
+
+\item \textit{Formal reasoning structure.} It is a simulation of the formal reasoning process in regular mathematics. We could prove propositions step by step without using transitivity every time. Every step is explict so that it is more readable. This is an example of using formal reasoning structure,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{37}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{begin}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{x+}\;\Conid{ℕ+}\;\Varid{z-}\;\Conid{ℕ+}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{y-})\;{}\<[37]%
+\>[37]{}\Varid{≡⟨}\;\Varid{exchange}\;\Varid{x+}\;\Varid{z-}\;\Varid{y+}\;\Varid{y-}\;\Varid{⟩}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{x+}\;\Conid{ℕ+}\;\Varid{y-}\;\Conid{ℕ+}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{z-})\;{}\<[37]%
+\>[37]{}\Varid{≡⟨}\;\Varid{eq1}\;\Varid{+='}\;\Varid{eq2}\;\Varid{⟩}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{z+}\;\Conid{ℕ+}\;\Varid{y-}\;\Conid{ℕ+}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{x-})\;{}\<[37]%
+\>[37]{}\Varid{≡⟨}\;\Varid{exchange}\;\Varid{z+}\;\Varid{y-}\;\Varid{y+}\;\Varid{x-}\;\Varid{⟩}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{z+}\;\Conid{ℕ+}\;\Varid{x-}\;\Conid{ℕ+}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{y-})\;{}\<[37]%
+\>[37]{}\Varid{∎}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+It starts with begin and ends with QED. It allows reflexive refinement during proofs.
+
+\item \textit{Ring solver.} Ring solver is an automatic prover for simple equations which only contains operations including addition, negation, subtraction and multiplication. We can set up ring solver based on the proof of semiring or ring. It is especially helpful for complicated polynomials which have too many elements. To prove a proposition we only need to send it to the solver and the solver will automatically generate the proof we need. However every coin has two sides. Although it saves the time for the programmer it takes much longer time for type-checking. This is an example of how to use ring solver,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{z+0=z}\;\mathbin{:}\;\Conid{RightIdentity}\;(\Varid{0},\Varid{0})\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{z+0=z}\;(\Varid{a'},\Varid{b'})\;\mathrel{=}\;\Varid{solve}\;\Varid{2}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Varid{...})\;\Varid{refl}\;\Varid{a'}\;\Varid{b'}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{enumerate}
+
+
+\subsection{Problems and Changes}
+
+At first, starting using Agda which was unfamiliar to me is really a big chanllenge. Although it is similar to Coq to some extent, and similar to Haskell which Agda itself is implemented in, it is still a new way to program and do theorem proving. Because of the inadequate understanding of Agda and its library code, I encoutered several problems in undertaking this project.
+
+\subparagraph{Efficiency Problem} The efficiency problem of type checker has been mentioned before. The computation time of type checking is not only related to the amount of the code in a single files but also to the complexity of referenced functions and properties. Therefore although some proofs for rational numbers looks similar to the ones for integers, it takes about double time to check the file. In the other hand, ring solver which is an automatical theorem prover can simplify the proof a lot but also sacrifice the efficiency instead. At first I use the ring solver of natural numbers to prove theorems for setoid integers, it works well but takes more time. However when I try to use the ring solver set up based on the commutative ring of setoid integers, the time spent on type checking is too long to refine the goals. The problem is extremely serious when I use the old version of rational numbers to define real numbers. At that time my computer were working work fully-loaded for about half an hour to make the definition of reals completely checked.
+
+\textit{Changes.} To solve the efficiency problem, firstly I divide large files into more parts such as the field of rational numbers. To reduce computation for type checker I have to give up the ring solver and choose to construct proofs manually. Then I use the formal reasoning structure introduced before. For some properties it is clear and short. But for bigger proofs, the intermediate steps are unecessary to present while they are too long to be structured well. After all I choose to prove theorems without the tools because I can write more compact proofs. Learning from some tricks used in Thomas Anberrée's quotient definition, I using a set of symbols to replace the properties to make them more comprehensive. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{⟨\char95 ⟩}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{Symmetric}\;(\Varid{\char95 ≡\char95 }\;\{\mskip1.5mu \Conid{A}\;\mathrel{=}\;\Conid{A}\mskip1.5mu\}){}\<[E]%
+\\
+\>[B]{}\Varid{⟨\char95 ⟩}\;\mathrel{=}\;\Varid{sym}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 >≡<\char95 }\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{Transitive}\;(\Varid{\char95 ≡\char95 }\;\{\mskip1.5mu \Conid{A}\;\mathrel{=}\;\Conid{A}\mskip1.5mu\}){}\<[E]%
+\\
+\>[B]{}\Varid{\char95 >≡<\char95 }\;\mathrel{=}\;\Varid{trans}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 ⋆\char95 }\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{A}\;\Conid{B}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;(\Varid{f}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{B})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\{\mskip1.5mu \Varid{x}\;\Varid{y}\mskip1.5mu\}\;\Varid{→}\;\Varid{x}\;\Varid{≡}\;\Varid{y}\;\Varid{→}\;\Varid{f}\;\Varid{x}\;\Varid{≡}\;\Varid{f}\;\Varid{y}{}\<[E]%
+\\
+\>[B]{}\Varid{\char95 ⋆\char95 }\;\mathrel{=}\;\Varid{cong}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Unary function like "symmetry" can be more meaningful when it includes the equation it applied to. For transitivity, the symbol like a chain links all intermidiate proofs together which are more clearly presented. The congurence is also replaced by a infix operator to make the programs similar to the goals.
+
+Then I revise all the lemmas to generalise the common part and discard useless ones. After rewritting all of them, the proofs become much more shorter and comprehensive with increased effciency to use. For instance, in the older version, to prove the transitivity for rational numbers, I defined 10 lemmas and there are nearly 50 lines of codes. in the new version there are no lemmas for it and the proof is as short as 10 lines. The time spent on type checking the definition with real number is 10 minutes for the older version, but 10 seconds for the newer version.
+
+\subparagraph{Stuck in difficult theorems} For some theorems like the distributivity for normal integers, transitivity for setoid integers and rational numbers and integrity which are comparative much more difficult to prove. At first when I try to prove these properties, I was stuck for very long time. I followed the common steps to pattern match and prove case by case. 
+But later I found there are too much cases and the types of goals are beyond my understanding.
+
+To reduce the number of cases, firstly I defined setoid integers and redefined integers as we discussed before. Then I found that to prove lemmas first could also reduce cases. Defining normal integers based on setoid integers makes the proof simpler as well. We can prove theorems of normal integers by proving the ones of setoid integers and proving the isomorphism between the setoid the normal definition. The general quotient theory of Thorsten Altenkirch and Thomas Anberrée could provide easier way to lift theorems, however the current version still has some small questions that restrict it.
+
+The types of goals are always unfolded and unreadable. Therefore I use formal reasoning structure at first. Although I rewrite the code without this tool in the end, it benefited refinement of goals with clear steps. To formalise a proof in Agda, it is better to configure it out in regular mathematics by hand. This is what I have learnt from undertaking this project. It also helps me find mistakes. For example, when I try to prove integrity, I forgot to add the condition of non-zero of the cancelled term. Wrong propositions are allowed to be written but unlikely to be proved. When I try to configure out the proof manually, I found this stupid mistake by trying to replace the cancelled term using 0.
+
+When I explored in the library code, I found there are many useful functions and tools that could simplfy the proofs. To understand these codes more deeply, I tried to write the programs by myself. At the same time, I also learnt a lot from the library code writtern by Nils Anders Danielsson.
+
+\subparagraph{Other problems} There are some other small problems that related to Agda itself. It is better use extraction functions rather than pattern match in defining relations and operations so that they are decoupled with the definition of setoid number,
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}(\Varid{x+},\Varid{x-})\;\Varid{∼}\;(\Varid{y+},\Varid{y-})\;\mathrel{=}\;(\Varid{x+}\;\Conid{ℕ+}\;\Varid{y-})\;\Varid{≡}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{x-}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+\begin{definition}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pos}\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[B]{}\Varid{pos}\;(\Varid{m},\anonymous )\;\mathrel{=}\;\Varid{m}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{neg}\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℕ}{}\<[E]%
+\\
+\>[B]{}\Varid{neg}\;(\anonymous ,\Varid{n})\;\mathrel{=}\;\Varid{n}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
+\\
+\>[B]{}\Varid{x}\;\Varid{∼}\;\Varid{y}\;\mathrel{=}\;(\Varid{pos}\;\Varid{x}\;\Conid{ℕ+}\;\Varid{neg}\;\Varid{y}),(\Varid{pos}\;\Varid{y}\;\Conid{ℕ+}\;\Varid{neg}\;\Varid{x}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{definition}
+
+However for the secound version, there is problem when using the transitivity proved based on it. Everytime when I use the transitivity I have to explicitly show the three elements involved. For the convenience, I gave up the version with extraction functions.
+
+Also I found when we use "with", we could pattern match on impossible cases. For example, when I pattern match on "suc n", it still requires to prove the case "zero". These problems can be solved by developers of Agda and It will become more powerful in the future. 
+
+During the period of project, Agda has also changed a lot in both itself and its standard library. The relations, operations, algebra strucutures are mostly changed due to the added feature universe polymorphism. It enables programmers to define polymorphic data types on several levels \cite{agdawiki:up}. The pattern match on record is also available right now in the development version $2.2.7$ which will also benefit the theorem proving a lot.
+
+\section{Evaluation}
+
+\subsection{How to use the code}
+
+Most of the code are tested to worked under Agda $2.2.6$ except the definitions of normal rational number and real number. These two definitions use the pattern match of record type which is only available from $2.2.7$ version which is a development version.
+
+To use the numbers it is enough to just import the definition file of each type of numbers. What should be noted is that, the setoid definitions require the "Data.Product" library code and In all kinds of these numbers, "Data.Nat" which includes the definition of natural numbers is also essential. According to the dependencies, we should include the lower level of numbers if we want use the higher level ones.
+
+To prove the properties, it is enough to just import the second part to use the ring solver for simple propositions. In addition we should add the following code,
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{open}\;\Conid{RingSolver}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Keyword{using}\;(\Varid{prove};\Varid{solve};\Varid{\char95 :=\char95 };\Varid{con};\Varid{var};\Varid{\char95 :+\char95 };\Varid{\char95 :*\char95 };\Conid{:-\char95 };\Varid{\char95 :-\char95 }){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+I have tested the ring solvers of each type of numbers. For example,
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{t}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{→}\;(\Varid{a}\;\Varid{+}\;\Varid{b})\;\Varid{*}\;(\Varid{c}\;\Varid{+}\;\Varid{d})\;\Varid{∼}\;\Varid{a}\;\Varid{*}\;\Varid{c}\;\Varid{+}\;\Varid{a}\;\Varid{*}\;\Varid{d}\;\Varid{+}\;\Varid{b}\;\Varid{*}\;\Varid{c}\;\Varid{+}\;\Varid{b}\;\Varid{*}\;\Varid{d}{}\<[E]%
+\\
+\>[B]{}\Varid{t}\;\mathrel{=}\;\Varid{solve}\;\Varid{4}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{→}\;(\Varid{a}\;\Conid{:+}\;\Varid{b})\;\Conid{:*}\;(\Varid{c}\;\Conid{:+}\;\Varid{d})\;\Conid{:=}\;\Varid{a}\;\Conid{:*}\;\Varid{c}\;\Conid{:+}\;\Varid{a}\;\Conid{:*}\;\Varid{d}\;\Conid{:+}\;\Varid{b}\;\Conid{:*}\;\Varid{c}\;\Conid{:+}\;\Varid{b}\;\Conid{:*}\;\Varid{d})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{zrefl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+It takes about one minute to verify the correctness of the proof. Ring solver is a good choice for proving unusual used propositions.
+
+Importing the "Properties" files, we could construct the proof manually. Some symbols for generic properties are defined in one single file "Symbols".
+
+\subsection{Feedback}
+
+I have changed the naming convention, organisation of files, layout of code and improve the readability of the code based on the feedback from Nils Anders Danielsson who is the main designer of the standard library of Agda.
+I also get some feedback from some friends of mine who have knowledge of Agda. The feedbacks reflect some problems,
+
+\begin{itemize}
+\item \textit{The definitions is hard to understand.} The definition requires more knowledge beyond the simple mathematics, especially for the real numbers, which seems difficult to use. I think the problem could be solved with reading the discussion of definitions of real numbers.
+
+\item \textit{Ring solver.} It is quite slow compared to what they have exprienced before but is still acceptable. The positive aspect is that they find it is interesting and helpful to use ring solver.
+
+\item \textit{Description.} The explanation for each property facilitates the understanding of the code. But if the emacs interface could fold the description with a button, the code will look clearer.
+
+\end{itemize}
+
+\section{Summary and future work}
+
+In this project, the various approaches of representing numbers in programming languages are reviewed firstly. Then the exploration of best representation in Agda are undertaken along with the implementation. The definitions were gradually refined by considering the usability, readability and the effects on theorem proving. While being more familiar with Agda and computer-aid formal reasoning, I make use of the tools and library code to improve the implementation. I also learnt from the definition of numbers in other languages by literature review and from codes written by others. Taking the usability and efficiency of properties into consideration, I changed the approaches to prove them several times. The final version has been tested to be acceptable when using the properties proved.
+
+Agda provides increasing number of beneficial features for theorem proving so that it will attract more users. The work of representing numbers can be extended futher in several aspects. Within Agda, other ways to represent each kind of number especially some other construction of exact real number are worth implementing, for example, the dedekind cut and infinite streams may perform better in efficiency. The implementation of quotient types is also a potential extention and we could apply it to the mechanism between setoid and normal forms. It is also interesting to use these definitions and properties in proving more complicated theorems. The work can also be extended in other languages. To review and compare the different representation of numbers in different proof assistants is also a nice topic. 
+
+\newpage
+\bibliography{myref}
+\bibliographystyle{plain}
+
+\end{document}

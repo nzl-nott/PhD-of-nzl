@@ -1,0 +1,763 @@
+\documentclass[a4paper,12pt]{article}
+\def\textmu{}
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+%
+\ReadOnlyOnce{agda.fmt}%
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8x]{inputenc}
+\RequirePackage{ucs}
+\RequirePackage{amsfonts}
+
+\providecommand\mathbbm{\mathbb}
+
+% TODO: Define more of these ...
+\DeclareUnicodeCharacter{737}{\textsuperscript{l}}
+\DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
+\DeclareUnicodeCharacter{8759}{::}
+\DeclareUnicodeCharacter{9669}{\ensuremath{\triangleleft}}
+\DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{\scriptscriptstyle ?}{=}}}
+\DeclareUnicodeCharacter{10214}{\ensuremath{\llbracket}}
+\DeclareUnicodeCharacter{10215}{\ensuremath{\rrbracket}}
+
+% TODO: This is in general not a good idea.
+\providecommand\textepsilon{$\epsilon$}
+\providecommand\textmu{$\mu$}
+
+
+%Actually, varsyms should not occur in Agda output.
+
+% TODO: Make this configurable. IMHO, italics doesn't work well
+% for Agda code.
+
+\renewcommand\Varid[1]{\mathord{\textsf{#1}}}
+\let\Conid\Varid
+\newcommand\Keyword[1]{\textsf{\textbf{#1}}}
+\EndFmtInput
+
+
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{cite}
+
+%\DeclareUnicodeCharacter{"2237}{\ensuremath{::}}
+\DeclareUnicodeCharacter{"03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{"03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{"03C6}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{"03C8}{\ensuremath{\psi}}
+
+\usepackage{color}
+\newcommand{\txa}[1]{\textcolor{red}{\textbf{Thorsten:~}#1}}
+
+\newcommand{\nzl}[1]{\textcolor{green}{\textbf{Nuo:~}#1}}
+
+\author{Li Nuo}
+\title{Two presentations of equality in dependently typed languages}
+
+\begin{document}
+
+\maketitle
+
+\section{Background}
+
+In intensional type theory such as Agda, propositional equality (establish equality based on identity) can be defined in two ways: either defined as an inductive
+relation or as a parameterized inductive predicate:
+
+\begin{description}
+\item[As a binary relation] \hspace*{\fill} \\
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{Id}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{A}\;\Varid{→}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{refl}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+This one was first
+proposed by Per Martin-Löf as propositional equality\cite{Nord}. \ensuremath{\Varid{refl}} here is a function which creates a single equality term for each element of A.
+
+
+\item[As a predicate] \hspace*{\fill} \\
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{Id'}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{refl}\;\mathbin{:}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+This version was proposed by Christine Paulin-Mohring \cite{habil} and is adopted in the Agda standard library. The formalisation of this identity type requires the equated value.
+\ensuremath{\Conid{Id'}\;\Conid{A}\;\Varid{a}} can be seen as a predicate of whether some \ensuremath{\Varid{x}\;\mathbin{:}\;\Conid{A}} is the same as
+\ensuremath{\Varid{a}} in the type declaration. Since the equated value has been determined within the type, we only need an unique proof \ensuremath{\Varid{refl}}.
+
+\end{description}
+
+In intensional type theory, we have a corresponding elimination rule for each of them. It was
+called \ensuremath{\Varid{idpeel}} in \cite{Nord} but we use the common name \ensuremath{\Conid{J}} here. We can easily define it using pattern matching in Agda as below.
+
+\begin{description}
+\item[As a binary relation] \hspace*{\fill} \\
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{J}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Conid{P}\;\mathbin{:}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Set})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{→}\;(\Varid{m}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{P}\;\Varid{a}\;\Varid{a}\;(\Varid{refl}\;\Varid{a}))\;{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{→}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{p}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;\Conid{P}\;\Varid{a}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Conid{J}\;\Conid{A}\;\Conid{P}\;\Varid{m}\;\Varid{a}\;\Varid{.a}\;(\Varid{refl}\;\Varid{.a})\;\mathrel{=}\;\Varid{m}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\ensuremath{\Conid{P}} is the proposition dependent on the equality. \ensuremath{\Varid{m}} is function to create inhabitant for this proposition when we we know the two sides of the identity term are definitionally equal. Using pattern matching we can easily derive that the equality term must only be constructed by the function \ensuremath{\Varid{refl}} and if it is inhabitant, the two sides must be identical. Then \ensuremath{\Conid{P}\;\Varid{a}\;\Varid{b}\;\Varid{p}} can be turned into \ensuremath{\Conid{P}\;\Varid{a}\;\Varid{a}\;(\Varid{refl}\;\Varid{a})} so that we can trivially formalise it using \ensuremath{\Varid{m}\;\Varid{a}}. 
+
+The main ingredient of \ensuremath{\Conid{J}} is pattern matching \ensuremath{(\Varid{a},\Varid{b},\Varid{p}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})} with \ensuremath{(\Varid{b},\Varid{b},\Varid{refl}\;\Varid{b})}.
+
+\item[As a predicate] \hspace*{\fill} \\
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{J'}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{→}\;(\Conid{P}\;\mathbin{:}\;(\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Set})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{→}\;(\Varid{m}\;\mathbin{:}\;\Conid{P}\;\Varid{a}\;\Varid{refl})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{→}\;(\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{p}\;\mathbin{:}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;\Conid{P}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Conid{J'}\;\Conid{A}\;\Varid{.a}\;\Conid{P}\;\Varid{m}\;\Varid{a}\;\Varid{refl}\;\mathrel{=}\;\Varid{m}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+J' is the Paul-Mohring's rule. For \ensuremath{\Conid{Id'}\;\Conid{A}\;\Varid{a}}, since the type formalisation requires one side of the equality, we treat it as a predicate on the other side of the equality. Therefore, within the elimination rule, \ensuremath{\Conid{Id'}\;\Conid{A}\;\Varid{a}} is fixed, which means \ensuremath{\Conid{P}}, \ensuremath{\Varid{m}} and \ensuremath{\Varid{p}} now share the same free variable \ensuremath{\Varid{a}} as in \ensuremath{\Conid{Id'}\;\Conid{A}\;\Varid{a}}. Then \ensuremath{\Varid{m}} becomes the proof that P is only valid when the other side is the same as \ensuremath{\Varid{a}}. Also with pattern matching, \ensuremath{(\Varid{b},\Varid{p}\;\mathbin{:}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b})} is identified with \ensuremath{(\Varid{a},\Varid{refl}\;\mathbin{:}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{a})}. Hence, \ensuremath{\Conid{P}\;\Varid{b}\;\Varid{p}} can be turned into \ensuremath{\Conid{P}\;\Varid{a}\;\Varid{refl}} which is just \ensuremath{\Varid{m}}. 
+
+\end{description}
+
+These two formalisation of equality can be used alternatively in many places. They should be ispomorphic in intensional type theory. We can easily prove it as below.
+
+
+Firstly we establish the isomorphic functions between the two formulasation. 
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{φ}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{A}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{φ}\;\{\mskip1.5mu \Conid{A}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\mskip1.5mu\}\;\Varid{eq}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a'}\;\Varid{b'}\;\anonymous \;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a'}\;\Varid{b'})\;(\Varid{λ}\;\Varid{a'}\;\Varid{→}\;\Varid{refl})\;\Varid{a}\;\Varid{b}\;\Varid{eq}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{ψ}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{A}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{ψ}\;\{\mskip1.5mu \Conid{A}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\mskip1.5mu\}\;\Varid{eq}\;\mathrel{=}\;\Conid{J'}\;\Conid{A}\;\Varid{a}\;(\Varid{λ}\;\Varid{b'}\;\anonymous \;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b'})\;(\Varid{refl}\;\Varid{a})\;\Varid{b}\;\Varid{eq}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Then we need to prove the two ways of composing them are simply identity functions. There are one small question that to use which formalisation of equality of the equality of the equality. However, if we have either of them, we have proved that the two equality are definitionally equal. Therefore we can choose either of them to make the proof as simple as possible.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{idId}\;\mathbin{:}\;\Varid{∀}\;\Conid{A}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;(\Varid{ψ}\;(\Varid{φ}\;\Varid{p}))\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Varid{idId}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{p}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a'}\;\Varid{b'}\;\Varid{eq}\;\Varid{→}\;\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{a'}\;\Varid{b'})\;(\Varid{ψ}\;(\Varid{φ}\;\Varid{eq}))\;\Varid{eq})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{16}{}\<[16]%
+\>[16]{}(\Varid{λ}\;\Varid{a'}\;\Varid{→}\;\Varid{refl}\;(\Varid{refl}\;\Varid{a'}))\;\Varid{a}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{idId'}\;\mathbin{:}\;\Varid{∀}\;\Conid{A}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;\Conid{Id'}\;(\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;(\Varid{φ}\;(\Varid{ψ}\;\Varid{p}))\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Varid{idId'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{p}\;\mathrel{=}\;\Conid{J'}\;\Conid{A}\;\Varid{a}\;(\Varid{λ}\;\Varid{b'}\;\Varid{eq}\;\Varid{→}\;\Conid{Id'}\;(\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b'})\;(\Varid{φ}\;(\Varid{ψ}\;\Varid{eq}))\;\Varid{eq})\;\Varid{refl}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+What is more interesting is the question below.
+
+\section{The Question}
+Now the question is: how to implement \ensuremath{\Conid{J}} using only \ensuremath{\Conid{J'}} and vice versa? We will still use corresponding equality to be used by each
+elimination rule.
+
+\section{The Solution}
+
+From \ensuremath{\Conid{J'}} to \ensuremath{\Conid{J}} is quite simple. If we assume a is the left hand side, and we rename \ensuremath{\Conid{P}\;\Varid{a}} with \ensuremath{\Conid{P'}}, then \ensuremath{\Conid{J'}\;\Conid{A}\;\Varid{a}\;\Conid{P'}\;(\Varid{m}\;\Varid{a})} can turn \ensuremath{\Conid{P'}\;\Varid{b}\;\Varid{p}} for some \ensuremath{\Varid{b}} into \ensuremath{\Conid{P'}\;\Varid{a}\;\Varid{refl}} which is just \ensuremath{\Varid{m}\;\Varid{a}}.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{JId'}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Conid{P}\;\mathbin{:}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Set})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{→}\;((\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{P}\;\Varid{a}\;\Varid{a}\;\Varid{refl})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{→}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{p}\;\mathbin{:}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;\Conid{P}\;\Varid{a}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Conid{JId'}\;\Conid{A}\;\Conid{P}\;\Varid{m}\;\Varid{a}\;\mathrel{=}\;\Conid{J'}\;\Conid{A}\;\Varid{a}\;(\Conid{P}\;\Varid{a})\;(\Varid{m}\;\Varid{a}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+We can easily verfiy it by definitionally expanding J'.
+
+The other direction is more tricky, because for \ensuremath{\Conid{J'}} we have proposition \ensuremath{\Conid{P}}, proof term \ensuremath{\Varid{m}} and equality term \ensuremath{\Varid{p}} dependent on the same value \ensuremath{\Varid{a}} which is not trivially suited for \ensuremath{\Conid{J}}. We must try to devise other ways to solve it.
+
+We first define \ensuremath{\Varid{subst}} from \ensuremath{\Conid{J}}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{id}\;\mathbin{:}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;\Conid{A}\;\Varid{→}\;\Conid{A}{}\<[E]%
+\\
+\>[B]{}\Varid{id}\;\mathrel{=}\;\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{subst}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{p}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Conid{B}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Set})\;\Varid{→}\;\Conid{B}\;\Varid{a}\;\Varid{→}\;\Conid{B}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{subst}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{p}\;\Conid{B}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a'}\;\Varid{b'}\;\anonymous \;\Varid{→}\;\Conid{B}\;\Varid{a'}\;\Varid{→}\;\Conid{B}\;\Varid{b'})\;(\Varid{λ}\;\anonymous \;\Varid{→}\;\Varid{id})\;\Varid{a}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+And then define \ensuremath{\Conid{Q}\;\Conid{A}\;\Varid{a}} as the product of some \ensuremath{\Varid{b}} with the equality between \ensuremath{\Varid{a}} and \ensuremath{\Varid{b}}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{Q}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[B]{}\Conid{Q}\;\Conid{A}\;\Varid{a}\;\mathrel{=}\;\Conid{Σ}\;\Conid{A}\;(\Varid{λ}\;\Varid{b}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Finally we prove \ensuremath{\Conid{J'}} from \ensuremath{\Conid{J}} (note that \ensuremath{\Varid{subst}} is also defined by \ensuremath{\Conid{J}}).
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{J'Id}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Conid{P}\;\mathbin{:}\;(\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Set})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{→}\;\Conid{P}\;\Varid{a}\;(\Varid{refl}\;\Varid{a})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{→}\;(\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{p}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;\Conid{P}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Conid{J'Id}\;\Conid{A}\;\Varid{a}\;\Conid{P}\;\Varid{m}\;\Varid{b}\;\Varid{p}\;\mathrel{=}\;\Varid{subst}\;(\Conid{Q}\;\Conid{A}\;\Varid{a})\;(\Varid{a},\Varid{refl}\;\Varid{a})\;(\Varid{b},\Varid{p})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a'}\;\Varid{b'}\;\Varid{p'}\;\Varid{→}\;\Conid{Id}\;(\Conid{Q}\;\Conid{A}\;\Varid{a'})\;(\Varid{a'},\Varid{refl}\;\Varid{a'})\;(\Varid{b'},\Varid{p'})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{λ}\;\Varid{a'}\;\Varid{→}\;\Varid{refl}\;(\Varid{a'},\Varid{refl}\;\Varid{a'}))\;\Varid{a}\;\Varid{b}\;\Varid{p})\;(\Varid{uncurry}\;\Conid{P})\;\Varid{m}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The idea behind it is that we need to identify \ensuremath{\Conid{P}\;\Varid{b}\;\Varid{p}} with \ensuremath{\Conid{P}\;\Varid{a}\;\Varid{refl}}. We cannot
+substitute \ensuremath{\Varid{b}} with \ensuremath{\Varid{a}} or \ensuremath{\Varid{p}} with \ensuremath{\Varid{refl}\;\Varid{a}} independently because the second argument is
+dependent on the first argument. we must substitute them simultaneously. Therefore it is natural to use a dependent product.
+It happens simultaneously when we use pattern match to prove it.
+
+We use a function \ensuremath{\Conid{Q}} to form the dependent product. To substitute \ensuremath{(\Varid{b},\Varid{p})} with \ensuremath{(\Varid{a},\Varid{refl}\;\Varid{a})} we must have the equality term \ensuremath{\Conid{Id}\;(\Conid{Q}\;\Varid{a})\;(\Varid{a},\Varid{refl}\;\Varid{a})\;(\Varid{b},\Varid{p})}.
+We can easily get this term using \ensuremath{\Conid{J}}. So we have done the proof. Also we can expand it definitionally to verfy it.
+
+The question shows that no matter which formulation of equality and which elimination rule we have, we can prove the other elimination rule for the other formulation of equality.
+
+\section{Proof of equivalence relation}
+
+Based on the elimination rule, we can then implement the proof in \cite{Nord} that \ensuremath{\Conid{Id}} is an equivalence relation.
+
+Reflexivity is trivially in the definition so we only need to prove symmetric and transitivity.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{sym}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{b}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{sym}\;\Conid{A}\;\mathrel{=}\;{}\<[10]%
+\>[10]{}\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\anonymous \;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{b}\;\Varid{a})\;\Varid{refl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The definition is simplified based on the $\eta$ reduction.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{trans}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;(\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{b}\;\Varid{c}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{c}{}\<[E]%
+\\
+\>[B]{}\Varid{trans}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\anonymous \;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{b}\;\Varid{c}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{c})\;(\Varid{λ}\;\anonymous \;\Varid{→}\;\Varid{id})\;\Varid{a}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The one for \ensuremath{\Conid{Id'}} is similar, but due to \ensuremath{\Varid{a}} is the present in more than one place in the elimination rule, we can not simplfy the definition that much.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{sym'}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{b}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{sym'}\;\Conid{A}\;\Varid{a}\;\mathrel{=}\;\Conid{J'}\;\Conid{A}\;\Varid{a}\;(\Varid{λ}\;\Varid{b}\;\anonymous \;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{b}\;\Varid{a})\;\Varid{refl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{trans'}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;(\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{b}\;\Varid{c}\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{c}{}\<[E]%
+\\
+\>[B]{}\Varid{trans'}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Conid{J'}\;\Conid{A}\;\Varid{a}\;(\Varid{λ}\;\Varid{b}\;\anonymous \;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{b}\;\Varid{c}\;\Varid{→}\;\Conid{Id'}\;\Conid{A}\;\Varid{a}\;\Varid{c})\;\Varid{id}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+By these properties, we show that both \ensuremath{\Conid{Id}} and \ensuremath{\Conid{Id'}} are equivalence relations.
+
+\section {Identity of equality}
+
+The identity of equality is obvious from the oberservation of the definition of the equality. However we cannot prove it using only \ensuremath{\Conid{J}}, because \ensuremath{\Conid{J}} only reveals \ensuremath{\Varid{a}} and \ensuremath{\Varid{b}} is convertible if we have the equality. What is missing from the pattern matching is that the only inhabitant of the equality type \ensuremath{\Varid{refl}}.
+
+However Hedberg \cite{Hedberg} has proved that if we know \ensuremath{\Conid{Id}} is decidable, then we can prove the UIP (uniqueness of identity proof). I have implemented the theorem in Agda. We have proved Identity elimination \ensuremath{\Conid{J}}, Identity coercion \ensuremath{\Varid{subst}}, Identity composition \ensuremath{\Varid{trans}}, Identity inverse \ensuremath{\Varid{sym}}. Then we need to prove following lemmas,
+
+
+\emph{Identity mapping}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{resp}\;\mathbin{:}\;(\Conid{A}\;\Conid{B}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;(\Varid{f}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{B})\;\Varid{→}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id}\;\Conid{B}\;(\Varid{f}\;\Varid{a})\;(\Varid{f}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\Varid{resp}\;\Conid{A}\;\Conid{B}\;\Varid{f}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a'}\;\Varid{b'}\;\anonymous \;\Varid{→}\;\Conid{Id}\;\Conid{B}\;(\Varid{f}\;\Varid{a'})\;(\Varid{f}\;\Varid{b'}))\;(\Varid{λ}\;\Varid{a'}\;\Varid{→}\;\Varid{refl}\;(\Varid{f}\;\Varid{a'})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\emph{A groupoid law - inverse law}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{invrI}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{u}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{b}\;\Varid{b})\;(\Varid{trans}\;\Conid{A}\;\Varid{b}\;\Varid{a}\;\Varid{b}\;(\Varid{sym}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{u})\;\Varid{u})\;(\Varid{refl}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\Varid{invrI}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{u}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{u}\;\Varid{→}\;\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{b}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{7}{}\<[7]%
+\>[7]{}(\Varid{trans}\;\Conid{A}\;\Varid{b}\;\Varid{a}\;\Varid{b}\;(\Varid{sym}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{u})\;\Varid{u})\;(\Varid{refl}\;\Varid{b}))\;(\Varid{λ}\;\Varid{b}\;\Varid{→}\;\Varid{refl}\;(\Varid{refl}\;\Varid{b}))\;\Varid{a}\;\Varid{b}\;\Varid{u}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\emph{Constancy lemma}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{con}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;\Conid{Dec}\;\Conid{A}\;\Varid{→}\;\Conid{A}\;\Varid{→}\;\Conid{A}{}\<[E]%
+\\
+\>[B]{}\Varid{con}\;\Conid{A}\;(\Varid{yes}\;\Varid{p})\;\anonymous \;\mathrel{=}\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Varid{con}\;\Conid{A}\;(\Varid{no}\;\anonymous )\;\Varid{a}\;\mathrel{=}\;\Varid{a}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{iscon}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;(\Varid{d}\;\mathbin{:}\;\Conid{Dec}\;\Conid{A})\;\Varid{→}\;(\Varid{a}\;\Varid{a'}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;(\Varid{con}\;\Conid{A}\;\Varid{d}\;\Varid{a})\;(\Varid{con}\;\Conid{A}\;\Varid{d}\;\Varid{a'}){}\<[E]%
+\\
+\>[B]{}\Varid{iscon}\;\Conid{A}\;(\Varid{yes}\;\Varid{p})\;\Varid{a}\;\Varid{a'}\;\mathrel{=}\;\Varid{refl}\;\Varid{p}{}\<[E]%
+\\
+\>[B]{}\Varid{iscon}\;\Conid{A}\;(\Varid{no}\;\Varid{¬p})\;\Varid{a}\;\Varid{a'}\;\Keyword{with}\;\Varid{¬p}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{iscon}\;\Conid{A}\;(\Varid{no}\;\Varid{¬p})\;\Varid{a}\;\Varid{a'}\;\mid \;(){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+If \ensuremath{\Conid{A}} is true, the function will always return a constant proof of \ensuremath{\Conid{A}}, otherwise it will work as identity function. However when \ensuremath{\Conid{A}} is false, there is no inhabitant of \ensuremath{\Conid{A}}, therefore it must be a constant function.
+
+
+\emph{Collapse lemma}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{collaps}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{f}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{A})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{is\char95 c}\;\mathbin{:}\;\Varid{∀}\;\Varid{x}\;\Varid{x'}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;(\Varid{f}\;\Varid{x})\;(\Varid{f}\;\Varid{x'}))\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{g}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{A})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{is\char95 li}\;\mathbin{:}\;\Varid{∀}\;\Varid{x}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;(\Varid{g}\;(\Varid{f}\;\Varid{x}))\;\Varid{x})\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{collaps}\;\Conid{A}\;\Varid{f}\;\Varid{is\char95 c}\;\Varid{g}\;\Varid{is\char95 li}\;\Varid{a}\;\Varid{b}\;\mathrel{=}\;\Varid{trans}\;\Conid{A}\;\Varid{a}\;(\Varid{g}\;(\Varid{f}\;\Varid{a}))\;\Varid{b}\;(\Varid{sym}\;\Conid{A}\;(\Varid{g}\;(\Varid{f}\;\Varid{a}))\;\Varid{a}\;(\Varid{is\char95 li}\;\Varid{a}))\;{}\<[E]%
+\\
+\>[B]{}(\Varid{trans}\;\Conid{A}\;(\Varid{g}\;(\Varid{f}\;\Varid{a}))\;(\Varid{g}\;(\Varid{f}\;\Varid{b}))\;\Varid{b}\;(\Varid{resp}\;\Conid{A}\;\Conid{A}\;\Varid{g}\;(\Varid{f}\;\Varid{a})\;(\Varid{f}\;\Varid{b})\;(\Varid{is\char95 c}\;\Varid{a}\;\Varid{b}))\;(\Varid{is\char95 li}\;\Varid{b})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+
+\emph{Left inverse lemma}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{leftinv}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{nt}\;\mathbin{:}\;(\Varid{x}\;\Varid{y}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Varid{leftinv}\;\Conid{A}\;\Varid{nt}\;\Varid{a}\;\Varid{b}\;\Varid{v}\;\mathrel{=}\;\Varid{trans}\;\Conid{A}\;\Varid{a}\;\Varid{a}\;\Varid{b}\;(\Varid{sym}\;\Conid{A}\;\Varid{a}\;\Varid{a}\;(\Varid{nt}\;\Varid{a}\;\Varid{a}\;(\Varid{refl}\;\Varid{a})))\;\Varid{v}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{isleftinv}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{nt}\;\mathbin{:}\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\hsindent{13}{}\<[13]%
+\>[13]{}\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;(\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;(\Varid{u}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{13}{}\<[13]%
+\>[13]{}\Varid{→}\;\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;(\Varid{leftinv}\;\Conid{A}\;\Varid{nt}\;\Varid{a}\;\Varid{b}\;(\Varid{nt}\;\Varid{a}\;\Varid{b}\;\Varid{u}))\;\Varid{u}{}\<[E]%
+\\
+\>[B]{}\Varid{isleftinv}\;\Conid{A}\;\Varid{nt}\;\Varid{a}\;\Varid{b}\;\Varid{u}\;\mathrel{=}\;\Conid{J}\;\Conid{A}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{u}\;\Varid{→}\;\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b})\;(\Varid{leftinv}\;\Conid{A}\;\Varid{nt}\;\Varid{a}\;\Varid{b}\;(\Varid{nt}\;\Varid{a}\;\Varid{b}\;\Varid{u}))\;\Varid{u})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{invrI}\;\Conid{A}\;\Varid{x}\;\Varid{x}\;(\Varid{nt}\;\Varid{x}\;\Varid{x}\;(\Varid{refl}\;\Varid{x})))\;\Varid{a}\;\Varid{b}\;\Varid{u}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\emph{DI$\subseteq$CI-theorem}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{condi}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;(\Varid{di}\;\mathbin{:}\;\Conid{Decidable}\;(\Conid{Id}\;\Conid{A}))\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{x}\;\Varid{y}\;\mathbin{:}\;\Conid{A})\;(\Varid{u}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;\Varid{→}\;\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y}{}\<[E]%
+\\
+\>[B]{}\Varid{condi}\;\Conid{A}\;\Varid{di}\;\Varid{x}\;\Varid{y}\;\Varid{u}\;\mathrel{=}\;\Varid{con}\;(\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;(\Varid{di}\;\Varid{x}\;\Varid{y})\;\Varid{u}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\emph{Theorem : UIP of decidable identity type}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{dici}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;\Conid{Decidable}\;(\Conid{Id}\;\Conid{A})\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{7}{}\<[7]%
+\>[7]{}\Varid{∀}\;(\Varid{x}\;\Varid{y}\;\mathbin{:}\;\Conid{A})\;(\Varid{u}\;\Varid{v}\;\mathbin{:}\;\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;\Varid{→}\;\Conid{Id}\;(\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;\Varid{u}\;\Varid{v}{}\<[E]%
+\\
+\>[B]{}\Varid{dici}\;\Conid{A}\;\Varid{di}\;\Varid{x}\;\Varid{y}\;\Varid{u}\;\Varid{v}\;\mathrel{=}\;\Varid{collaps}\;(\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{condi}\;\Conid{A}\;\Varid{di}\;\Varid{x}\;\Varid{y})\;(\Varid{iscon}\;(\Conid{Id}\;\Conid{A}\;\Varid{x}\;\Varid{y})\;(\Varid{di}\;\Varid{x}\;\Varid{y}))\;{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{leftinv}\;\Conid{A}\;(\Varid{condi}\;\Conid{A}\;\Varid{di})\;\Varid{x}\;\Varid{y})\;(\Varid{isleftinv}\;\Conid{A}\;(\Varid{condi}\;\Conid{A}\;\Varid{di})\;\Varid{x}\;\Varid{y})\;\Varid{u}\;\Varid{v}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+Finally we proved that if \ensuremath{\Conid{Id}\;\Conid{A}} is decidable e.g. \ensuremath{\Conid{Id}\;\Conid{Bool}}, then we have have UIP for that type.
+
+\bibliography{equality1}{}
+\bibliographystyle{plain}
+
+\end{document}

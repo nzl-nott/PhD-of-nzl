@@ -1,0 +1,31 @@
+\section{Implementation: issues, problems and changes}
+
+At first, starting using Agda which was unfamiliar to me is really a big chanllenge. Although it is similar to Coq to some extent, and similar to Haskell which Agda itself is implemented in, it is still a new way to program and do theorem proving. Because of the inadequate understanding of Agda and its library code, I encoutered several problems in undertaking this project.
+
+
+
+
+
+change: I also do some measures to improve the code: rewrite library code by myself to deepen the understanding of some code and learn some techniques to prove in Agda,
+using symbols : much shorter, evaluation : ??? lines ??? characters - old ??? lines - new
+
+trade-off
+
+
+problems: efficiency when too many code in one file
+
+what is mathematically incorrect, we can still write, but cannot prove, waste time
+
+lemmas
+
+low efficiency of ring solver
+
+I have rewritten nearly all of the code to improve the efficiency to use. The time spent to type check the definition with real number costs several minutes, but the newer version can pass within 10 seconds.
+I give up to use the ring solver which is less efficient than construct proof manually. Also I define some symbols to make the proof looks much simpler and it is much shorter using the reasoning structure.
+
+
+\subsection{How I organise the files}
+
+\subsection{How I name the files}
+
+\subsection{How to use symbols to facilitate proof}

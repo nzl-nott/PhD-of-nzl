@@ -1,0 +1,1086 @@
+\documentclass[a4paper,12pt]{article}
+\def\textmu{}
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+%
+\ReadOnlyOnce{agda.fmt}%
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8x]{inputenc}
+\RequirePackage{ucs}
+\RequirePackage{amsfonts}
+
+\providecommand\mathbbm{\mathbb}
+
+% TODO: Define more of these ...
+\DeclareUnicodeCharacter{737}{\textsuperscript{l}}
+\DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
+\DeclareUnicodeCharacter{8759}{::}
+\DeclareUnicodeCharacter{9669}{\ensuremath{\triangleleft}}
+\DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{\scriptscriptstyle ?}{=}}}
+\DeclareUnicodeCharacter{10214}{\ensuremath{\llbracket}}
+\DeclareUnicodeCharacter{10215}{\ensuremath{\rrbracket}}
+
+% TODO: This is in general not a good idea.
+\providecommand\textepsilon{$\epsilon$}
+\providecommand\textmu{$\mu$}
+
+
+%Actually, varsyms should not occur in Agda output.
+
+% TODO: Make this configurable. IMHO, italics doesn't work well
+% for Agda code.
+
+\renewcommand\Varid[1]{\mathord{\textsf{#1}}}
+\let\Conid\Varid
+\newcommand\Keyword[1]{\textsf{\textbf{#1}}}
+\EndFmtInput
+
+
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{cite}
+\usepackage{MnSymbol}
+
+\DeclareUnicodeCharacter{"03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{"03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{"03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{"03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{"231C}{\ensuremath{\ulcorner}}
+\DeclareUnicodeCharacter{"231D}{\ensuremath{\urcorner}}
+\DeclareUnicodeCharacter{"25B6}{\ensuremath{\filledmedtriangleright}}
+
+
+\begin{document}
+
+\section{Appendix}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{module}\;\Conid{Quotient}\;\Keyword{where}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Data.Product}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Function}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Relation.Binary.Core}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{Relation.Binary.PropositionalEquality}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{hiding}\;(\Varid{isEquivalence}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Keyword{import}\;\Conid{ThomasProperties}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Definition of setoids}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{Setoid}\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{infix}\;\Varid{4}\;\Varid{\char95 ≈\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Carrier}\;{}\<[19]%
+\>[19]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ≈\char95 }\;{}\<[19]%
+\>[19]{}\mathbin{:}\;\Conid{Carrier}\;\Varid{→}\;\Conid{Carrier}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{isEquivalence}\;\mathbin{:}\;\Conid{IsEquivalence}\;\Varid{\char95 ≈\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{open}\;\Conid{IsEquivalence}\;\Varid{isEquivalence}\;\Keyword{public}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Conid{Setoid}\;\Keyword{renaming}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{refl}\;\Varid{to}\;\Varid{reflexive};\Varid{sym}\;\Varid{to}\;\Varid{symmetric};\Varid{trans}\;\Varid{to}\;\Varid{transitive}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Prequotients}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{PreQu}\;(\Conid{S}\;\mathbin{:}\;\Conid{Setoid})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Q:\char95 }\;[\mskip1.5mu \mskip1.5mu]\;\Conid{:\char95 sound:\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{A}\;{}\<[9]%
+\>[9]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Q}\;{}\<[11]%
+\>[11]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[11]%
+\>[11]{}\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Q}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{sound}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Conid{PreQu}\;\Keyword{renaming}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Conid{Q}\;\Varid{to}\;\Conid{Q'};[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{to}\;\Varid{nf};\Varid{sound}\;\Varid{to}\;\Varid{sound'}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Quotients as prequotients with a dependent eliminator.}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{50}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{Qu}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;(\Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim:\char95 qelim-β:\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{A}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Q}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{sound}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{sound}\;\mathrel{=}\;\Varid{sound'}\;\Conid{PQ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim}\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[13]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
+\\
+\>[13]{}\Varid{→}\;((\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{b})\;{}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{b})\;{}\<[E]%
+\\
+\>[13]{}\Varid{→}\;(\Varid{q}\;\mathbin{:}\;\Conid{Q})\;\Varid{→}\;\Conid{B}\;\Varid{q}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim-β}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\;\Varid{a}\;\Varid{f}\mskip1.5mu\}\;\Varid{q}\;\Varid{→}\;\Varid{qelim}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;{}\<[50]%
+\>[50]{}\Varid{≡}\;\Varid{f}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Conid{Qu}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Proof irrelevance of qelim}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{qelimIrr}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;(\Varid{x}\;\mathbin{:}\;\Conid{Qu}\;\Conid{PQ})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{10}{}\<[10]%
+\>[10]{}\Varid{→}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\;\Varid{a}\;\Varid{f}\;\Varid{q}\;\Varid{q'}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{10}{}\<[10]%
+\>[10]{}\Varid{→}\;\Varid{qelim}\;\Varid{x}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;(\Varid{nf}\;\Conid{PQ}\;\Varid{a})\;{}\<[E]%
+\\
+\>[10]{}\hsindent{2}{}\<[12]%
+\>[12]{}\Varid{≡}\;\Varid{qelim}\;\Varid{x}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q'}\;(\Varid{nf}\;\Conid{PQ}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\Varid{qelimIrr}\;\Varid{x}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{q}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{q'}\mskip1.5mu\}\;\mathrel{=}\;(\Varid{qelim-β}\;\Varid{x}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\Varid{q})\;{}\<[E]%
+\\
+\>[B]{}\hsindent{33}{}\<[33]%
+\>[33]{}\Varid{▶}\;\Varid{⟨}\;\Varid{qelim-β}\;\Varid{x}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\Varid{q'}\;\Varid{⟩}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Exact quotients}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{QuE}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;(\Conid{QU}\;\mathbin{:}\;\Conid{Qu}\;\Conid{PQ})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{exact:\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{A}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[10]%
+\>[10]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[10]%
+\>[10]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{exact}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Conid{QuE}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Quotients as prequotients with a non-dependent eliminator (lift).}
+
+\emph{(As in Hofmann's PhD dissertation.)}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{45}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{48}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{QuH}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;(\Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{lift:\char95 lift-β:\char95 qind:\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{A}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Q}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{lift}\;{}\<[12]%
+\>[12]{}\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[12]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{B})\;{}\<[E]%
+\\
+\>[12]{}\Varid{→}\;((\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;\Varid{f}\;\Varid{a}\;{}\<[42]%
+\>[42]{}\Varid{≡}\;{}\<[45]%
+\>[45]{}\Varid{f}\;\Varid{b})\;{}\<[E]%
+\\
+\>[12]{}\Varid{→}\;\Conid{Q}\;\Varid{→}\;\Conid{B}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{lift-β}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\;\Varid{a}\;\Varid{f}\;\Varid{q}\mskip1.5mu\}\;\Varid{→}\;\Varid{lift}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;{}\<[48]%
+\>[48]{}\Varid{≡}\;\Varid{f}\;\Varid{a}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qind}\;{}\<[11]%
+\>[11]{}\mathbin{:}\;(\Conid{P}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set})\;{}\<[E]%
+\\
+\>[11]{}\hsindent{1}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{∀}\;\Varid{x}\;\Varid{→}\;(\Varid{p}\;\Varid{p'}\;\mathbin{:}\;\Conid{P}\;\Varid{x})\;\Varid{→}\;\Varid{p}\;\Varid{≡}\;\Varid{p'})\;{}\<[E]%
+\\
+\>[11]{}\hsindent{1}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{∀}\;\Varid{a}\;\Varid{→}\;\Conid{P}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
+\\
+\>[11]{}\hsindent{1}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{∀}\;\Varid{x}\;\Varid{→}\;\Conid{P}\;\Varid{x}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Keyword{open}\;\Conid{QuH}\;\Keyword{renaming}\;(\Varid{lift}\;\Varid{to}\;\Varid{lift'};\Varid{lift-β}\;\Varid{to}\;\Varid{lift-β'}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Definable quotients}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{record}\;\Conid{QuD}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;(\Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{constructor}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{emb:\char95 complete:\char95 stable:\char95 }{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{private}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{A}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Q}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{field}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{emb}\;{}\<[14]%
+\>[14]{}\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{A}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{complete}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{→}\;\Varid{emb}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{∼}\;\Varid{a}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{stable}\;{}\<[14]%
+\>[14]{}\mathbin{:}\;\Varid{∀}\;\Varid{q}\;\Varid{→}\;[\mskip1.5mu \Varid{emb}\;\Varid{q}\mskip1.5mu]\;\Varid{≡}\;\Varid{q}{}\<[E]%
+\\
+\>[B]{}\Keyword{open}\;\Conid{QuD}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\emph{Relations between types of quotients:}
+
+Below, we show the following, where the arrow → means "gives rise to" :
+
+\ensuremath{\Conid{QuH}\;\Varid{→}\;\Conid{Qu}} (Proposition 3 in the paper)
+
+\ensuremath{\Conid{Qu}\;\Varid{→}\;\Conid{QuH}} (Reverse of Proposition 3)
+
+\ensuremath{\Conid{QuD}\;\Varid{→}\;\Conid{QuE}} (A definable quotient is always exact)
+
+\ensuremath{\Conid{QuD}\;\Varid{→}\;\Conid{Qu}}
+
+\ensuremath{\Conid{QuD}\;\Varid{→}\;\Conid{QuH}} (Also a consequence of \ensuremath{\Conid{QuD}\;\Varid{→}\;\Conid{Qu}} and \ensuremath{\Conid{Qu}\;\Varid{→}\;\Conid{QuH}})
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{QuH→Qu}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Varid{→}\;(\Conid{QuH}\;\Conid{PQ})\;\Varid{→}\;(\Conid{Qu}\;\Conid{PQ}){}\<[E]%
+\\
+\>[B]{}\Conid{QuH→Qu}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q:}\;\Conid{Q}\;[\mskip1.5mu \mskip1.5mu]\;\mathbin{:}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{sound:}\;\Varid{sound}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}(\Varid{lift:}\;\Varid{lift}\;\Varid{lift-β:}\;\Varid{β}\;\Varid{qind:}\;\Varid{qind})\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{record}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\{\mskip1.5mu \Varid{qelim}\;{}\<[15]%
+\>[15]{}\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{→}\;\Varid{qelim₁}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{};\Varid{qelim-β}\;\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\Varid{→}\;\Varid{qelim-β₁}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{a}\;\Varid{f}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{where}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{A}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\[\blanklineskip]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\mbox{\onelinecomment  the dependent function f is made independent}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{indep}\;\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[28]%
+\>[28]{}\Varid{→}\;((\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;\Varid{→}\;\Conid{A}\;\Varid{→}\;\Conid{Σ}\;\Conid{Q}\;\Conid{B}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{indep}\;\Varid{f}\;\Varid{a}\;\mathrel{=}\;[\mskip1.5mu \Varid{a}\mskip1.5mu],\Varid{f}\;\Varid{a}{}\<[E]%
+\\[\blanklineskip]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{indep-β}\;\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{8}{}\<[13]%
+\>[13]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
+\\
+\>[5]{}\hsindent{8}{}\<[13]%
+\>[13]{}\Varid{→}\;(\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{b})\;{}\<[E]%
+\\
+\>[5]{}\hsindent{8}{}\<[13]%
+\>[13]{}\Varid{→}\;\Varid{∀}\;\Varid{a}\;\Varid{a'}\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{a'})\;\Varid{→}\;\Varid{indep}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{a}\;\Varid{≡}\;\Varid{indep}\;\Varid{f}\;\Varid{a'}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{indep-β}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;\Varid{a}\;\Varid{a'}\;\Varid{p}\;\mathrel{=}\;(\Varid{cong\char95 },\anonymous \;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;[\mskip1.5mu \Varid{a'}\mskip1.5mu]\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a}))\;{}\<[E]%
+\\
+\>[5]{}\hsindent{23}{}\<[28]%
+\>[28]{}\Varid{▶}\;((\Varid{λ}\;\Varid{b}\;\Varid{→}\;[\mskip1.5mu \Varid{a'}\mskip1.5mu],\Varid{b})\;\Varid{⋆}\;(\Varid{q}\;\Varid{a}\;\Varid{a'}\;\Varid{p})){}\<[E]%
+\\[\blanklineskip]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{lift₀}\;\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]))\;{}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;((\Varid{a}\;\Varid{a'}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{a'}){}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;{}\<[31]%
+\>[31]{}(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{a'})\;{}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;\Conid{Q}\;\Varid{→}\;\Conid{Σ}\;\Conid{Q}\;\Conid{B}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;\mathrel{=}\;\Varid{lift}\;(\Varid{indep}\;\Varid{f})\;(\Varid{indep-β}\;\Varid{f}\;\Varid{q}){}\<[E]%
+\\[\blanklineskip]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qind₁}\;\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;(\Varid{q}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{b})\;{}\<[E]%
+\\
+\>[5]{}\hsindent{5}{}\<[10]%
+\>[10]{}\Varid{→}\;\Varid{∀}\;(\Varid{c}\;\mathbin{:}\;\Conid{Q})\;\Varid{→}\;\Varid{proj₁}\;(\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;\Varid{c})\;\Varid{≡}\;\Varid{c}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qind₁}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;\mathrel{=}\;\Varid{qind}\;\Conid{P}\;\Varid{heredity}\;\Varid{base}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Keyword{where}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Varid{f'}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Σ}\;\Conid{Q}\;\Conid{B}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Varid{f'}\;\mathrel{=}\;\Varid{lift₀}\;\Varid{f}\;\Varid{q}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Conid{P}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Conid{P}\;\Varid{c}\;\mathrel{=}\;\Varid{proj₁}\;\{\mskip1.5mu \anonymous \mskip1.5mu\}\;\{\mskip1.5mu \anonymous \mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;(\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;\Varid{c})\;\Varid{≡}\;\Varid{c}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Varid{heredity}\;\mathbin{:}\;\Varid{∀}\;\Varid{x}\;\Varid{→}\;(\Varid{p}\;\Varid{p'}\;\mathbin{:}\;\Conid{P}\;\Varid{x})\;\Varid{→}\;\Varid{p}\;\Varid{≡}\;\Varid{p'}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Varid{heredity}\;\Varid{x}\;\Varid{p}\;\Varid{p'}\;\mathrel{=}\;\Varid{≡-prfIrr}\;((\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;\Varid{x})\;\Varid{₁})\;\Varid{x}\;\Varid{p}\;\Varid{p'}{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Varid{base}\;\mathbin{:}\;\Varid{∀}\;\Varid{a}\;\Varid{→}\;\Conid{P}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}\Varid{base}\;\Varid{a}\;\mathrel{=}\;\Varid{proj₁}\;\Varid{⋆}\;\Varid{β}{}\<[E]%
+\\[\blanklineskip]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim₁}\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{Q}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{7}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]))\;{}\<[E]%
+\\
+\>[5]{}\hsindent{7}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{∀}\;\Varid{a}\;\Varid{b}\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{b})\;{}\<[E]%
+\\
+\>[5]{}\hsindent{7}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{c}\;\mathbin{:}\;\Conid{Q})\;\Varid{→}\;\Conid{B}\;\Varid{c}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim₁}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;\Varid{c}\;\mathrel{=}\;\Varid{subst}\;\Conid{B}\;(\Varid{qind₁}\;\Varid{f}\;\Varid{q}\;\Varid{c})\;{}\<[E]%
+\\
+\>[5]{}\hsindent{18}{}\<[23]%
+\>[23]{}(\Varid{proj₂}\;\{\mskip1.5mu \anonymous \mskip1.5mu\}\;\{\mskip1.5mu \anonymous \mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;(\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;\Varid{c})){}\<[E]%
+\\[\blanklineskip]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim-β₁}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{a}\;\Varid{f}\;\Varid{q}\;\Varid{→}\;\Varid{qelim₁}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;\Varid{f}\;\Varid{a}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{qelim-β₁}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{a}\;\Varid{f}\;\Varid{q}\;\mathrel{=}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}(\Varid{substIrr}\;\Conid{B}\;(\Varid{qind₁}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}(\Varid{cong-proj₁}\;\{\mskip1.5mu \Conid{Q}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;(\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;(\Varid{indep}\;\Varid{f}\;\Varid{a})\;\Varid{β})\;{}\<[E]%
+\\
+\>[7]{}\hsindent{2}{}\<[9]%
+\>[9]{}(\Varid{proj₂}\;\{\mskip1.5mu \anonymous \mskip1.5mu\}\;\{\mskip1.5mu \anonymous \mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;(\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])))\;\Varid{▶}\;{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}(\Varid{cong-proj₂}\;\{\mskip1.5mu \Conid{Q}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;(\Varid{lift₀}\;\Varid{f}\;\Varid{q}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;(\Varid{indep}\;\Varid{f}\;\Varid{a})\;\Varid{β}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{Qu→QuH}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Varid{→}\;(\Conid{Qu}\;\Conid{PQ})\;\Varid{→}\;(\Conid{QuH}\;\Conid{PQ}){}\<[E]%
+\\
+\>[B]{}\Conid{Qu→QuH}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q:}\;\Conid{Q}\;[\mskip1.5mu \mskip1.5mu]\;\mathbin{:}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{sound:}\;\Varid{sound}\mskip1.5mu\}\;(\Varid{qelim:}\;\Varid{qelim}\;\Varid{qelim-β:}\;\Varid{β})\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{lift}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\Varid{s}\;\Varid{→}\;\Varid{qelim}\;\{\mskip1.5mu \Varid{λ}\;\anonymous \;\Varid{→}\;\Conid{B}\mskip1.5mu\}\;\Varid{f}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\
+\>[12]{}\Varid{→}\;(\Varid{subFix}\;(\Varid{sound}\;\Varid{p})\;\Conid{B}\;(\Varid{f}\;\Varid{a}))\;\Varid{▶}\;(\Varid{s}\;\Varid{a}\;\Varid{b}\;\Varid{p})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{lift-β}\;\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a'}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{s}\mskip1.5mu\}\;\Varid{→}\;\Varid{β}\;\{\mskip1.5mu \Varid{λ}\;\anonymous \;\Varid{→}\;\Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a'}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{p}{}\<[E]%
+\\
+\>[3]{}\hsindent{9}{}\<[12]%
+\>[12]{}\Varid{→}\;(\Varid{subFix}\;(\Varid{sound}\;\Varid{p})\;\Conid{B}\;(\Varid{f}\;\Varid{a}))\;\Varid{▶}\;(\Varid{s}\;\Varid{a}\;\Varid{b}\;\Varid{p})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{qind}\;\mathrel{=}\;\Varid{λ}\;\Conid{P}\;\Varid{irr}\;\Varid{f}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{7}{}\<[10]%
+\>[10]{}\Varid{→}\;\Varid{qelim}\;\{\mskip1.5mu \Conid{P}\mskip1.5mu\}\;\Varid{f}\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{p}\;\Varid{→}\;\Varid{irr}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]\;(\Varid{subst}\;\Conid{P}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a}))\;(\Varid{f}\;\Varid{b})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{where}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{subFix}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{c}\;\Varid{d}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;(\Varid{x}\;\mathbin{:}\;\Varid{c}\;\Varid{≡}\;\Varid{d})\;(\Conid{B}\;\mathbin{:}\;\Conid{Set})\;(\Varid{p}\;\mathbin{:}\;\Conid{B})\;{}\<[E]%
+\\
+\>[5]{}\hsindent{7}{}\<[12]%
+\>[12]{}\Varid{→}\;\Varid{subst}\;(\Varid{λ}\;\anonymous \;\Varid{→}\;\Conid{B})\;\Varid{x}\;\Varid{p}\;\Varid{≡}\;\Varid{p}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{subFix}\;\Varid{refl}\;\anonymous \;\anonymous \;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{QuD→QuE}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{QU}\;\mathbin{:}\;\Conid{Qu}\;\Conid{PQ}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{→}\;(\Conid{QuD}\;\Conid{PQ})\;\Varid{→}\;(\Conid{QuE}\;\Conid{QU}){}\<[E]%
+\\
+\>[B]{}\Conid{QuD→QuE}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q:}\;\Conid{Q}\;[\mskip1.5mu \mskip1.5mu]\;\mathbin{:}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{sound:}\;\anonymous \mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{emb:}\;\Varid{emb}\;\Varid{complete:}\;\Varid{complete}\;\Varid{stable:}\;\anonymous )\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{record}\;\{\mskip1.5mu \Varid{exact}\;\mathrel{=}\;{}\<[21]%
+\>[21]{}\Varid{λ}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{b}\mskip1.5mu\}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[3]{}\hsindent{7}{}\<[10]%
+\>[10]{}\Varid{→}\;\Varid{⟨}\;\Varid{complete}\;\Varid{a}\;\Varid{⟩₀}\;{}\<[E]%
+\\
+\>[10]{}\hsindent{2}{}\<[12]%
+\>[12]{}\Varid{▶₀}\;\Varid{subst}\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x}\;\Varid{∼}\;\Varid{b})\;(\Varid{emb}\;\Varid{⋆}\;\Varid{⟨}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]\;\Varid{⟩})\;(\Varid{complete}\;\Varid{b}){}\<[E]%
+\\
+\>[3]{}\hsindent{7}{}\<[10]%
+\>[10]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Keyword{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Conid{A}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{\char95 ∼\char95 }\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{⟨\char95 ⟩₀}\;{}\<[14]%
+\>[14]{}\mathbin{:}\;\Conid{Symmetric}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{⟨\char95 ⟩₀}\;{}\<[14]%
+\>[14]{}\mathrel{=}\;\Varid{symmetric}\;\Conid{S}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{\char95 ▶₀\char95 }\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\Conid{Transitive}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{\char95 ▶₀\char95 }\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{transitive}\;\Conid{S}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{QuD→Qu}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}\Varid{→}\;(\Conid{QuD}\;\Conid{PQ})\;\Varid{→}\;(\Conid{Qu}\;\Conid{PQ}){}\<[E]%
+\\
+\>[B]{}\Conid{QuD→Qu}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q:}\;\Conid{Q}\;[\mskip1.5mu \mskip1.5mu]\;\mathbin{:}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{sound:}\;\Varid{sound}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{8}{}\<[8]%
+\>[8]{}(\Varid{emb:}\;\Varid{⌜\char95 ⌝}\;\Varid{complete:}\;\Varid{complete}\;\Varid{stable:}\;\Varid{stable})\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{qelim}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{f}\;\anonymous \;\Varid{a}\;\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{stable}\;\Varid{a})\;(\Varid{f}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{qelim-β}\;\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\Varid{s}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{12}{}\<[15]%
+\>[15]{}\Varid{→}\;\Varid{substIrr}\;\Conid{B}\;(\Varid{stable}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;(\Varid{sound}\;(\Varid{complete}\;\Varid{a}))\;(\Varid{f}\;\Varid{⌜}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{⌝})\;{}\<[E]%
+\\
+\>[3]{}\hsindent{12}{}\<[15]%
+\>[15]{}\Varid{▶}\;\Varid{s}\;\anonymous \;\anonymous \;(\Varid{complete}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{QuD→QuH}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{→}\;(\Conid{QuD}\;\Conid{PQ})\;\Varid{→}\;(\Conid{QuH}\;\Conid{PQ}){}\<[E]%
+\\
+\>[B]{}\Conid{QuD→QuH}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{Q:}\;\Conid{Q}\;[\mskip1.5mu \mskip1.5mu]\;\mathbin{:}\;[\mskip1.5mu \anonymous \mskip1.5mu]\;\Varid{sound:}\;\Varid{sound}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}(\Varid{emb:}\;\Varid{⌜\char95 ⌝}\;\Varid{complete:}\;\Varid{complete}\;\Varid{stable:}\;\Varid{stable})\;\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{lift}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{λ}\;\Varid{f}\;\anonymous \;\Varid{q}\;\Varid{→}\;\Varid{f}\;\Varid{⌜}\;\Varid{q}\;\Varid{⌝}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{lift-β}\;\mathrel{=}\;\Varid{λ}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{a}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{s}\mskip1.5mu\}\;\Varid{→}\;\Varid{s}\;\Varid{⌜}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{⌝}\;\Varid{a}\;(\Varid{complete}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{qind}\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{λ}\;\Conid{P}\;\anonymous \;\Varid{f}\;\Varid{→}\;\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{subst}\;\Conid{P}\;(\Varid{stable}\;\Varid{x})\;(\Varid{f}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Or
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{QuD→QuH'}\;\mathbin{:}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\Varid{→}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{10}{}\<[10]%
+\>[10]{}\Varid{→}\;(\Conid{QuD}\;\Conid{PQ})\;\Varid{→}\;(\Conid{QuH}\;\Conid{PQ}){}\<[E]%
+\\
+\>[B]{}\Conid{QuD→QuH'}\;\{\mskip1.5mu \Conid{S}\mskip1.5mu\}\;\mathrel{=}\;\Conid{Qu→QuH}\;\Varid{∘}\;\Conid{QuD→Qu}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\end{document}

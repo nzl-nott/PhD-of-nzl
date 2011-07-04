@@ -1,9 +1,14 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{aan}
 Thorsten Altenkirch, Thomas Anberr\'{e}e, and Nuo Li.
 \newblock Definable quotients in type theory.
 \newblock 2011.
+
+\bibitem{bar:96}
+Gilles Barthe and Herman Geuvers.
+\newblock Congruence types.
+\newblock In {\em Proceedings of CSL'95}, pages 36--51. Springer-Verlag, 1996.
 
 \bibitem{bis:85}
 Errett Bishop and Douglas Bridges.

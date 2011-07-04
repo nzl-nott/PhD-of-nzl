@@ -5,5 +5,8 @@
 *.log
 *.ptb
 *.blg
-*.tex
+# *.tex
 *.dvi
+*.cls
+*.bbl
+*.ddf

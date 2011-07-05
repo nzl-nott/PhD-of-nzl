@@ -15,6 +15,11 @@ Errett Bishop and Douglas Bridges.
 \newblock {\em Constructive Analysis}.
 \newblock Springer, New York, 1985.
 
+\bibitem{coq:92}
+Thierry Coquand.
+\newblock Pattern matching with dependent types.
+\newblock In {\em Types for Proofs and Programs}, 1992.
+
 \bibitem{cou:01}
 Pierre Courtieu.
 \newblock \textbf{Normalized types}.
@@ -43,6 +48,12 @@ Martin Hofmann.
 Peter~V. Homeier.
 \newblock Quotient types.
 \newblock In {\em In TPHOLs 2001: Supplemental Proceedings}, page 0046, 2001.
+
+\bibitem{nog:02}
+Aleksey Nogin.
+\newblock Quotient types: A modular approach.
+\newblock In {\em ITU-T Recommendation H.324}, pages 263--280. Springer-Verlag,
+  2002.
 
 \bibitem{nor:90}
 Bengt Nordstr\"{o}m, Kent Petersson, and Jan~M. Smith.

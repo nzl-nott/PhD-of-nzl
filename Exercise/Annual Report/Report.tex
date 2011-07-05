@@ -178,7 +178,10 @@ In \cite{cab}, Mendler et al. has considered building new type from a given type
 Hofmann in his PhD thesis \cite{hof:phd} proposed three models for quotient types. The first one is to constructs a setoid model for quotient types. In this model all types are attached with partial equivalence relations, namely all types are setoids rather than sets. Most of the types without specific equivalence relation can be translated as setoids with trivial reflection equality. While in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level.
 He also mentions extensional Type Theory is conservative over \itt {}  extended with quotient types and a universe \cite{hof:95:con}.
 
-Homeier \cite{hom} has made a tool to construct quotient types mechanically in Higher Order Logic theorem prover.
+Homeier \cite{hom} axiomatise quotient types in Higher Order Logic (HOL), which is also a theorem prover.
+He creates a tool package to construct quotient types as a conservative and definitional extension of HOL such that users are able to define new types as a quotient types of some setoid which including several axiomatised properties. Also he try to solve the problem of quotienting aggregate types such as lists, pairs and sum types.
+
+
 
 Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Construction
 with a different notion called \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. Actually normalised types are proper subset of quotient types,
@@ -186,10 +189,11 @@ with a different notion called \emph{Normalised Types} which are similar to quot
 
 However not all quotient types have normal forms. Therefore it only solves part of the problem.
 
-Similarly, Barthe and Geunvers \cite{bar:96} also proposes \emph{congruence types}, w
+Similarly, Barthe and Geunvers \cite{bar:96} also proposes \emph{congruence types}, which is also a special class of quotient types, in which the base type are inductively defined and with a set of reduction rules called the term-rewriting system. \ed{The idea behind it is the $\beta$-equivalence is replaced by a set of $\beta$-conversion rules.} The congruence types can be treated as an alternative to pattern matching introduced in \cite{coq:92}.
+Hence it aims at solving problems in term rewriting systems rather than simply implementing quotient types.
 
-Nogin \cite{nog:02} considers a modular approach to axiomatizing the same quotient types in an extensional Type Theory, NuPRL. 
- 
+Nogin \cite{nog:02} considers a modular approach to axiomatizing the same quotient types in an extensional Type Theory, NuPRL. NuPRL type theory is similar to what Hofmann proposed as setoid model for quotients, the types comes with its own equality relation and equalities are guaranteed to be respected. Hence the definition of quotients are trivial.
+However there are still a few complicated problems arising. For example, since the the equality is extensional, we can not recover the witness of the equality. So he claims that we need to include more axioms to conceptualise quotients. He decompose the concept of quotient type into several more primitive concepts such that the quotient types can be formalised based on these concepts and can be handled much simpler. 
 \section{Aims and Objectives of the Project}
 
 If we have quotient types in type theory such as Agda (more in Sec 3.), we can implement more things like modulo congruence. Also we can benefit from the lifting between base types and quotient types as in Sec 4.  The objective of this project is to explore the best way to implement quotient types in intensional Type Theory.
@@ -501,7 +505,7 @@ and prove \emph{sound}. Then we define emb function and prove all the required p
 \emb (-\suc b) &= (0,b+1)\\
 \end{align*}
 
-We have done these in Agda \cite{nuo;10}. The quotients here are not just something relate the setoid with the quotient type, we use lift functions to define functions trivially and use properties to transform the proof term for the setoid to the quotient type. For instance, the addition of the setoid is defined as
+We have done these in Agda \cite{nuo:10}. The quotients here are not just something relate the setoid with the quotient type, we use lift functions to define functions trivially and use properties to transform the proof term for the setoid to the quotient type. For instance, the addition of the setoid is defined as
 
 $$(a,b){+_0}(a', b')= (a+a',b+b')$$
 

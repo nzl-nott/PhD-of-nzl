@@ -1,0 +1,632 @@
+%&latex
+
+\documentclass[envcountsame]{llncs}
+
+\author{LI Nuo}
+\title{First Year PhD Annual Report}
+\institute{University of Nottingham}
+\usepackage{dsfont}
+
+%\usepackage{amsthm}
+
+
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xypic}
+
+% Editing and debugging
+%\hfuzz 0.1pt
+%\overfullrule=15pt
+%\brokenpenalty=10000
+\newcommand{\todo}[1]{\textcolor{red}{TO~DO:~#1}}
+
+
+\newcommand{\ed}[1]{\textcolor{blue}{#1}}
+
+
+\newtheorem{assumption}[theorem]{Assumption}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+
+\newcommand{\dotph}{\,\cdot\,}
+\newcommand{\dotop}{\mathrel{.}}
+\providecommand{\abs}  [1]{\lvert#1\rvert}
+\providecommand{\norm} [1]{\lVert#1\rVert}
+\providecommand{\class}[1]{[#1]}
+\providecommand{\set}  [1]{\left\{#1\right\}}
+\providecommand{\dlift}[1]{\widehat{#1}}
+
+\DeclareMathOperator{\Prop}{\mathbf{Prop}}
+\DeclareMathOperator{\Set}{\mathbf{Set}}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Bool}{Bool}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\sound}{sound}
+\DeclareMathOperator{\qelimbeta}{qelim-\beta}
+\DeclareMathOperator{\qind}{qind}
+\DeclareMathOperator{\exact}{exact}
+\DeclareMathOperator{\subst}{subst}
+\DeclareMathOperator{\emb}{emb}
+\DeclareMathOperator{\complete}{complete}
+\DeclareMathOperator{\stable}{stable}
+\DeclareMathOperator{\List}{List}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\now}{now}
+\DeclareMathOperator{\later}{later}
+\DeclareMathOperator{\nowequal}{now_\sqsubseteq}
+\DeclareMathOperator{\laterequal}{later_\sqsubseteq}
+\DeclareMathOperator{\laterleft}{later_{left}}
+\DeclareMathOperator{\inl}{inl}
+\DeclareMathOperator{\inr}{inr}
+\DeclareMathOperator{\qelim}{qelim}
+\DeclareMathOperator{\lift}{lift}
+\DeclareMathOperator{\LC}{LC}
+\DeclareMathOperator{\liftbeta}{lift-\beta}
+\DeclareMathOperator{\Bijection}{Bijection}
+\DeclareMathOperator{\true}{true}
+\DeclareMathOperator{\false}{false}
+\DeclareMathOperator{\sort}{sort}
+\DeclareMathOperator{\length}{length}
+\DeclareMathOperator{\nub}{nub}
+\DeclareMathOperator{\suc}{suc\,}
+\DeclareMathOperator{\defi}{\stackrel{\text{\tiny def}}{=}}
+\DeclareMathOperator{\coprime}{Coprime}
+
+\DeclareMathOperator{\A/sim}{A\, / \sim}
+
+\newcommand{\eqqm}{\overset{\text{\tiny ?}}{=}}
+\newcommand{\sep}{\mathrel{\sharp}}
+
+
+% For xy matrices
+\newcommand{\pullbackcorner}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+\newcommand{\pushoutcorner} [1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+
+\newcommand{\itt}{intensional Type Theory}
+
+
+\newcommand{\ett}{extensional Type Theory}
+
+%\newtheorem{axiom}{Axiom}[section]
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Definition}[section]
+%\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{varioref}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage 
+
+\begin{abstract}
+\todo{enhance the connection within between ideas. Split the two ideas in the abstract: why in general quotient is useful and implementing in Agda.}
+Given a setoid, that is a set equipped with an equivalence relation, one can form its quotient set, that is the set of equivalence classes. % When dividing a set by an equivalence relation on it, we get a new set called quotient set
+Reinterpreting this idea in type theory, quotient type is formed by some type with its equivalence relation. However in \itt{}  the quotient type is still unavailable. The axiomatic quotient type enables us to define real numbers, functionals, and many other sets which are not definable in current \itt,  such as Agda which is also a theorem prover. Also we can benefit from the formalisation of some quotient types, since some base types are simpler to deal with or have better features, such as the integers represented by a pair of natural numbers.  Therefore, we undertake this project to investigate how to implement quotients in Agda. There are several schemes to do this, extending intensional Type Theory to quotient types, or we can define quotients without in current settings. In  \cite{aan}, we present some results of defining quotients in Agda and I will
+give some explanations  and show some instances in this report as a complement to it.
+%For some definable quotients like the integers and the rational numbers,
+%it is unnecessary to formalise them based on setoid. But we found the quotient %interface could provide more convenience if we prove that they are definable %quotients. While some other types such as real numbers are undefinable, %but they are the quotient of dividing cauchy sequences of rational numbers %by the equivalence relation that two sequences converges. 
+
+\end{abstract}
+
+
+\section{Introduction}
+
+
+
+
+
+\subsection{Quotient Set}
+In mathematics, a quotient represents the result of division. Usually, the division is between numbers and the result is also a number.  However the concept of division can be extended to other domains. In set theory, addition and multiplication can be extended to sets. Then the addition and multiplication can be seen as the calculation on the cardinality when operating the disjoint union and product within a special class of sets, which are called set-theoretical
+natural numbers.
+\begin{align*}
+\underline0 &= \O\\
+\underline1 &= \{\underline0\}\\
+\underline2 &= \{\underline0,\underline1\}\\
+\vdots
+\\\underline n &= \{\underline0,\underline1,\underline2,\cdots \underline{n-1}\}
+\end{align*}
+
+Similarly, we can also extend division to sets. First we need a setoid,
+
+
+\begin{definition}
+A setoid $(A,\sim)$ is a set $A$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
+
+\end{definition}
+
+
+
+\begin{definition}
+Given a setoid, we can get an equivalent class for each $a \,\colon A$,
+
+\[\class a =\{b \in A \,|\, b \sim a \}\  \]
+\end{definition}
+
+\begin{definition}
+Given a setoid $(A,\sim)$, a quotient set $\A/sim$ is  the set of equivalent classes of $\sim$,
+
+
+\[\A/sim =\{[a] \in \wp(A) \,|\, a \in A\}\  \]
+
+\end{definition}
+
+ Then dividing a natural number $a$, by another number $b$, can be inductively defined as dividing the set $\underline a$ by the equivalence relation that the corresponding number has same quotient over $b$. The quotient set only contains the equivalence classes which has  $b$ elements, then the quotient number is just the cardinality of this set.
+
+
+To make the difference between setoids and quotient sets clear, we can use an analogy, $8\div2=4$. We know 4 is the quotient because $4 \times 2 = 8$, and we cannot recover the dividend and the divisor from the quotient $4$. Similarly, the setoids can be seen as a composition of the dividend and divisor, but the quotient sets do not contain all the information from this setoid, hence we can not recover the base sets. And a set can be the quotient type of several different setoids. 
+
+%why quotients is useful?
+
+Many mathematical objects are quotients. Some are quite obvious, such as integers modulo some number and rational numbers as fractions. Some are also intrinsically quotients, such as integers, real numbers.
+
+\subsection{Type Theory}
+
+
+The theory of types was first introduced by Russell as an alternative to naive set theory. However, the type theory we discussed here is the one developed by Per Martin-L\"{o}f. It is based on the Curry-Howard isomorphism between propositions and the types of its proofs such that it can served as a formalisation of mathematics.   
+
+Type Theory can be used as a programming language in
+which the evaluation of well-typed program always terminates \cite{nor:90}. There are a few implementation of type theory, for example NuPRL, Coq and Agda. Agda is one of the most recent implementation and it has a bundle of good features which makes it a good theorem prover as well as a programming language.
+Hence we can program and make formal verification in the same language. We will use it to implement our definitions and verify theorems and propositions in this project.
+
+Per Martin-L\"{o}f proposed both intensional
+Type Theory and \ett{}. Usually the implementation of Type Theory can be categorised into intensional ones and extensional ones. The distinction between them is whether the definitional equality is distinguished with
+propositional equality. In \itt{}, two objects are definitional equal
+if they are the same, but two objects are propositional equal if we have proof.
+Therefore must be proof terms for propositional equalities. However
+in \ett{}, they are not distinguished so that type checking is undecidable due to the halting problem.
+Therefore in \ett{}, the reinterpretation of quotients are easier. Nevertheless, \itt{} is more useful since it is decidable, we also want to implement quotients in \itt.
+
+\todo{The relation between equality and quotient types}\subsection{Quotient Types}
+
+
+
+
+
+
+
+ In Martin-L\"{o}f type theory,  many notions from set theory and propositional logic can be implemented easily, such as the product of sets and disjoint union of sets. However the reinterpretation of quotients in Type Theory is  still a big problem.
+I will discuss the different related work on this topic in the literature review.
+
+Since types of Type Theory work similar to sets in set theory, and we can define equivalence relations on types, it is natural to define quotient types as follows,
+
+
+\begin{definition}
+Given $A \,\colon \Set$, and an equivalence relation $\,\sim \,\colon A \to A \to \Prop$, a quotient type $Q \,\colon \Set$ represents the corresponding quotient set $\A/sim$.
+
+\end{definition}
+
+Quotient types can be used to implement the quotients in mathematics. Some other notions in type theory can also be formalised by quotient types. For example partiality monad divided by a weak similarity ignoring finite delays \cite{aan}, propositions divided by $\iff$  and the set of extensionally equal functions. Also set-theoretical finite sets can be implemented as the quotient of lists in Type Theory. 
+
+In fact, from any given function $f \,\colon\, A \to B$, we can get an equivalence relation $\sim \,\colon A \to A \to \Prop$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. Then there could be a quotient type represents $\A/sim$.
+
+Moreover all types  can be seen as quotient types. The types without specified equivalence relation can be seen as the quotient of itself by the trivial equivalence relation, namely the definitional equality.
+
+If we can formalise quotient types just by the setoids, it is the best solution. However it seems impossible to do that without extending \itt{} by several axioms. There is another choice, we can construct a type from scratch and prove it is the quotient of a given setoid \cite{aan}.
+I will explain the quotient interface and discuss some examples later. For instances in \cite{nuo:10}, the normal form integers,  reducible rational numbers are definable and proved to construct quotients with respect to the corresponding setoids,  such that we can treat them as the quotient types.
+The advantage of this idea is, it is feasible in current setting of  intensional Type Theory,  but we can still achieve some convenience from constructing quotients as we will discuss later. The disadvantage this only work for the quotient types which are definable in \itt{}. Another disadvantage is we have to manually construct  the quotient types and the proof that it can be used to formalise required quotients,  manually define functions or predicates by lifting with proofs that these functions or predicates respect the equivalence relation\cite{hof:95:sm}.
+
+
+Usually a definable quotient type is defined based on its normal form which can only be equated by identity. Hence types like real numbers $\R$ which do not have their own normal forms are not definable even set theoretically speaking  $\R$  can be seen as the  quotient set of the cauchy sequences of rational numbers  $\Q$. 
+
+
+\subsection{Literature Reviews}
+
+% Why I mention about this article
+% More description about these articles
+% in a more comprehensive way, tell a story
+% compare and link between literatures
+In \cite{cab}, Mendler et al. has considered building new types from a given type by  a quotient operator and the issues when defining functions on the new type.
+
+ After the introduction~\cite{men} of quotient types by Mendler, there has been a number of articles concerning implementing quotient types in various kinds of type theories.
+
+
+Hofmann in his PhD thesis \cite{hof:phd} proposed three models for quotient types. The first one is to constructs a setoid model for quotient types. In this model all types are attached with partial equivalence relations, namely all types are setoids rather than sets. Types without specific equivalence relation can be translated as setoids with trivial reflection equality. While in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt {}  extended with quotient types and a universe \cite{hof:95:con}.
+
+Homeier \cite{hom} axiomatises quotient types in Higher Order Logic (HOL), which is also a theorem prover.
+He creates a tool package to construct quotient types as a conservative extension of HOL such that users are able to define new types as a quotient type of some setoid which includes several axiomatised properties. He also considers quotients of....
+
+
+
+Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Constructions
+with a different notion called \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. Normalised types are proper subsets of quotient types,
+\[ (A, Q, \class\dotph \colon A \to Q) \Rightarrow(A, \lambda \,a \,b\to \class a = \class b)\]
+
+However not all quotient types have normal forms. Therefore it only solves part of the problem.
+
+Similarly, Barthe and Geunvers \cite{bar:96} also proposes \emph{congruence types}, which is also a special class of quotient types, in which the base type are inductively defined and with a set of reduction rules called the term-rewriting system. \ed{The idea behind it is the $\beta$-equivalence is replaced by a set of $\beta$-conversion rules.} The congruence types can be treated as an alternative to pattern matching introduced in \cite{coq:92}.
+Hence it aims at solving problems in term rewriting systems rather than simply implementing quotient types.
+
+Nogin \cite{nog:02} considers a modular approach to axiomatizing the same quotient types in an extensional Type Theory, NuPRL. NuPRL type theory is similar to what Hofmann proposed as setoid model for quotients, the types comes with its own equality relation and equalities are guaranteed to be respected. Hence the definition of quotients are trivial.
+However there are still a few complicated problems arising. For example, since the the equality is extensional, we can not recover the witness of the equality. So he suggests to include more axioms to conceptualise quotients. He decomposes the concept of quotient type into several more primitive concepts such that the quotient types can be formalised based on these concepts and can be handled much simpler. 
+
+\section{Aims and Objectives of the Project}
+
+If we have quotient types in type theory such as Agda (more in Sec 3.), we can implement more things like modulo congruence. Also we can benefit from the lifting between base types and quotient types as in Sec 4.  The objective of this project is to explore the best way to implement quotient types in intensional Type Theory.
+
+%future : something on equality, complete preliminary work in Agda
+%Extend without losing nice features of itt, termination, deciable type checking
+%axiomatising quotients types, adding rules, na 
+% possible quotions, talk to Thorsten
+% 
+% pay attention to the connection,the flow of ideas throughout the article.
+% one thing in one paragraph.
+
+The current aim is to implement some definable quotients, trying to build a model of them and study the benefits.
+We also need to do research on the different definitions of quotients.
+
+Next we need to investigate on the undefinable quotients such as real numbers and partiality monads and prove why they are undefinable. The key different characters between definable and undefinable quotients will be studied. 
+\section{Theoretical Methods}
+The work will be implemented in Agda, which is a dependent typed programming language and mainly used as a theorem prover.
+It has dependent type so that we can use Curry-Howard correspondence between types and propositions. Since propositions can be represented as types, its type checker can verify the proof.
+
+In this project the work will be proved in Agda and also verified in Agda since it is a good choice of intensional Type Theory.
+
+\section{Results and Discussion}
+
+
+\subsection{Definitions}
+
+Currently, we have done some work on the framework of quotient.
+We have submitted a paper \cite{aan} for APLAS 2011.
+It is about the definable quotients and some undefinable quotients. Here we only talk about the quotient set, but it is universal polymorphic. 
+
+To associate a setoid $(A,\sim)$ with a set Q, we have several definitions as in~\cite{aan},
+I will not present it again but explain some ideas behind them.
+
+
+Given a setoid $(A,\sim)$   , we denote the set of equivalence classes as $\A/sim$ and the normalisation function is $\class\dotph_{\sim} \colon A \to \A/sim $, assigning each elements to the set it is belonging to.
+Hence we have
+
+\begin{proposition}\label{prop:nf}
+$\forall \, a \, b \, \colon A, a \sim b \iff [ a ]_{\sim} = [b]_{\sim}$
+\end{proposition}
+
+\
+
+And the normalisation function is surjective, hence we assume classically,
+
+
+
+\begin{proposition}
+$\forall \, e \,\colon \A/sim , \exists \, a \, \colon A , [a]_{\sim} = e$
+
+\end{proposition}
+
+Namely, the normalisation function is split,
+
+
+\begin{proposition}
+$\exists \, s \, \colon \A/sim \to A,\, \class\dotph_{\sim}  \circ s = 1_{\A/sim}$
+\end{proposition}
+
+\
+
+
+Since then 
+
+$$\class\dotph_{\sim}  \circ (s \circ \class\dotph_{\sim}) = \class\dotph_{\sim} \circ 1_{\A/sim} $$
+
+And with Proposition~\ref{prop:nf}, we can prove that
+
+\begin{proposition}\label{prop:stable}
+$\forall \, a \,  \colon A,  (s \circ \, \class\dotph_{\sim}) \, a   \sim a$ 
+\end{proposition}
+
+\
+
+
+Some of them are only classically true. However, we worked in intensional Type Theory which is constructive. What we do is to  associate a given set Q to the setoid or the quotient set. Given a function $\class\dotph\colon A \to Q$,
+
+ \[\sound\colon  (a,b : A) \to a\sim b \to [a] = [b]\]
+
+is a property which means that from the images of the elements from the same equivalence class are identical, namely $\class\dotph$ respects the equivalence relation. It is also equivalent to say that there is a naming function, $na \, \colon \A/sim  \to Q $ , such that the following diagram commutes,
+\[\xymatrix{
+A\ar[r]^{\class\dotph_{\sim}}\ar[dr]_{\class\dotph} & \A/sim \ar[d]^{na}\\
+&Q
+}\]
+
+And $na$ can be constructed as $\class\dotph \, \circ s$. We can prove this diagram is commute as,
+
+\[ na \circ  \class\dotph_{\sim} = \class\dotph \circ s  \circ \class\dotph_{\sim}
+\]
+
+Apply  Proposition~\ref{prop:stable} and  Proposition~\ref{prop:nf}, we know,
+\[ \forall \,a \, \colon A, (na \circ  \class\dotph_{\sim}) \, a = (\class\dotph \circ s  \circ \class\dotph_{\sim}) \, a = \class\dotph \circ ((s  \circ \class\dotph_{\sim}) \, a) = \class\dotph \, a     
+\]
+
+Extensionally, we proved that the diagram commute.
+
+
+However, with this property, we cannot confirm $Q$ is the required quotient set, we only construct a prequotient.
+To complete a quotient, we require one eliminator
+for every
+$B\colon Q\to\Set$,
+\begin{align*}
+ \qelim_B\colon &(f\colon (a:A) \to B\,\class a) \\
+        {\to}\, &((p:a\sim b) \to f\,a \simeq_{\sound\,p}f\,b)\\
+        {\to}\, &((q:Q) \to B\,q)
+ \end{align*}
+such that $\qelimbeta\colon \qelim_B f \,p\,\class a\equiv f a$.
+
+With this eliminator we can lift a function which takes in $a \,\colon A$ but the result is dependent on the $[a] \, \colon Q$  and identifies more than $\class\dotph$, namely for the elements in the same equivalence class by $\class\dotph$ , the result produced by $f$ is the same. Combining with this function, 
+
+However this is not a exact quotient, since it is unnecessary for $na$ function to assign one \emph{name} ($q \,\colon Q$) to each equivalence class ($e \,\colon \A/sim$). It is very inefficient to define a too general quotient. Therefore we need a property to make a quotient exact,
+
+\[\exact :\forall \,a \, b : A\,,\,  \class a = \class b \to a \sim b \]
+
+equivalently, we have the property that $na$ is injective,
+
+\[ \forall \,e \, f : \A/sim \,,\,  na \,e = na \, f \Rightarrow (\class\dotph \, \circ s) \, e = (\class\dotph \, \circ s) \,f\]
+
+\[\Rightarrow \class{s \, e} =  \class{s \, f} \Rightarrow s \, e \sim s \, f \Rightarrow [s \, e]_{\sim} = [s \, f]_{\sim} \Rightarrow e = f
+ \]
+
+The alternative definition of quotient with non-dependent eliminator introduced in \cite{hof:phd}, and consists of,
+
+
+\[ \lift_B\colon (f\colon A \to B) \to (\forall a,b\cdot a\sim b \to f\,a \equiv f\,b) \to (Q \to B)\]
+
+\[\liftbeta : \lift_B f \,p\,\class a\equiv f a\]
+
+
+
+ for any $B\colon\Set,$ which can lift a function $f$ which respects the equivalence relation and the following diagram commute with respect to lift-$\beta$,
+
+\[\xymatrix{
+A\ar[r]^{\class\dotph}\ar[dr]_{f} & Q \ar[d]^{lift_{B} \, f \, p}\\
+&B
+}\]
+
+
+
+
+In this definition we also need an introduction principle if $B$ in the dependent eliminator is a predicate on $Q$,
+
+\[\qind_{P} \colon((a: A)\to P \,\class a)\to ((q : Q)\to P\,q)\]
+
+The quotient with dependent eliminator and the one with non-dependent eliminator are actually equivalent. We prove this by formalise one by another in Agda. It is quite trivial to generate the non-dependent version from dependent version since $\lift_B$ and $\qind_{P}$ are both special cases of the dependent eliminator. However to recover dependent eliminator, it is a little complicated. We need a function $indep$ to transform the dependent $a \, \colon A \to B \,\class a $ into the non-dependent $A \to \Sigma \,Q \,B$ which is defined as $indep \, f \,a \mapsto \class a \,, f \,a$. Then we can use non-dependent eliminator to lift $indep \,f$ and the projection of the second component is the same as dependent function. You can check the detailed Agda proof in the Appendix.
+
+When the quotient type is definable and we want the target type $Q$ is just the quotient type, which means
+
+\[  Q \cong \A/sim \]
+
+Therefore, to constructively define isomorphism in intensional Type Theory, we not only need $na$, but also the inverse function of it.
+So the definable quotients in \cite{aan} is the prequotient with
+
+\begin{align*}
+\emb &: Q \to A\\
+\complete &: (a : A) \to \emb {\class a} \sim a\\
+\stable &: (q:Q) \to \class{\emb\,q} \equiv q\\
+\end{align*}
+
+$\emb$ is the embedding function which choose one representative element for each equivalence class. Hence the following diagram needs to commute,
+
+\[ \xymatrix{
+&A\ar@<-0.5ex>[dl]^{\class\dotph}\ar@<0.5ex>[dr]_{\class\dotph_{\sim}} \\
+Q \ar@<1.5ex>[ur]^{\emb} \ar@<-0.5ex>[rr]_{na^{-1}}&&\ar@<-0.5ex>[ll]_{na}  \A/sim \ar@<-1.5ex>[ul]_{s}
+}\]
+
+
+Such that $ na^{-1} = \class\dotph_{\sim} \circ \emb$ is the inverse function of $na$. 
+
+
+
+\[na^{-1} \circ na = 1_{\A/sim} \Rightarrow \class\dotph_{\sim} \circ \emb \circ \class\dotph \circ s = 1_{\A/sim} \] 
+ 
+\[ \Rightarrow \forall a \colon A ,  a   \sim (s \circ \, \class\dotph_{\sim}) \, a \sim (s \circ 1_{\A/sim} \circ \class\dotph_{\sim})  \, a\]
+
+\[\sim (s \circ (\class\dotph_{\sim} \circ \emb \circ \class\dotph \circ s) \circ \class\dotph_{\sim}) \, a \sim \emb \,\class{a}    \,     
+ \]
+
+So we need this property called completeness which ensures the correctness of emb.
+Also,
+
+\[ na \circ na^{-1} =1 _{Q} \Rightarrow\class\dotph \circ s \circ \class\dotph_{\sim} \circ \emb = \class\dotph  _{} \circ \emb = 1 _{Q}  \Rightarrow \]
+
+\[\forall \,q\, \colon Q, \class{\emb \,q} = q  \]
+
+is needed called the stable property which ensures
+$\class\dotph$ is surjective, Hence it is \emph{normalisation} function and the $Q$ is the quotient type without redundance.
+
+With these two properties, we can conclude that $ \class\dotph_{\sim} \circ \emb $ is the inverse function of $na$ , hence $Q$ is isomorphic to $\A/sim$.
+We can use it as the quotient type.
+
+In category theory, coequalizers are the generalization of quotients.
+We assume
+
+$R = \Sigma a , b : A , a \sim b$  are the pairs of equivalent elements in $A$
+
+$\pi_{0}\,,\pi_{1} \colon R \to A $ are the projection functions for $R$
+
+$\class\dotph \colon A \to Q$ satisfies that $\sound \colon \forall\,a,b \colon A, a \sim b \to \class a = \class b$
+
+
+\[\xymatrix{
+R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{\class\dotph}\ar[dr]_{f} & Q\ar@{-->}[d]^{\dlift f}\\
+&&X
+}\]
+
+
+Since 
+\begin{enumerate}
+\item$(Q \,, \class\dotph)$ fulfils that $\class\dotph\ \circ \pi_0 = \class\dotph \circ \pi_1$, we can acquire this from applying the $\pi_{0}\, r ,\pi_{1}\,r$ for all $r $ to sound.
+\item Given any $(X, f \colon A \to X)$, there exists a unique $\hat{f}$, such that the diagram above commutes. From the definition of quotients, we can use the eliminator to lift $f$ , namely $\hat{f} = \lift f,  $ and the $\beta$-law simply implies the diagram commutes. The uniqueness can be proved as follows
+
+\[\forall \,g \, \colon Q \to X, g \circ \class\dotph = f \Rightarrow \forall \,a \,\colon A, g \,\class a = f a = \lift f \,q \,\class a  \Rightarrow g = \lift f \,q\]
+
+\end{enumerate}
+
+These two parts proved from quotients
+exactly define a coequalizer. Also we can prove $\class\dotph$ is an epimorphism
+
+\[ \forall\, g_1,g_2 : Q \to Z, g_1 \circ \class\dotph = g_2 \circ \class\dotph \Rightarrow \]
+
+\[\Rightarrow  \forall \,q \,\colon Q,  g_{1} \,q = \lift \, (g_1 \circ \class\dotph) \, q = \lift \, (g_2 \circ \class\dotph) \, q = g_2\, q \Rightarrow g_1 = g_2\]
+
+Also the exact quotient is equivalent to the exact coequalizer,
+
+\[\xymatrix{
+R\pullbackcorner\ar[r]^{\pi_2}\ar[d]_{\pi_1} & A\ar[d]^{\class\dotph} \\
+A\ar[r]_{\class\dotph} & Q
+}\]
+
+\begin{enumerate}
+
+\item This diagram commutes
+
+$(\forall \,r\, \colon R, \pi_1 \, r \sim \pi_2 \, r \Rightarrow\class{\pi_1 \,r} = \class{\pi_2 \, r}) \Rightarrow \class\dotph \circ \pi_1 = \class\dotph\circ \pi_2$
+
+
+\item $$\forall (Z , z_1 \colon Z \to A, z_2 \colon Z \to A), \, \class{\dotph} \circ z_1 = \class\dotph \circ z_2$$
+
+$$\Rightarrow( \exists \,u : Z \to R, \pi_1 \circ u = z_1 \wedge  \pi_2 \circ u = z$$
+
+
+$$\wedge \,\forall \,u' \colon Z \to R, \pi_1 \circ u' = z_1 \wedge  \pi_2 \circ u' = z_2$$
+
+$$\Rightarrow u = u')$$
+
+We  can construct the unique function as $u \,x \mapsto z_1 \,x \,, z_2\, x$, but we need to prove $z_1 \,x\sim z_2 \,x$ from exact property of quotient, 
+
+$\class{\dotph} \circ z_1 = \class\dotph \circ z_2 \Rightarrow \forall \,x\, \colon Z, (\class{z_1\,x}=\class{z_2 \,x} \Rightarrow z_{1} \,x \sim z_2 \, x) $
+
+$u$ is the function which makes the diagram commutes,
+
+$$\forall \,x\,\colon Z, (\pi_1 \circ u) \, x = z_1 \,x$$
+
+$$\forall \,x\,\colon Z, (\pi_2 \circ u) \, x = z_2 \,x$$
+
+$u$ is unique,
+
+$$\forall \,u' \colon Z \to R, \pi_1 \circ u' = z_1 \wedge  \pi_2 \circ u'  = z_2$$ 
+ 
+$$ \Rightarrow \forall \,x\,\colon Z, u' \,x = z_1 \,x\,,z_2\,x=u\,x \Rightarrow u' = u$$
+
+
+\end{enumerate}
+
+
+\section{Examples}
+We have already define the basic requirements to create quotients in intensional Type Theory, I will then present some concrete examples in \cite{nuo:10} to illustrate these ideas. They are implemented in Agda. 
+
+\subsection{Integers}
+
+
+All the result of subtraction between natural numbers are integers. Therefore it is naturally to define a pair of
+natural numbers to represent integers. Hence the base type of the quotient is
+
+$$\Z_0=\N \times \N$$
+
+Mathematically, for any two pairs of natural numbers $(n_1, n_2)$ and $(n_3, n_4)$, 
+
+$$ n_1 - n_2 = n_3 - n_4\iff n_1 + n_4 = n_3 + n_2$$
+since the pair of integers represent the same result of subtraction, they define the same integer. Hence we can define an equivalence relation for $\N \times \N$ as
+
+\[ (n_1, n_2) \sim (n_3, n_4) = n_1 + n_4 \equiv n_3 + n_2 
+ \]
+
+
+Here $\equiv$ is the propositional equality. so that the $\Z_0/\sim$ is the quotient integer.
+Integer is also definable in intensional Type Theory as $\N+\N$ where we define two constructors
+
+$ (n \colon \N) \Rightarrow + \,n \colon\Z$
+
+$ (n \colon \N) \Rightarrow -\suc n \colon\Z$
+
+
+Firstly to construct the prequotient based on the setoid $(\Z_0,\sim)$, we need to define the $\class\dotph \colon \Z_0 \to \Z$ as
+
+\begin{align*}
+\class{(a,0)} &= +\,a\\
+\class{(0,\suc b)} &= -\suc b\\
+\class{(\suc a,\suc b)} &= \class{(a,b)}\\
+\end{align*}
+
+and prove \emph{sound}. Then we define emb function and prove all the required properties for definable quotients
+
+
+\begin{align*}
+\emb \,(+ a) &= (a,0)\\
+\emb (-\suc b) &= (0,b+1)\\
+\end{align*}
+
+We have done these in Agda \cite{nuo:10}. The quotients here are not just something relate the setoid with the quotient type, we use lift functions to define functions trivially and use properties to transform the proof term for the setoid to the quotient type. For instance, the addition of the setoid is defined as
+
+$$(a,b){+_0}(a', b')= (a+a',b+b')$$
+
+We can then define use the eliminator to lift the operator, or just define a lift function for binary operators,
+
+$$ \lift \,* \,z_1 \,z_2 = \class{\emb \,z_1 \,*\,\emb \,z_2}$$
+
+or a more general lift function for n-ary operators,
+
+
+
+\begin{align*}
+\lift' \,0 \,op &= \class{op}\\
+\lift' \,(\suc n) \,op &= \lambda \,x \to \lift' n \,(op \,(\emb x))\\
+\end{align*}
+Then we don't need to define the addition of integers by several cases.
+
+$$+ = \lift +_0$$
+
+If we lift the operators in this way, we have to prove it respects the equivalence relation later. The main benefits from the quotients arise in proving properties. Because for normal form integers, we have two cases for each argument. The number of cases will expand exponentially if we can not combine cases. The proof of distributivity of multiplication over addition is so cumbersome
+that it is hard to write and read. However, we could lift the proof for the setoid integers so that we could prove it in one case. This convenience is due to the simplicity of the proof for the setoid $(\Z_0,\sim)$. 
+
+\subsection{Rational numbers}
+
+The quotients of rational numbers is more natural to understand and the normalisation function is also commonly used in regular mathematics. Generally we can use a pair of integers to represent rational numbers. However, it is complicated to exclude 0 in the denominator. For simplicity, we just use one integer for \emph{numerator} and one natural number for \emph{denominator-1} to represent a rational number to avoid the invalid cases from construction. 
+
+$$\Q_0 = \Z \times \N$$
+
+
+
+The equivalence relation is
+
+$$(n_1, d_1) \sim (n_2, d_2) = n_1 \times (d_2 + 1) \equiv n_2 \times (d_1 + 1) $$
+
+The normal form of rational numbers can just be defined by adding a condition that the numerator and denominator are coprime.
+
+$$\Q = \Sigma (n \colon \Z)(d \colon \N), \coprime \,n \,(d +1)$$
+
+Since there are a set of \emph{gcd} (great common divisor) functions in Agda, it is possible to define the normalisation functions (See Appendix).
+emb function can be trivially defined by forgetting coprime proof.
+
+\subsection{Real numbers as cauchy sequences}
+
+We can represent real numbers as cauchy sequences of rational numbers \cite{bis:85}.
+
+$$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to |s\,i - s\, m|<\varepsilon}$$
+
+And we define the equivalence relation of two sequences by the proposition that their pointwise difference converges to 0.
+
+$$r \sim s = \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to |r\,i - s\,i|<\varepsilon$$
+
+Then $\R_0 /\sim$ is the quotient set of real numbers. However it is undefinable because real numbers have no normal forms.
+Therefore we cannot use the definable quotient interface for it. The undefinability is proved in \cite{aan}.
+Nevertheless, we could easily embedding rational numbers as the cauchy sequences of all the same rational numbers. But for irrational numbers, there is no such an uniform way to generate a sequences.
+\section{Conclusion}
+
+Currently we investigate the possible quotient definitions in \itt{} and present some examples and benefits from the definable quotients. For definable quotients, it provides an alternative choice to define functions or prove propositions which reuses things and could be simpler in most cases. However, to solve the problems arose from undefinable quotients, a new type former may be unavoidable.
+
+\todo{future extension.}
+
+If we axiomize quotient types in \itt, then every type can be seen as quotient type, when the default equivalence relation is just \ed{reflection equality}.
+\newpage
+\bibliography{quotients}
+\bibliographystyle{plain}
+
+\end{document}

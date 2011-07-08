@@ -6,7 +6,8 @@
 \title{First Year PhD Annual Report}
 \institute{University of Nottingham}
 \usepackage{dsfont}
-\usepackage{amsthm}
+
+%\usepackage{amsthm}
 
 
 \usepackage{color}
@@ -92,7 +93,7 @@
 
 \newcommand{\ett}{extensional Type Theory}
 
-\newtheorem{axiom}{Axiom}[section]
+%\newtheorem{axiom}{Axiom}[section]
 %\newtheorem{theorem}{Theorem}[section]
 %\newtheorem{lemma}[theorem]{Lemma}
 %\theoremstyle{definition}
@@ -102,7 +103,7 @@
 
 \begin{document}
 
-\maketitle
+\vref{prop:nf}\maketitle
 
 \newpage
 
@@ -203,13 +204,13 @@ Since types of Type Theory work similar to sets in set theory, and we can define
 
 
 \begin{definition}
-Given $A \,\colon \Set$, and an equivalence relation $\,\sim \,\colon A \to A \to \Prop$, a quotient type $Q \,\colon \Set$ represents the corresponding quotient set $\A/sim$ $.
+Given $A \,\colon \Set$, and an equivalence relation $\,\sim \,\colon A \to A \to \Prop$, a quotient type $Q \,\colon \Set$ represents the corresponding quotient set $\A/sim$.
 
 \end{definition}
 
 Quotient types can be used to implement the quotients in mathematics. Some other notions in type theory can also be formalised by quotient types. For example partiality monad divided by a weak similarity ignoring finite delays \cite{aan}, propositions divided by $\iff$  and the set of extensionally equal functions. Also set-theoretical finite sets can be implemented as the quotient of lists in Type Theory. 
 
-In fact, from any given function $f \,\colon\, A \to B$, we can get an equivalence relation $\sim \,\colon A \to A \to \Prop$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. Then there could be a quotient type represents $\A/sim.
+In fact, from any given function $f \,\colon\, A \to B$, we can get an equivalence relation $\sim \,\colon A \to A \to \Prop$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. Then there could be a quotient type represents $\A/sim$.
 
 Moreover all types  can be seen as quotient types. The types without specified equivalence relation can be seen as the quotient of itself by the trivial equivalence relation, namely the definitional equality.
 
@@ -290,17 +291,15 @@ Given a setoid $(A,\sim)$   , we denote the set of equivalence classes as $\A/si
 Hence we have
 
 \begin{proposition}\label{prop:nf}
-\forall \, a \, b \, \colon A, a \sim b \iff [ a ]_{\sim} = [b]_{\sim}
+$\forall \, a \,, b \, \colon A, a \sim b \iff [ a ]_{\sim} = [b]_{\sim}$
 \end{proposition}
-
-\
 
 And the normalisation function is surjective, hence we assume classically,
 
 
 
 \begin{proposition}
-\forall \, e \,\colon \A/sim , \exists \, a \, \colon A , [a]_{\sim} = e 
+$\forall \, e \,\colon \A/sim , \exists \, a \, \colon A , [a]_{\sim} = e$
 
 \end{proposition}
 
@@ -308,7 +307,7 @@ Namely, the normalisation function is split,
 
 
 \begin{proposition}
-\exists \, s \, \colon \A/sim \to A,\, \class\dotph_{\sim}  \circ s = 1_{\A/sim}
+$\exists \, s \, \colon \A/sim \to A,\, \class\dotph_{\sim}  \circ s = 1_{\A/sim}$
 \end{proposition}
 
 \
@@ -321,10 +320,8 @@ $$\class\dotph_{\sim}  \circ (s \circ \class\dotph_{\sim}) = \class\dotph_{\sim}
 And with Proposition~\ref{prop:nf}, we can prove that
 
 \begin{proposition}\label{prop:stable}
-\forall \, a \,  \colon A,  (s \circ \, \class\dotph_{\sim}) \, a   \sim a 
+$\forall \, a \,  \colon A,  (s \circ \, \class\dotph_{\sim}) \, a   \sim a$ 
 \end{proposition}
-
-\
 
 
 Some of them are only classically true. However, we worked in intensional Type Theory which is constructive. What we do is to  associate a given set Q to the setoid or the quotient set. Given a function $\class\dotph\colon A \to Q$,
@@ -368,21 +365,25 @@ However this is not a exact quotient, since it is unnecessary for $na$ function 
 
 equivalently, we have the property that $na$ is injective,
 
-\[ \forall \,e \, f : \A/sim \,,\,  na \,e = na \, f \Rightarrow (\class\dotph \, \circ s) \, e = (\class\dotph \, \circ s) \,f
-
-\Rightarrow \class{s \, e} =  \class{s \, f} \Rightarrow s \, e \sim s \, f \Rightarrow [s \, e]_{\sim} = [s \, f]_{\sim} \Rightarrow e = f
- \]
+\begin{align*}
+\forall \,e \, f : \A/sim \,,\, &na \,e = na \, f \Rightarrow
+(\class\dotph \, \circ s) \, e = (\class\dotph \, \circ s) \,f \\
+\Rightarrow &\class{s \, e} =  \class{s \, f} \Rightarrow s \, e \sim s \, f \Rightarrow [s \, e]_{\sim} = [s \, f]_{\sim} \Rightarrow e = f
+\end{align*}
 
 The alternative definition of quotient with non-dependent eliminator introduced in \cite{hof:phd}, and consists of,
 
 
-\[ \lift_B\colon (f\colon A \to B) \to (\forall a,b\cdot a\sim b \to f\,a \equiv f\,b) \to (Q \to B)
 
-\liftbeta : \lift_B f \,p\,\class a\equiv f a\]
+\begin{align*}
+\lift_B &\colon (f\colon A \to B) \to (\forall a,b\cdot a\sim b \to f\,a
+\equiv f\,b) \to (Q \to B) \\
+\liftbeta &\colon \lift_B f \,p\,\class a\equiv f a
+\end{align*}
 
 
 
- for any $B\colon\Set,$ which can lift a function $f$ which respects the equivalence relation and the following diagram commute with respect to lift-\beta,
+ for any $B\colon\Set,$ which can lift a function $f$ which respects the equivalence relation and the following diagram commute with respect to lift-$\beta$,
 
 \[\xymatrix{
 A\ar[r]^{\class\dotph}\ar[dr]_{f} & Q \ar[d]^{lift_{B} \, f \, p}\\
@@ -400,17 +401,18 @@ The quotient with dependent eliminator and the one with non-dependent eliminator
 
 When the quotient type is definable and we want the target type $Q$ is just the quotient type, which means
 
-\[ Q \isomorphic \cong \A/sim\]
+\[  Q \cong \A/sim \]
 
-Therefore,
-to constructively define isomorphism in intensional Type Theory, we not only need $na$, but also the inverse function of it.
+Therefore, to constructively define isomorphism in intensional Type Theory, we not only need $na$, but also the inverse function of it.
 So the definable quotients in \cite{aan} is the prequotient with
+
 \begin{align*}
 \emb &: Q \to A\\
 \complete &: (a : A) \to \emb {\class a} \sim a\\
 \stable &: (q:Q) \to \class{\emb\,q} \equiv q\\
 \end{align*}
-$emb$ is the embedding function which choose one representative element for each equivalence class. Hence the following diagram needs to commute,
+
+$\emb$ is the embedding function which choose one representative element for each equivalence class. Hence the following diagram needs to commute,
 
 \[ \xymatrix{
 &A\ar@<-0.5ex>[dl]^{\class\dotph}\ar@<0.5ex>[dr]_{\class\dotph_{\sim}} \\
@@ -422,22 +424,21 @@ Such that $ na^{-1} = \class\dotph_{\sim} \circ \emb$ is the inverse function of
 
 
 
-\[na^{-1} \circ na = 1_{\A/sim} \Rightarrow \class\dotph_{\sim} \circ \emb \circ \class\dotph \circ s = 1_{\A/sim}  
- 
- \Rightarrow \forall a \colon A ,  a   \sim (s \circ \, \class\dotph_{\sim}) \, a \sim (s \circ 1_{\A/sim} \circ \class\dotph_{\sim})  \, a 
-
-\sim (s \circ (\class\dotph_{\sim} \circ \emb \circ \class\dotph \circ s) \circ \class\dotph_{\sim}) \, a \sim \emb \,\class{a}    \,     
- \]
+\begin{align*}
+&na^{-1} \circ na = 1_{\A/sim} \Rightarrow \class\dotph_{\sim} \circ \emb \circ \class\dotph \circ s = 1_{\A/sim} \\
+&\Rightarrow \forall a \colon A ,  a \sim (s \circ \,
+\class\dotph_{\sim}) \, a \sim (s \circ 1_{\A/sim} \circ
+\class\dotph_{\sim})  \, a \\
+&\sim (s \circ (\class\dotph_{\sim} \circ \emb \circ \class\dotph \circ s) \circ \class\dotph_{\sim}) \, a \sim \emb \,\class{a} 
+\end{align*}
 
 So we need this property called completeness which ensures the correctness of emb.
 Also,
 
-\[ na \circ na^{-1} =1 _{Q} \Rightarrow\class\dotph \circ s \circ \class\dotph_{\sim} \circ \emb = \class\dotph  _{} \circ \emb = 1 _{Q}  \Rightarrow 
-
-\forall \,q\, \colon Q, \class{\emb \,q} = q  \]
+\[ na \circ na^{-1} =1 _{Q} \Rightarrow\class\dotph \circ s \circ \class\dotph_{\sim} \circ \emb = \class\dotph  _{} \circ \emb = 1 _{Q}  \Rightarrow \forall \,q\, \colon Q, \class{\emb \,q} = q  \]
 
 is needed called the stable property which ensures
-\class\dotph$ is surjective, Hence it is \emph{normalisation} function and the $Q$ is the quotient type without redundance.
+$\class\dotph$ is surjective, Hence it is \emph{normalisation} function and the $Q$ is the quotient type without redundance.
 
 With these two properties, we can conclude that $ \class\dotph_{\sim} \circ \emb $ is the inverse function of $na$ , hence $Q$ is isomorphic to $\A/sim$.
 We can use it as the quotient type.
@@ -470,11 +471,12 @@ Since
 These two parts proved from quotients
 exactly define a coequalizer. Also we can prove $\class\dotph$ is an epimorphism
 
-\[ \forall\, g_1,g_2 : Q \to Z, g_1 \circ \class\dotph = g_2 \circ \class\dotph \Rightarrow  
+\begin{align*}
+&\forall\, g_1,g_2 : Q \to Z, g_1 \circ \class\dotph = g_2 \circ
+\class\dotph\\
+&\Rightarrow  \forall \,q \,\colon Q,  g_{1} \,q = \lift \, (g_1 \circ \class\dotph) \, q = \lift \, (g_2 \circ \class\dotph) \, q = g_2\, q \Rightarrow g_1 = g_2
+\end{align*}
 
-\Rightarrow  \forall \,q \,\colon Q,  g_{1} \,q = \lift \, (g_1 \circ \class\dotph) \, q = \lift \, (g_2 \circ \class\dotph) \, q = g_2\, q \Rightarrow g_1 = g_2
-
-\]
 Also the exact quotient is equivalent to the exact coequalizer,
 
 \[\xymatrix{
@@ -489,14 +491,16 @@ A\ar[r]_{\class\dotph} & Q
 $(\forall \,r\, \colon R, \pi_1 \, r \sim \pi_2 \, r \Rightarrow\class{\pi_1 \,r} = \class{\pi_2 \, r}) \Rightarrow \class\dotph \circ \pi_1 = \class\dotph\circ \pi_2$
 
 
-\item $\forall (Z , z_1 \colon Z \to A, z_2 \colon Z \to A), \, \class{\dotph} \circ z_1 = \class\dotph \circ z_2 
-
-\Rightarrow( \exists \,u : Z \to R, \pi_1 \circ u = z_1 \wedge  \pi_2 \circ u = z
-
-
-\wedge \,\forall \,u' \colon Z \to R, \pi_1 \circ u' = z_1 \wedge  \pi_2 \circ u' = z_2 
-
-\Rightarrow u = u')$
+\item 
+\begin{align*}
+&\forall (Z , z_1 \colon Z \to A, z_2 \colon Z \to A), \,
+\class{\dotph} \circ z_1 = \class\dotph \circ z_2 \\
+&\Rightarrow ( \exists \,u : Z \to R, \pi_1 \circ u = z_1 \wedge  \pi_2
+\circ u = z \\
+&\wedge \,\forall \,u' \colon Z \to R, \pi_1 \circ u' = z_1 \wedge
+\pi_2 \circ u' = z_2 \\
+&\Rightarrow u = u') 
+\end{align*}
 
 We  can construct the unique function as $u \,x \mapsto z_1 \,x \,, z_2\, x$, but we need to prove $z_1 \,x\sim z_2 \,x$ from exact property of quotient, 
 
@@ -504,16 +508,17 @@ $\class{\dotph} \circ z_1 = \class\dotph \circ z_2 \Rightarrow \forall \,x\, \co
 
 $u$ is the function which makes the diagram commutes,
 
-$\forall \,x\,\colon Z, (\pi_1 \circ u) \, x = z_1 \,x
+$$\forall \,x\,\colon Z, (\pi_1 \circ u) \, x = z_1 \,x$$
 
-\forall \,x\,\colon Z, (\pi_2 \circ u) \, x = z_2 \,x$
+$$\forall \,x\,\colon Z, (\pi_2 \circ u) \, x = z_2 \,x$$
 
 $u$ is unique,
 
-$\forall \,u' \colon Z \to R, \pi_1 \circ u' = z_1 \wedge  \pi_2 \circ u'  = z_2 
- 
- \Rightarrow \forall \,x\,\colon Z, u' \,x = z_1 \,x\,,z_2\,x=u\,x \Rightarrow u' = u$
 
+\begin{align*}
+&\forall \,u' \colon Z \to R, \pi_1 \circ u' = z_1 \wedge  \pi_2 \circ u'  = z_2\\ 
+&\Rightarrow \forall \,x\,\colon Z, u' \,x = z_1 \,x\,,z_2\,x=u\,x \Rightarrow u' = u
+\end{align*}
 
 \end{enumerate}
 
@@ -608,11 +613,11 @@ emb function can be trivially defined by forgetting coprime proof.
 
 We can represent real numbers as cauchy sequences of rational numbers \cite{bis:85}.
 
-$$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to |s\,i - s\, m|<\varepsilon}
+$$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to |s\,i - s\, m|<\varepsilon}$$
 
 And we define the equivalence relation of two sequences by the proposition that their pointwise difference converges to 0.
 
-$$r\sim s &= \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to |r\,i - s\,i|<\varepsilon$$
+$$r \sim s = \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to |r\,i - s\,i|<\varepsilon$$
 
 Then $\R_0 /\sim$ is the quotient set of real numbers. However it is undefinable because real numbers have no normal forms.
 Therefore we cannot use the definable quotient interface for it. The undefinability is proved in \cite{aan}.

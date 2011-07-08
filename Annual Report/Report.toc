@@ -1,0 +1,17 @@
+\contentsline {title}{First Year PhD Annual Report}{2}
+\authcount {1}
+\contentsline {author}{LI Nuo}{2}
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {subsection}{\numberline {1.1}Quotient Set}{4}
+\contentsline {subsection}{\numberline {1.2}Type Theory}{5}
+\contentsline {subsection}{\numberline {1.3}Quotient Types}{6}
+\contentsline {subsection}{\numberline {1.4}Literature Reviews}{7}
+\contentsline {section}{\numberline {2}Aims and Objectives of the Project}{8}
+\contentsline {section}{\numberline {3}Theoretical Methods}{8}
+\contentsline {section}{\numberline {4}Results and Discussion}{8}
+\contentsline {subsection}{\numberline {4.1}Definitions}{8}
+\contentsline {section}{\numberline {5}Examples}{13}
+\contentsline {subsection}{\numberline {5.1}Integers}{13}
+\contentsline {subsection}{\numberline {5.2}Rational numbers}{14}
+\contentsline {subsection}{\numberline {5.3}Real numbers as cauchy sequences}{15}
+\contentsline {section}{\numberline {6}Conclusion}{15}

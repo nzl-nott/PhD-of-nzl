@@ -5,3 +5,5 @@ ViewOrientation=Portrait
 [Info]
 Source=Report.tex
 InputEncoding=CP1252
+[MakeIndex]
+.idx=.ind

@@ -104,26 +104,28 @@
 \newcommand{\ett}{extensional Type Theory}
 \newcommand{\mltt}{Martin-L\"{o}f type theory}
 
-%\newtheorem{axiom}{Axiom}[section]
 %\newtheorem{theorem}{Theorem}[section]
 %\newtheorem{lemma}[theorem]{Lemma}
 %\theoremstyle{definition}
 %\newtheorem{definition}{Definition}[section]
 %\newtheorem{proposition}[theorem]{Proposition}
+
 \usepackage{varioref}
 
 \begin{document}
 
 \maketitle
 
-\newpage
+%\newpage
 
 \tableofcontents
 
 \newpage 
 
 \begin{abstract}
-\todo{enhance the connection within between ideas. Split the two ideas in the abstract: why in general quotient is useful and implementing in Agda.}
+%\todo{enhance the connection within between ideas. Split the two ideas in the abstract: why in general quotient is useful and implementing in Agda.}
+
+
 Given a setoid, that is a set equipped with an equivalence relation, one can form its quotient set, that is the set of equivalence classes. % When dividing a set by an equivalence relation on it, we get a new set called quotient set
 Reinterpreting this idea in type theory, quotient type is formed by some type with its equivalence relation. However in \itt{}  the quotient type is still unavailable. The axiomatic quotient type enables us to define real numbers, functionals, and many other sets which are not definable in current \itt,  such as Agda which is also a theorem prover. Also we can benefit from the formalisation of some quotient types, since some base types are simpler to deal with or have better features, such as the integers represented by a pair of natural numbers.  Therefore, we undertake this project to investigate how to implement quotients in Agda. There are several schemes to do this, extending intensional Type Theory to quotient types, or we can define quotients without in current settings. In  \cite{aan}, we present some results of defining quotients in Agda and I will
 give some explanations  and show some instances in this report as a complement to it.
@@ -136,12 +138,14 @@ give some explanations  and show some instances in this report as a complement t
 \section{Introduction}
 
 
-
-
-
 \subsection{Quotient Set}
-In mathematics, a quotient represents the result of division. Usually, the division is between numbers and the result is also a number.  However the concept of division can be extended to other domains. In set theory, addition and multiplication can be extended to sets. Then the addition and multiplication can be seen as the calculation on the cardinality when operating the disjoint union and product within a special class of sets, which are called set-theoretical
-natural numbers.
+In mathematics, a quotient represents the result of division which is
+between numbers and it is also a number.  However the concept of
+division can be extended to other domains. In set theory, addition
+and multiplication can be extended to sets as disjoint union and
+product between sets. Based on this analogy, numbers can be
+represented by the cardinality of following inductively generated
+sets, which are called set-theoretical natural numbers,
 \begin{align*}
 \underline0 &= \O\\
 \underline1 &= \{\underline0\}\\
@@ -149,97 +153,158 @@ natural numbers.
 \vdots
 \\\underline n &= \{\underline0,\underline1,\underline2,\cdots \underline{n-1}\}
 \end{align*}
+then the addition and multiplication between numbers can be can be
+reinterpreted as the calculation on the cardinality when operating
+disjoint union and product within these sets.
 
-Similarly, we can also extend division to sets. First we need a setoid,
-
-
-\begin{definition}
-A setoid $(A,\sim)$ is a set $A$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
-
-\end{definition}
-
-
-
-\begin{definition}
-Given a setoid, we can get an equivalent class for each $a \,\colon A$,
+Similarly, we can also extend division to sets. In Set Theory, given a
+set A and an equivalence relation $\sim$ on A, the equivalence class for each $a \,\in A$ is,
 
 \[\class a =\{b \in A \,|\, b \sim a \}\  \]
-\end{definition}
 
-\begin{definition}
-Given a setoid $(A,\sim)$, a quotient set $\A/sim$ is  the set of equivalent classes of $\sim$,
-
+The quotient set $\A/sim$ is the set of equivalence classes of $\sim$,
 
 \[\A/sim =\{[a] \in \wp(A) \,|\, a \in A\}\  \]
 
-\end{definition}
+The process of  formulating new set $\A/sim$ from base set $A$ can be
+described as the \emph{extended division} of set $A$ by an equivalence
+relation $\sim$ on $A$.
 
- Then dividing a natural number $a$, by another number $b$, can be inductively defined as dividing the set $\underline a$ by the equivalence relation that the corresponding number has same quotient over $b$. The quotient set only contains the equivalence classes which has  $b$ elements, then the quotient number is just the cardinality of this set.
-
-
-To make the difference between setoids and quotient sets clear, we can use an analogy, $8\div2=4$. We know 4 is the quotient because $4 \times 2 = 8$, and we cannot recover the dividend and the divisor from the quotient $4$. Similarly, the setoids can be seen as a composition of the dividend and divisor, but the quotient sets do not contain all the information from this setoid, hence we can not recover the base sets. And a set can be the quotient type of several different setoids. 
+Dividing a natural number $a$, by another number $b$, can be
+inductively defined. For example, natural numbers divided by $3$ can
+be simulated by the following process. Assume $0$ divided by any
+positive number gives $0$ and remainder is $0$. the quotient number
+can be obtained from the cardinality of the last equivalence class of set $\underline a$
+under congruence modulo $3$, that is the equivalence class whose
+elements share the remainder $2$. The remainder can be obtained by
+adding one to the remainder of the previous number in the set of ${0,1,2}$.
 
 %why quotients is useful?
 
-Many mathematical objects are quotients. Some are quite obvious, such as integers modulo some number and rational numbers as fractions. Some are also intrinsically quotients, such as integers, real numbers.
+There are many mathematics notions can be constructed in the form of
+quotient sets. Some are more natural to construct by quotients, such as integers modulo some
+number and rational numbers as fractions. Integers modulo some number
+$n$ is the set of equivalence classes of all integers $\Z$ under the equivalence relation
+which equates two elements with the same remainders after divided by
+$n$. Pairs of integers $\Z \times \Z$ can be used to represent rational numbers, but
+eahc rational number can be represented by infinitely many internally
+different pairs. In other words, the set of rational numbers is the
+set of equivalence classes of $\Z \times \Z$ under the equivalence relation that equates
+different forms of one rational number. Some other sets like
+integers and real numbers are also intrinsically
+quotients. Integers can be interpreted as pairs of natural numbers
+$\N \times \N$ and real numbers can be represented by cauchy sequences of
+rational numbers. They can be encoded in Type Theory as we will
+discussed in detail later.
 
 \subsection{Type Theory}
 
+The theory of types was first introduced by Russell \cite{rus:1903} as
+an alternative to naive set theory. However, the type theory discussed
+here is the one developed by Per Martin-L\"{o}f \cite{per:71,per:82}. It is based
+on the Curry-Howard isomorphism between propositions and the types of
+its proofs such that it can served as a formalisation of
+mathematics. For detailed introduction, please refer to\cite{nor:00}.
 
-The theory of types was first introduced by Russell as an alternative to naive set theory. However, the type theory we discussed here is the one developed by Per Martin-L\"{o}f. It is based on the Curry-Howard isomorphism between propositions and the types of its proofs such that it can served as a formalisation of mathematics.   
 
-Type Theory can be used as a programming language in
-which the evaluation of well-typed program always terminates \cite{nor:90}. There are a few implementation of type theory, for example NuPRL, Coq and Agda. Agda is one of the most recent implementation and it has a bundle of good features which makes it a good theorem prover as well as a programming language.
-Hence we can program and make formal verification in the same language. We will use it to implement our definitions and verify theorems and propositions in this project.
+Per Martin-L\"{o}f proposed both an intensional and an extensional
+variants of his Intuitionistic type theory. The distinction between them is whether definitional equality is
+distinguished with propositional equality. In \itt{}, definitional equality exists
+between two intensionally identical objects, but propositional
+equality is a type which requires proof term. However
+in \ett{}, they are not distinguished so that definitional equality is
+undecidable. Since type checking only depends on definitional
+equality\cite{alt:99}, it is decidable and terminates in \itt{} but
+not in \ett{}.
 
-Per Martin-L\"{o}f proposed both \itt{} and \ett{}. Usually the implementation of Type Theory can be categorised into intensional ones and extensional ones. The distinction between them is whether the definitional equality is distinguished with
-propositional equality. In \itt{}, two objects are definitional equal
-if they are the same, but two objects are propositional equal if we
-have proof. There must be proof terms for propositional equalities. However
-in \ett{}, they are not distinguished so that type checking is
-undecidable due to the halting problem, but the reinterpretation of quotients is
-easier. Nevertheless, \itt{} is more useful  since type checking
-terminates because it only depends on definitional equality which is
-decidable in \itt{} \cite{alt:99}. Therefore we also want to implement quotients in \itt.
+Type theory can also serve as a programming language in
+which the evaluation of well-typed program always terminates
+\cite{nor:90}. There are a few implementation based on different type theories, such as
+NuPRL, Coq and Agda. Agda is one of the most recent implementation of
+intensional version of \mltt{}. As we have seen, Because of the identification of types
+and propositions, it is not only a programming language but also a
+theorem prover. Moreover we are able to verify our Agda programs in
+the itself. It has a bundle of good features like pattern matching,
+unicode input, implicit aruguments etc \cite{bov:09}. Since this
+project is based on \mltt{}, it is ideal to implement our definitions
+and verify propositions in Agda.
 
 \subsection{Quotient Types}
 
- In \mltt{},  many notions from set theory and propositional logic can be implemented easily, such as the product of sets and disjoint union of sets. However the reinterpretation of quotients in Type Theory is  still a big problem.
-I will discuss the different related work on this topic in the literature review.
+In \itt{},  many notions from set theory and propositional logic can
+be reinterpreted easily. For instances, the product of sets can be
+formalised by $\Sigma-Type$ and the functions can be formalised by
+$\Pi-Type$ \cite{nor:00}. However the reinterpretation of quotients in
+Type Theory is still a problematic issue and quotient types are still unavailable.
 
-Since types of Type Theory work similar to sets in set theory, and we can define equivalence relations on types, it is natural to define quotient types as follows,
-
+Alternatively, in \itt{} we have the bases of quotients as follows,
 
 \begin{definition}
-Given $A \,\colon \Set$, and an equivalence relation $\,\sim \,\colon A \to A \to \Prop$, a quotient type $Q \,\colon \Set$ represents the corresponding quotient set $\A/sim$.
-
+A setoid $(A,\sim)$ is a set $A$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
 \end{definition}
 
-Quotient types can be used to implement the quotients in mathematics. Some other notions in type theory can also be formalised by quotient types. For example partiality monad divided by a weak similarity ignoring finite delays \cite{aan}, propositions divided by $\iff$  and the set of extensionally equal functions. Also set-theoretical finite sets can be implemented as the quotient of lists in Type Theory. 
+We can use setoids to represent quotients but they are not sets. If we
+use the setoid $(\N \times \N, \sim)$ for integers, we have to
+redefine set-based operations and it is unsafe \cite{aan}. Moreover to define quotients
+based on this setoid, such as rational numbers, is
+impossible. Therefore it is not a good solution.
 
-In fact, from any given function $f \,\colon\, A \to B$, we can get an equivalence relation $\sim \,\colon A \to A \to \Prop$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. Then there could be a quotient type represents $\A/sim$.
+Quotient types should enable users to implement quotients in
+\itt{} which means the quotient types based on the setoid should have
+type $\Set$. Moreover it should be universe polymorphic.
 
-Moreover all types  can be seen as quotient types. The types without specified equivalence relation can be seen as the quotient of itself by the trivial equivalence relation, namely the definitional equality.
 
-If we can formalise quotient types just by the setoids, it is the best solution. However it seems impossible to do that without extending \itt{} by several axioms. There is another choice, we can construct a type from scratch and prove it is the quotient of a given setoid \cite{aan}.
-I will explain the quotient interface and discuss some examples later. For instances in \cite{nuo:10}, the normal form integers,  reducible rational numbers are definable and proved to construct quotients with respect to the corresponding setoids,  such that we can treat them as the quotient types.
-The advantage of this idea is, it is feasible in current setting of
-intensional Type Theory,  but we can still achieve some convenience
-from constructing quotients as we will discuss later. The disadvantage
-this only work for the quotient types which are definable in
-\itt{}. Another disadvantage is we have to manually construct  the
-quotient types and the proof that it can be used to formalise required
-quotients,  manually define functions or predicates by lifting with
-proofs that these functions or predicates respect the equivalence
-relation\cite{hof:95:sm}.  Morever, if the quotient sets cannot be
-constructed, like the normal forms of real numbers, $\R$, even set
-theoretically speaking  $\R$  can be seen as the  quotient set of the
-cauchy sequences of rational numbers  $\Q$ and the equivalence
+In this report, I will use the symbol $\A/sim$ for the quotient based
+on a given setoid  $(A,\sim)$. To make the difference between setoids and quotient types clear, we use
+an analogy, $8\div2=4$. The number 4 is the quotient because $4 \times
+2 = 8$, and we cannot recover the dividend and the divisor from the
+quotient $4$ or manipulate $8$ or $2$ separately. Similarly, setoids contain pairs of dividend and
+divisor, but quotient sets do not include all the information from the
+setoids. Futhermore one set can be the quotient sets of several different setoids. 
+
+
+\itt{} has to be extended if we want to define quotient
+types. Alternatively, some quotients are definable such that we can
+construct it from scratch and prove it is the quotient based on a given setoid
+\cite{aan}. For instances in \cite{nuo:10}, the normal form integers,
+reducible rational numbers are definable and proved to construct
+quotients with respect to the corresponding setoids,  such that we can
+treat them as the quotient types. The quotient interfaces introduced in \cite{aan} do not
+provide the access to the underlying setoids but include a set of
+properties which serve as not only proofs but also tools. I will
+explain the quotient interface and discuss some examples
+later. The advantages of this idea are, it is feasible in current setting of
+intensional Type Theory,  and we achieve some convenience
+from constructing quotients. The disadvantages are, it only works for
+the quotient types which are definable in \itt{} and the quotient
+types and functions are constructed manually rather than derived
+automatically. Hence the lifting of functions and predicates is a bit
+complicated as it requires proofs that these functions or predicates respect the equivalence
+relation\cite{hof:95:sm}.  Moreover, if the quotient sets are not
+definable, for instance the set of real numbers $\R$, even though $\R$
+can be seen as the quotient set of the Cauchy sequences of rational numbers $\Q$ and the equivalence
 relation that two sequences converge to zero. 
+
+Quotient types is not only a tool to implement quotients in
+mathematics. It is based on \mltt{}, therefore some notions in Type
+Theory or in programming languages are actually quotients. For example partiality monad divided by a weak
+similarity ignoring finite delays \cite{aan}, propositions divided by
+$\iff$  and the set of extensionally equal functions. Also
+set-theoretical finite sets can be implemented as the quotient of
+lists in Type Theory. 
+
+Furthermore from any given function $f \,\colon\, A \to B$, we obtain an
+equivalence relation $\sim \,\colon A \to A \to \Prop$ called $kernel$
+of $f$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. From
+this setoid we can form a quotient.
+
+Actually all types can be seen as quotient types. The types without
+specified equivalence relation can be seen as the quotient of itself
+by the trivial equivalence relation, namely the definitional equality.
 
 
 \subsection{The relation between equality and quotient types}
-As we have discussed before, we distinguished definitional equality
+As we have discussed before, we distinguish definitional equality
 and propositional equality in \itt{}. Within the setoid, the
 equivalence relation is usually propositional equality which is
 non-trivial despite the case that it is the same with definitional
@@ -275,13 +340,13 @@ base types to the ones for quotient types. Only functions respects the
 equivalence relation can be lifted, even in the extensional Type
 Theory as we will discussed later.
 
-\subsection{Literature Reviews}
+\subsection{Literature Review}
 
 % Why I mention about this article
 % More description about these articles
 % in a more comprehensive way, tell a story
 % compare and link between literatures
-In \cite{cab}, Mendler et al. has considered building new types from a
+In \cite{cab}, Mendler et al. have considered building new types from a
 given type by  a quotient operator $//$. Their work is based on an
 implementation of extensional Type Theory, NuPRL. In NuPRL, every type
 comes with its own equality relation, so the quotient operator can be
@@ -308,8 +373,8 @@ then $f$ is well-defined on the new type. We call it \emph{sound} in
  which is further discussed by Nogin.
 
 
-Hofmann in his PhD thesis \cite{hof:phd} proposed three models for
-quotient types. The first one is to constructs a setoid model for
+Hofmann proposed  in his PhD thesis \cite{hof:phd} three models for
+quotient types. The first one is a setoid model for
 quotient types. In this model all types are attached with partial
 equivalence relations, namely all types are setoids rather than
 sets. Types without specific equivalence relation can be translated as setoids with trivial reflection equality. It is similar to NuPRL. While in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt {}  extended with quotient types and a universe \cite{hof:95:con}.
@@ -335,7 +400,7 @@ aggregate types such as lists and pairs.
 
 
 Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Constructions
-with a different notion called \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. Normalised types are proper subsets of quotient types,
+with \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. Normalised types are proper subsets of quotient types,
 \[ (A, Q, \class\dotph \colon A \to Q) \Rightarrow(A, \lambda \,a \,b\to \class a = \class b)\]
 
 However not all quotient types have normal forms. Therefore it only solves part of the problem.
@@ -347,24 +412,30 @@ Hence it aims at solving problems in term rewriting systems rather than simply i
 \section{Aims and Objectives of the Project}
 
 The objective of this project is to investigate and explore the ways to
-implement quotient types inType Theory, especially in intensional one.
+implement quotient types in Type Theory, especially in intensional
+one since type checking always terminates.
 As we have seen quotients are quite useful in implementing
 mathematical objects and programming datatypes, it will be very
 helpful if we can define quotients in thoerem prover like Agda. Also
 to implement some other undefinable quotients such as Real numbers, it
 is an unvoidable issue to implement the idea of quotient.
 
-The current aim is to implement some definable quotients, trying to build a model of them and study the benefits.
-We also need to do research on the different definitions of quotients.
+The current aim is to implement some definable quotients, use the
+quotient interfaces for them and study their benefits. We also need to do
+research on the different definitions of quotients.
 
-Next we need to investigate on the undefinable quotients such as real
+Next we need to investigate undefinable quotients such as the real
 numbers and partiality monads and prove why they are undefinable. The
 key different characters between definable and undefinable quotients
 will be studied. 
 
 
 \section{Theoretical Methods}
-The work will be implemented in Agda, which is a dependent typed programming language and mainly used as a theorem prover.
+Part of our work is implemented in Agda, which is a dependent typed
+programming language and mainly used as a theorem prover.
+
+\todo{I have to write some other things here. Agda has been introduced
+before}
 It has dependent type so that we can use Curry-Howard correspondence between types and propositions. Since propositions can be represented as types, its type checker can verify the proof.
 
 In this project the work will be proved in Agda and also verified in Agda since it is a good choice of intensional Type Theory.

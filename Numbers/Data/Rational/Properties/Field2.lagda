@@ -7,7 +7,7 @@ open import Data.Nat using (suc) renaming (_*_ to _ℕ*_)
 open import Function
 open import Data.Integer' using (+_; -suc_; [_]; ⌜_⌝; +suc)
   renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_; -_ to ℤ-_)
-open import Data.Integer.Properties' as ℤ using (_*⋆_ ; _⋆*_)
+open import Data.Integer.Properties' as ℤ' using (_*⋆_ ; _⋆*_)
 open import Data.Nat.Properties+ as ℕ using (_+⋆_) renaming (_⋆*_ to _ℕ⋆*_ ; _*⋆_ to  _ℕ*⋆_)
 open import Data.Rational'
 open import Data.Rational.Properties.BasicProp
@@ -17,6 +17,18 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Symbols
 
 import Algebra.FunctionProperties as P; open P _∼_
+
+private
+  module ℤ where
+    open CommutativeRing ℤ'.commutativeRing public
+    0+z≡z = proj₁ +-identity
+    z+0≡z = proj₂ +-identity
+    z*1≡z = proj₂ *-identity
+    1*z≡z = proj₁ *-identity
+    distˡ = proj₁ distrib
+    distʳ = proj₂ distrib
+    0*z≡0 = proj₁ ℤ'.*-zero
+    z*0≡0 = proj₂ ℤ'.*-zero
 
 \end{code}
 
@@ -101,13 +113,13 @@ a * (b + c) = a * b + a * c
 dis-lem1 : ∀ a b c d → a ℤ* (b ℤ* (+ c)) ℤ* (+ d) ≡ (a ℤ* b) ℤ* (+ (d ℕ* c))
 dis-lem1  a b c d = ⟨ ℤ.*-assoc a b (+ c) ⟩ ⋆* (+ d) >≡<
   ℤ.*-assoc (a ℤ* b) (+ c) (+ d) >≡<
-  (a ℤ* b) *⋆ ( ℤ.*-comm (+ c) (+ d) >≡< ℤ.*+-simp d c )
+  (a ℤ* b) *⋆ ( ℤ.*-comm (+ c) (+ d) >≡< ℤ'.*+-simp d c )
 
 distˡ :  _*_ DistributesOverˡ _+_
 distˡ (a /suc ad) (b /suc bd) (c /suc cd) = ℤ.*-cong (ℤ.distˡ a (b ℤ* +suc cd) (c ℤ* +suc bd))
   (+_ ⋆ (ℕ.*-exchange₃ (suc ad) (suc bd) (suc ad) (suc cd) >≡<
   ℕ.*-assoc (suc ad) (suc ad) ((suc bd) ℕ* (suc cd))) >≡<
-  ⟨ ℤ.*+-simp (suc ad) ((suc ad) ℕ* ((suc bd) ℕ* (suc cd))) ⟩ ) >≡<
+  ⟨ ℤ'.*+-simp (suc ad) ((suc ad) ℕ* ((suc bd) ℕ* (suc cd))) ⟩ ) >≡<
   ⟨ ℤ.*-assoc (a ℤ* (b ℤ* +suc cd) ℤ+ a ℤ* (c ℤ* +suc bd)) (+suc ad) (+ ((suc ad) ℕ* ((suc bd) ℕ* (suc cd)))) ⟩ >≡<
   (ℤ.distʳ (+suc ad) (a ℤ* (b ℤ* +suc cd)) (a ℤ* (c ℤ* +suc bd)) >≡<  (ℤ.+-cong (dis-lem1 a b (suc cd) (suc ad))
   (dis-lem1 a c (suc bd) (suc ad)))) ⋆* (+ (suc ad ℕ* (suc bd ℕ* suc cd)))
@@ -121,16 +133,16 @@ c) right distributivity
 
 
 dis-lem2 : ∀ a b c d → (a ℤ* (+ b)) ℤ* c ℤ* (+ d) ≡ (a ℤ* c) ℤ* (+ (b ℕ* d))
-dis-lem2  a b c d = (ℤ.*-ex₂ a (+ b) c) ⋆* (+ d) >≡<
+dis-lem2  a b c d = (ℤ'.*-ex₂ a (+ b) c) ⋆* (+ d) >≡<
   ℤ.*-assoc (a ℤ* c) (+ b) (+ d) >≡<
-  (a ℤ* c) *⋆ ( ℤ.*+-simp b d )
+  (a ℤ* c) *⋆ ( ℤ'.*+-simp b d )
 
 distʳ : _*_ DistributesOverʳ _+_
 distʳ (a /suc ad) (b /suc bd) (c /suc cd) = ℤ.*-cong (ℤ.distʳ a (b ℤ* +suc cd) (c ℤ* +suc bd))
   (+_ ⋆ ((ℕ.*-comm (suc bd) (suc ad)) ℕ⋆* ((suc cd) ℕ* (suc ad)) >≡<
   ℕ.*-assoc (suc ad) (suc bd) ((suc cd) ℕ* (suc ad)) 
   >≡< (suc ad) ℕ*⋆ ⟨ ℕ.*-assoc (suc bd) (suc cd) (suc ad) ⟩ ) >≡<
-  ⟨ ℤ.*+-simp (suc ad) (((suc bd) ℕ* (suc cd)) ℕ* (suc ad)) ⟩ ) >≡<
+  ⟨ ℤ'.*+-simp (suc ad) (((suc bd) ℕ* (suc cd)) ℕ* (suc ad)) ⟩ ) >≡<
   ⟨ ℤ.*-assoc ((b ℤ* +suc cd) ℤ* a ℤ+ (c ℤ* +suc bd) ℤ* a) (+suc ad) (+ (((suc bd) ℕ* (suc cd)) ℕ* (suc ad))) ⟩ >≡<
   (ℤ.distʳ (+suc ad) ((b ℤ* +suc cd) ℤ* a) ((c ℤ* +suc bd) ℤ* a) >≡<  (ℤ.+-cong (dis-lem2 b (suc cd) a (suc ad))
   (dis-lem2 c (suc bd) a (suc ad)))) ⋆* (+ (((suc bd) ℕ* (suc cd)) ℕ* (suc ad)))
@@ -151,11 +163,11 @@ b) a = b → c = d → a * c = b * d
 
 *-cong : ∀ {a b c d} → a ∼ b → c ∼ d → a * c ∼ b * d
 *-cong {a /suc ad} {b /suc bd} {c /suc cd} {d /suc dd} a=b c=d = 
-  (a ℤ* c) *⋆ ⟨ ℤ.*+-simp (suc bd) (suc dd) ⟩ >≡<
-  ℤ.*-exchange₃ a c (+suc bd) (+suc dd) >≡<
+  (a ℤ* c) *⋆ ⟨ ℤ'.*+-simp (suc bd) (suc dd) ⟩ >≡<
+  ℤ'.*-exchange₃ a c (+suc bd) (+suc dd) >≡<
   ℤ.*-cong a=b c=d >≡<
-  ℤ.*-exchange₃ b (+suc ad) d (+suc cd) >≡<
-  (b ℤ* d) *⋆ ℤ.*+-simp (suc ad) (suc cd)
+  ℤ'.*-exchange₃ b (+suc ad) d (+suc cd) >≡<
+  (b ℤ* d) *⋆ ℤ'.*+-simp (suc ad) (suc cd)
 
 \end{code}
 
@@ -169,11 +181,11 @@ a ≠ 0 → a * 1/a = 1
 *-rightInverse : ∀ x → {p : ¬0 x} → (x * (inverse x {p})) ∼ qone
 *-rightInverse ((+ 0) /suc qd) {p} with p refl
 ... | ()
-*-rightInverse ((+ suc q) /suc qd) = ℤ.*-ex₃ (+suc q) (+suc qd) (+ 1) >≡<
-  (+ 1) *⋆ (ℤ.*+-simp (suc qd) (suc q))
-*-rightInverse (-suc q /suc qd) = ℤ.*-ex₃ (-suc q) (-suc qd) (+ 1) >≡<
-  (+ 1) *⋆ (ℤ.-*cong (-suc qd) (-suc q) >≡<
-  ℤ.*+-simp (suc qd) (suc q))
+*-rightInverse ((+ suc q) /suc qd) = ℤ'.*-ex₃ (+suc q) (+suc qd) (+ 1) >≡<
+  (+ 1) *⋆ (ℤ'.*+-simp (suc qd) (suc q))
+*-rightInverse (-suc q /suc qd) = ℤ'.*-ex₃ (-suc q) (-suc qd) (+ 1) >≡<
+  (+ 1) *⋆ (ℤ'.-*cong (-suc qd) (-suc q) >≡<
+  ℤ'.*+-simp (suc qd) (suc q))
 
 \end{code}
 

@@ -14,13 +14,13 @@ open import Data.Integer.Setoid using (ℤ₀; _,_ ; _∼_)
   renaming (_+_ to _ℤ₀+_; _◃_ to _ℤ₀◃_; _*_ to _ℤ₀*_; -_ to ℤ₀-_
   ; _≤_ to _ℤ₀≤_; ¬0 to ℤ₀¬0)
 open import Data.Integer.Setoid.Properties as ℤ₀
-  using (zrefl ; zsym ; _>∼<_ ; ℤ-Setoid; refl') 
+  using (zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence; refl') 
   renaming (_≟_ to _ℤ₀≟_ ; _≤?_ to _ℤ₀≤?_)
 open import Data.Nat.Properties+ as ℕ using (_+suc_≢0_)
 
 open import Quotient
 
-open import Relation.Binary
+open import Relation.Binary hiding (Setoid)
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary.Core
 open import Symbols
@@ -120,41 +120,37 @@ c) The quotient definition for ℤ
 
 \begin{code}
 
-ℤ-QuSig : QuSig ℤ-Setoid
-ℤ-QuSig = record
+
+
+ℤ-Setoid : Setoid
+ℤ-Setoid = record
+  { Carrier       = ℤ₀
+  ; _≈_           = _∼_
+  ; isEquivalence = _∼_isEquivalence
+  }
+
+ℤ-PreQu : PreQu ℤ-Setoid
+ℤ-PreQu = record
   { Q       = ℤ
   ; [_]     = [_]
   ; sound   = sound
   }
 
-ℤ-Nf : Nf ℤ-QuSig
-ℤ-Nf = record
+ℤ-QuD : QuD ℤ-PreQu
+ℤ-QuD = record
   { emb       = ⌜_⌝
-  ; compl     = λ z → compl
+  ; complete  = λ z → compl
   ; stable    = λ z → stable
   }
 
-ℤ-Qu = nf2qu ℤ-Nf
+ℤ-Qu = QuD→Qu ℤ-QuD
 
-ℤ-QuE = nf2quE {_} {_} {ℤ-Qu} ℤ-Nf
+ℤ-QuE = QuD→QuE {_} {_} {ℤ-Qu} ℤ-QuD
 
-ℤ-QuH = Nf2QuH ℤ-Nf
+ℤ-QuH = QuD→QuH ℤ-QuD
 
-complete : ∀ {a b} → [ a ] ≡ [ b ] → a ∼ b
-complete = QuE.exactness ℤ-QuE
-
-lift : { B : ℤ → Set } →
-       (f : (a : ℤ₀) → (B [ a ])) →
-       ((a a' : ℤ₀) → (p : a ∼ a') →
-       subst B (sound p)  (f a)  ≡  f a') →
-       (c : ℤ) → B c
-lift {B} = Qu.lift ℤ-Qu {B}
-
-liftH : { B : Set } →
-        (f : ℤ₀ → B) →
-        ((a a' : ℤ₀) → (a ∼ a') →  (f a)  ≡  f a') →
-        ℤ → B
-liftH = QuH.liftH ℤ-QuH
+exact : ∀ {a b} → [ a ] ≡ [ b ] → a ∼ b
+exact = QuE.exact ℤ-QuE
 
 \end{code}
 
@@ -198,24 +194,19 @@ Helpful functions for the proving the properties of rational numbers
 
 \begin{code}
 
+import Quotient.Lift as L
+open  L ℤ-QuD
 
-[-out]     : ∀ a → [ ℤ₀- a ] ≡ - [ a ]
-[-out] a = sound {ℤ₀- a} (ℤ₀.⁻¹-cong compl')
+-β : ∀ a → - [ a ] ≡ [ ℤ₀- a ]
+-β = liftOp1-β (ℤ₀-_ , ℤ₀.⁻¹-cong)
 
 -inv : ∀ {z} → - - z ≡ z
 -inv {+ 0} = refl
 -inv {+ nsuc n} = refl
 -inv { -suc n} = refl
 
-{-
-liftTest : ∀ a op₀ → (P : (A : Set) → (A → A → Set) → (Op 1 A) → A → Set) → P ℤ₀ _∼_ op₀ ⌜ a ⌝ → P ℤ _≡_ (liftOp 1 op₀) a
-liftTest a op₀ P from = {!a!}
-
--inv {z} = liftTest z ℤ₀-_ (λ A _∼_ op x → op (op x) ∼ x) ℤ₀.-inv
--}-- how to transform (- a) * b to (ℤ₀-_ ⌜ a ⌝) ℤ₀*  ⌜ b ⌝
-
 -out : ∀ a b → (- a) * b ≡ - (a * b) 
--out a b = sound (ℤ₀.*-cong (compl {ℤ₀- ⌜ a ⌝ }) (zrefl {⌜ b ⌝}) >∼< ℤ₀.-out ⌜ a ⌝ ⌜ b ⌝) >≡< [-out] (⌜ a ⌝ ℤ₀* ⌜ b ⌝)
+-out a b = sound (ℤ₀.*-cong (compl {ℤ₀- ⌜ a ⌝ }) (zrefl {⌜ b ⌝}) >∼< ℤ₀.-out ⌜ a ⌝ ⌜ b ⌝) >≡< ⟨ -β (⌜ a ⌝ ℤ₀* ⌜ b ⌝) ⟩
 
 \end{code}
 

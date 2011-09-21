@@ -53,7 +53,7 @@ c) + identity
 
 2. + Commutativity
 
-a + b = b + a
+a + b ~ b + a
 
 \begin{code}
 
@@ -64,7 +64,7 @@ a + b = b + a
 
 3. + Associativity
 
-(a + b) + c = a + (b + c)
+(a + b) + c ~ a + (b + c)
 
 \begin{code}
 
@@ -76,17 +76,23 @@ a + b = b + a
 
 4. (_+_, -_, 0) Inverse
 
-a) x + (- x) = 0
+a) x + (- x) ~ 0
 
 \begin{code}
 
-+-rightInverse : RightInverse (0 , 0) -_ _+_
-+-rightInverse (x+ , x-) = ℕ.+-comm (x+ ℕ+ x-) 0 >≡<
++neg : ∀ x y → x + (- y) ∼ x - y
++neg (x+ , x-) (y+ , y-) = refl
+
+-inverse : ∀ x → x - x ∼ (0 , 0)
+-inverse (x+ , x-) = ℕ.+-comm (x+ ℕ+ x-) 0 >≡<
   ℕ.+-comm x+ x-
+
++-rightInverse : RightInverse (0 , 0) -_ _+_
++-rightInverse (x+ , x-) = -inverse (x+ , x-)
 
 \end{code}
 
-b) (- x) + x = 0
+b) (- x) + x ~ 0
 
 \begin{code}
 
@@ -100,7 +106,7 @@ b) (- x) + x = 0
 
 5. * zero
 
-a) 0 * a = 0
+a) 0 * a ~ 0
 
 \begin{code}
 
@@ -109,7 +115,7 @@ a) 0 * a = 0
 
 \end{code}
 
-b) a * 0 = 0
+b) a * 0 ~ 0
 
 \begin{code}
 
@@ -124,7 +130,7 @@ z*0~0 (x+ , x-) =  ℕ.n+0≡n
 6. * identity
 
 a) left identity
-1 * a = a
+1 * a ~ a
 
 \begin{code}
 
@@ -134,7 +140,7 @@ a) left identity
 \end{code}
 
 b) right identity
-a * 1 = a
+a * 1 ~ a
 
 \begin{code}
 
@@ -150,7 +156,7 @@ z*1~z (x+ , x-) =
 
 7. * commutativity
 
-a * b = b * a
+a * b ~ b * a
 
 \begin{code}
 
@@ -164,7 +170,7 @@ a * b = b * a
 
 8. * assocciativity
 
-(a * b) * c = a * (b * c)
+(a * b) * c ~ a * (b * c)
 
 \begin{code}
 
@@ -179,7 +185,7 @@ a * b = b * a
 
 a) left distributivity
 
-a * (b + c) = a * b + a * c
+a * (b + c) ~ a * b + a * c
 
 \begin{code}
 
@@ -192,7 +198,7 @@ distˡ (a , b) (c , d) (e , f) =
 
 b) right distributivity
 
-(b + c) * a = b * a + c * a
+(b + c) * a ~ b * a + c * a
 
 \begin{code}
 
@@ -208,7 +214,7 @@ distrib-*-+ = distˡ , distʳ
 
 10. + preserves ∼
 
-∀ a b c d → a = b → c = d → a + c = b + d
+∀ a b c d → a ~ b → c ~ d → a + c ~ b + d
 
 \begin{code}
 
@@ -222,7 +228,7 @@ distrib-*-+ = distˡ , distʳ
 
 11. -_ preserves ∼
 
-∀ a b → a = b → - a = - b
+∀ a b → a ~ b → - a ~ - b
 
 \begin{code}
 
@@ -234,7 +240,7 @@ distrib-*-+ = distˡ , distʳ
 
 12. * preserves ∼
 
-∀ a b c d → a = b → c = d → a * c = b * d
+∀ a b c d → a ~ b → c ~ d → a * c ~ b * d
 
 \begin{code}
 

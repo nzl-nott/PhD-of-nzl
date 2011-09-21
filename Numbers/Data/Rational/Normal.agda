@@ -4,7 +4,8 @@ open import Data.Rational as Rt
 open import Data.Rational' as Rt₀ hiding (-_ ; _÷_ ; ∣_∣)
 
 open import Data.Integer as ℤ using (∣_∣) renaming (-_ to ℤ-_)
-open import Data.Integer' as ℤ' hiding (-_ ; suc ; [_] ; ∣_∣; _◃_ ; pred) renaming (p to ∣_∣')
+open import Data.Integer' as ℤ' hiding (-_ ; suc ; [_] ; ∣_∣; _◃_ ; pred ; ⌜_⌝) renaming (p to ∣_∣')
+import Data.Integer.Properties' as ℤ'
 open import Data.Nat as ℕ renaming (_+_ to _ℕ+_ ; _*_ to _ℕ*_)
 open import Data.Nat.GCD
 open import Data.Nat.Divisibility using (_∣_ ; 1∣_ ; divides)
@@ -13,8 +14,8 @@ open import Data.Unit
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary.Decidable
 
-norlem1 : ∀ x y di → y ≢ 0 → C.GCD′ x y di → ℚ
-norlem1 .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) = record { numerator = numr
+GCD′→ℚ : ∀ x y di → y ≢ 0 → C.GCD′ x y di → ℚ
+GCD′→ℚ .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) = record { numerator = numr
           ; denominator-1 = pred q₂
           ; isCoprime = iscoprime }
    where
@@ -79,13 +80,19 @@ norlem1 .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) = record { 
 [_] : ℚ₀ → ℚ
 [ (+ 0) /suc d ] = ℤ.+_ 0 ÷ 1
 [ (+ (suc n)) /suc d ] with gcd (suc n) (suc d)
-[ (+ suc n) /suc d ] | di , g = norlem1 (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
+[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
 
 [ (-suc n) /suc d ] with gcd (suc n) (suc d)
-... | di , g = - norlem1 (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
+... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
 
 
+ℤcon : ℤ.ℤ → ℤ
+ℤcon (ℤ.-[1+_] n) = -suc n
+ℤcon (ℤ.+_ n) = + n
+
+⌜_⌝ : ℚ → ℚ₀
+⌜ x ⌝ = (ℤcon (ℚ.numerator x)) /suc (ℚ.denominator-1 x)
 
 
-
-
+sound : ∀ {a b : ℚ₀} → a ∼ b → [ a ] ≡ [ b ]
+sound {n /suc d} {n' /suc d'} eq = {!!}

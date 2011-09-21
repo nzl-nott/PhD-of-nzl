@@ -9,7 +9,7 @@ open import Algebra.Structures
 open import Function
 open import Data.Product
 open import Data.Integer'
-open import Data.Integer.Setoid using () renaming (_+_ to _ℤ₀+_ ; -_ to ℤ₀-_; _*_ to _ℤ₀*_)
+open import Data.Integer.Setoid using (ℤ₀ ; _,_ ; _∼_) renaming (_+_ to _ℤ₀+_ ; -_ to ℤ₀-_; _*_ to _ℤ₀*_)
 open import Data.Integer.Properties.BasicProp
 open import Data.Integer.Setoid.Properties as ℤ₀ using (zrefl ; zsym ; _>∼<_)
 import Data.Nat.Properties+ as ℕ
@@ -26,36 +26,26 @@ open import Symbols
 a) zero is left neutral (left identity) for addition
 0 + z = z
 
-\begin{code}
-
-0+z≡z   : LeftIdentity (+ 0) _+_
-0+z≡z (+ n)    = refl
-0+z≡z (-suc n) = refl
-
-\end{code}
-
 b) zero is right neutral (right identity) for addition
 z + 0 = z
 
 \begin{code}
 
-z+0≡z : RightIdentity (+ 0) _+_
-z+0≡z (+ n)    = +_ ⋆ ℕ.n+0≡n
-z+0≡z (-suc n) = -suc_ ⋆ ℕ.n+0≡n
+import Quotient.Lift as L
+open  L ℤ-QuD
 
-+-identity : Identity (+ 0) _+_
-+-identity = 0+z≡z , z+0≡z
-
+liftId : ∀ {op : Op 2 ℤ₀}(e : ℤ) → P.Identity _∼_ ⌜ e ⌝ op → Identity e (liftOp 2 op)
+liftId {op} e (idl , idr) = (λ x → lift21' {op} e x x (idl ⌜ x ⌝)) , (λ x → lift21' {op} x e x (idr ⌜ x ⌝))
 \end{code}
 
 2. + Commutativity
 
-m * n = n * m
+m + n = n + m
 
 \begin{code}
 
-+-comm : Commutative _+_
-+-comm m n = sound $ ℤ₀.+-comm ⌜ m ⌝ ⌜ n ⌝
+liftComm : ∀ {op : Op 2 ℤ₀} → P.Commutative _∼_ op → Commutative (liftOp 2 op)
+liftComm {op} comm x y = sound $ comm ⌜ x ⌝ ⌜ y ⌝
 
 \end{code}
 
@@ -64,8 +54,10 @@ m * n = n * m
 (a + b) + c = a + (b + c)
 \begin{code}
 
-+-assoc : Associative _+_
-+-assoc a b c = sound $ ℤ₀.+-cong (compl {⌜ a ⌝ ℤ₀+ ⌜ b ⌝}) zrefl >∼< ℤ₀.+-assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong zrefl compl'
+
+liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) → P.Associative _∼_ op → Associative (liftOp2safe op cong)
+liftAssoc {op} cong assoc a b c = sound $ cong (compl {op ⌜ a ⌝ ⌜ b ⌝}) zrefl >∼< assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< cong zrefl compl'
+
 \end{code}
 
 4. (_+_, -_, 0) Inverse
@@ -75,8 +67,11 @@ x + (- x) = 0
 
 \begin{code}
 
++neg : ∀ x y → x + (- y) ≡ x - y
++neg x y = sound $ ℤ₀.+-cong (zrefl {⌜ x ⌝}) compl >∼< ℤ₀.+neg ⌜ x ⌝ ⌜ y ⌝
+
 +-rightInverse : RightInverse (+ 0) -_ _+_
-+-rightInverse z = sound (ℤ₀.+-cong (zrefl {⌜ z ⌝}) compl >∼< ℤ₀.+-rightInverse ⌜ z ⌝)
++-rightInverse z = +neg z z >≡< sound (ℤ₀.-inverse ⌜ z ⌝)
 
 \end{code}
 
@@ -86,73 +81,37 @@ b) left inverse
 \begin{code}
 
 +-leftInverse : LeftInverse (+ 0) -_ _+_
-+-leftInverse z = sound (ℤ₀.+-cong (compl {ℤ₀- ⌜ z ⌝}) (zrefl {⌜ z ⌝}) >∼< ℤ₀.+-leftInverse ⌜ z ⌝)
++-leftInverse z = cong (λ x → - z + x) ⟨ -inv {z} ⟩ >≡< +-rightInverse (- z)
 
 +-inverse : Inverse (+ 0) -_ _+_
 +-inverse = +-leftInverse , +-rightInverse
 
 \end{code}
 
+
 5. * Zero
 
 a) 0 * z = 0
-
-\begin{code}
-
-0*z≡0 : LeftZero (+ 0) _*_
-0*z≡0 (+ n)    = refl
-0*z≡0 (-suc n) = refl
-
-\end{code}
 
 b) z * 0 = 0
 
 \begin{code}
 
-z*0≡0 : RightZero (+ 0) _*_
-z*0≡0 z = sound (ℤ₀.z*0~0 ⌜ z ⌝)
-
 *-zero : Zero  (+ 0) _*_
-*-zero = 0*z≡0 , z*0≡0
-
+*-zero = (λ x → sound (ℤ₀.0*z~0 ⌜ x ⌝)) , (λ x → sound (ℤ₀.z*0~0 ⌜ x ⌝))
+-- 
 \end{code}
 
 6. * Identity
-
-\begin{code}
-
-1*z≡z : LeftIdentity (+ 1) _*_
-1*z≡z z = sound (ℤ₀.1*z~z ⌜ z ⌝) >≡< stable 
-
-z*1≡z : RightIdentity (+ 1) _*_
-z*1≡z z = sound (ℤ₀.z*1~z ⌜ z ⌝) >≡< stable
-
-*-identity : Identity (+ 1) _*_
-*-identity = 1*z≡z , z*1≡z
-
-\end{code}
 
 7. * Commutativity
 
 a * b = b * a
 
-\begin{code}
-
-*-comm :  Commutative _*_
-*-comm m n = sound (ℤ₀.*-comm ⌜ m ⌝ ⌜ n ⌝)
-
-\end{code}
-
 8. * Assocciativity
 
 (a * b) * c = a * (b * c)
 
-\begin{code}
-
-*-assoc : Associative _*_
-*-assoc a b c = sound $ ℤ₀.*-cong (compl {⌜ a ⌝ ℤ₀* ⌜ b ⌝ }) zrefl >∼< ℤ₀.*-assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.*-cong zrefl compl'
-
-\end{code}
 
 9. * + Distributivity
 
@@ -184,41 +143,31 @@ distrib-*-+ = distˡ , distʳ
 
 \begin{code}
 
-+-cong : _+_ Preserves₂ _≡_ ⟶ _≡_ ⟶ _≡_
-+-cong = cong₂ _+_
-
-*-cong : _*_ Preserves₂ _≡_ ⟶ _≡_ ⟶ _≡_
-*-cong = cong₂ _*_
+liftMonoid : {op : Op 2 ℤ₀}{e : ℤ}(cong : Cong2 op) → IsMonoid _∼_ op  ⌜ e ⌝ → IsMonoid _≡_ (liftOp 2 op) e
+liftMonoid {op} {e} cong im = record 
+  { isSemigroup = record 
+    { isEquivalence = isEquivalence
+    ; assoc = liftAssoc cong (IsMonoid.assoc im)
+    ; ∙-cong = cong₂ (liftOp 2 op)
+    }
+  ; identity = liftId {op} e (IsMonoid.identity im)
+  }
 
 isCommutativeRing : IsCommutativeRing _≡_ _+_ _*_ -_ (+ 0) (+ 1)
 isCommutativeRing = record
   { isRing = record
     { +-isAbelianGroup = record
       { isGroup = record
-        { isMonoid = record
-          { isSemigroup = record
-            { isEquivalence = isEquivalence
-            ; assoc         = +-assoc
-            ; ∙-cong        = cong₂ _+_
-            }
-          ; identity = +-identity
-          }
+        { isMonoid = liftMonoid (ℤ₀.+-cong) (IsCommutativeRing.+-isMonoid ℤ₀.isCommutativeRing)
         ; inverse = +-inverse
         ; ⁻¹-cong = cong -_
         }
-        ; comm = +-comm
+        ; comm = liftComm ℤ₀.+-comm
      }
-    ; *-isMonoid = record
-        { isSemigroup = record
-          { isEquivalence = isEquivalence
-          ; assoc         = *-assoc
-          ; ∙-cong        = cong₂ _*_
-          }
-        ; identity = *-identity
-        }
+    ; *-isMonoid = liftMonoid (ℤ₀.*-cong) (IsCommutativeRing.*-isMonoid ℤ₀.isCommutativeRing)
     ; distrib = distrib-*-+
     }
-  ; *-comm = *-comm
+  ; *-comm = liftComm ℤ₀.*-comm
   }
 
 commutativeRing : CommutativeRing _ _
@@ -230,6 +179,7 @@ commutativeRing = record
   ; 1#                    = (+ 1)
   ; isCommutativeRing = isCommutativeRing
   }
+
 
 \end{code}
 

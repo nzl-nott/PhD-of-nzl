@@ -1,17 +1,20 @@
 \begin{code}
 module Data.Rational.Properties.BasicProp where
 
+open import Algebra
 open import Function
 open import Data.Nat using (suc) renaming (_+_ to _ℕ+_ ; _*_ to _ℕ*_)
 open import Data.Integer.Setoid.Properties as ℤ₀ using () renaming (_>≤<_ to _ℤ₀>≤<_) 
 open import Data.Integer' using (+_ ; -suc_; [_]; ⌜_⌝; +suc) renaming (_+_ to _ℤ+_ ; _*_ to _ℤ*_ ; _≤_ to _ℤ≤_)
-open import Data.Integer.Properties' as ℤ using (_⋆*_; _*⋆_) renaming (_≟_ to _ℤ≟_; _≤?_ to _ℤ≤?_ )
+open import Data.Integer.Properties' as ℤ using (_⋆*_; _*⋆_; commutativeRing) renaming (_≟_ to _ℤ≟_; _≤?_ to _ℤ≤?_ )
 open import Data.Rational'
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary.Core
 
 open import Symbols
+
+open CommutativeRing commutativeRing using (*-cong; *-assoc)
 
 infixl 40 _>≤<_
 
@@ -74,7 +77,7 @@ qtrans {a /suc ad} {.(+ 0) /suc bd} {c /suc cd} a=b b=c | yes refl =
 qtrans {a /suc ad} {b /suc bd} {c /suc cd} a=b b=c | no ¬p =
   ℤ.l-integrity (b ℤ* (+ suc bd)) (ℤ.nz* b (+ suc bd) ¬p (λ ())) $ 
   ℤ.*-exchange₁ b (+ suc bd) a (+ suc cd) >≡< 
-  (ℤ.*-cong b=c a=b) >≡<
+  (*-cong b=c a=b) >≡<
   ℤ.*-exchange₂ c (+ suc bd) b (+ suc ad)
 
 \end{code}
@@ -256,7 +259,7 @@ f) same denominator
 
 combine : ∀ a b ad bd → ad ≡ bd → (a /suc ad) + (b /suc bd) ∼ (a ℤ+ b) /suc ad
 combine a b ad .ad refl = ⟨ ℤ.distʳ (+suc ad) a b ⟩ ⋆* +suc ad >≡< 
-  (ℤ.*-assoc (a ℤ+ b) (+suc ad) (+suc ad) >≡<
+  (*-assoc (a ℤ+ b) (+suc ad) (+suc ad) >≡<
   (a ℤ+ b) *⋆ (ℤ.*+-simp (suc ad) (suc ad)))
 
 \end{code}

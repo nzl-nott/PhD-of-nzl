@@ -13,7 +13,7 @@ open import Data.Nat as ℕ using (ℕ)
 open import Data.Sign as Sign using (Sign)
   renaming (_*_ to _S*_)
 open import Data.Product
-open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _,_)
+open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _∼_ ; _,_)
   renaming (_+_ to _ℤ₀+_ ; _-_ to _ℤ₀-_ ; _*_ to _ℤ₀*_ ;
   _≤_ to _ℤ₀≤_; _<_ to _ℤ₀<_)
 open import Relation.Binary.Core
@@ -168,11 +168,25 @@ liftOp : ∀ n → Op n ℤ₀ → Op n ℤ
 liftOp 0 op = [ op ]
 liftOp (ℕ.suc n) op = λ x → liftOp n (op ⌜ x ⌝)
 
-⟦_⟧      : Op₁ ℤ₀ → Op₁ ℤ
-⟦ f ⟧ = λ n → [ f ⌜ n ⌝ ]
+\end{code}
 
-⟦_⟧₂      : Op₂ ℤ₀ → Op₂ ℤ
-⟦ _∼_ ⟧₂ = λ m n → [ ⌜ m ⌝ ∼ ⌜ n ⌝ ]
+However this liftOp is unsafe
+
+\begin{code} 
+
+Cong1 : Op 1 ℤ₀ → Set
+Cong1 f = ∀ {a b} → a ∼ b → f a ∼ f b
+
+Cong2 : Op 2 ℤ₀ → Set
+Cong2 op = ∀ {a b c d} → a ∼ b → c ∼ d → op a c ∼ op b d
+
+liftOp1safe : (f : Op 1 ℤ₀) → Cong1 f → Op₁ ℤ
+liftOp1safe f cong = λ n → [ f ⌜ n ⌝ ]
+
+liftOp2safe      : (op : Op 2 ℤ₀) → Cong2 op → Op₂ ℤ
+liftOp2safe _op_ cong = λ m n → [ ⌜ m ⌝ op ⌜ n ⌝ ]
+
+
 
 \end{code}
 

@@ -1,5 +1,8 @@
 module nuo3 where
 
+open import Data.Nat
+open import Relation.Nullary
+
 data Id (A : Set) : A → A → Set where
   refl : (a : A) → Id A a a
 
@@ -78,6 +81,18 @@ trans A a b c p q = {!!}
 
 resp : (A B : Set) → (f : A → B) → (a b : A) → Id A a b → Id B (f a) (f b)
 resp A B f a b p = {!!}
+
+postulate
+  Ext : {A : Set}{B : A → Set}{f g : (x : A) → B x}
+        → ((x : A) → Id (B x) (f x) (g x)) 
+        → Id ((x : A) → B x) f g
+
+
+irr : ℕ
+irr = J (ℕ → ℕ) (λ a b x → ℕ) (λ a → 0) (λ x → x) (λ x → x) (Ext refl)
+
+irr-prf : ∀ n → ¬ Id ℕ irr n
+irr-prf n eqt = {!eqt!}
 
 {-
 postulate

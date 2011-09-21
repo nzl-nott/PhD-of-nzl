@@ -37,7 +37,7 @@ private
    Converge : Seq ℚ₀ → Set
    Converge f = ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ m n → (lb < m) → (lb < n) →  ∣ (f m) - (f n) ∣ <' ε
 -}
-   record ℝ : Set where
+   record ℝ₀ : Set where
      constructor f:_p:_
      field
        f : Seq ℚ₀
@@ -46,9 +46,9 @@ private
    _Diff_on_ : Seq ℚ₀ → Seq ℚ₀ → Seq ℚ₀*
    f Diff g on m = ∣ f m - g m ∣
 
-   _~_ : Rel ℝ zero
+   _~_ : Rel ℝ₀ zero
    (f: f p: p) ~ (f: f' p: p') =  
-       ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ m → (lb < m) → f Diff f' on m <' ε
+       ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ i → (lb < i) → f Diff f' on i <' ε
 
 open Definition public
 
@@ -78,7 +78,7 @@ private
     lem1 : ∀ a b c d → ∣ (a + b) - (c + d) ∣ ≡ ∣ (a - c) + (b - d) ∣
     lem1 a b c d = cong ∣_∣ {!!}
 
-prf+ : ∀ a b → Converge (liftSQ ℚ₀._+_ (ℝ.f a) (ℝ.f b))
+prf+ : ∀ a b → Converge (liftSQ ℚ₀._+_ (ℝ₀.f a) (ℝ₀.f b))
 prf+ (f: f p: p) (f: f' p: p') ep with (p (ep /2)) | (p' (ep /2))
 ... | lb1 , y1 | lb2 , y2 with inspect (ℤ₀.ℕGE lb1 lb2)
 ... | true with-≡ eq = lb1 , λ m n → {!!}
@@ -88,16 +88,16 @@ prf+ (f: f p: p) (f: f' p: p') ep with (p (ep /2)) | (p' (ep /2))
 ... | false with-≡ eq = lb2 , {!!}
 
 
-_+_ : Op₂ ℝ
-a + b = f: liftSQ ℚ₀._+_ (ℝ.f a) (ℝ.f b) p: prf+ a b
+_+_ : Op₂ ℝ₀
+a + b = f: liftSQ ℚ₀._+_ (ℝ₀.f a) (ℝ₀.f b) p: prf+ a b
 
 
-prf* : ∀ a b → Converge (liftSQ ℚ₀._*_ (ℝ.f a) (ℝ.f b))
+prf* : ∀ a b → Converge (liftSQ ℚ₀._*_ (ℝ₀.f a) (ℝ₀.f b))
 prf* = {!!}
 
 
-_*_ : Op₂ ℝ
-a * b = f: liftSQ ℚ₀._*_ (ℝ.f a) (ℝ.f b) p: prf* a b
+_*_ : Op₂ ℝ₀
+a * b = f: liftSQ ℚ₀._*_ (ℝ₀.f a) (ℝ₀.f b) p: prf* a b
 
 \end{code}
 

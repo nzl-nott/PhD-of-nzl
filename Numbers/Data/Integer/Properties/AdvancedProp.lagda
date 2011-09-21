@@ -17,6 +17,8 @@ open import Data.Nat.Properties+ as ℕ using (_+=_; _+⋆_)
 open import Relation.Binary.PropositionalEquality
 open import Symbols
 
+open CommutativeRing commutativeRing hiding (_*_ ; refl; -_)
+
 infixr 42  _*⋆_
 infixr 42  _⋆*_
 
@@ -27,7 +29,7 @@ if m * n ∼ 0 and m is not 0 then n must be 0
 \begin{code}
 
 solve0 : ∀ m {n} → (p : ¬0 m) → m * n ≡ + 0 → n ≡ + 0
-solve0 m p eqt = ⌞ ℤ₀.solve0 ⌜ m ⌝ (⌜nz⌝ p) (complete eqt) ⌟
+solve0 m p eqt = ⌞ ℤ₀.solve0 ⌜ m ⌝ (⌜nz⌝ p) (exact eqt) ⌟
 
 solve0' : ∀ m {n} → (p : ¬0 m) → n * m ≡ + 0 → n ≡ + 0
 solve0' m {n} p eqt = solve0 m p (*-comm m n >≡< eqt)
@@ -40,7 +42,7 @@ integrity of ℤ
 \begin{code}
 
 l-integrity : ∀ {m n} a → (p : ¬0 a) → a * m ≡ a * n → m ≡ n
-l-integrity a p eqt = ⌞ ℤ₀.integrity ⌜ a ⌝ (⌜nz⌝ p) (complete eqt)  ⌟
+l-integrity a p eqt = ⌞ ℤ₀.integrity ⌜ a ⌝ (⌜nz⌝ p) (exact eqt)  ⌟
 
 r-integrity : ∀ {m n} a → (p : ¬0 a) → m * a ≡ n * a → m ≡ n
 r-integrity {m} {n} a p eqt = l-integrity a p $

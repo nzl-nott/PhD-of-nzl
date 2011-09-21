@@ -1498,7 +1498,15 @@ properties contained in the quotient structure is very helpful in
 lifting functions and propositions for setoids to quotient types. This
 approach provides us an alternative choice to define functions and prove propositions. It is probably simpler to define functions on setoids and we can reuses proved theorems for the setoids in many cases. However it is a little complicated to build the quotients and is only applicable to quotients which are definable in \itt{}.
 
-In the next phase we will focus on the undefinable quotients and extending \itt{} with axiomatic quotient types. To implement undefinable quotients, a new type former with the essential introduction and elimination rules is unavoidable. Although the quotient structures only works for definable quotients, it can be a good guidance to axiomatise the quotient types. We can extend the work in \cite{alt:99} and find an approach to extend \itt{} without losing nice features such as termination and decidable type checking. Another possible task is to investigate the conservativity of \itt{} with quotient types over \ett{}.
+In the next phase we will focus on the undefinable quotients and
+extending \itt{} with axiomatic quotient types. To implement
+undefinable quotients, a new type former with the essential
+introduction and elimination rules is unavoidable. Although the
+quotient structures only works for definable quotients, it can be a
+good guidance to axiomatise the quotient types. We can extend the work
+in \cite{alt:99} and find an approach to extend \itt{} without losing
+nice features such as termination and decidable type checking. Another
+future work could be to give a detailed proof of the conservativity of \itt{} with quotient types over \ett{}.
 
 %future : something on equality, complete preliminary work in Agda
 %Extend without losing nice features of itt, termination, decidable type checking

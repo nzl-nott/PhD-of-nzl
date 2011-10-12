@@ -43,6 +43,7 @@ private
        f : Seq ℚ₀
        p : Converge f
 
+
    _Diff_on_ : Seq ℚ₀ → Seq ℚ₀ → Seq ℚ₀*
    f Diff g on m = ∣ f m - g m ∣
 

@@ -1,0 +1,78 @@
+%include uni_greek.fmt
+
+%format         =  \
+%format         =  "\!\rightarrow\!"
+%format         =  "\!\leftarrow\!"
+%format         =  "\!\Rightarrow\!"
+%format         =  "\!\Leftarrow\!"
+%format         =  "\leadsto"
+%format         =  "\!\circ\!"
+%format         =  "\!\times\!"
+%format         =  "\!\uplus\!"
+%format         =  "\!\equiv\!"
+%format         =  "\!\leqslant\!"
+%format         =  "\!\geqslant\!"
+%format         =  "\!\approx\!"
+%format         =  "\doteq"
+%format         =  "\!\parallel\!"
+%format         =  "\!\wedge\!"
+%format         =  "\!\vee\!"
+%format         =  "\!\sqcap\!"
+%format         =  "\!\sqcup\!"
+%format         =  "\neg"
+%format         =  "\!\in\!"
+%format         =  "\!::\!"
+%format         =  "\bot"
+%format         =  "\top"
+%format         =  "\mathbb{N}"
+%format         =  "\mathbb{Z}"
+%format         =  "\mathbb{R}"
+%format         =  "\forall"
+%format         =  "\exists"
+%format         =  "\infty"
+%format         =  "\langle"
+%format         =  "\rangle"
+
+%format         =  "1"
+
+%format          =   "^{+}"
+%format Time      =  "Time^{+}"
+%format EventTime =  "EventTime^{+}"
+%format splice    =  "splice^{+}"
+
+%format ChangelessSV     = "ChangelessSV^{r}"
+%format Changeless       = "Changeless^{r}"
+%format Source           = "Source^{r}"
+%format ChangeDep        = "ChangeDep^{r}"
+%format ChangePrp        = "ChangePrp^{r}"
+%format ChangeExec       = "ChangeExec^{r}"
+%format UnchangingOver   = "UnchangingOver^{r}"
+
+%format t       =   t
+%format a       =   a
+%format b       =   b
+%format s       =   s
+%format t       =   t
+%format as      =   as
+%format bs      =   bs
+%format ts      =   ts
+
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format __    = _  _
+%format _     =  _
+
+%format :     =  ":"
+%format _:_   = _  ":\!" _

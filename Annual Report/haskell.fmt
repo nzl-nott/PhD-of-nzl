@@ -1,0 +1,47 @@
+%include general.fmt
+
+%format family   = "\keyword{family}"
+%format with     = "\keyword{with}"
+
+
+%format Nothing  = "\constructor{Nothing}"
+%format Just     = "\constructor{Just}"
+%format True     = "\constructor{True}"
+%format False    = "\constructor{False}"
+
+
+%format SFC      = "\constructor{SF}"
+%format DecC     = "\constructor{Dec}"
+%format CauC     = "\constructor{Cau}"
+
+%format SFId     = "\constructor{SFId}"
+%format Fst      = "\constructor{Fst}"
+%format Snd      = "\constructor{Snd}"
+%format Prim     = "\constructor{Prim}"
+%format CPrim    = "\constructor{CPrim}"
+%format DPrim    = "\constructor{DPrim}"
+%format NodeC    = "\constructor{Node}"
+%format CNode    = "\constructor{CNode}"
+%format DNode    = "\constructor{DNode}"
+%format Seq      = "\constructor{Seq}"
+%format Fan      = "\constructor{Fan}"
+%format Switch   = "\constructor{Switch}"
+%format ARouter  = "\constructor{ARouter}"
+%format Freeze   = "\constructor{Freeze}"
+%format Loop     = "\constructor{Loop}"
+%format Weaken   = "\constructor{Weaken}"
+
+%format Prim'
+%format Seq'
+%format Fan'
+%format Switch'
+%format ARouter'
+%format Freeze'
+%format Loop'
+%format Weaken'
+
+%format :&: = "\wedge"
+%format :|: = "\vee"
+
+%format &&  = "\;\&\!\!\&\;"
+%format *   = "\;*\;"

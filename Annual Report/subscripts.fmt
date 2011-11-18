@@ -1,0 +1,334 @@
+%format a0
+%format a = a0
+%format a1
+%format a = a1
+%format a2
+%format a = a2
+
+%format as0
+%format as = as0
+%format as1
+%format as = as1
+%format as2
+%format as = as2
+
+%format b0
+%format b = b0
+%format b1
+%format b = b1
+%format b2
+%format b = b2
+
+%format bs0
+%format bs = bs0
+%format bs1
+%format bs = bs1
+%format bs2
+%format bs = bs2
+
+%format beh1
+%format beh = beh1
+%format beh2
+%format beh = beh2
+
+%format c1
+%format c = c1
+%format c2
+%format c = c2
+
+%format c1'
+%format c' = c1'
+%format c2'
+%format c' = c2'
+
+%format cpa = "cp_{a}"
+%format cp_a = cpa
+%format cpb = "cp_{b}"
+%format cp_b = cpb
+
+%format cp1
+%format cp = cp1
+%format cp2
+%format cp = cp2
+
+%format d0
+%format d = d0
+%format d1
+%format d = d1
+%format d2
+%format d = d2
+%format d3
+%format d = d3
+
+%format d0'
+%format d' = d0'
+%format d1'
+%format d' = d1'
+%format d2'
+%format d' = d2'
+%format d3'
+%format d' = d3'
+
+%format das1
+%format das = das1
+%format das2
+%format das = das2
+
+%format _a =  "_{a}"
+%format _b =  "_{b}"
+
+%format 0
+%format  = 0
+%format 1
+%format  = 1
+%format 2
+%format  = 2
+%format 3
+%format  = 3
+
+%format a1
+%format a = a1
+%format a2
+%format a = a2
+
+%format b1
+%format b = b1
+%format b2
+%format b = b2
+
+%format t1
+%format t = t1
+%format t2
+%format t = t2
+
+%format as1
+%format as = as1
+%format as2
+%format as = as2
+
+%format bs1
+%format bs = bs1
+%format bs2
+%format bs = bs2
+
+%format ts1
+%format ts = ts1
+%format ts2
+%format ts = ts2
+
+%format ev0
+%format ev = ev0
+%format ev1
+%format ev = ev1
+%format ev2
+%format ev = ev2
+%format ev3
+%format ev = ev3
+
+%format fa  = "f_{a}"
+%format fb  = "f_{b}"
+%format fab = "f_{ab}"
+
+
+%format f1
+%format f = f1
+%format f2
+%format f = f2
+
+%format g1
+%format g = g1
+%format g2
+%format g = g2
+
+%format h0
+%format h = h0
+%format h1
+%format h = h1
+
+%format i1
+%format i = i1
+%format i2
+%format i = i2
+
+
+%format loop0
+%format loop = loop0
+%format loop1
+%format loop = loop1
+%format loop2
+%format loop = loop2
+%format loop3
+%format loop = loop3
+
+%format m1
+%format m = m1
+%format m2
+%format m = m2
+%format m11
+%format m = m11
+%format m12
+%format m = m12
+%format m21
+%format m = m21
+
+%format ma1
+%format ma = ma1
+%format ma2
+%format ma = ma2
+%format me  = "m_{e}"
+
+%format P_l = "P_{l}"
+
+%format q1
+%format q = q1
+%format q2
+%format q = q2
+
+%format q1'
+%format q' = q1'
+%format q2'
+%format q' = q2'
+
+%format Q1
+%format Q = Q1
+%format Q2
+%format Q = Q2
+
+%format s0
+%format s = s0
+%format s1
+%format s = s1
+%format s2
+%format s = s2
+%format s3
+%format s = s3
+%format s4
+%format s = s4
+
+%format s0'
+%format s' = s0'
+%format s1'
+%format s' = s1'
+%format s2'
+%format s' = s2'
+%format s3'
+%format s' = s3'
+%format s4'
+%format s' = s4'
+
+%format s_a = "s_{a}"
+%format s_b = "s_{b}"
+%format s_e = "s_{e}"
+
+%format sa0
+%format sa = sa0
+%format sa1
+%format sa = sa1
+%format sa2
+%format sa = sa2
+%format sa3
+%format sa = sa3
+%format sa4
+%format sa = sa4
+
+%format sb0
+%format sb = sb0
+%format sb1
+%format sb = sb1
+%format sb2
+%format sb = sb2
+
+%format Set0
+%format Set = Set0
+%format Set1
+%format Set = Set1
+%format Set2
+%format Set = Set2
+
+%format sf0
+%format sf = sf0
+%format sf1
+%nformat sf1 = "sf_{\!1}"
+%format sf = sf1
+%nformat sf2 = "sf_{\!2}"
+%format sf2
+%format sf = sf2
+%format sf3
+%format sf = sf3
+%format sf4
+%format sf = sf4
+
+%format sf0'
+%format sf' = sf0'
+%format sf1'
+%format sf' = sf1'
+%format sf2'
+%format sf' = sf2'
+%format sf3'
+%format sf' = sf3'
+%format sf4'
+%format sf' = sf4'
+
+%format st1
+%format st = st1
+%format st2
+%format st = st2
+
+%format st1'
+%format st' = st1'
+%format st2'
+%format st' = st2'
+
+%format sv1
+%format sv = sv1
+%format sv2
+%format sv = sv2
+
+%format step0
+%format step = step0
+%format dstep0
+%format dstep = dstep0
+%format dstepAux0
+%format dstepAux = dstepAux0
+
+%format te  = "t_{e}"
+%format t_e = "t_{e}"
+%format tx  = "t_{x}"
+%format t_x = "t_{x}"
+
+%format t0
+%format t = t0
+%format t1
+%format t = t1
+%format t2
+%format t = t2
+%format t3
+%format t = t3
+
+%format t0'
+%format t' = t0'
+%format t1'
+%format t' = t1'
+%format t2'
+%format t' = t2'
+%format t3'
+%format t' = t3'
+
+
+%format time0
+%format time = time0
+
+%format v0
+%format v = v0
+
+%format x0
+%format x = x0
+%format x1
+%format x = x1
+%format x2
+%format x = x2
+%format x3
+%format x = x3
+%format x4
+%format x = x4
+

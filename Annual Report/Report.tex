@@ -3,12 +3,16 @@
 \author{Li Nuo}
 \title{First Year PhD Annual Report}
 
+%\setlength{\textheight}{20cm}
+%\setlength{\textwidth}{5.5in}
+%\setlength{\topmargin}{-0.1in}
+%\setlength{\oddsidemargin}{-1.8mm}
+%\setlength{\evensidemargin}{-1.8mm}
 
 %\institute{University of Nottingham}
 
 \usepackage{dsfont}
 \usepackage{amsthm}
-
 
 %% ODER: format ==         = "\mathrel{==}"
 %% ODER: format /=         = "\neq "
@@ -305,19 +309,14 @@
 \EndFmtInput
 
 
-
-
 \usepackage{color}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{xypic}
+\usepackage{autofe}
 
-%\newtheorem{theorem}{Theorem}[section]
-%\newtheorem{lemma}[theorem]{Lemma}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
-%\newtheorem{proposition}[theorem]{Proposition}
 
 \DeclareUnicodeCharacter{955}{$\lambda$}
 \DeclareUnicodeCharacter{8988}{$\ulcorner$}
@@ -326,22 +325,9 @@
 \DeclareUnicodeCharacter{8991}{$\lrcorner$}
 \DeclareUnicodeCharacter{946}{$\beta$}
 
-%\DeclareUnicodeCharacter{9666}{$\blacktriangleleft$}
-%\DeclareUnicodeCharacter{9667}{$\triangleleft$}
-
-
-% Editing and debugging
-%\hfuzz 0.1pt
-%\overfullrule=15pt
-%\brokenpenalty=10000
-
 \newcommand{\todo}[1]{\textcolor{red}{TO~DO:~#1}}
 
-
 \newcommand{\ed}[1]{\textcolor{blue}{#1}}
-
-
-%\newtheorem{assumption}[theorem]{Assumption}
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -393,25 +379,23 @@
 \DeclareMathOperator{\defi}{\stackrel{\text{\tiny def}}{=}}
 \DeclareMathOperator{\coprime}{Coprime}
 
-\DeclareMathOperator{\A/sim}{A\,/ \sim}
+\DeclareMathOperator{\A/sim}{A\,\, /\sim}
 
 \newcommand{\eqqm}{\overset{\text{\tiny ?}}{=}}
 \newcommand{\sep}{\mathrel{\sharp}}
 
-
-% For xy matrices
-%\newcommand{\pullbackcorner}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
-%\newcommand{\pushoutcorner} [1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
-
-\newcommand{\itt}{intensional Type Theory}
-\newcommand{\ett}{extensional Type Theory}
+% Shorthand
+\newcommand{\itt}{Intensional Type Theory}
+\newcommand{\ett}{Extensional Type Theory}
 \newcommand{\mltt}{Martin-L\"{o}f type theory}
 
-%\newtheorem{theorem}{Theorem}[section]
-%\newtheorem{lemma}[theorem]{Lemma}
-%\theoremstyle{definition}
-%\newtheorem{definition}{Definition}[section]
-%\newtheorem{proposition}[theorem]{Proposition}
+\newenvironment{codes}{\tiny\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mskip1.5mu\}\;\{\mskip1.5mu {}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+}
 
 \usepackage{varioref}
 
@@ -449,78 +433,115 @@
 % 5. Plan and steps to achieve these.
 
 In set theory, given a set equipped with an equivalence relation, one can form its
-quotient set, that is the set of equivalence classes. Reinterpreting
-this notion in type theory, the implementation of quotient set is
-called quotient type. However in the quotient type is still
-unavailable in type theories like \itt{}. Quotients are very common in
-mathematics and computer science. The introduction of quotients could
-be very helpful. Some quotient types are less effective to define than
-being based on their base types and equivalence relations, such as the
-set of integers, even some others are impossible to define without
-quotients in current implementations of \itt{} such as the set of real
-numbers. Quotient types are often more difficult to reason than their
-base types. Therefore it is more convenient to manipulate the base
-types and lift the operations and propositions using the properties of
-quotients. 
-% Also we can still benefit from the interaction of
-% types within some quotients without using quotient types. Because some
-% base types are simpler to deal with or have better features while what
-% we want to use is the new type, for instance the integers represented
-% by a pair of natural numbers is easier to handled compared to the
-% normal form integers. 
-Therefore we conduct a research project on the implementation of quotients in
-\itt{}. The work of this project will be divided into several phases. This report aims at
-introducing the basic notions in the project like type theory and
-quotient types, discuss some work related to this
-topic and conclude some result of the first phase. The results done by
-Altenkirch, Anberr\'{e}e and me in \cite{aan} will be explained with a
-few instances of quotients.
+quotient set, that is the set of equivalence classes.
+Reinterpreting this notion in type theory,quotient sets are called quotient types.
+However quotient types are still
+unavailable in \itt{} which is a very important type theory.
+Quotients are very common in mathematics and computer science, and
+thus the introduction of quotients could be very helpful.
+Some types are less effective to define from scrach than being defined
+as the quotients of some other types and their equivalence relations, such as the
+set of integers.
+Even some sets are impossible to define without being based on quotients such as the set of real
+numbers.
+Sometimes, quotient types are more difficult to reason about than
+their base types. 
+We can achieve more convenience by manipulating base types and then lifting the operators and propositions according to the relation between quotient types and base types.
+Therefore it is worthwhile for us to conduct a research project on the
+implementation of quotients in \itt{}.
 
-%For some definable quotients like the integers and the rational numbers,
-%it is unnecessary to formalise them based on setoid. But we found the quotient %interface could provide more convenience if we prove that they are definable %quotients. While some other types such as real numbers are undefinable, %but they are the quotient of dividing Cauchy sequences of rational numbers %by the equivalence relation that two sequences converges. 
+The work of this project will be divided into several phases. This
+report introduces the basic notions in my project on implementing
+quotients in type theory, such as type theory setoids, and quotient
+types, reviews some work related to this topic and concludes with some
+results of the first phase. 
+The results done by Altenkirch, Anberr\'{e}e and I in \cite{aan} will be explained with a
+few instances of quotients.
 
 \end{abstract}
 
 
 \section{Introduction}
 
+%Some general backgroud?
 
-In mathematics, a quotient represents the result of division. The
-notion of quotient is extended to other more abstract branches of mathematics. For example, we
-have quotient set, quotient group, quotient space, quotient category
-etc. They are all defined similarly. Some group of objects are divided
-by some equivalence relation and the group of the equivalent classes
-is the quotient sets or other algebraic structure.
+% the notion of quotient
+In mathematics, the result of division is called quotient.
+Similar to product, the notion of a quotient is also extended to other more abstract branches of mathematics.
+For example, we have quotient sets, quotient groups, quotient spaces and quotient categories.
+They are all defined in this way: some collection of objects is partitioned by some equivalence relation and the set of the equivalent classes
+is the quotient set which usually bears some algebraic structure inherited from
+the structure of the original collection of objects.
 
-Actually, we can find quotients in our daily life. When you take a
-picture by a digital camera, the real scene is divided into each pixel
-on the picture, in other words, the real scene within a certain area is
-equated. The digital picture which is the set of the pixel is just the
-quotient of the real scene. Since things are equated
-with respect to certain rules, quotient is usually related to
-information hiding or information losing. Quotients also exist in
-computer science. Users are usually concerned the extensional use of
+% quotients in real life
+Quotients are also common in our daily life. When you take a
+picture with a digital camera, the real scene is divided into pixels
+on the pictures, and a red point and a blue point on the real scene are indistinguishable on
+the photo if they are represented by the same pixel. The digital picture which is the set of pixels is just the
+quotient of the real scene. Since different things are equated
+with respect to certain rules, a quotient is usually related to
+information hiding or information losing.
+
+% quotients in CS
+Quotients also exist in computer science. Users are usually concerned with the extensional use of
 softwares rather than the intensional implementation of them,
 different implementations of softwares doing the same tasks are
 treated as the same to them even though 
 some of them are programmed in different languages. Another example is
-the application of \emph{interface} in JAVA. All different classes implementing the same
-interface \ensuremath{\Conid{A}} are extensionally equal and are treated as the same when
-we call some object of \ensuremath{\Conid{A}}.
+the application of an \emph{interface} in Java. The objects of different classes implementing the same
+interface \ensuremath{\Conid{A}} should be treated equally when we create new objects of type \ensuremath{\Conid{A}}, even
+though they are not really the same.
 
-In this report, I will mainly discuss the quotients in type theory
-which are usually named as quotient types. Although set theory and
-type theory have different fundamentals, they have many similar
-notions like product and disjoint union.  In this case, quotient type
-is also an interpretation of quotient set in set theory which may be
-more familiar to some of you. Because of this reason, we start from
-quotient set in set theory and then move on to type theory.
+However in some type theories, the construction of quotients remains
+problematic. In this project, we are going to explore this topic in the intensional variant of \mltt{}
+(See Section~\ref{tt}) which serves as the basis of some useful
+functional programming languages or theorem provers such as Coq and
+Agda. This report aims at introducing some basic notions used in this
+project, reviewing related works and explaining some results that have
+been done. 
 
-\subsection{Quotient Set} 
+The structure of this report is as follows:
+
+Section~\ref{sec:bg} introduces some basic concepts such as type
+theory and quotient types along with the discussion of the problems
+that arise when implementing quotient types. To make them easier to understand, it
+will start with quotients in set theory which may be
+more familiar to many people. 
+
+Section~\ref{sec:lr} reviews some related works. Some of them discuss
+implementing quotient types in other type theories, some of them
+introduce similar notions. There are also some works done in this area
+but still require futher extensions. These constitute the basis of this project.
+
+Section~\ref{sec:ob} gives more detailed objectives and a plan of how
+to achieve them.
+
+Section~\ref{sec:rd} explains some results that have been done by the
+author or by Altenkirch, Anberr\'{e}e and the author in \cite{aan}.
+
+Section~\ref{sec:cl} concludes this report along with the discussion
+of furture works.
+
+In Appendix, I will list the full versions of some codes within the
+text which are less relevant. All the codes are written in Agda which
+will be introduced later. The readers who are familiar with Agda
+or interested in the codes could look up them there. To make the codes
+more readable, I eliminate some unnecessary parts such as the universe polymorphism.
+
+\section{Background}
+\label{sec:bg}
+
+In this report, I will mainly discuss quotients in type theory
+which are usually referred to as quotient types. Although set theory and
+type theory have different foundations, they have many similar
+notions such as product and disjoint union.  In this case, a quotient type
+is also an interpretation of a quotient set in set theory.
+
+\subsection{Quotient Sets} 
 
 The division of sets is different from division of numbers. We divide a
-given set into small groups according to a given equivalence relation
-and the quotient is the set of these groups.
+given set into disjoint subsets according to a given equivalence relation
+and the quotient is the set of these subsets.
 
 Formally, given a set $A$ and an equivalence relation $\sim$ on $A$, the equivalence class for each $a \,\in A$ is,
 
@@ -536,21 +557,19 @@ The quotient set denoted as $\A/sim$ is the set of equivalence classes of $\sim$
 \]
 
 %why quotients is useful?
-
-There are many mathematical notions which can be constructed as quotient sets
-from some other sets. Some are more natural to come up with,
-such as integers modulo some number
+There are many mathematical notions which can be constructed as
+quotient sets. 
+For example, the integers modulo some number
 $n$ is the quotient set constructed by quotienting the set of all
 integers $\Z$ with the congruence relation which equates two integers sharing the same remainders when divided by
 $n$.
-The set of rational numbers $\Q$ is defined as the set of numbers
+For another example, the set of rational numbers $\Q$ is defined as the set of numbers
 which can be expressed as fractions, but different fractions like
 $\frac{1}{2}$ and $\frac{2}{4}$ can be
-reduced to the same rational number. In another word, $\Q$ can
-be constructed by quotienting the set of pairs of integers, while the
+reduced to the same rational number. 
+In other words, $\Q$ can be constructed by quotienting the set of pairs of integers, while the
 second is non-zero integer, with the equivalence
 relation which equates fractions sharing the same irreducible forms.
-%The set of canonical forms of rational numbers are subset of the pairs of integers. 
 A less common example is the set of integers $\Z$, which can also been
 obtained from quotienting the set of pairs of natural numbers $\N \times \N$ which represent integers as the result of subtraction
 between two natural numbers within each pair. Furthermore real
@@ -562,39 +581,42 @@ to zero. There are more examples of quotient sets, but the main
 topic of this report is quotients in \emph{type theory}. 
 
 \subsection{Type Theory}
+\label{tt}
 
 The theory of types was first introduced by Russell \cite{rus:1903} as
-an alternative to naive set theory. After that, mathematicians or
+an alternative to naive set theory. Since then, mathematicians and
 computer scientists have developed a number of variants of type
 theory. The type theory in this discourse is the one developed by Per
 Martin-L\"{o}f \cite{per:71,per:82} which is also called
 intuitionistic type theory. It is based on the Curry-Howard
 isomorphism between propositions and the types of its proofs such that
-it can served as a formalisation of mathematics. For detailed
-introduction, please refer to\cite{nor:00}. In this report, Type
-Theory specially indicates \mltt{}.
-
+it can served as a formalisation of mathematics. For a detailed
+introduction, refer to \cite{nor:00}.
 
 Per Martin-L\"{o}f proposed both an intensional and an extensional
-variants of his intuitionistic type theory. The distinction between them is whether definitional equality is distinguished with
+variants of his intuitionistic type theory. The distinction between them is whether definitional equality is distinguished from
 propositional equality. In \itt{}, definitional equality exists
-between two intensionally identical objects, but propositional
-equality is a type which requires proof terms. Any thing is only
+between two definitionally identical objects, but propositional
+equality is a type which requires proof terms. Anything is only
 definitionally equal to itself and all terms that can be normalised to
-it which means that definitional equality is decidable in \itt{}. Therefore type checking which
-depends on definitional equality is decidable as well  \cite{alt:99}
-. The propositional equality we use in \itt{} is written
-as $Id(A,a,b)$ \cite{nor:90} which is also called
-\emph{intensional equality}. In Agda, an implementation of \itt{},  it is
-redefined as \ensuremath{\Varid{a}\;\Varid{≡}\;\Varid{b}} with the type \ensuremath{\Conid{A}}implicitly, and this set has an
-unique element \ensuremath{\Varid{refl}} only if \ensuremath{\Varid{a}} and \ensuremath{\Varid{b}} are definitionally equal. However
-in \ett{}, they are not distinguished so that if we have $p \,\colon Eq
-(A,a,b)$ which is called extensional equality, $a$ and $b$ are
-definitional equal. Terms which have different normal forms may be
-definitional equal or not. In other words, definitional equality is
-undecidable and type checking become undecidable as well.
-Altenkirch and McBride \cite{alt:06} introduce a variant of \ett{} called
-\emph{Observational Type Theory} in which definitional equality is
+it, which means that definitional equality is decidable in
+\itt{}.
+Therefore type checking that depends on definitional equality is decidable as well~\cite{alt:99}
+. 
+The type for propositional equality in \itt{} is usually written as
+$Id(A,a,b)$ (which is also called
+\emph{intensional equality} \cite{nor:90}). 
+In Agda\cite{norell:09}, an implementation of \itt{},  it is written
+as \ensuremath{\Varid{a}\;\Varid{≡}\;\Varid{b}} with the type \ensuremath{\Conid{A}} often kept implicit. 
+This set has an unique element \ensuremath{\Varid{refl}} only if \ensuremath{\Varid{a}} and \ensuremath{\Varid{b}} are
+definitionally equal and is uninhabited if not. 
+However in \ett{}, the two kinds of equalities are not distinguished, so if we have $p \,\colon Eq
+(A,a,b)$ (which is called extensional equality \cite{nor:90}), $a$ and $b$ are
+definitionally equal. 
+It means that terms which have different normal forms may be definitionally equal. In other words, definitional equality is
+undecidable and type checking becomes undecidable as well. However
+Altenkirch and McBride have introduced a variant of \ett{} called
+\emph{Observational Type Theory}  \cite{alt:06} in which definitional equality is
 decidable and propositional equality is extensional.
 
 %The propositional equality in \ett{} is written as $Eq(A,a,b)$ and is
@@ -614,27 +636,33 @@ decidable and propositional equality is extensional.
 
 
 Type theory can also serve as a programming language in
-which the evaluation of well-typed program always terminates
+which the evaluation of a well-typed program always terminates
 \cite{nor:90}. 
-There are a few implementation based on different type theories, such as
-NuPRL, Coq and Agda.
-Agda is one of the most recent implementation of intensional version
-of \mltt{}. As we have seen that \mltt{} is based on the Curry-Howard
-isomorphism, types are identified with propositions and programs or
-terms are identified with proofs. Therefore it is not only a programming language but also a
+There are various implementations based on different type theories, such as
+NuPRL, LEGO, Coq, Epigram and Agda.
+%\todo{Possibly a separate section (maybe one page) for Agda} 
+Agda is one of the most recent implementations of intensional version
+of \mltt{}. 
+It is a dependently typed programming language, we can write program specifications as
+types. 
+As we have seen, \mltt{} is based on the Curry-Howard
+isomorphism: types are identified with propositions and programs (or
+terms) are identified with proofs. 
+Therefore it is not only a programming language but also a
 theorem prover which allows user to verify Agda programs in
-itself. Compared to other implementations, it has a bundle of good
-features like pattern matching, unicode input, implicit arguments etc
-\cite{bov:09}  but it does not have tactics such that the proofs are less
-readable. Since this project is based on \mltt{}, it is a good choice to implement our definitions
-and verify propositions in Agda.
+itself. 
+Compared to other implementations, it has a package of useful
+features such as pattern matching, unicode input, and implicit
+arguments \cite{bov:09}, but it does not have tactics and consequently
+its proofs are less readable than implementations that do. Since this project is based on \mltt{}, it is a good choice to implement our definitions
+and verify our theorems and properties in Agda.  For a detailed
+introduction of Agda, refer to \cite{norell:09}.
 
-Although type theory has some similarities to set theory, they are
-fundamentally different. Types play a similar role to sets and are
+To move from set theory to type theory, the similarities and differences should be made clear. Although type theory has some similarities to set theory, their foundations are different. Types play a similar role to sets and they are
 also called sets in many situations. However we can only create
-elements after we declare their types, while in set theory elements are there before
+elements after we declare their types, while in set theory elements exist there before
 we have sets. For example,
-we have type $\N$ for natural numbers corresponding to the set of
+we have the type $\N$ for natural numbers corresponding to the set of
 natural numbers in set theory. In set theory, $2$ is a shared element
 of the set of natural numbers and the set of integers. While in type
 theory, $\N$ provides us two constructors
@@ -642,117 +670,136 @@ $zero \,\colon\N$ and $suc\,\colon\N\to\N$, and $2$ can be constructed
 as $suc\,(suc\,\,zero)$ which is of type $\N$ and does not have any other
 types like $\Z$. Because different sets may contain the same elements, we
 have the subset relation such that we can construct equivalence
-classes and quotient set. In type theory we have to give constructors
-for any type before we can construct elements which is different to the situation in set theory that
-elements exist before we construct quotient sets. The approach in set
-theory fails here. So how can we reinterpret quotient sets in type theory? 
+classes and quotient set. 
+In type theory we have to give constructors for any type before we can construct elements, which is different to the situation in set theory that
+elements exist before we construct quotient sets. Therefore this approach to construct quotients in set
+theory has some problems in type theory. In fact, Voevodsky constructs
+quotients using this approach in Homotopy Type Theory using Coq
+\cite{voe:hset} but here we
+mainly discuss how to reinterpret quotient sets in the current settings of \itt{} (e.g. Agda).
 
 
 \subsection{Quotient Types}
 
 Following the correspondence between sets and types, many notions from
 set theory can be reinterpreted in type theory. The product of
-sets can be formed by $\Sigma-Type$ and the functions can be
-formed by $\Pi-Type$ \cite{nor:00}. However in \itt{} quotient
-types are still unavailable and it is a problematic issue to interpret
-quotients.
+sets can be formed by $\Sigma$-Types and the functions can be
+formed by $\Pi$-Types \cite{nor:00}.
 
-Alternatively, in \itt{} we have the ingredients of quotients as follows,
+However, in \itt{} a general apporach to construct quotient types is
+still unavailable. 
+
+Alternatively, in \itt{}, we have \emph{setoids} which contain all the ingredients of quotients as follows,
 
 \begin{definition}
-A setoid $(A,\sim)\,\colon\Set_1$ is a set $A\,\colon\Set$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
+A setoid $(A,\sim)\,\colon\Set_1$ is a set \footnote{Setoid could be universe polymorphic.} 
+$A\,\colon\Set$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
 \end{definition}
 
-Here we assume $\Set$ means type and for any $p\,q\colon\,\Prop$, $p = q$. In Agda, we define a setoid as
+Here we assume $\Set$ means type, and for any $P \colon\,\Prop$, it has
+at most one element, namely we can get proof irrelevance for
+propositions which has type $\Prop$. In Agda, we define a setoid as
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Keyword{record}\;\Conid{Setoid}\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Keyword{infix}\;\Varid{4}\;\Varid{\char95 ≈\char95 }{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Keyword{field}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{Carrier}\;{}\<[19]%
-\>[19]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
+\>[5]{}\Conid{Carrier}\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{\char95 ≈\char95 }\;{}\<[19]%
-\>[19]{}\mathbin{:}\;\Conid{Carrier}\;\Varid{→}\;\Conid{Carrier}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\>[5]{}\Varid{\char95 ≈\char95 }\;{}\<[24]%
+\>[24]{}\mathbin{:}\;\Conid{Carrier}\;\Varid{→}\;\Conid{Carrier}\;\Varid{→}\;\Conid{Set}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Varid{isEquivalence}\;\mathbin{:}\;\Conid{IsEquivalence}\;\Varid{\char95 ≈\char95 }{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-Setoid could be universe polymorphic.
+It contains \ensuremath{\Conid{Carrier}} for an underlying set, \ensuremath{\Varid{\char95 ≈\char95 }} for a binary
+relation on \ensuremath{\Conid{Carrier}} and a proof that it is an equivalence relation.
 
-%. If we use the setoid $(\N \times \N, \sim)$ for integers, 
-We can use setoids to represent quotients. However setoids is
-different from sets so that we have to redefine all the operations on sets
-and it is unsafe \cite{aan}. Another interesting problem is how to
-represent quotients if the $A$ is already a setoid. It means that it
-is better that if the base type $A$ is of type $\Set$ then the type of
-quotient should also be of type $\Set$. It should be
-universe polymorphic as well. From mathematical perspective, we also
-found the structure of the base object is always the same as the
-structure of the result quotient object. So what should be a quotient type?
-%Quotient types should enable users to implement quotients in \itt{}
-%which means the quotient types based on the setoid should have type
-%$\Set$. 
+We can use setoids to represent quotients, just as we can represent
+$4$ by the pair $(8,2)$. However there are several problems if we use
+this approach. Firstly \ensuremath{\Conid{Setoid}} are
+different from sets so that we have to redefine all the operations on
+\ensuremath{\Conid{Set}}. An interesting problem is how to represent quotients if the base
+type $A$ is already a setoid. Setoids are also unsafe because we have access to the underlying
+ sets \cite{aan}. 
+It is better that if the base type $A$ is of type $\Set$ then the type of
+quotient derived from it and its equivalence relation should also be
+of type $\Set$, just as if we divide $8$ by $2$ we prefer $4$ than
+$(8,2)$. From mathematical perspective, we can find the structure of the base object is usually the same as the
+structure of the resultant quotient object. So what could be a quotient type?
 
-\begin{definition}
-Given a setoid $(A,\sim)\,\colon\Set_1$, there is a type
-$Q\,\colon\Set$ which is an implementation of the quotient set $A/\sim$, $Q$ is called the quotient type of $(A,\sim)$
-\end{definition}
+Here we firstly decribe what quotient types are. Given a setoid
+$(A,\sim)\,\colon\Set_1$, a type $Q : \Set$ is called the quotient
+type of this setoid, if we can prove it implements the quotient set
+$A/\sim$, no matter how we construct it.
 
-
-For example, given a setoid $(\N\times\N , \sim)$ where $\sim$ is
-defined as
+For instance, since integers represent the result of subtraction of
+any pairs of natural numbers, we can represent integers by the setoid $(\N\times\N , \sim)$ where $\sim$ is
+defined as (more details in section~\ref{sec:definitions} on page~\pageref{sec:definitions})
 
 \[(a , b) \sim (c , d) \defi  a + d \equiv c + b \]
 
-and $\sim$ is proved to be an equivalence relation, 
-the quotient type corresponding to this setoid is just the set of
-integers $\Z\,\colon\Set$. 
+$\sim$ can also be proved to be an equivalence relation. However the
+set of integers $\Z\,\colon\Set$ can also be constructed as 
 
-Quotient types can be very useful. The encoding of quotients in mathematics is not all what quotient
-types can do. It is a type theoretical notion which means some notions in Type
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Keyword{data}\;\Conid{ℤ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{+\char95 }\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{-suc\char95 }\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The type $\Z\,\colon\Set$  is just the quotient type corresponding to
+the setoid  $(\N\times\N , \sim)$. 
+
+Quotient types have uses beyond encoding mathematical quotients. It is a type theoretical notion which means some notions in Type
 Theory or in programming languages can also be treated as quotient
 types. For example partiality monad divided by a weak
-similarity ignoring finite delays \cite{aan}, propositions divided by
-$\iff$  and the set of extensionally equal functions. Also
+similarity ignoring finite delays \cite{aan}, propositions quotiented by
+logical equivalence relation $\iff$  or the set of extensionally equal functions. Also
 set-theoretical finite sets can be implemented as the quotient of
 lists in Type Theory. 
 Furthermore given any function $f \,\colon\, A \to B$, we obtain an
 equivalence relation $\sim \,\colon A \to A \to \Prop$ called \emph{kernel}
 of $f$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. Based on
 this setoid $(A,\sim)$ we can form a quotient.
-Indeed all types can be seen as quotient types of itself with the
+Indeed any type can be seen as quotient types of itself with the
 intensional equality \ensuremath{\Varid{≡}}.
 
 %How to obtain quotient type? 
 
 In the definition of quotient types, we do not provide an approach to
 construct them from given setoids. Indeed how to obtain a
-quotient type of a given setoid is one of the main topic of this
+quotient type of a given setoid is one of the main topics of this
 project.
 
 One feasible approach in current setting of \itt{} is to manually construct
-the quotient type and prove it is the required quotient type. For instances in
-\cite{nuo:10}, the normal form integers, irreducible rational numbers
-are definable and proved to construct quotients with respect to the
-corresponding setoids. The quotient interfaces introduced in
-\cite{aan} requires the necessary properties for some type $Q$ to be
-the quotient type of some setoid $(A , \sim)$. Since they are basics
-of quotients, we can use them to lift operations and prove some
+the quotient type as we do in the example of the set of integer above,
+and prove it is the required quotient type. We can form a quotient
+using the quotient interfaces introduced in
+\cite{aan}, which require the necessary proofs for some type $Q : \Set$ to be
+the quotient type of some setoid $(A , \sim)$. These proofs are also
+the basic properties of quotients, so we can use them to lift operations and prove some
 general theorems. However, this approach is
 inefficient because the quotient types and the properties have to be
 manually figured out rather than automatically derived. 
@@ -762,7 +809,8 @@ Furthermore, some quotients like real numbers are undefinable even
 though we can define the base type and equivalence relation for them
 \cite{nuo:10} . Although it has some drawbacks, it is feasible without
 extending \itt{} and it provides some convenience in practice. There
-has been some results on this \cite{aan}. I will discuss them later. 
+have been some results on this \cite{aan}, which I will discuss them
+in section~\ref{sec:definitions}. 
 
 %In this report, I will use the symbol $\A/sim$ for the quotient based
 %on a given setoid  $(A,\sim)$. 
@@ -788,7 +836,7 @@ definitional equality of quotient types etc.
 Quotient types can be seen as the result of replacing the equivalence
 relation of given types. This operation does not work in \itt{}, but it seems
 easier to manage in \ett{} where
-propositional equal terms are also definitional equal. Nevertheless there
+propositional equal terms are also definitionally equal. Nevertheless there
 are still some problems which we discuss in the literature review.
 
 %[(S m) , (S p)] -> [m , p] 
@@ -816,11 +864,9 @@ are still some problems which we discuss in the literature review.
 
 \subsection{Functional extensionality and quotient types}
 
-% equality $Id(A,a,b)$ consists of
-%proof terms that $a$ and $b$ are definitionally equal in all cases. 
-
-In \itt{} intensional propositional equality $Id(A,a,b)$ is inhabited
-if and only if $a$ and $b$ are definitional equal terms,
+As we have mentioned before, in \itt{} propositional equality $Id(A,a,b)$ is inhabited
+if and only if $a$ and $b$ are definitionally equal terms. The Agda
+definition could be written as
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -833,25 +879,20 @@ if and only if $a$ and $b$ are definitional equal terms,
 \ColumnHook
 \end{hscode}\resethooks
 
- but the intensional propositional
-equalities of functions are not inhabited \cite{alt:99}. When talking about the equality of functions, they are
-usually treated extensionally as black boxes. If two functions pointwise
+However the equality of functions are not only judged  by
+definitions. Functions are
+usually viewed extensionally as black boxes. If two functions pointwise
 generate the same outputs for the same inputs, they are equivalent
-even though their inside definitions may differ. This is called
-functional extensionality  which is not inhabited in original
+even though their definitions may differ. This is called
+functional extensionality which is not inhabited \cite{alt:99} in original
 \itt{} and can be expressed as following,
 
 given two types $A$ and $B$, and two functions $f,\,g\,\colon A \to B$,
 
 \[Ext = \forall\, x\colon A, f x = g x \to f = g\]
 
-
-If seems that we just need to add the constant $Ext$ to \itt{}.
-However postulate something new may cause inconsistence. If we postulate $Ext$, then the theory is said to be not
-adequate which means it is possible to define irreducible terms. It
-can be easily verified in Agda through formalising a non-canonical term
-of natural number by an eliminator of intensional equality. 
-Firstly we postulate $Ext$
+The problem seems easy to solve by just adding a constant $ext : Ext$
+to \itt{} as following codes in Agda
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -861,7 +902,7 @@ Firstly we postulate $Ext$
 \>[B]{}\Keyword{postulate}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Conid{Ext}\;\mathbin{:}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\;\Varid{g}\;\mathbin{:}\;(\Varid{x}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;\Varid{x}\mskip1.5mu\}\;{}\<[E]%
+\>[3]{}\Varid{ext}\;\mathbin{:}\;\{\mskip1.5mu \Conid{A}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Set}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{f}\;\Varid{g}\;\mathbin{:}\;(\Varid{x}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;\Varid{x}\mskip1.5mu\}\;{}\<[E]%
 \\
 \>[3]{}\hsindent{6}{}\<[9]%
 \>[9]{}\Varid{→}\;((\Varid{x}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{Id}\;(\Conid{B}\;\Varid{x})\;(\Varid{f}\;\Varid{x})\;(\Varid{g}\;\Varid{x}))\;{}\<[E]%
@@ -871,7 +912,14 @@ Firstly we postulate $Ext$
 \ColumnHook
 \end{hscode}\resethooks
 
-And the eliminator of the intensional equality is
+However, postulating something could lead to inconsistence. If we
+postulate $Ext$, then theory is no longer adequate, which means it is possible to define irreducible terms. 
+It can be easily verified in Agda through formalising a non-canonical
+term for a natural number by an eliminator of intensional equality. 
+
+Using the eliminator \ensuremath{\Conid{J}} \footnote{It is originally
+  used by Martin-L\"{o}f \cite{nor:90} and a good explanation could be
+found in \cite{ngk:11}}  of the \ensuremath{\Conid{Id}\;\Conid{A}\;\Varid{a}\;\Varid{b}} :
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -888,28 +936,28 @@ And the eliminator of the intensional equality is
 \>[B]{}\Conid{J}\;\Conid{A}\;\Conid{P}\;\Varid{m}\;\Varid{.b}\;\Varid{b}\;(\Varid{refl}\;\Varid{.b})\;\mathrel{=}\;\Varid{m}\;\Varid{b}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-
-Finally we can construct a irreducible term of natural number as
-
+we can construct an irreducible term of natural number as
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{irr}\;\mathbin{:}\;\Conid{ℕ}{}\<[E]%
 \\
-\>[B]{}\Varid{irr}\;\mathrel{=}\;\Conid{J}\;(\Conid{ℕ}\;\Varid{→}\;\Conid{ℕ})\;(\Varid{λ}\;\Varid{a}\;\Varid{b}\;\Varid{x}\;\Varid{→}\;\Conid{ℕ})\;(\Varid{λ}\;\Varid{a}\;\Varid{→}\;\Varid{0})\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x})\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x})\;(\Conid{Ext}\;\Varid{refl}){}\<[E]%
+\>[B]{}\Varid{irr}\;\mathrel{=}\;\Conid{J}\;(\Conid{ℕ}\;\Varid{→}\;\Conid{ℕ})\;(\Varid{λ}\;\Varid{f}\;\Varid{g}\;\Conid{P}\;\Varid{→}\;\Conid{ℕ})\;(\Varid{λ}\;\Varid{f}\;\Varid{→}\;\Varid{0})\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x})\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{x})\;(\Conid{Ext}\;\Varid{refl}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-Because of the inconsistency, the definitional equality and type checking become undecidable. 
+With this term, we can construct irreducible terms of any type \ensuremath{\Conid{A}} by a
+mapping \ensuremath{\Varid{f}\;\mathbin{:}\;\Conid{ℕ}\;\Varid{→}\;\Conid{A}}. This will destroy some good features of \itt{}
+since it could leads to nonterminating programs.
 
 Altenkirch investigates this issue and gives a solution in
-\cite{alt:99}. He propose an extension of \itt{} by a universe of
+\cite{alt:99}. He proposes an extension of \itt{} by a universe of
 propositions $\Prop$ in which all proofs of same propositions are
-definitionally equal, namely it is proof irrelevant. At the same time,
+definitionally equal, namely the theory is proof irrelevant. At the same time,
 a setoid model where types are interpreted by a type and an equivalence relation acts as the metatheory and $\eta$-rules for
 $\Pi$-types and $\Sigma$-types hold in the metatheory. The extended type
 theory generated from the metatheory is decidable and adequate, $Ext$ is
-inhabited and it permits large elimination. Within this type theory,
+inhabited and it permits large elimination (defining a dependent type by recursion). Within this type theory,
 introduction of quotient types is straightforward. 
 The set of functions are naturally quotient types, the hidden information is the
 definition of the functions and the equivalence relation is the
@@ -918,51 +966,56 @@ functional extensionality.
 
 There are more problems concerning quotient types and most
 of them are related to equality. One of the main problems is how to lift the functions for
-base types to the ones for quotient types. Only functions respects the
+base types to the ones for quotient types. Only functions respecting the
 equivalence relation can be lifted. Even in \ett{}, the implementation
-of quotient types does not stop at replacing equality of the types. We will discussed these later.
+of quotient types does not stop at replacing equality of the types. We
+will discuss these in next section.
 
-\subsection{Literature Review}
+\section{Literature Review}
+\label{sec:lr}
 
-% Why I mention about this article
-% More description about these articles
-% in a more comprehensive way, tell a story
+% 1. Why I mention about this article?
+% 2. More description about these articles  in a more comprehensive
+% way (tell a story)
 % compare and link between literatures
+
 In \cite{cab}, Mendler et al. have firstly considered building new types from a
 given type using a quotient operator $//$. Their work is based on an
 implementation of \ett{}, NuPRL. In NuPRL, every type
 comes with its own equality relation, so the quotient operator can be
 seen as a way of redefining equality in a type. But it is not all
-about building new types. They also discuss the problems arises from
-defining functions on the new type. The problem can be illustrated using a simple example. 
+about building new types. They also discuss problems that arise from
+defining functions on the new type which can be illustrated using a simple example. 
 
-Assume the base type is $A$ and the new equality relation is $E$, the new
-type can be formed as $A//E$. If we want to define a function $f
-\,\colon\, A//E \to Bool$,  Assume we have two $a, b \,\colon A$ such that $E\,a\,b$ but $f\,a \not= f\,b$, then it
-becomes inconsistent since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, the left
-hand side $f\,a$ can be converted to $f\,b$ namely $f\,b \not= f\,b$
-which is contradicted with the equality reflection rule. Only a function respects the equivalence
-relation, namely
+Assume the base type is $A$ and the new equivalence relation is $E$, the new
+type can be formed as $A//E$. 
+
+When we want to define a function $f \,\colon\, A//E \to Bool$,  $f\,a \not= f\,b$ may
+exists for $a, b \,\colon A$ such that $E\,a\,b$. This will lead to
+inconsistency since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, hence
+the left hand side $f\,a$ can be converted to $f\,b$, namely we get $f\,b \not= f\,b$
+which is contradicted with the equality reflection rule. 
+
+Therefore a function is said to be well-defined \cite{cab} on the new type only
+if it respects the equivalence relation $E$, namely
 
 $$\forall \, a\,b\,\colon A, E\,a\,b \to f\,a = f\,b$$
 
-$f$ is said to be well-defined on the new type. We call it \emph{sound} in
-\cite{aan} and this project.
+We call this \emph{soundness} property in \cite{aan}.
 
  After the introduction of quotient types, Mendler further investigates
- this topic from a categorical perspective in ~\cite{men:90}. He use
+ this topic from a categorical perspective in ~\cite{men:90}. He uses
  the correspondence between quotient types in \mltt{} and coequalizers
- in a category of types to define a notion called \emph{squash types}
- which is further discussed by Nogin.
+ in a category of types to define a notion called \emph{squash types},
+ which is further discussed by Nogin \cite{nog:02}.
 
-
-To adding quotient types to \mltt{}, Hofmann proposes  three models for
+To add quotient types to \mltt{}, Hofmann proposes  three models for
 quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
 quotient types. In this model all types are attached with partial
 equivalence relations, namely all types are setoids rather than
-sets. Types without specific equivalence relation can be translated as
-setoids with the basic intensional equality. It looks a bit like
-\ett{}. The second one is groupoid model which solves some problems
+sets. Types without a specific equivalence relation can be seen as
+setoids with the basic intensional equality. This is similar to
+\ett{} in some sense. The second one is groupoid model which solves some problems
 but it is not definable in \itt{}. He also proposes a third model to
 combine the advantages of the first two models, but it also has some
 disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt {}  extended with quotient types and a universe \cite{hof:95:con}.
@@ -970,9 +1023,9 @@ disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we hav
 Nogin \cite{nog:02} considers a modular approach to axiomatizing the
 same quotient types in NuPRL as well. Despite the ease of constructing new types
 from base types, he also discusses some
-problems about quotient types. For example, since the the equality is
-extensional, we can not recover the
-witness of the equality.  He suggests to include more axioms to
+problems about quotient types. For example, since the equality is
+extensional, we cannot recover the
+witness of the equality.  He suggests including more axioms to
 conceptualise quotients. He decomposes the formalisation of quotient type
 into several smaller primitives such that they can be handled much
 simpler.
@@ -994,36 +1047,51 @@ type from a normalised type as below
 \[ (A, Q, \class\dotph \colon A \to Q) \Rightarrow(A, \lambda \,a \,b\to \class a = \class b)\]
 
 
-Barthe and Geunvers \cite{bar:96} also proposes a new notion called
+Barthe and Geuvers \cite{bar:96} also propose a new notion called
 \emph{congruence types}, which is also a special class of quotient
 types, in which the base type are inductively defined and with a set
 of reduction rules called the term-rewriting system. The idea behind
 it is the $\beta$-equivalence is replaced by a set of
 $\beta$-conversion rules. Congruence types can be treated as an
-alternative to pattern matching introduced in \cite{coq:92}. The main
-purpose of introduction of congruence types is to solve problems in
+alternative to the pattern matching introduced in \cite{coq:92}. The main
+purpose of introducting congruence types is to solve problems in
 term rewriting systems rather than to implement quotient types.
 
 
-\section{Aims and Objectives of the Project}
+Abbott, Altenkirch et al. \cite{abb:04} provides the basis for
+programming with quotient datetypes polymorphically based on their
+works on containers which are datatypes whose instances are
+collections of objects, such as arrays, trees and so on. Generalising
+the notion of container, they define quotient containers as the
+containers quotiented by a collection of isomorphisms on the positions
+within the containers.
 
-The objective of this project is to investigate and explore the ways of
-implementing quotients in \mltt{}, especially in intensional
-one where type checking always terminates.
-As we have seen quotients can enable defining various kinds of
-mathematical notions or programming datatypes, the introduction of
+Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
+of axioms of Homotopy Type Theory. It is based on the groupoid model
+for \itt{} where isomorphisms are equalities. He firstly implement
+equivalence class and use it to implement quotients which is an
+analogy to the construction of quotient sets in set theory. 
+
+\section{Aims and Objectives of the Project}
+\label{sec:ob}
+
+As we have seen, quotients can enable defining or constructing various kinds of
+mathematical notions or programming datatypes, thus the introduction of
 quotient types will be quite beneficial in theorem provers and
 programming languages based on Type Theory. 
 
-The ultimate aim is to extend \itt{} such that all quotients can be
-defined and handled easily and correctly without losing consistency
-and good features of \itt{}.
+The objective of this project is to investigate and explore the ways of
+implementing quotients in \mltt{}, especially in intensional
+variant where type checking always terminates.
+
 
 The project will be undertaken step by step. Firstly, we should make
-the basic notions clear, for example what is quotients and if we want
-quotients in Type Theory what kind of problems need to be solved. We
-also need to do research on related works on this topic as much as possible.
-The second step is working in current setting of \itt{},
+the basic notions clear, for example what are quotients and if we want
+quotients in type theory what kind of problems need to be solved. We
+also need to do research on related works on this topic as much as
+possible.
+
+The second step is to work in the current setting of \itt{},
 investigating some definable quotients, and building the module structure of quotients. The module structure
 and some research on definable quotients has been done in
 \cite{aan}.
@@ -1031,44 +1099,50 @@ and some research on definable quotients has been done in
 Next we need to investigate some undefinable quotients such as the set
 of real numbers $\R$ and partiality monads and prove why they are undefinable. The
 key different characters between definable and undefinable quotients
-will be studied. You can find the proof of why $\R$ is undefinable in
-\cite{aan} as well.
+will be studied. A proof of why $\R$ is undefinable is also given in
+\cite{aan}.
 
 The development of framework of quotient types in \itt{} is one of the major
-objective. We need to propose a set of rules to axiomatise quotient
+objectives. We need to propose a set of rules to axiomatise quotient
 types in \itt{}. To test our approach with a few typical quotients
-to explore its potential benefits. The correctness of axiomatisation
+to explore its potential benefits. It is better if we could
+constructed quotients in a general way and the quotient types have
+useful properties that facilitating programming and reasoning.
+The correctness of axiomatisation
 and the consistency of extended \itt{} require formal proofs.
 
-A possible intermediate result is to extend the addition of extensionality in \itt{}
-\cite{txa:99}. The conservativity of \itt{} with quotient types over
-\ett{} could be proved following the work in \cite{hof:95}. 
 
-Finally, we will summarise the approach of defining quotient types in
+The ultimate aim is to extend \itt{} such that all quotients can be
+defined and handled easily and correctly without losing the consistency
+and features of \itt{}.
+
+Finally, we will summarise all these works, including background
+information, literature review, defining quotient types in
 \itt{}, the benefits of it and the application of it into a PhD Thesis.
 
 
-\section{Theoretical Methods}
+%\subsection{Theoretical Methods}
 
-To do this research, we need to review several related work, compare
-the existing approaches in different implementations of \mltt{}
-and try to figure out the best approach by testing it in real cases.
+To do this research, we need to review and compare
+the existing approaches in different implementations of \mltt{},
+and try to determine the best approach by testing it in real cases.
 
 As we have mentioned before, Agda is a good implementation of
-\itt{}. Conducting this research in Agda will be very efficient and
-useful. We can verify our proofs in it and try to apply quotient types
+\itt{}. Conducting this research in Agda will be useful as we can verify our proofs in it and try to apply quotient types
 to a lot of practical examples.
 
-We also need to advertise our work, get feedbacks from the users and
+We also need to advertise our work, get feedback from the users, and
 improve our approaches such that they are more applicable and easier
 to use.
 
-\section{Results and Discussion}
 
+\section{Results and Discussion}
+\label{sec:rd}
 
 \subsection{Definitions}
+\label{sec:definitions}
 
-Currently, we are on the first stage and there are some progression on
+Currently, we are on the first stage and there is some progression on
 definable quotients in \itt{} \cite{aan}. Here I will present some necessary knowledge from that paper.
 
 %It is about the definable quotients and some undefinable
@@ -1079,9 +1153,8 @@ During the first stage, the aim is to explore the potential to define quotients
 in current setting of \itt{}. 
 
 
-Given a setoid $(A,\sim)$, we know what is a quotient type but we can
-not define it from the setoid because there is no axiomatised quotient
-types. If means that we can just prove some type is quotient type of given
+Given a setoid $(A,\sim)$, we know what is a quotient type but we cannot define it from the setoid because there are no axiomatised quotient
+types. We can only prove some type is a quotient type of a given
 setoid. Therefore the only way to introduce possible quotient types $Q
 \,\colon \Set$ is to define it by ourselves. With defined $Q$ and
 $(A,\sim)$, we are required construct some structures of quotients in
@@ -1093,7 +1166,7 @@ natural numbers. Therefore we can use a pair of natural numbers in a subtraction
 expression to represent the resulting integer.
 For example, $1 - 4 = - 3$ says that the pair of natural numbers $(1,4)$
 represents the integer $- 3$. Assuming we have the necessary definitions
-of natural numbers, the base type of this quotient is
+of natural numbers, the base type of this quotient is:
 
 $$\Z_0=\N \times \N$$
 
@@ -1107,30 +1180,33 @@ $\sim$ for $\Z_0$ could be defined as
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}\;\Varid{zero}{}\<[E]%
+\>[B]{}\Varid{\char95 ∼\char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℤ₀}{}\<[E]%
 \\
-\>[B]{}(\Varid{x+},\Varid{x-})\;\Varid{∼}\;(\Varid{y+},\Varid{y-})\;\mathrel{=}\;(\Varid{x+}\;\Conid{ℕ+}\;\Varid{y-})\;\Varid{≡}\;(\Varid{y+}\;\Conid{ℕ+}\;\Varid{x-}){}\<[E]%
+\>[B]{}(\Varid{n1},\Varid{n2})\;\Varid{∼}\;(\Varid{n3},\Varid{n4})\;\mathrel{=}\;(\Varid{n1}\;\Varid{+}\;\Varid{n4})\;\Varid{≡}\;(\Varid{n3}\;\Conid{ℕ+}\;\Varid{n2}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-Here \ensuremath{\Varid{≡}} is the propositional equality. Of course we must prove \ensuremath{\Varid{∼}} is an equivalence relation then we can define the setoid $(\Z_0,\sim)$ in Agda as
+Here \ensuremath{\Varid{≡}} is propositional equality. Of course we must prove \ensuremath{\Varid{∼}} is an
+equivalence relation then we can define the setoid $(\Z_0,\sim)$ in
+Agda as\footnote{the proof \ensuremath{\Varid{\char95 ∼\char95 isEquivalence}} is omitted here}
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Conid{ℤ-Setoid}\;\mathbin{:}\;\Conid{Setoid}{}\<[E]%
 \\
 \>[B]{}\Conid{ℤ-Setoid}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\{\mskip1.5mu \Conid{Carrier}\;{}\<[19]%
-\>[19]{}\mathrel{=}\;\Conid{ℤ₀}{}\<[E]%
+\>[3]{}\{\mskip1.5mu \Conid{Carrier}\;{}\<[23]%
+\>[23]{}\mathrel{=}\;\Conid{ℤ₀}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{};\Varid{\char95 ≈\char95 }\;{}\<[19]%
-\>[19]{}\mathrel{=}\;\Varid{\char95 ∼\char95 }{}\<[E]%
+\>[3]{};\Varid{\char95 ≈\char95 }\;{}\<[24]%
+\>[24]{}\mathrel{=}\;\Varid{\char95 ∼\char95 }{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{};\Varid{isEquivalence}\;\mathrel{=}\;\Varid{\char95 ∼\char95 isEquivalence}{}\<[E]%
@@ -1169,18 +1245,20 @@ type $\Z$ which should be the normalisation function
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[23]%
-\>[23]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
+\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[25]%
+\>[25]{}\mathbin{:}\;\Conid{ℤ₀}\;\Varid{→}\;\Conid{ℤ}{}\<[E]%
 \\
 \>[B]{}[\mskip1.5mu \Varid{m},\Varid{0}\mskip1.5mu]\;{}\<[23]%
 \>[23]{}\mathrel{=}\;\Varid{+}\;\Varid{m}{}\<[E]%
 \\
-\>[B]{}[\mskip1.5mu \Varid{0},\Conid{ℕ.suc}\;\Varid{n}\mskip1.5mu]\;{}\<[23]%
-\>[23]{}\mathrel{=}\;\Varid{-suc}\;\Varid{n}{}\<[E]%
+\>[B]{}[\mskip1.5mu \Varid{0},\Varid{suc}\;\Varid{n}\mskip1.5mu]\;{}\<[22]%
+\>[22]{}\mathrel{=}\;\Varid{-suc}\;\Varid{n}{}\<[E]%
 \\
-\>[B]{}[\mskip1.5mu \Conid{ℕ.suc}\;\Varid{m},\Conid{ℕ.suc}\;\Varid{n}\mskip1.5mu]\;\mathrel{=}\;[\mskip1.5mu \Varid{m},\Varid{n}\mskip1.5mu]{}\<[E]%
+\>[B]{}[\mskip1.5mu \Varid{suc}\;\Varid{m},\Varid{suc}\;\Varid{n}\mskip1.5mu]\;\mathrel{=}\;[\mskip1.5mu \Varid{m},\Varid{n}\mskip1.5mu]{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1188,12 +1266,10 @@ The first property to prove is the \emph{sound} property,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{sound}\;{}\<[23]%
-\>[23]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{x}\;\Varid{y}\mskip1.5mu\}\;\Varid{→}\;\Varid{x}\;\Varid{∼}\;\Varid{y}\;\Varid{→}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{y}\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{sound}\;\{\mskip1.5mu \Varid{x}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{y}\mskip1.5mu\}\;\Varid{x∼y}\;\mathrel{=}\;\Varid{⌞}\;\Varid{compl}\;\Varid{>∼<}\;\Varid{x∼y}\;\Varid{>∼<}\;\Varid{compl'}\;\Varid{⌟}{}\<[E]%
+\>[B]{}\Varid{sound}\;{}\<[28]%
+\>[28]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{x}\;\Varid{y}\mskip1.5mu\}\;\Varid{→}\;\Varid{x}\;\Varid{∼}\;\Varid{y}\;\Varid{→}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{y}\mskip1.5mu]{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1205,8 +1281,9 @@ should be the same. With this property, we are able to form a prequotient which 
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Keyword{record}\;\Conid{PreQu}\;(\Conid{S}\;\mathbin{:}\;\Conid{Setoid})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
 \\
@@ -1220,8 +1297,8 @@ should be the same. With this property, we are able to form a prequotient which 
 \>[3]{}\Keyword{private}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{A}\;{}\<[9]%
-\>[9]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\>[5]{}\Conid{A}\;{}\<[10]%
+\>[10]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Varid{\char95 ∼\char95 }\;\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
@@ -1230,12 +1307,12 @@ should be the same. With this property, we are able to form a prequotient which 
 \>[3]{}\Keyword{field}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{Q}\;{}\<[11]%
-\>[11]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
+\>[5]{}\Conid{Q}\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\Conid{Set}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[11]%
-\>[11]{}\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Q}{}\<[E]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[14]%
+\>[14]{}\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{Q}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Varid{sound}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
@@ -1280,9 +1357,8 @@ To form quotients we have several different definitions as written in \cite{aan}
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{13}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{50}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Keyword{record}\;\Conid{Qu}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;(\Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
@@ -1297,20 +1373,20 @@ To form quotients we have several different definitions as written in \cite{aan}
 \>[3]{}\Keyword{private}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{A}\;{}\<[11]%
-\>[11]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\>[5]{}\Conid{A}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[11]%
-\>[11]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{Q}\;{}\<[11]%
-\>[11]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
+\>[5]{}\Conid{Q}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[11]%
-\>[11]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Varid{sound}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A}\mskip1.5mu\}\;\Varid{→}\;(\Varid{a}\;\Varid{∼}\;\Varid{b})\;\Varid{→}\;[\mskip1.5mu \Varid{a}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{b}\mskip1.5mu]{}\<[E]%
@@ -1327,10 +1403,9 @@ To form quotients we have several different definitions as written in \cite{aan}
 \\
 \>[13]{}\Varid{→}\;(\Varid{f}\;\mathbin{:}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Conid{B}\;[\mskip1.5mu \Varid{a}\mskip1.5mu])\;{}\<[E]%
 \\
-\>[13]{}\Varid{→}\;((\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{b})\;{}\<[E]%
+\>[13]{}\Varid{→}\;((\Varid{a}\;\Varid{b}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;(\Varid{p}\;\mathbin{:}\;\Varid{a}\;\Varid{∼}\;\Varid{b}){}\<[E]%
 \\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{b})\;{}\<[E]%
+\>[13]{}\Varid{→}\;\Varid{subst}\;\Conid{B}\;(\Varid{sound}\;\Varid{p})\;(\Varid{f}\;\Varid{a})\;\Varid{≡}\;\Varid{f}\;\Varid{b})\;{}\<[E]%
 \\
 \>[13]{}\Varid{→}\;(\Varid{q}\;\mathbin{:}\;\Conid{Q})\;\Varid{→}\;\Conid{B}\;\Varid{q}{}\<[E]%
 \\
@@ -1347,8 +1422,8 @@ To form quotients we have several different definitions as written in \cite{aan}
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Keyword{record}\;\Conid{QuE}\;\{\mskip1.5mu \Conid{S}\;\mathbin{:}\;\Conid{Setoid}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{PQ}\;\mathbin{:}\;\Conid{PreQu}\;\Conid{S}\mskip1.5mu\}\;(\Conid{QU}\;\mathbin{:}\;\Conid{Qu}\;\Conid{PQ})\;\mathbin{:}\;\Conid{Set₁}\;\Keyword{where}{}\<[E]%
 \\
@@ -1362,16 +1437,16 @@ To form quotients we have several different definitions as written in \cite{aan}
 \>[3]{}\Keyword{private}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{A}\;{}\<[11]%
-\>[11]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
+\>[5]{}\Conid{A}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[10]%
-\>[10]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[12]%
+\>[12]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[10]%
-\>[10]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
+\>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{nf}\;\Conid{PQ}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Keyword{field}{}\<[E]%
@@ -1409,12 +1484,12 @@ To form quotients we have several different definitions as written in \cite{aan}
 \>[12]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[12]%
-\>[12]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Conid{Q}\;{}\<[12]%
-\>[12]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
+\>[5]{}\Conid{Q}\;{}\<[11]%
+\>[11]{}\mathrel{=}\;\Conid{Q'}\;\Conid{PQ}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;{}\<[12]%
@@ -1460,6 +1535,7 @@ To form quotients we have several different definitions as written in \cite{aan}
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{11}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{14}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1479,8 +1555,8 @@ To form quotients we have several different definitions as written in \cite{aan}
 \>[11]{}\mathrel{=}\;\Conid{Carrier}\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[11]%
-\>[11]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
+\>[5]{}\Varid{\char95 ∼\char95 }\;{}\<[10]%
+\>[10]{}\mathrel{=}\;\Varid{\char95 ≈\char95 }\;\Conid{S}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Conid{Q}\;{}\<[11]%
@@ -1516,38 +1592,32 @@ For integers, it is natural to define a function to choose a representative for 
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{⌜\char95 ⌝}\;{}\<[12]%
-\>[12]{}\mathbin{:}\;\Conid{ℤ}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
+\>[B]{}\Varid{⌜\char95 ⌝}\;{}\<[16]%
+\>[16]{}\mathbin{:}\;\Conid{ℤ}\;\Varid{→}\;\Conid{ℤ₀}{}\<[E]%
 \\
-\>[B]{}\Varid{⌜}\;\Varid{+}\;\Varid{n}\;\Varid{⌝}\;{}\<[12]%
-\>[12]{}\mathrel{=}\;\Varid{n},\Varid{0}{}\<[E]%
+\>[B]{}\Varid{⌜}\;\Varid{+}\;\Varid{n}\;\Varid{⌝}\;{}\<[14]%
+\>[14]{}\mathrel{=}\;\Varid{n},\Varid{0}{}\<[E]%
 \\
-\>[B]{}\Varid{⌜}\;\Varid{-suc}\;\Varid{n}\;\Varid{⌝}\;\mathrel{=}\;\Varid{0},\Conid{ℕ.suc}\;\Varid{n}{}\<[E]%
+\>[B]{}\Varid{⌜}\;\Varid{-suc}\;\Varid{n}\;\Varid{⌝}\;{}\<[13]%
+\>[13]{}\mathrel{=}\;\Varid{0},\Varid{suc}\;\Varid{n}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-Now we need to prove \ensuremath{\Varid{⌜\char95 ⌝}} is the required embedding function, namely it is the inverse function of \ensuremath{[\mskip1.5mu \anonymous \mskip1.5mu]}.
-Firstly \ensuremath{\Varid{⌜\char95 ⌝}} is left inverse of \ensuremath{[\mskip1.5mu \anonymous \mskip1.5mu]},
+Now we need to prove \ensuremath{\Varid{⌜\char95 ⌝}} is the required embedding function, namely
+it is the inverse function of \ensuremath{[\mskip1.5mu \anonymous \mskip1.5mu]}.
 
+Firstly \ensuremath{\Varid{⌜\char95 ⌝}} is left inverse of \ensuremath{[\mskip1.5mu \anonymous \mskip1.5mu]},
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{46}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{compl}\;{}\<[25]%
-\>[25]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{⌜}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{⌝}\;\Varid{∼}\;\Varid{n}{}\<[E]%
-\\
-\>[B]{}\Varid{compl}\;\{\mskip1.5mu \Varid{x},\Varid{0}\mskip1.5mu\}\;{}\<[25]%
-\>[25]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
-\\
-\>[B]{}\Varid{compl}\;\{\mskip1.5mu \Varid{0},\Varid{nsuc}\;\Varid{y}\mskip1.5mu\}\;{}\<[25]%
-\>[25]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
-\\
-\>[B]{}\Varid{compl}\;\{\mskip1.5mu \Varid{nsuc}\;\Varid{x},\Varid{nsuc}\;\Varid{y}\mskip1.5mu\}\;\mathrel{=}\;\Varid{compl}\;\{\mskip1.5mu \Varid{x},\Varid{y}\mskip1.5mu\}\;\Varid{>∼<}\;{}\<[46]%
-\>[46]{}\Varid{⟨}\;\Conid{ℕ.sm+n≡m+sn}\;\Varid{x}\;\Varid{y}\;\Varid{⟩}{}\<[E]%
+\>[B]{}\Varid{compl}\;{}\<[34]%
+\>[34]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{⌜}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{⌝}\;\Varid{∼}\;\Varid{n}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1557,15 +1627,10 @@ Secondly \ensuremath{\Varid{⌜\char95 ⌝}} is right inverse of \ensuremath{[\m
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{stable}\;{}\<[19]%
-\>[19]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;[\mskip1.5mu \Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]\;\Varid{≡}\;\Varid{n}{}\<[E]%
-\\
-\>[B]{}\Varid{stable}\;\{\mskip1.5mu \Varid{+}\;\Varid{n}\mskip1.5mu\}\;{}\<[19]%
-\>[19]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
-\\
-\>[B]{}\Varid{stable}\;\{\mskip1.5mu \Varid{-suc}\;\Varid{n}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\>[B]{}\Varid{stable}\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;[\mskip1.5mu \Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]\;\Varid{≡}\;\Varid{n}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1577,22 +1642,24 @@ Now we can form the definable quotient structure with the prequotient we have,
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Conid{ℤ-QuD}\;\mathbin{:}\;\Conid{QuD}\;\Conid{ℤ-PreQu}{}\<[E]%
 \\
 \>[B]{}\Conid{ℤ-QuD}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\{\mskip1.5mu \Varid{emb}\;{}\<[15]%
-\>[15]{}\mathrel{=}\;\Varid{⌜\char95 ⌝}{}\<[E]%
+\>[3]{}\{\mskip1.5mu \Varid{emb}\;{}\<[17]%
+\>[17]{}\mathrel{=}\;\Varid{⌜\char95 ⌝}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{};\Varid{complete}\;{}\<[15]%
-\>[15]{}\mathrel{=}\;\Varid{λ}\;\Varid{z}\;\Varid{→}\;\Varid{compl}{}\<[E]%
+\>[15]{}\mathrel{=}\;\Varid{λ}\;\Varid{z}\;\Varid{→}\;\Varid{compl}\;\{\mskip1.5mu \Varid{z}\mskip1.5mu\}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{};\Varid{stable}\;{}\<[15]%
-\>[15]{}\mathrel{=}\;\Varid{λ}\;\Varid{z}\;\Varid{→}\;\Varid{stable}{}\<[E]%
+\>[3]{};\Varid{stable}\;{}\<[19]%
+\>[19]{}\mathrel{=}\;\Varid{λ}\;\Varid{z}\;\Varid{→}\;\Varid{stable}\;\{\mskip1.5mu \Varid{z}\mskip1.5mu\}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\mskip1.5mu\}{}\<[E]%
@@ -1601,7 +1668,7 @@ Now we can form the definable quotient structure with the prequotient we have,
 
 Now we have the mapping between the base type $\Z_0$ and the target type $\Z$, and have proved that \ensuremath{[\mskip1.5mu \anonymous \mskip1.5mu]} is a normalisation function.
 
-We can obtain the dependent and non-dependent eliminators by translate the definable quotient into other definitions,
+We can obtain the dependent and non-dependent eliminators by translating the definable quotient into other definitions,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1614,19 +1681,20 @@ We can obtain the dependent and non-dependent eliminators by translate the defin
 \ColumnHook
 \end{hscode}\resethooks
 
-It is not easy to find what benefit we obtain from constructing
-quotients. The real benefit is generated from the interaction between
-setoids and quotient types.
-Firstly the setoid definitions are usually more simpler than the normal
+We can benefit from the interaction between setoids and quotient types
+in a number of ways.
+
+Firstly the setoid definitions are usually simpler than the normal
 definitions. In the case of integers, the normal form have two
 constructors. For propositions with only one argument, sometimes we
 have to prove them for both cases in the canonical definition. With
 the increasing number of arguments in propositions, the number of
 cases we need to prove would increase exponentially. A real case is
 when trying to prove the distributivity of multiplication over
-addition for integers, there are too many cases which makes the
+addition for integers: the large amount of cases makes the
 proving cumbersome and we can hardly save any effort from any theorems
-we proved. However for the setoid definition of integers, a
+we proved. 
+However for the setoid definition of integers, a
 proposition can be converted into another proposition on natural
 numbers which is much convenient to prove because we do not need to
 prove case by case and we have a bundle of
@@ -1635,24 +1703,17 @@ theorems for natural numbers. For example,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{63}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{distʳ}\;\mathbin{:}\;\Varid{\char95 *\char95 }\;\Conid{DistributesOverʳ}\;\Varid{\char95 +\char95 }{}\<[E]%
 \\
-\>[B]{}\Varid{distʳ}\;(\Varid{a},\Varid{b})\;(\Varid{c},\Varid{d})\;(\Varid{e},\Varid{f})\;\mathrel{=}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Conid{ℕ.dist-lemʳ}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{e}\;\Varid{f}\;\Varid{+=}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{⟨}\;{}\<[6]%
-\>[6]{}\Conid{ℕ.dist-lemʳ}\;\Varid{b}\;\Varid{a}\;\Varid{c}\;\Varid{d}\;\Varid{e}\;\Varid{f}\;\Varid{⟩}{}\<[E]%
+\>[B]{}\Varid{distʳ}\;(\Varid{a},\Varid{b})\;(\Varid{c},\Varid{d})\;(\Varid{e},\Varid{f})\;\mathrel{=}\;\Conid{ℕ.dist-lemʳ}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\;\Varid{e}\;\Varid{f}\;\Varid{+=}\;\Varid{⟨}\;{}\<[63]%
+\>[63]{}\Conid{ℕ.dist-lemʳ}\;\Varid{b}\;\Varid{a}\;\Varid{c}\;\Varid{d}\;\Varid{e}\;\Varid{f}\;\Varid{⟩}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 Moreover, as we have constructed the semiring of natural numbers, it
-is even simpler to use an automatic prover \emph{ring solver} to prove simple equation of natural numbers. 
+is even simpler to use the automatic prover \emph{ring solver} to prove simple equation of natural numbers. 
 
 The rest we have to do is to lift the properties proved for setoid definition to the ones for canonical definition.
 We can easily lift n-ary operators defined for $\Z_0$ to the ones for $\Z$ by
@@ -1669,71 +1730,45 @@ We can easily lift n-ary operators defined for $\Z_0$ to the ones for $\Z$ by
 \end{hscode}\resethooks
 
 However, this lift function is unsafe because some operations on
-$\N\times\N$ do not make sense by applying this function. It is
+$\N\times\N$ do not make sense when applying this function. It is
 similar to the situation when defining functions on types with
 replaced equality in \ett{}. The solution is to lift functions which
 respects the equivalence relation. I only define the two most commonly
 used safe lifting functions
+
+\small
+{\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{liftOp1safe}\;\mathbin{:}\;(\Varid{f}\;\mathbin{:}\;\Conid{Op}\;\Varid{1}\;\Conid{ℤ₀})\;\Varid{→}\;(\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{f}\;\Varid{a}\;\Varid{∼}\;\Varid{f}\;\Varid{b})\;\Varid{→}\;\Conid{Op₁}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\Varid{liftOp1safe}\;\Varid{f}\;\Varid{cong}\;\mathrel{=}\;\Varid{λ}\;\Varid{n}\;\Varid{→}\;[\mskip1.5mu \Varid{f}\;\Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{liftOp2safe}\;\mathbin{:}\;(\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀})\;\Varid{→}\;{}\<[34]%
+\>[34]{}(\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{c}\;\Varid{∼}\;\Varid{d}\;\Varid{→}\;\Varid{op}\;\Varid{a}\;\Varid{c}\;\Varid{∼}\;\Varid{op}\;\Varid{b}\;\Varid{d})\;\Varid{→}\;\Conid{Op₂}\;\Conid{ℤ}{}\<[E]%
+\\
+\>[B]{}\Varid{liftOp2safe}\;\Varid{\char95 op\char95 }\;\Varid{cong}\;\mathrel{=}\;\Varid{λ}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;[\mskip1.5mu \Varid{⌜}\;\Varid{m}\;\Varid{⌝}\;\Varid{op}\;\Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+}
+
+Then we can obtain the $\beta$-laws which are very useful,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{15}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{16}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{liftOp1safe}\;\mathbin{:}\;(\Varid{f}\;\mathbin{:}\;\Conid{Op}\;\Varid{1}\;\Conid{ℤ₀})\;\Varid{→}\;{}\<[E]%
+\>[B]{}\Varid{liftOp1-β}\;\mathbin{:}\;(\Varid{f}\;\mathbin{:}\;\Conid{Op}\;\Varid{1}\;\Conid{ℤ₀})\;\Varid{→}\;(\Varid{cong}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{f}\;\Varid{a}\;\Varid{∼}\;\Varid{f}\;\Varid{b})\;\Varid{→}\;{}\<[E]%
 \\
-\>[B]{}\hsindent{15}{}\<[15]%
-\>[15]{}(\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{f}\;\Varid{a}\;\Varid{∼}\;\Varid{f}\;\Varid{b})\;\Varid{→}\;{}\<[E]%
-\\
-\>[15]{}\hsindent{1}{}\<[16]%
-\>[16]{}\Conid{Op₁}\;\Conid{ℤ}{}\<[E]%
-\\
-\>[B]{}\Varid{liftOp1safe}\;\Varid{f}\;\Varid{cong}\;\mathrel{=}\;\Varid{λ}\;\Varid{n}\;\Varid{→}\;[\mskip1.5mu \Varid{f}\;\Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]{}\<[E]%
+\>[B]{}\hsindent{16}{}\<[16]%
+\>[16]{}\Varid{∀}\;\Varid{n}\;\Varid{→}\;\Varid{liftOp1safe}\;\Varid{f}\;\Varid{cong}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{f}\;\Varid{n}\mskip1.5mu]{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{liftOp2safe}\;\mathbin{:}\;(\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀})\;\Varid{→}\;{}\<[E]%
+\>[B]{}\Varid{liftOp2-β}\;\mathbin{:}\;(\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀})\;\Varid{→}\;(\Varid{cong}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{c}\;\Varid{∼}\;\Varid{d}\;\Varid{→}\;\Varid{op}\;\Varid{a}\;\Varid{c}\;\Varid{∼}\;\Varid{op}\;\Varid{b}\;\Varid{d})\;\Varid{→}\;{}\<[E]%
 \\
 \>[B]{}\hsindent{15}{}\<[15]%
-\>[15]{}(\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{c}\;\Varid{∼}\;\Varid{d}\;\Varid{→}{}\<[E]%
-\\
-\>[15]{}\hsindent{1}{}\<[16]%
-\>[16]{}\Varid{op}\;\Varid{a}\;\Varid{c}\;\Varid{∼}\;\Varid{op}\;\Varid{b}\;\Varid{d})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{15}{}\<[15]%
-\>[15]{}\Conid{Op₂}\;\Conid{ℤ}{}\<[E]%
-\\
-\>[B]{}\Varid{liftOp2safe}\;\Varid{\char95 op\char95 }\;\Varid{cong}\;\mathrel{=}\;\Varid{λ}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;[\mskip1.5mu \Varid{⌜}\;\Varid{m}\;\Varid{⌝}\;\Varid{op}\;\Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
-Then we can obtain the $\beta$-laws which are very useful,
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{liftOp1-β}\;\mathbin{:}\;(\Varid{f}\;\mathbin{:}\;\Conid{Op}\;\Varid{1}\;\Conid{ℤ₀})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{13}{}\<[13]%
-\>[13]{}(\Varid{cong}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{f}\;\Varid{a}\;\Varid{∼}\;\Varid{f}\;\Varid{b})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{13}{}\<[13]%
-\>[13]{}\Varid{∀}\;\Varid{n}\;\Varid{→}\;\Varid{liftOp1safe}\;\Varid{f}\;\Varid{cong}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{f}\;\Varid{n}\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{liftOp1-β}\;\Varid{f}\;\Varid{cong}\;\Varid{n}\;\mathrel{=}\;\Varid{sound}\;(\Varid{cong}\;\Varid{compl}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{liftOp2-β}\;\mathbin{:}\;(\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{13}{}\<[13]%
-\>[13]{}(\Varid{cong}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{c}\;\Varid{∼}\;\Varid{d}\;\Varid{→}{}\<[E]%
-\\
-\>[13]{}\hsindent{1}{}\<[14]%
-\>[14]{}\Varid{op}\;\Varid{a}\;\Varid{c}\;\Varid{∼}\;\Varid{op}\;\Varid{b}\;\Varid{d})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{13}{}\<[13]%
-\>[13]{}\Varid{∀}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;\Varid{liftOp2safe}\;\Varid{op}\;\Varid{cong}\;[\mskip1.5mu \Varid{m}\mskip1.5mu]\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{op}\;\Varid{m}\;\Varid{n}\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{liftOp2-β}\;\Varid{op}\;\Varid{cong}\;\Varid{m}\;\Varid{n}\;\mathrel{=}\;\Varid{sound}\;(\Varid{cong}\;\Varid{compl}\;\Varid{compl}){}\<[E]%
+\>[15]{}\Varid{∀}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;\Varid{liftOp2safe}\;\Varid{op}\;\Varid{cong}\;[\mskip1.5mu \Varid{m}\mskip1.5mu]\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{op}\;\Varid{m}\;\Varid{n}\mskip1.5mu]{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1763,27 +1798,18 @@ When trying to prove theorems for canonical integers, we can lift
 proved properties for the setoid integers, such as commutativity of
 any binary operations,
 
-
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{liftComm}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;\Varid{→}\;{}\<[E]%
+\>[B]{}\Varid{liftComm}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;\Varid{→}\;\Conid{P.Commutative}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{→}\;\Conid{Commutative}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
 \\
-\>[B]{}\hsindent{12}{}\<[12]%
-\>[12]{}\Conid{P.Commutative}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{12}{}\<[12]%
-\>[12]{}\Conid{Commutative}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
-\\
-\>[B]{}\Varid{liftComm}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\Varid{comm}\;\Varid{x}\;\Varid{y}\;\mathrel{=}\;\Varid{sound}\;\mathbin{\$}\;\Varid{comm}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{y}\;\Varid{⌝}{}\<[E]%
+\>[B]{}\Varid{liftComm}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\Varid{comm}\;\Varid{x}\;\Varid{y}\;\mathrel{=}\;\Varid{sound}\;(\Varid{comm}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{y}\;\Varid{⌝}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 The generalised lifting function for commutativity is also one of the
 derived theorem of quotients as it only uses \ensuremath{\Varid{sound}} and \ensuremath{\Varid{⌜\char95 ⌝}} which are part of the
-quotients.
-then we can lift the commutativity of addition and multiplication,
+quotients. We can then lift the commutativity of addition and multiplication,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1800,107 +1826,92 @@ then we can lift the commutativity of addition and multiplication,
 \ColumnHook
 \end{hscode}\resethooks
 
-It is also much simpler to prove the complicated distributivity of multiplication over addition, 
+It is also much simpler and reasonable to prove the complicated distributivity of multiplication over addition, 
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{distʳ}\;\mathbin{:}\;\Varid{\char95 *\char95 }\;\Conid{DistributesOverʳ}\;\Varid{\char95 +\char95 }{}\<[E]%
 \\
-\>[B]{}\Varid{distʳ}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Varid{sound}\;\mathbin{\$}\;\Conid{ℤ₀.*-cong}\;(\Varid{compl}\;\{\mskip1.5mu \Varid{⌜}\;\Varid{b}\;\Varid{⌝}\;\Conid{ℤ₀+}\;\Varid{⌜}\;\Varid{c}\;\Varid{⌝}\mskip1.5mu\})\;\Varid{zrefl}\;\Varid{>∼<}\;{}\<[E]%
+\>[B]{}\Varid{distʳ}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Varid{sound}\;{}\<[22]%
+\>[22]{}(\Conid{ℤ₀.*-cong}\;(\Varid{compl}\;\{\mskip1.5mu \Varid{⌜}\;\Varid{b}\;\Varid{⌝}\;\Varid{+}\;\Varid{⌜}\;\Varid{c}\;\Varid{⌝}\mskip1.5mu\})\;\Varid{zrefl}\;\Varid{>∼<}{}\<[E]%
 \\
 \>[B]{}\hsindent{15}{}\<[15]%
-\>[15]{}\Conid{ℤ₀.distʳ}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{b}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{c}\;\Varid{⌝}\;\Varid{>∼<}\;{}\<[E]%
+\>[15]{}\Conid{ℤ₀.distʳ}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{b}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{c}\;\Varid{⌝}\;\Varid{>∼<}{}\<[E]%
 \\
 \>[B]{}\hsindent{15}{}\<[15]%
-\>[15]{}\Conid{ℤ₀.+-cong}\;\Varid{compl'}\;\Varid{compl'}{}\<[E]%
+\>[15]{}\Conid{ℤ₀.+-cong}\;\Varid{compl'}\;\Varid{compl'}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 There is no need to use pattern matching, namely prove the
-propositions inductively. The simplicity of the proof is achieved by
+propositions inductively. At first, I tried to prove distributivity by
+case analysis, and I found it is especially difficult and the proof is
+too long and it looks like (I omit to write the long proof for each clause):
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{distʳ}\;\mathbin{:}\;\Varid{\char95 *\char95 }\;\Conid{DistributesOverʳ}\;\Varid{\char95 +\char95 }{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{+}\;\Varid{n})\;(\Varid{+}\;\Varid{n'})\;(\Varid{+}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{+}\;\Varid{n})\;(\Varid{+}\;\Varid{n'})\;(\Varid{-suc}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{+}\;\Varid{n})\;(\Varid{-suc}\;\Varid{n'})\;(\Varid{+}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{+}\;\Varid{n})\;(\Varid{-suc}\;\Varid{n'})\;(\Varid{-suc}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{-suc}\;\Varid{n})\;(\Varid{+}\;\Varid{n'})\;(\Varid{+}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{-suc}\;\Varid{n})\;(\Varid{+}\;\Varid{n'})\;(\Varid{-suc}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{-suc}\;\Varid{n})\;(\Varid{-suc}\;\Varid{n'})\;(\Varid{+}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\\
+\>[B]{}\Varid{distʳ}\;(\Varid{-suc}\;\Varid{n})\;(\Varid{-suc}\;\Varid{n'})\;(\Varid{-suc}\;\Varid{n0})\;\mathrel{=}\;\Varid{...}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Even though it must be provable in this way, it is not the best choice
+to prove something like distributivity by induction.
+
+ The simplicity of the short proof is achieved by
 applying the quotient properties such as \ensuremath{\Varid{sound}}, we can translate or
 convert the proposition into the corresponding proposition for setoid
-integers. We can further translating the propositions for setoid
-integers into some easier propositions for natural numbers. The
-connections between canonical integers and natural numbers is built by
+integers. Although all the lemmas may be as much as the long proofs by
+induction, they are more meaningful and can be reused. We can further
+translating the propositions for setoid integers into some easier
+propositions for natural numbers. 
+The connections between canonical integers and natural numbers is built by
 the definition of quotient.
 
 We can also lift a structure of properties such as monoid,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{liftId}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;(\Varid{e}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{10}{}\<[10]%
-\>[10]{}\Conid{P.Identity}\;\Varid{\char95 ∼\char95 }\;\Varid{⌜}\;\Varid{e}\;\Varid{⌝}\;\Varid{op}\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{10}{}\<[10]%
-\>[10]{}\Conid{Identity}\;\Varid{e}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
-\\
-\>[B]{}\Varid{liftId}\;\Varid{e}\;(\Varid{idl},\Varid{idr})\;\mathrel{=}\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{sound}\;(\Varid{idl}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝})\;\Varid{>≡<}\;\Varid{stable}),{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{sound}\;(\Varid{idr}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝})\;\Varid{>≡<}\;\Varid{stable}){}\<[E]%
+\>[B]{}\Varid{liftId}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;(\Varid{e}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;\Conid{Identity}\;\Varid{\char95 ∼\char95 }\;\Varid{⌜}\;\Varid{e}\;\Varid{⌝}\;\Varid{op}\;\Varid{→}\;\Conid{Identity}\;\Varid{e}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{liftAssoc}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;(\Varid{cong}\;\mathbin{:}\;\Conid{Cong2}\;\Varid{op})\;\Varid{→}\;{}\<[E]%
+\>[B]{}\Varid{liftAssoc}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;(\Varid{cong}\;\mathbin{:}\;\Conid{Cong2}\;\Varid{op})\;\Varid{→}\;\Conid{Associative}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{→}\;{}\<[E]%
 \\
-\>[B]{}\hsindent{13}{}\<[13]%
-\>[13]{}\Conid{P.Associative}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{13}{}\<[13]%
-\>[13]{}\Conid{Associative}\;(\Varid{liftOp2safe}\;\Varid{op}\;\Varid{cong}){}\<[E]%
-\\
-\>[B]{}\Varid{liftAssoc}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\Varid{cong}\;\Varid{assoc}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Varid{sound}\;\mathbin{\$}\;\Varid{cong}\;(\Varid{compl}\;\{\mskip1.5mu \Varid{op}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{b}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{⌝}\mskip1.5mu\})\;\Varid{zrefl}\;\Varid{>∼<}\;\Varid{assoc}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{b}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{c}\;\Varid{⌝}\;\Varid{>∼<}\;\Varid{cong}\;\Varid{zrefl}\;\Varid{compl'}{}\<[E]%
+\>[B]{}\hsindent{20}{}\<[20]%
+\>[20]{}\Conid{Associative}\;(\Varid{liftOp2safe}\;\Varid{op}\;\Varid{cong}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{liftMonoid}\;\mathbin{:}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{e}\;\mathbin{:}\;\Conid{ℤ}\mskip1.5mu\}\;(\Varid{cong}\;\mathbin{:}\;\Conid{Cong2}\;\Varid{op})\;\Varid{→}\;{}\<[E]%
+\>[B]{}\Varid{liftMonoid}\;\mathbin{:}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{e}\;\mathbin{:}\;\Conid{ℤ}\mskip1.5mu\}\;(\Varid{cong}\;\mathbin{:}\;\Conid{Cong2}\;\Varid{op})\;\Varid{→}\;\Conid{IsMonoid}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{⌜}\;\Varid{e}\;\Varid{⌝}\;\Varid{→}\;{}\<[E]%
 \\
-\>[B]{}\hsindent{14}{}\<[14]%
-\>[14]{}\Conid{IsMonoid}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;{}\<[31]%
-\>[31]{}\Varid{⌜}\;\Varid{e}\;\Varid{⌝}\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{14}{}\<[14]%
-\>[14]{}\Conid{IsMonoid}\;\Varid{\char95 ≡\char95 }\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op})\;\Varid{e}{}\<[E]%
-\\
-\>[B]{}\Varid{liftMonoid}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{e}\mskip1.5mu\}\;\Varid{cong}\;\Varid{im}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\{\mskip1.5mu \Varid{isSemigroup}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
-\\
-\>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\{\mskip1.5mu \Varid{isEquivalence}\;\mathrel{=}\;\Varid{isEquivalence}{}\<[E]%
-\\
-\>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{};\Varid{assoc}\;\mathrel{=}\;\Varid{liftAssoc}\;\Varid{cong}\;(\Conid{IsMonoid.assoc}\;\Varid{im}){}\<[E]%
-\\
-\>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{};\Varid{∙-cong}\;\mathrel{=}\;\Varid{cong₂}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
-\\
-\>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\mskip1.5mu\}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{};\Varid{identity}\;\mathrel{=}\;\Varid{liftId}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\Varid{e}\;(\Conid{IsMonoid.identity}\;\Varid{im}){}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\mskip1.5mu\}{}\<[E]%
+\>[B]{}\hsindent{21}{}\<[21]%
+\>[21]{}\Conid{IsMonoid}\;\Varid{\char95 ≡\char95 }\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op})\;\Varid{e}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 These lift functions for operators and properties can be generalised
-even further such that they can be applied to all quotients. They are
-all derived theorems for quotients which can save a lot of work for
+even further such that they can be applied to all quotients that have
+similar algebraic structures.
+They are all derived theorems for quotients which can save a lot of work for
 us. We can reuse them in the next example, the set of rational numbers $\Q$.
 
 \subsection{Rational numbers}
@@ -1939,14 +1950,14 @@ Therefore the equivalence relation can be defined as,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{36}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{\char95 ∼\char95 }\;{}\<[7]%
-\>[7]{}\mathbin{:}\;\Conid{Rel}\;\Conid{ℚ₀}\;\Varid{zero}{}\<[E]%
+\>[B]{}\Varid{\char95 ∼\char95 }\;{}\<[36]%
+\>[36]{}\mathbin{:}\;\Conid{Rel}\;\Conid{ℚ₀}{}\<[E]%
 \\
 \>[B]{}\Varid{n1}\;\Varid{/suc}\;\Varid{d1}\;\Varid{∼}\;\Varid{n2}\;\Varid{/suc}\;\Varid{d2}\;\mathrel{=}\;{}\<[28]%
-\>[28]{}\Varid{n1}\;\Conid{ℤ*ℕ}\;\Varid{suc}\;\Varid{d2}\;\Varid{≡}\;\Varid{n2}\;\Conid{ℤ*ℕ}\;\Varid{suc}\;\Varid{d1}{}\<[E]%
+\>[28]{}\Varid{n1}\;\Varid{*}\;\Varid{suc}\;\Varid{d2}\;\Varid{≡}\;\Varid{n2}\;\Varid{*}\;\Varid{suc}\;\Varid{d1}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1960,7 +1971,7 @@ We can encode it using record type in Agda,
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Keyword{record}\;\Conid{ℚ}\;\mathbin{:}\;\Conid{Set}\;\Keyword{where}{}\<[E]%
 \\
@@ -1968,15 +1979,15 @@ We can encode it using record type in Agda,
 \>[3]{}\Keyword{field}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{numerator}\;{}\<[19]%
-\>[19]{}\mathbin{:}\;\Conid{ℤ}{}\<[E]%
+\>[5]{}\Varid{numerator}\;{}\<[22]%
+\>[22]{}\mathbin{:}\;\Conid{ℤ}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Varid{denominator-1}\;\mathbin{:}\;\Conid{ℕ}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{isCoprime}\;{}\<[19]%
-\>[19]{}\mathbin{:}\;\Conid{True}\;(\Conid{C.coprime?}\;\Varid{∣}\;\Varid{numerator}\;\Varid{∣}\;(\Varid{suc}\;\Varid{denominator-1})){}\<[E]%
+\>[5]{}\Varid{isCoprime}\;{}\<[22]%
+\>[22]{}\mathbin{:}\;\Conid{True}\;(\Conid{C.coprime?}\;\Varid{∣}\;\Varid{numerator}\;\Varid{∣}\;(\Varid{suc}\;\Varid{denominator-1})){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1988,16 +1999,6 @@ divisor can help us reduce the fraction and give us the proof of coprime,
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;\mathbin{:}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{ℚ}{}\<[E]%
-\\
-\>[B]{}[\mskip1.5mu (\Varid{+}\;\Varid{0})\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\mathrel{=}\;\Conid{ℤ.+\char95 }\;\Varid{0}\;\Varid{÷}\;\Varid{1}{}\<[E]%
-\\
-\>[B]{}[\mskip1.5mu (\Varid{+}\;(\Varid{suc}\;\Varid{n}))\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\Keyword{with}\;\Varid{gcd}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d}){}\<[E]%
-\\
-\>[B]{}[\mskip1.5mu (\Varid{+}\;\Varid{suc}\;\Varid{n})\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\mid \;\Varid{di},\Varid{g}\;\mathrel{=}\;\Conid{GCD′→ℚ}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d})\;\Varid{di}\;(\Varid{λ}\;())\;(\Conid{C.gcd-gcd′}\;\Varid{g}){}\<[E]%
-\\
-\>[B]{}[\mskip1.5mu (\Varid{-suc}\;\Varid{n})\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\Keyword{with}\;\Varid{gcd}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d}){}\<[E]%
-\\
-\>[B]{}\Varid{...}\;\mid \;\Varid{di},\Varid{g}\;\mathrel{=}\;\Varid{-}\;\Conid{GCD′→ℚ}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d})\;\Varid{di}\;(\Varid{λ}\;())\;(\Conid{C.gcd-gcd′}\;\Varid{g}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -2012,15 +2013,16 @@ The embedding function is simple. We only need to forget the coprime proof in th
 \ColumnHook
 \end{hscode}\resethooks
 
-Similarly, we are able to construct the setoid, the prequotient and then the definable quotient of rational numbers. We can benefit from the ease of defining operators and proving theorems on setoids while still using the normal form of rational numbers which is safer. and the lifted operators and properties.
-
-
-
+Similarly, we are able to construct the setoid, the prequotient and
+then the definable quotient of rational numbers. We can benefit from
+the ease of defining operators and proving theorems on setoids while
+still using the normal form of rational numbers, the lifted operators
+and properties which are safer.
 
 
 \subsection{Real numbers}
 
-The previous quotient types are all definable in \itt{} so that we can
+The previous quotient types are all definable in \itt{}, so we can
 construct the definable quotients for them. However, there are some
 types undefinable in \itt{}. The set of real numbers $\R$ has been proved to be undefinable in \cite{aan}.
 
@@ -2035,8 +2037,10 @@ We can implement it in Agda. First a sequence of elements of $A$ can be represen
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Conid{Seq}\;\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\>[B]{}\Conid{Seq}\;{}\<[9]%
+\>[9]{}\mathbin{:}\;(\Conid{A}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;\Conid{Set}{}\<[E]%
 \\
 \>[B]{}\Conid{Seq}\;\Conid{A}\;\mathrel{=}\;\Conid{ℕ}\;\Varid{→}\;\Conid{A}{}\<[E]%
 \ColumnHook
@@ -2046,14 +2050,12 @@ And a sequence of rational numbers converges to zero can be expressed as follows
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Conid{Converge}\;\mathbin{:}\;\Conid{Seq}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{Set}{}\<[E]%
+\>[B]{}\Conid{Converge}\;{}\<[13]%
+\>[13]{}\mathbin{:}\;\Conid{Seq}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{Set}{}\<[E]%
 \\
-\>[B]{}\Conid{Converge}\;\Varid{f}\;\mathrel{=}\;\Varid{∀}\;(\Varid{ε}\;\mathbin{:}\;\Conid{ℚ₀*})\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Varid{lb}\;\Varid{→}\;\Varid{∀}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{23}{}\<[23]%
-\>[23]{}\Varid{∣}\;(\Varid{f}\;(\Varid{suc}\;\Varid{lb}\;\Varid{+}\;\Varid{m}))\;\Varid{-}\;(\Varid{f}\;(\Varid{suc}\;\Varid{lb}\;\Varid{+}\;\Varid{n}))\;\Varid{∣}\;\Varid{<'}\;\Varid{ε}{}\<[E]%
+\>[B]{}\Conid{Converge}\;\Varid{f}\;\mathrel{=}\;\Varid{∀}\;(\Varid{ε}\;\mathbin{:}\;\Conid{ℚ₀*})\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Varid{lb}\;\Varid{→}\;\Varid{∀}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;\Varid{∣}\;(\Varid{f}\;(\Varid{suc}\;\Varid{lb}\;\Varid{+}\;\Varid{m}))\;\Varid{-}\;(\Varid{f}\;(\Varid{suc}\;\Varid{lb}\;\Varid{+}\;\Varid{n}))\;\Varid{∣}\;\Varid{<'}\;\Varid{ε}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -2085,30 +2087,12 @@ To complete the setoid for real numbers, an equivalence relation is required. In
 $$r \sim s = \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N,
 \forall i:\N, i>m\to \vert  r_i - s_i \vert <\varepsilon$$
 
-The Agda version is
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[4]{}\Varid{\char95 Diff\char95 on\char95 }\;\mathbin{:}\;\Conid{Seq}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{Seq}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{Seq}\;\Conid{ℚ₀*}{}\<[E]%
-\\
-\>[4]{}\Varid{f}\;\Conid{Diff}\;\Varid{g}\;\Varid{on}\;\Varid{m}\;\mathrel{=}\;\Varid{∣}\;\Varid{f}\;\Varid{m}\;\Varid{-}\;\Varid{g}\;\Varid{m}\;\Varid{∣}{}\<[E]%
-\\[\blanklineskip]%
-\>[4]{}\Varid{\char95 \char126 \char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℝ₀}\;\Varid{zero}{}\<[E]%
-\\
-\>[4]{}(\Varid{f:}\;\Varid{f}\;\Varid{p:}\;\Varid{p})\;\mathord{\sim}\;(\Varid{f:}\;\Varid{f'}\;\Varid{p:}\;\Varid{p'})\;\mathrel{=}\;{}\<[E]%
-\\
-\>[4]{}\hsindent{4}{}\<[8]%
-\>[8]{}\Varid{∀}\;(\Varid{ε}\;\mathbin{:}\;\Conid{ℚ₀*})\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Varid{lb}\;\Varid{→}\;\Varid{∀}\;\Varid{i}\;\Varid{→}\;(\Varid{lb}\;\Varid{<}\;\Varid{i})\;\Varid{→}\;\Varid{f}\;\Conid{Diff}\;\Varid{f'}\;\Varid{on}\;\Varid{i}\;\Varid{<'}\;\Varid{ε}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
+The Agda version is in Appendix.
 
 In set theory we can construct  quotient set $\R_0 /\sim$. However
-since real numbers have no normal forms we can not define the quotient
+since real numbers have no normal forms we cannot define the quotient
 in \itt{}. Hence the definable quotient definition does not work for
-it.The undefinability of the any type $\R$ which is the quotient type
+it. The undefinability of the any type $\R$ which is the quotient type
 of the setoid $(\R_0, \sim)$ is proved by local continuity \cite{aan}.
 
 \subsection{All epimorphisms are split epimorphisms}
@@ -2119,20 +2103,10 @@ A morphism $e$ is an epimorphism if it is right-cancellative
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Conid{Epi}\;\mathbin{:}\;\{\mskip1.5mu \Conid{A}\;\Conid{B}\;\mathbin{:}\;\Conid{Set}\mskip1.5mu\}\;\Varid{→}\;(\Varid{e}\;\mathbin{:}\;\Conid{A}\;\Varid{→}\;\Conid{B})\;\Varid{→}\;(\Conid{C}\;\mathbin{:}\;\Conid{Set})\;\Varid{→}\;\Conid{Set}{}\<[E]%
 \\
-\>[B]{}\Conid{Epi}\;\{\mskip1.5mu \Conid{A}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{e}\;\Conid{C}\;\mathrel{=}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{7}{}\<[7]%
-\>[7]{}\Varid{∀}\;(\Varid{f}\;\Varid{g}\;\mathbin{:}\;\Conid{B}\;\Varid{→}\;\Conid{C})\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{7}{}\<[7]%
-\>[7]{}(\Varid{∀}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Varid{f}\;(\Varid{e}\;\Varid{a})\;\Varid{≡}\;\Varid{g}\;(\Varid{e}\;\Varid{a}))\;\Varid{→}\;{}\<[E]%
-\\
-\>[B]{}\hsindent{7}{}\<[7]%
-\>[7]{}\Varid{∀}\;(\Varid{b}\;\mathbin{:}\;\Conid{B})\;\Varid{→}\;\Varid{f}\;\Varid{b}\;\Varid{≡}\;\Varid{g}\;\Varid{b}{}\<[E]%
+\>[B]{}\Conid{Epi}\;\{\mskip1.5mu \Conid{A}\mskip1.5mu\}\;\{\mskip1.5mu \Conid{B}\mskip1.5mu\}\;\Varid{e}\;\Conid{C}\;\mathrel{=}\;\Varid{∀}\;(\Varid{f}\;\Varid{g}\;\mathbin{:}\;\Conid{B}\;\Varid{→}\;\Conid{C})\;\Varid{→}\;(\Varid{∀}\;(\Varid{a}\;\mathbin{:}\;\Conid{A})\;\Varid{→}\;\Varid{f}\;(\Varid{e}\;\Varid{a})\;\Varid{≡}\;\Varid{g}\;(\Varid{e}\;\Varid{a}))\;\Varid{→}\;\Varid{∀}\;(\Varid{b}\;\mathbin{:}\;\Conid{B})\;\Varid{→}\;\Varid{f}\;\Varid{b}\;\Varid{≡}\;\Varid{g}\;\Varid{b}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -2241,10 +2215,14 @@ must be decidable,
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Keyword{postulate}\;\Varid{g}\;\mathbin{:}\;\Conid{B}\;\Varid{→}\;\Conid{Bool}{}\<[E]%
+\>[B]{}\Keyword{postulate}\;\Varid{g}\;{}\<[16]%
+\>[16]{}\mathbin{:}\;\Conid{B}\;\Varid{→}\;\Conid{Bool}{}\<[E]%
 \\
-\>[B]{}\Keyword{postulate}\;\Varid{gb}\;\mathbin{:}\;\Varid{g}\;\Varid{b}\;\Varid{≡}\;\Varid{true}{}\<[E]%
+\>[B]{}\Keyword{postulate}\;\Varid{gb}\;{}\<[15]%
+\>[15]{}\mathbin{:}\;\Varid{g}\;\Varid{b}\;\Varid{≡}\;\Varid{true}{}\<[E]%
 \\
 \>[B]{}\Keyword{postulate}\;\Varid{gb'}\;\mathbin{:}\;\Varid{∀}\;\Varid{b'}\;\Varid{→}\;\Varid{¬}\;(\Varid{b'}\;\Varid{≡}\;\Varid{b})\;\Varid{→}\;\Varid{false}\;\Varid{≡}\;\Varid{g}\;\Varid{b'}{}\<[E]%
 \ColumnHook
@@ -2268,28 +2246,39 @@ Finally we can prove $e$ is not an epi
 \end{hscode}\resethooks
 
 This proposition can only been applied to definable types $A$ $B$ in \itt{} and is
-only proved to be true with classic axioms.Therefore it does not make
+only proved to be true with classic axioms. Therefore it does not make
 sense for the epimorphism from $\R_0$ to $\R$.
 
 \section{Conclusion}
+\label{sec:cl}
 
 In the first phase of the project of quotient types in \itt{}, we
 investigate the quotients which are definable in current setting of
 \itt{}. The quotient types are separately defined and then proved to
 be correct by forming definable quotients of some setoids. The
-properties contained in the quotient structure is very helpful in
+properties contained in the quotient structure are very helpful in
 lifting functions and propositions for setoids to quotient types. This
-approach provides us an alternative choice to define functions and prove propositions. It is probably simpler to define functions on setoids and we can reuses proved theorems for the setoids in many cases. However it is a little complicated to build the quotients and is only applicable to quotients which are definable in \itt{}.
+approach provides us an alternative choice to define functions and
+prove propositions.
+It is probably simpler to define functions on setoids and we can
+ reuse proved theorems for the setoids in many cases.
+However it is a little complicated to build the quotients and is only applicable to quotients which are definable in \itt{}.
 
 In the next phase we will focus on the undefinable quotients and
 extending \itt{} with axiomatic quotient types. To implement
 undefinable quotients, a new type former with the essential
 introduction and elimination rules is unavoidable. Although the
 quotient structures only works for definable quotients, it can be a
-good guidance to axiomatise the quotient types. We can extend the work
-in \cite{alt:99} and find an approach to extend \itt{} without losing
-nice features such as termination and decidable type checking. Another
-future work could be to give a detailed proof of the conservativity of \itt{} with quotient types over \ett{}.
+good guide when axiomatising the quotient types. 
+
+For future works, We can extend the setoid model in \cite{alt:99} to
+quotient types, find an approach to extend \itt{} without losing
+nice features such as termination and decidable type checking. 
+Additional future work could be to give a detailed proof of the
+conservativity of \itt{} with quotient types over \ett{} extending the
+work in \cite{hof:95:con}. Some other models, such as groupoid model
+could also be investigated since Voevodsky has defined quotients in
+Homotopy Type Theory\cite{voe:hset}.
 
 %future : something on equality, complete preliminary work in Agda
 %Extend without losing nice features of itt, termination, decidable type checking
@@ -2300,11 +2289,172 @@ future work could be to give a detailed proof of the conservativity of \itt{} wi
 % one thing in one paragraph.
 
 
+%future : something on equality, complete preliminary work in Agda
+%Extend without losing nice features of itt, termination, decidable type checking
+%axiomatizing quotients types, adding rules, na 
+% possible quotations, talk to Thorsten
+% 
 
 
 
 \newpage
 \bibliography{quotients}
 \bibliographystyle{plain}
+
+\newpage
+
+\oddsidemargin=-1cm
+\evensidemargin=-1cm
+\begin{appendix}
+
+\section{Appendix}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{sound}\;{}\<[28]%
+\>[28]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{x}\;\Varid{y}\mskip1.5mu\}\;\Varid{→}\;\Varid{x}\;\Varid{∼}\;\Varid{y}\;\Varid{→}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{y}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{sound}\;\{\mskip1.5mu \Varid{x}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{y}\mskip1.5mu\}\;\Varid{x∼y}\;\mathrel{=}\;\Varid{⌞}\;\Varid{compl}\;\Varid{>∼<}\;\Varid{x∼y}\;\Varid{>∼<}\;\Varid{compl'}\;\Varid{⌟}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{46}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{compl}\;{}\<[34]%
+\>[34]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;\Varid{⌜}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{⌝}\;\Varid{∼}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{compl}\;\{\mskip1.5mu \Varid{x},\Varid{0}\mskip1.5mu\}\;{}\<[31]%
+\>[31]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{compl}\;\{\mskip1.5mu \Varid{0},\Varid{nsuc}\;\Varid{y}\mskip1.5mu\}\;{}\<[28]%
+\>[28]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{compl}\;\{\mskip1.5mu \Varid{nsuc}\;\Varid{x},\Varid{nsuc}\;\Varid{y}\mskip1.5mu\}\;\mathrel{=}\;\Varid{compl}\;\{\mskip1.5mu \Varid{x},\Varid{y}\mskip1.5mu\}\;\Varid{>∼<}\;{}\<[46]%
+\>[46]{}\Varid{⟨}\;\Varid{sm+n≡m+sn}\;\Varid{x}\;\Varid{y}\;\Varid{⟩}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{stable}\;{}\<[23]%
+\>[23]{}\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{n}\mskip1.5mu\}\;\Varid{→}\;[\mskip1.5mu \Varid{⌜}\;\Varid{n}\;\Varid{⌝}\mskip1.5mu]\;\Varid{≡}\;\Varid{n}{}\<[E]%
+\\
+\>[B]{}\Varid{stable}\;\{\mskip1.5mu \Varid{+}\;\Varid{n}\mskip1.5mu\}\;{}\<[20]%
+\>[20]{}\mathrel{=}\;\Varid{refl}{}\<[E]%
+\\
+\>[B]{}\Varid{stable}\;\{\mskip1.5mu \Varid{-suc}\;\Varid{n}\mskip1.5mu\}\;\mathrel{=}\;\Varid{refl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{liftOp1-β}\;\mathbin{:}\;(\Varid{f}\;\mathbin{:}\;\Conid{Op}\;\Varid{1}\;\Conid{ℤ₀})\;\Varid{→}\;(\Varid{cong}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{f}\;\Varid{a}\;\Varid{∼}\;\Varid{f}\;\Varid{b})\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{16}{}\<[16]%
+\>[16]{}\Varid{∀}\;\Varid{n}\;\Varid{→}\;\Varid{liftOp1safe}\;\Varid{f}\;\Varid{cong}\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{f}\;\Varid{n}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{liftOp1-β}\;\Varid{f}\;\Varid{cong}\;\Varid{n}\;\mathrel{=}\;\Varid{sound}\;(\Varid{cong}\;\Varid{compl}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{liftOp2-β}\;\mathbin{:}\;(\Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀})\;\Varid{→}\;(\Varid{cong}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}\mskip1.5mu\}\;\Varid{→}\;\Varid{a}\;\Varid{∼}\;\Varid{b}\;\Varid{→}\;\Varid{c}\;\Varid{∼}\;\Varid{d}\;\Varid{→}\;\Varid{op}\;\Varid{a}\;\Varid{c}\;\Varid{∼}\;\Varid{op}\;\Varid{b}\;\Varid{d})\;\Varid{→}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\Varid{∀}\;\Varid{m}\;\Varid{n}\;\Varid{→}\;\Varid{liftOp2safe}\;\Varid{op}\;\Varid{cong}\;[\mskip1.5mu \Varid{m}\mskip1.5mu]\;[\mskip1.5mu \Varid{n}\mskip1.5mu]\;\Varid{≡}\;[\mskip1.5mu \Varid{op}\;\Varid{m}\;\Varid{n}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{liftOp2-β}\;\Varid{op}\;\Varid{cong}\;\Varid{m}\;\Varid{n}\;\mathrel{=}\;\Varid{sound}\;(\Varid{cong}\;\Varid{compl}\;\Varid{compl}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{liftId}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;(\Varid{e}\;\mathbin{:}\;\Conid{ℤ})\;\Varid{→}\;\Conid{Identity}\;\Varid{\char95 ∼\char95 }\;\Varid{⌜}\;\Varid{e}\;\Varid{⌝}\;\Varid{op}\;\Varid{→}\;\Conid{Identity}\;\Varid{e}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
+\\
+\>[B]{}\Varid{liftId}\;\Varid{e}\;(\Varid{idl},\Varid{idr})\;\mathrel{=}\;(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{sound}\;(\Varid{idl}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝})\;\Varid{>≡<}\;\Varid{stable}),(\Varid{λ}\;\Varid{x}\;\Varid{→}\;\Varid{sound}\;(\Varid{idr}\;\Varid{⌜}\;\Varid{x}\;\Varid{⌝})\;\Varid{>≡<}\;\Varid{stable}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{liftAssoc}\;\mathbin{:}\;\Varid{∀}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;(\Varid{cong}\;\mathbin{:}\;\Conid{Cong2}\;\Varid{op})\;\Varid{→}\;\Conid{Associative}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{→}\;\Conid{Associative}\;(\Varid{liftOp2safe}\;\Varid{op}\;\Varid{cong}){}\<[E]%
+\\
+\>[B]{}\Varid{liftAssoc}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\Varid{cong}\;\Varid{assoc}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\mathrel{=}\;\Varid{sound}\;(\Varid{cong}\;(\Varid{compl}\;\{\mskip1.5mu \Varid{op}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{b}\;\Varid{⌝}\mskip1.5mu\})\;\Varid{zrefl}\;\Varid{>∼<}\;\Varid{assoc}\;\Varid{⌜}\;\Varid{a}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{b}\;\Varid{⌝}\;\Varid{⌜}\;\Varid{c}\;\Varid{⌝}\;\Varid{>∼<}\;\Varid{cong}\;\Varid{zrefl}\;\Varid{compl'}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{liftMonoid}\;\mathbin{:}\;\{\mskip1.5mu \Varid{op}\;\mathbin{:}\;\Conid{Op}\;\Varid{2}\;\Conid{ℤ₀}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{e}\;\mathbin{:}\;\Conid{ℤ}\mskip1.5mu\}\;(\Varid{cong}\;\mathbin{:}\;\Conid{Cong2}\;\Varid{op})\;\Varid{→}\;\Conid{IsMonoid}\;\Varid{\char95 ∼\char95 }\;\Varid{op}\;\Varid{⌜}\;\Varid{e}\;\Varid{⌝}\;\Varid{→}\;\Conid{IsMonoid}\;\Varid{\char95 ≡\char95 }\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op})\;\Varid{e}{}\<[E]%
+\\
+\>[B]{}\Varid{liftMonoid}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\{\mskip1.5mu \Varid{e}\mskip1.5mu\}\;\Varid{cong}\;\Varid{im}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\{\mskip1.5mu \Varid{isSemigroup}\;\mathrel{=}\;\Keyword{record}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\{\mskip1.5mu \Varid{isEquivalence}\;\mathrel{=}\;\Varid{isEquivalence}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{};\Varid{assoc}\;\mathrel{=}\;\Varid{liftAssoc}\;\Varid{cong}\;(\Conid{IsMonoid.assoc}\;\Varid{im}){}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{};\Varid{∙-cong}\;\mathrel{=}\;\Varid{cong₂}\;(\Varid{liftOp}\;\Varid{2}\;\Varid{op}){}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\mskip1.5mu\}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{};\Varid{identity}\;\mathrel{=}\;\Varid{liftId}\;\{\mskip1.5mu \Varid{op}\mskip1.5mu\}\;\Varid{e}\;(\Conid{IsMonoid.identity}\;\Varid{im}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}[\mskip1.5mu \anonymous \mskip1.5mu]\;\mathbin{:}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{ℚ}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu (\Varid{+}\;\Varid{0})\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\mathrel{=}\;\Conid{ℤ.+\char95 }\;\Varid{0}\;\Varid{÷}\;\Varid{1}{}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu (\Varid{+}\;(\Varid{suc}\;\Varid{n}))\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\Keyword{with}\;\Varid{gcd}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d}){}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu (\Varid{+}\;\Varid{suc}\;\Varid{n})\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\mid \;\Varid{di},\Varid{g}\;\mathrel{=}\;\Conid{GCD′→ℚ}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d})\;\Varid{di}\;(\Varid{λ}\;())\;(\Conid{C.gcd-gcd′}\;\Varid{g}){}\<[E]%
+\\
+\>[B]{}[\mskip1.5mu (\Varid{-suc}\;\Varid{n})\;\Varid{/suc}\;\Varid{d}\mskip1.5mu]\;\Keyword{with}\;\Varid{gcd}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d}){}\<[E]%
+\\
+\>[B]{}\Varid{...}\;\mid \;\Varid{di},\Varid{g}\;\mathrel{=}\;\Varid{-}\;\Conid{GCD′→ℚ}\;(\Varid{suc}\;\Varid{n})\;(\Varid{suc}\;\Varid{d})\;\Varid{di}\;(\Varid{λ}\;())\;(\Conid{C.gcd-gcd′}\;\Varid{g}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[4]{}\Varid{\char95 Diff\char95 on\char95 }\;\mathbin{:}\;\Conid{Seq}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{Seq}\;\Conid{ℚ₀}\;\Varid{→}\;\Conid{Seq}\;\Conid{ℚ₀*}{}\<[E]%
+\\
+\>[4]{}\Varid{f}\;\Conid{Diff}\;\Varid{g}\;\Varid{on}\;\Varid{m}\;\mathrel{=}\;\Varid{∣}\;\Varid{f}\;\Varid{m}\;\Varid{-}\;\Varid{g}\;\Varid{m}\;\Varid{∣}{}\<[E]%
+\\[\blanklineskip]%
+\>[4]{}\Varid{\char95 \char126 \char95 }\;\mathbin{:}\;\Conid{Rel}\;\Conid{ℝ₀}{}\<[E]%
+\\
+\>[4]{}(\Varid{f:}\;\Varid{f}\;\Varid{p:}\;\Varid{p})\;\mathord{\sim}\;(\Varid{f:}\;\Varid{f'}\;\Varid{p:}\;\Varid{p'})\;\mathrel{=}\;{}\<[E]%
+\\
+\>[4]{}\hsindent{4}{}\<[8]%
+\>[8]{}\Varid{∀}\;(\Varid{ε}\;\mathbin{:}\;\Conid{ℚ₀*})\;\Varid{→}\;\Varid{∃}\;\Varid{λ}\;\Varid{lb}\;\Varid{→}\;\Varid{∀}\;\Varid{i}\;\Varid{→}\;(\Varid{lb}\;\Varid{<}\;\Varid{i})\;\Varid{→}\;\Varid{f}\;\Conid{Diff}\;\Varid{f'}\;\Varid{on}\;\Varid{i}\;\Varid{<'}\;\Varid{ε}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{appendix}
 
 \end{document}

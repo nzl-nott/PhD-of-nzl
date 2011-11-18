@@ -1,0 +1,32 @@
+%include polycode.fmt
+%include greek.fmt
+
+%format \\       = "\vspace{1mm}"
+
+%format O        =  "0"
+%format 0        =  "0"
+%format 1        =  "1"
+
+%format >>>     = "\!\ggg\!"
+%format &&&     = "\&\!\!\&\!\!\&"
+%format ***     = "\!*\!\!*\!\!*\!"
+
+%format ::      = "::"
+%format .       = "."
+%format ==      = "\!==\!"
+%format <=      = "\!<=\!"
+%format >=      = "\!>=\!"
+%format &&      = "\&\!\!\&"
+%format ||      = "||"
+%format not     = "not"
+
+%% Keywords
+
+%format if       = "\keyword{if}"
+%format then     = "\keyword{then}"
+%format else     = "\keyword{else}"
+%format case     = "\keyword{case}"
+%format of       = "\keyword{of}"
+%format proc     = "\keyword{proc}"
+%format do       = "\keyword{do}"
+%format syntax   = "\keyword{syntax}"

@@ -1,0 +1,24 @@
+%include main_agda.fmt
+
+%format \C   = "C"
+%format \E   = "E"
+%format \S   = "S"
+
+%format C    = "\constructor{C}"
+%format E    = "\constructor{E}"
+%format S    = "\constructor{S}"
+%format dec  = "\constructor{dec}"
+%format cau  = "\constructor{cau}"
+%format ini  = "\constructor{ini}"
+%format uni  = "\constructor{uni}"
+
+%format .dec = "." dec
+
+%format ++h  = "\!" ++ "_{\!h}\!"
+%format ++v  = "\!" ++ "_{\!v}\!"
+%format +m   = +
+%format Mdec = "M_{dec}"
+%format _++v_ = _ ++v _
+%format _++h_ = _ ++h _
+
+%format _<:_ = _ "\!<:\!" _

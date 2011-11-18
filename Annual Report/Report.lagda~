@@ -3,27 +3,28 @@
 \author{Li Nuo}
 \title{First Year PhD Annual Report}
 
-%\setlength{\textheight}{20cm}
-%\setlength{\textwidth}{5.5in}
-%\setlength{\topmargin}{-0.1in}
-%\setlength{\oddsidemargin}{-1.8mm}
-%\setlength{\evensidemargin}{-1.8mm}
 
 %\institute{University of Nottingham}
 
 \usepackage{dsfont}
 \usepackage{amsthm}
 
+
 %include agda.fmt
+
+
 
 \usepackage{color}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{autofe}
+\usepackage{xypic}
 
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
+%\newtheorem{proposition}[theorem]{Proposition}
 
 \DeclareUnicodeCharacter{955}{$\lambda$}
 \DeclareUnicodeCharacter{8988}{$\ulcorner$}
@@ -32,9 +33,22 @@
 \DeclareUnicodeCharacter{8991}{$\lrcorner$}
 \DeclareUnicodeCharacter{946}{$\beta$}
 
+%\DeclareUnicodeCharacter{9666}{$\blacktriangleleft$}
+%\DeclareUnicodeCharacter{9667}{$\triangleleft$}
+
+
+% Editing and debugging
+%\hfuzz 0.1pt
+%\overfullrule=15pt
+%\brokenpenalty=10000
+
 \newcommand{\todo}[1]{\textcolor{red}{TO~DO:~#1}}
 
+
 \newcommand{\ed}[1]{\textcolor{blue}{#1}}
+
+
+%\newtheorem{assumption}[theorem]{Assumption}
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -86,17 +100,25 @@
 \DeclareMathOperator{\defi}{\stackrel{\text{\tiny def}}{=}}
 \DeclareMathOperator{\coprime}{Coprime}
 
-\DeclareMathOperator{\A/sim}{A\,\, /\sim}
+\DeclareMathOperator{\A/sim}{A\,/ \sim}
 
 \newcommand{\eqqm}{\overset{\text{\tiny ?}}{=}}
 \newcommand{\sep}{\mathrel{\sharp}}
 
-% Shorthand
-\newcommand{\itt}{Intensional Type Theory}
-\newcommand{\ett}{Extensional Type Theory}
+
+% For xy matrices
+%\newcommand{\pullbackcorner}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+%\newcommand{\pushoutcorner} [1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+
+\newcommand{\itt}{intensional Type Theory}
+\newcommand{\ett}{extensional Type Theory}
 \newcommand{\mltt}{Martin-L\"{o}f type theory}
 
-\newenvironment{codes}{\tiny\begin{code}}{\end{code}}
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Definition}[section]
+%\newtheorem{proposition}[theorem]{Proposition}
 
 \usepackage{varioref}
 
@@ -134,115 +156,77 @@
 % 5. Plan and steps to achieve these.
 
 In set theory, given a set equipped with an equivalence relation, one can form its
-quotient set, that is the set of equivalence classes.
-Reinterpreting this notion in type theory,quotient sets are called quotient types.
-However quotient types are still
-unavailable in \itt{} which is a very important type theory.
-Quotients are very common in mathematics and computer science, and
-thus the introduction of quotients could be very helpful.
-Some types are less effective to define from scrach than being defined
-as the quotients of some other types and their equivalence relations, such as the
-set of integers.
-Even some sets are impossible to define without being based on quotients such as the set of real
-numbers.
-Sometimes, quotient types are more difficult to reason about than
-their base types. 
-We can achieve more convenience by manipulating base types and then lifting the operators and propositions according to the relation between quotient types and base types.
-Therefore it is worthwhile for us to conduct a research project on the
-implementation of quotients in \itt{}.
-
-The work of this project will be divided into several phases. This
-report introduces the basic notions in my project on implementing
-quotients in type theory, such as type theory setoids, and quotient
-types, reviews some work related to this topic and concludes with some
-results of the first phase. 
-The results done by Altenkirch, Anberr\'{e}e and I in \cite{aan} will be explained with a
+quotient set, that is the set of equivalence classes. Reinterpreting
+this notion in type theory, the implementation of quotient set is
+called quotient type. However quotient types are still
+unavailable in type theories like \itt{}. Quotients are very common in
+Mathematics and Computer Science. The introduction of quotients could
+be very helpful. Some quotient types are less effective to define than
+being based on their base types and equivalence relations, such as the
+set of integers, even some others are impossible to define without
+quotients in current implementations of \itt{} such as the set of real
+numbers. Sometimes, quotient types are more difficult to reason about than their
+base types. We can achieve more convenience by manipulating base types and then lift the operators and propositions according to the relation between quotient types and base types.
+% Also we can still benefit from the interaction of
+% types within some quotients without using quotient types. Because some
+% base types are simpler to deal with or have better features while what
+% we want to use is the new type, for instance the integers represented
+% by a pair of natural numbers is easier to handled compared to the
+% normal form integers. 
+Therefore it is worthwhile for us to conduct a research project on the implementation of quotients in
+\itt{}. The work of this project will be divided into several phases. This report aims at
+introducing the basic notions in the project like type theory and
+quotient types, discuss some work related to this
+topic and conclude some result of the first phase. The results done by
+Altenkirch, Anberr\'{e}e and me in \cite{aan} will be explained with a
 few instances of quotients.
+
+%For some definable quotients like the integers and the rational numbers,
+%it is unnecessary to formalise them based on setoid. But we found the quotient %interface could provide more convenience if we prove that they are definable quotients. While some other types such as real numbers are undefinable, %but they are the quotient of dividing Cauchy sequences of rational numbers %by the equivalence relation that two sequences converges. 
 
 \end{abstract}
 
 
 \section{Introduction}
 
-%Some general backgroud?
 
-% the notion of quotient
-In mathematics, the result of division is called quotient.
-Similar to product, the notion of a quotient is also extended to other more abstract branches of mathematics.
-For example, we have quotient sets, quotient groups, quotient spaces and quotient categories.
-They are all defined in this way: some collection of objects is partitioned by some equivalence relation and the set of the equivalent classes
+In mathematics, the result of division is called quotient. Similar to product, the
+notion of quotient is also extended to other more abstract branches of mathematics. For example, we
+have quotient sets, quotient groups, quotient spaces, quotient categories
+etc. They are all defined in this way: some collection of objects is partitioned
+by some equivalence relation and the set of the equivalent classes
 is the quotient set which usually bears some algebraic structure inherited from
 the structure of the original collection of objects.
 
-% quotients in real life
 Quotients are also common in our daily life. When you take a
 picture with a digital camera, the real scene is divided into pixels
 on the pictures, and a red point and a blue point on the real scene are indistinguishable on
 the photo if they are represented by the same pixel. The digital picture which is the set of pixels is just the
 quotient of the real scene. Since different things are equated
-with respect to certain rules, a quotient is usually related to
-information hiding or information losing.
-
-% quotients in CS
-Quotients also exist in computer science. Users are usually concerned with the extensional use of
+with respect to certain rules, quotient is usually related to
+information hiding or information losing. Quotients also exist in
+computer science. Users are usually concerned with the extensional use of
 softwares rather than the intensional implementation of them,
 different implementations of softwares doing the same tasks are
 treated as the same to them even though 
 some of them are programmed in different languages. Another example is
-the application of an \emph{interface} in Java. The objects of different classes implementing the same
-interface |A| should be treated equally when we create new objects of type |A|, even
+the application of \emph{interface} in Java. The objects of different classes implementing the same
+interface |A| should be treated equally when we create new objects of type |A| even
 though they are not really the same.
-
-However in some type theories, the construction of quotients remains
-problematic. In this project, we are going to explore this topic in the intensional variant of \mltt{}
-(See Section~\ref{tt}) which serves as the basis of some useful
-functional programming languages or theorem provers such as Coq and
-Agda. This report aims at introducing some basic notions used in this
-project, reviewing related works and explaining some results that have
-been done. 
-
-The structure of this report is as follows:
-
-Section~\ref{sec:bg} introduces some basic concepts such as type
-theory and quotient types along with the discussion of the problems
-that arise when implementing quotient types. To make them easier to understand, it
-will start with quotients in set theory which may be
-more familiar to many people. 
-
-Section~\ref{sec:lr} reviews some related works. Some of them discuss
-implementing quotient types in other type theories, some of them
-introduce similar notions. There are also some works done in this area
-but still require futher extensions. These constitute the basis of this project.
-
-Section~\ref{sec:ob} gives more detailed objectives and a plan of how
-to achieve them.
-
-Section~\ref{sec:rd} explains some results that have been done by the
-author or by Altenkirch, Anberr\'{e}e and the author in \cite{aan}.
-
-Section~\ref{sec:cl} concludes this report along with the discussion
-of furture works.
-
-In Appendix, I will list the full versions of some codes within the
-text which are less relevant. All the codes are written in Agda which
-will be introduced later. The readers who are familiar with Agda
-or interested in the codes could look up them there. To make the codes
-more readable, I eliminate some unnecessary parts such as the universe polymorphism.
-
-\section{Background}
-\label{sec:bg}
 
 In this report, I will mainly discuss quotients in type theory
 which are usually referred to as quotient types. Although set theory and
 type theory have different foundations, they have many similar
-notions such as product and disjoint union.  In this case, a quotient type
-is also an interpretation of a quotient set in set theory.
+notions like product and disjoint union.  In this case, quotient type
+is also an interpretation of quotient set in set theory which may be
+more familiar to many people. For this reason, we start from
+quotient set in set theory and then move on to type theory.
 
 \subsection{Quotient Sets} 
 
 The division of sets is different from division of numbers. We divide a
-given set into disjoint subsets according to a given equivalence relation
-and the quotient is the set of these subsets.
+given set into small groups according to a given equivalence relation
+and the quotient is the set of these groups.
 
 Formally, given a set $A$ and an equivalence relation $\sim$ on $A$, the equivalence class for each $a \,\in A$ is,
 
@@ -258,19 +242,21 @@ The quotient set denoted as $\A/sim$ is the set of equivalence classes of $\sim$
 \]
 
 %why quotients is useful?
-There are many mathematical notions which can be constructed as
-quotient sets. 
-For example, the integers modulo some number
+
+There are many mathematical notions which can be constructed as quotient sets
+from some other sets. Some are more natural to come up with,
+such as integers modulo some number
 $n$ is the quotient set constructed by quotienting the set of all
 integers $\Z$ with the congruence relation which equates two integers sharing the same remainders when divided by
 $n$.
-For another example, the set of rational numbers $\Q$ is defined as the set of numbers
+The set of rational numbers $\Q$ is defined as the set of numbers
 which can be expressed as fractions, but different fractions like
 $\frac{1}{2}$ and $\frac{2}{4}$ can be
-reduced to the same rational number. 
-In other words, $\Q$ can be constructed by quotienting the set of pairs of integers, while the
+reduced to the same rational number. In other words, $\Q$ can
+be constructed by quotienting the set of pairs of integers, while the
 second is non-zero integer, with the equivalence
 relation which equates fractions sharing the same irreducible forms.
+%The set of canonical forms of rational numbers are subset of the pairs of integers. 
 A less common example is the set of integers $\Z$, which can also been
 obtained from quotienting the set of pairs of natural numbers $\N \times \N$ which represent integers as the result of subtraction
 between two natural numbers within each pair. Furthermore real
@@ -282,17 +268,18 @@ to zero. There are more examples of quotient sets, but the main
 topic of this report is quotients in \emph{type theory}. 
 
 \subsection{Type Theory}
-\label{tt}
 
 The theory of types was first introduced by Russell \cite{rus:1903} as
-an alternative to naive set theory. Since then, mathematicians and
+an alternative to naive set theory. After that, mathematicians and
 computer scientists have developed a number of variants of type
 theory. The type theory in this discourse is the one developed by Per
 Martin-L\"{o}f \cite{per:71,per:82} which is also called
 intuitionistic type theory. It is based on the Curry-Howard
 isomorphism between propositions and the types of its proofs such that
-it can served as a formalisation of mathematics. For a detailed
-introduction, refer to \cite{nor:00}.
+it can served as a formalisation of mathematics. For detailed
+introduction, please refer to\cite{nor:00}. In this report, Type
+Theory specially indicates \mltt{}.
+
 
 Per Martin-L\"{o}f proposed both an intensional and an extensional
 variants of his intuitionistic type theory. The distinction between them is whether definitional equality is distinguished from
@@ -300,24 +287,20 @@ propositional equality. In \itt{}, definitional equality exists
 between two definitionally identical objects, but propositional
 equality is a type which requires proof terms. Anything is only
 definitionally equal to itself and all terms that can be normalised to
-it, which means that definitional equality is decidable in
-\itt{}.
-Therefore type checking that depends on definitional equality is decidable as well~\cite{alt:99}
-. 
-The type for propositional equality in \itt{} is usually written as
-$Id(A,a,b)$ (which is also called
-\emph{intensional equality} \cite{nor:90}). 
-In Agda\cite{norell:09}, an implementation of \itt{},  it is written
-as |a ≡ b| with the type |A| often kept implicit. 
-This set has an unique element |refl| only if |a| and |b| are
-definitionally equal and is uninhabited if not. 
-However in \ett{}, the two kinds of equalities are not distinguished, so if we have $p \,\colon Eq
-(A,a,b)$ (which is called extensional equality \cite{nor:90}), $a$ and $b$ are
-definitionally equal. 
-It means that terms which have different normal forms may be definitionally equal. In other words, definitional equality is
-undecidable and type checking becomes undecidable as well. However
-Altenkirch and McBride have introduced a variant of \ett{} called
-\emph{Observational Type Theory}  \cite{alt:06} in which definitional equality is
+it which means that definitional equality is decidable in \itt{}. Therefore type checking which
+depends on definitional equality is decidable as well  \cite{alt:99}
+. The type for propositional equality in \itt{} is usually written
+as $Id(A,a,b)$ which is also called
+\emph{intensional equality} \cite{nor:90}. In Agda, an implementation of \itt{},  it is
+redefined as |a ≡ b| with their type |A| often kept implicitly. This set has an
+unique element |refl| only if |a| and |b| are definitionally equal. However
+in \ett{}, they are not distinguished so that if we have $p \,\colon Eq
+(A,a,b)$ which is called extensional equality, $a$ and $b$ are
+definitionally equal. It means that terms which have different normal forms may be
+definitionally equal. In other words, definitional equality is
+undecidable and type checking become undecidable as well.
+Altenkirch and McBride \cite{alt:06} introduce a variant of \ett{} called
+\emph{Observational Type Theory} in which definitional equality is
 decidable and propositional equality is extensional.
 
 %The propositional equality in \ett{} is written as $Eq(A,a,b)$ and is
@@ -337,33 +320,27 @@ decidable and propositional equality is extensional.
 
 
 Type theory can also serve as a programming language in
-which the evaluation of a well-typed program always terminates
+which the evaluation of well-typed program always terminates
 \cite{nor:90}. 
 There are various implementations based on different type theories, such as
 NuPRL, LEGO, Coq, Epigram and Agda.
-%\todo{Possibly a separate section (maybe one page) for Agda} 
 Agda is one of the most recent implementations of intensional version
-of \mltt{}. 
-It is a dependently typed programming language, we can write program specifications as
-types. 
-As we have seen, \mltt{} is based on the Curry-Howard
-isomorphism: types are identified with propositions and programs (or
-terms) are identified with proofs. 
-Therefore it is not only a programming language but also a
+of \mltt{}. It is a dependently typed programming language, we can write program specifications as
+types. As we have seen that \mltt{} is based on the Curry-Howard
+isomorphism, types are identified with propositions and their 
+terms are identified with proofs. Therefore it is not only a programming language but also a
 theorem prover which allows user to verify Agda programs in
-itself. 
-Compared to other implementations, it has a package of useful
-features such as pattern matching, unicode input, and implicit
-arguments \cite{bov:09}, but it does not have tactics and consequently
-its proofs are less readable than implementations that do. Since this project is based on \mltt{}, it is a good choice to implement our definitions
-and verify our theorems and properties in Agda.  For a detailed
-introduction of Agda, refer to \cite{norell:09}.
+itself. Compared to other implementations, it has a bundle of good
+features like pattern matching, unicode input, implicit arguments etc
+\cite{bov:09}, but it does not have tactics such that sometimes the proofs are less
+readable. Since this project is based on \mltt{}, it is a good choice to implement our definitions
+and verify theorems and properties in Agda.
 
 To move from set theory to type theory, the similarities and differences should be made clear. Although type theory has some similarities to set theory, their foundations are different. Types play a similar role to sets and they are
 also called sets in many situations. However we can only create
-elements after we declare their types, while in set theory elements exist there before
+elements after we declare their types, while in set theory elements are there before
 we have sets. For example,
-we have the type $\N$ for natural numbers corresponding to the set of
+we have type $\N$ for natural numbers corresponding to the set of
 natural numbers in set theory. In set theory, $2$ is a shared element
 of the set of natural numbers and the set of integers. While in type
 theory, $\N$ provides us two constructors
@@ -371,75 +348,64 @@ $zero \,\colon\N$ and $suc\,\colon\N\to\N$, and $2$ can be constructed
 as $suc\,(suc\,\,zero)$ which is of type $\N$ and does not have any other
 types like $\Z$. Because different sets may contain the same elements, we
 have the subset relation such that we can construct equivalence
-classes and quotient set. 
-In type theory we have to give constructors for any type before we can construct elements, which is different to the situation in set theory that
-elements exist before we construct quotient sets. Therefore this approach to construct quotients in set
-theory has some problems in type theory. In fact, Voevodsky constructs
-quotients using this approach in Homotopy Type Theory using Coq
-\cite{voe:hset} but here we
-mainly discuss how to reinterpret quotient sets in the current settings of \itt{} (e.g. Agda).
+classes and quotient set. In type theory we have to give constructors
+for any type before we can construct elements which is different to the situation in set theory that
+elements exist before we construct quotient sets. The approach to construct quotients in set
+theory has some problems in type theory. So how can we reinterpret quotient sets in type theory? 
 
 
 \subsection{Quotient Types}
 
 Following the correspondence between sets and types, many notions from
 set theory can be reinterpreted in type theory. The product of
-sets can be formed by $\Sigma$-Types and the functions can be
-formed by $\Pi$-Types \cite{nor:00}.
+sets can be formed by $\Sigma-Types$ and the functions can be
+formed by $\Pi-Types$ \cite{nor:00}.
 
-However, in \itt{} a general apporach to construct quotient types is
-still unavailable. 
-
-Alternatively, in \itt{}, we have \emph{setoids} which contain all the ingredients of quotients as follows,
+However in \itt{} an imediate formalisation of quotient types are still unavailable. Alternatively, in \itt{} we have the ingredients of quotients as follows,
 
 \begin{definition}
-A setoid $(A,\sim)\,\colon\Set_1$ is a set \footnote{Setoid could be universe polymorphic.} 
-$A\,\colon\Set$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
+A setoid $(A,\sim)\,\colon\Set_1$ is a set $A\,\colon\Set$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
 \end{definition}
 
-Here we assume $\Set$ means type, and for any $P \colon\,\Prop$, it has
-at most one element, namely we can get proof irrelevance for
-propositions which has type $\Prop$. In Agda, we define a setoid as
+Here we assume $\Set$ means type and for any $p\,q\colon\,\Prop$, $p = q$. In Agda, we define a setoid as
 
 \begin{code}
 
 record Setoid : Set₁ where
+  infix 4 _≈_
   field
-    Carrier           : Set
-    _≈_                : Carrier → Carrier → Set
+    Carrier       : Set
+    _≈_           : Carrier → Carrier → Set
     isEquivalence : IsEquivalence _≈_
 
 \end{code}
 
-It contains |Carrier| for an underlying set, |_≈_| for a binary
-relation on |Carrier| and a proof that it is an equivalence relation.
+Setoid could be universe polymorphic.
 
-We can use setoids to represent quotients, just as we can represent
-$4$ by the pair $(8,2)$. However there are several problems if we use
-this approach. Firstly |Setoid| are
-different from sets so that we have to redefine all the operations on
-|Set|. An interesting problem is how to represent quotients if the base
-type $A$ is already a setoid. Setoids are also unsafe because we have access to the underlying
- sets \cite{aan}. 
-It is better that if the base type $A$ is of type $\Set$ then the type of
-quotient derived from it and its equivalence relation should also be
-of type $\Set$, just as if we divide $8$ by $2$ we prefer $4$ than
-$(8,2)$. From mathematical perspective, we can find the structure of the base object is usually the same as the
-structure of the resultant quotient object. So what could be a quotient type?
+%. If we use the setoid $(\N \times \N, \sim)$ for integers, 
+We can use setoids to represent quotients. However setoids are
+different from sets so that we have to redefine all the operations on sets
+and which is unsafe \cite{aan} because we have access to the underlying sets in the setoids. Another interesting problem is how to
+represent quotients if the base type $A$ is already a setoid. It means that it
+is better that if the base type $A$ is of type $\Set$ then the type of
+quotient should also be of type $\Set$. It should be
+universe polymorphic as well. From mathematical perspective, we also
+found the structure of the base object is always the same as the
+structure of the result quotient object. So what should be a quotient type?
+%Quotient types should enable users to implement quotients in \itt{}
+%which means the quotient types based on the setoid should have type
+%$\Set$. 
 
-Here we firstly decribe what quotient types are. Given a setoid
-$(A,\sim)\,\colon\Set_1$, a type $Q : \Set$ is called the quotient
-type of this setoid, if we can prove it implements the quotient set
-$A/\sim$, no matter how we construct it.
+Here we firstly decribe what quotient types are. Given a setoid $(A,\sim)\,\colon\Set_1$, some implementation of the quotient set $A/\sim$ is called the quotient type of $(A,\sim)$
 
-For instance, since integers represent the result of subtraction of
-any pairs of natural numbers, we can represent integers by the setoid $(\N\times\N , \sim)$ where $\sim$ is
-defined as (more details in section~\ref{sec:definitions} on page~\pageref{sec:definitions})
+
+For example, given a setoid $(\N\times\N , \sim)$ where $\sim$ is
+defined as
 
 \[(a , b) \sim (c , d) \defi  a + d \equiv c + b \]
 
-$\sim$ can also be proved to be an equivalence relation. However the
-set of integers $\Z\,\colon\Set$ can also be constructed as 
+and $\sim$ is proved to be an equivalence relation, 
+the set of integers $\Z\,\colon\Set$ which can be defined as 
 
 \begin{code}
 data ℤ : Set where
@@ -447,37 +413,38 @@ data ℤ : Set where
   -suc_ : ℕ → ℤ
 \end{code}
 
-The type $\Z\,\colon\Set$  is just the quotient type corresponding to
-the setoid  $(\N\times\N , \sim)$. 
+is just the quotient type corresponding to the setoid. 
 
-Quotient types have uses beyond encoding mathematical quotients. It is a type theoretical notion which means some notions in Type
+Quotient types can be very useful. The encoding of quotients in mathematics is not all what quotient
+types can do. It is a type theoretical notion which means some notions in Type
 Theory or in programming languages can also be treated as quotient
 types. For example partiality monad divided by a weak
 similarity ignoring finite delays \cite{aan}, propositions quotiented by
-logical equivalence relation $\iff$  or the set of extensionally equal functions. Also
+$\iff$  and the set of extensionally equal functions. Also
 set-theoretical finite sets can be implemented as the quotient of
 lists in Type Theory. 
 Furthermore given any function $f \,\colon\, A \to B$, we obtain an
 equivalence relation $\sim \,\colon A \to A \to \Prop$ called \emph{kernel}
 of $f$ which is defined as $a \sim b \defi f \,a \equiv f \,b$. Based on
 this setoid $(A,\sim)$ we can form a quotient.
-Indeed any type can be seen as quotient types of itself with the
+Indeed all types can be seen as quotient types of itself with the
 intensional equality |≡|.
 
 %How to obtain quotient type? 
 
 In the definition of quotient types, we do not provide an approach to
 construct them from given setoids. Indeed how to obtain a
-quotient type of a given setoid is one of the main topics of this
+quotient type of a given setoid is one of the main topic of this
 project.
 
 One feasible approach in current setting of \itt{} is to manually construct
-the quotient type as we do in the example of the set of integer above,
-and prove it is the required quotient type. We can form a quotient
-using the quotient interfaces introduced in
-\cite{aan}, which require the necessary proofs for some type $Q : \Set$ to be
-the quotient type of some setoid $(A , \sim)$. These proofs are also
-the basic properties of quotients, so we can use them to lift operations and prove some
+the quotient type and prove it is the required quotient type. For instances in
+\cite{nuo:10}, the normal form integers, irreducible rational numbers
+are definable and proved to construct quotients with respect to the
+corresponding setoids. The quotient interfaces introduced in
+\cite{aan} requires the necessary properties for some type $Q$ to be
+the quotient type of some setoid $(A , \sim)$. Since they are basics
+of quotients, we can use them to lift operations and prove some
 general theorems. However, this approach is
 inefficient because the quotient types and the properties have to be
 manually figured out rather than automatically derived. 
@@ -487,8 +454,7 @@ Furthermore, some quotients like real numbers are undefinable even
 though we can define the base type and equivalence relation for them
 \cite{nuo:10} . Although it has some drawbacks, it is feasible without
 extending \itt{} and it provides some convenience in practice. There
-have been some results on this \cite{aan}, which I will discuss them
-in section~\ref{sec:definitions}. 
+has been some results on this \cite{aan}. I will discuss them later. 
 
 %In this report, I will use the symbol $\A/sim$ for the quotient based
 %on a given setoid  $(A,\sim)$. 
@@ -514,7 +480,7 @@ definitional equality of quotient types etc.
 Quotient types can be seen as the result of replacing the equivalence
 relation of given types. This operation does not work in \itt{}, but it seems
 easier to manage in \ett{} where
-propositional equal terms are also definitionally equal. Nevertheless there
+propositional equal terms are also definitional equal. Nevertheless there
 are still some problems which we discuss in the literature review.
 
 %[(S m) , (S p)] -> [m , p] 
@@ -542,9 +508,11 @@ are still some problems which we discuss in the literature review.
 
 \subsection{Functional extensionality and quotient types}
 
-As we have mentioned before, in \itt{} propositional equality $Id(A,a,b)$ is inhabited
-if and only if $a$ and $b$ are definitionally equal terms. The Agda
-definition could be written as
+% equality $Id(A,a,b)$ consists of
+%proof terms that $a$ and $b$ are definitionally equal in all cases. 
+
+In \itt{}, intensional propositional equality $Id(A,a,b)$ is inhabited
+if and only if $a$ and $b$ are definitionally equal terms,
 
 \begin{code}
 
@@ -552,39 +520,35 @@ data Id (A : Set) : A → A → Set where
   refl : (a : A) → Id A a a
 
 \end{code}
-
-However the equality of functions are not only judged  by
-definitions. Functions are
-usually viewed extensionally as black boxes. If two functions pointwise
+but the intensional propositional
+equalities of functions are not inhabited \cite{alt:99}. When talking about the equality of functions, they are
+usually treated extensionally as black boxes. If two functions pointwise
 generate the same outputs for the same inputs, they are equivalent
-even though their definitions may differ. This is called
-functional extensionality which is not inhabited \cite{alt:99} in original
+even though their internal definitions may differ. This is called
+functional extensionality  which is not inhabited in original
 \itt{} and can be expressed as following,
 
 given two types $A$ and $B$, and two functions $f,\,g\,\colon A \to B$,
 
 \[Ext = \forall\, x\colon A, f x = g x \to f = g\]
 
-The problem seems easy to solve by just adding a constant $ext : Ext$
-to \itt{} as following codes in Agda
+
+It seems that we just need to add the constant $Ext$ to \itt{}.
+However, to postulate something new may cause inconsistence. If we postulate $Ext$, then theory is no longer
+adequate, which means it is possible to define irreducible terms. It
+can be easily verified in Agda through formalising a non-canonical term for a natural number by an eliminator of intensional equality. the quotient type corresponding to this setoid is just 
+Firstly we postulate $Ext$
 
 \begin{code}
 
 postulate
-  ext : {A : Set}{B : A → Set}{f g : (x : A) → B x}
+  Ext : {A : Set}{B : A → Set}{f g : (x : A) → B x}
         → ((x : A) → Id (B x) (f x) (g x)) 
         → Id ((x : A) → B x) f g
 
 \end{code}
 
-However, postulating something could lead to inconsistence. If we
-postulate $Ext$, then theory is no longer adequate, which means it is possible to define irreducible terms. 
-It can be easily verified in Agda through formalising a non-canonical
-term for a natural number by an eliminator of intensional equality. 
-
-Using the eliminator |J| \footnote{It is originally
-  used by Martin-L\"{o}f \cite{nor:90} and a good explanation could be
-found in \cite{ngk:11}}  of the |Id A a b| :
+And the eliminator of the intensional equality $Id A a b$ is
 
 \begin{code}
 
@@ -594,26 +558,27 @@ J : (A : Set)(P : (a b : A) → Id A a b → Set)
 J A P m .b b (refl .b) = m b
 
 \end{code}
-we can construct an irreducible term of natural number as
+
+Finally we can construct an irreducible term of natural number as
+
 \begin{code}
+
 
 irr : ℕ
 irr = J (ℕ → ℕ) (λ f g P → ℕ) (λ f → 0) (λ x → x) (λ x → x) (Ext refl)
 
 \end{code}
 
-With this term, we can construct irreducible terms of any type |A| by a
-mapping |f : ℕ → A|. This will destroy some good features of \itt{}
-since it could leads to nonterminating programs.
+With this term, we can construct irreducible terms of any type. This makes propositional equality undecidable and leads to nonterminating programs and proofs.
 
 Altenkirch investigates this issue and gives a solution in
-\cite{alt:99}. He proposes an extension of \itt{} by a universe of
+\cite{alt:99}. He propose an extension of \itt{} by a universe of
 propositions $\Prop$ in which all proofs of same propositions are
 definitionally equal, namely the theory is proof irrelevant. At the same time,
 a setoid model where types are interpreted by a type and an equivalence relation acts as the metatheory and $\eta$-rules for
 $\Pi$-types and $\Sigma$-types hold in the metatheory. The extended type
 theory generated from the metatheory is decidable and adequate, $Ext$ is
-inhabited and it permits large elimination (defining a dependent type by recursion). Within this type theory,
+inhabited and it permits large elimination. Within this type theory,
 introduction of quotient types is straightforward. 
 The set of functions are naturally quotient types, the hidden information is the
 definition of the functions and the equivalence relation is the
@@ -622,56 +587,51 @@ functional extensionality.
 
 There are more problems concerning quotient types and most
 of them are related to equality. One of the main problems is how to lift the functions for
-base types to the ones for quotient types. Only functions respecting the
+base types to the ones for quotient types. Only functions respects the
 equivalence relation can be lifted. Even in \ett{}, the implementation
-of quotient types does not stop at replacing equality of the types. We
-will discuss these in next section.
+of quotient types does not stop at replacing equality of the types. We will discussed these later.
 
-\section{Literature Review}
-\label{sec:lr}
+\subsection{Literature Review}
 
-% 1. Why I mention about this article?
-% 2. More description about these articles  in a more comprehensive
-% way (tell a story)
+% Why I mention about this article
+% More description about these articles
+% in a more comprehensive way, tell a story
 % compare and link between literatures
-
 In \cite{cab}, Mendler et al. have firstly considered building new types from a
 given type using a quotient operator $//$. Their work is based on an
 implementation of \ett{}, NuPRL. In NuPRL, every type
 comes with its own equality relation, so the quotient operator can be
 seen as a way of redefining equality in a type. But it is not all
-about building new types. They also discuss problems that arise from
+about building new types. They also discuss the problem arises from
 defining functions on the new type which can be illustrated using a simple example. 
 
-Assume the base type is $A$ and the new equivalence relation is $E$, the new
-type can be formed as $A//E$. 
-
-When we want to define a function $f \,\colon\, A//E \to Bool$,  $f\,a \not= f\,b$ may
-exists for $a, b \,\colon A$ such that $E\,a\,b$. This will lead to
-inconsistency since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, hence
-the left hand side $f\,a$ can be converted to $f\,b$, namely we get $f\,b \not= f\,b$
-which is contradicted with the equality reflection rule. 
-
-Therefore a function is said to be well-defined \cite{cab} on the new type only
-if it respects the equivalence relation $E$, namely
+Assume the base type is $A$ and the new equality relation is $E$, the new
+type can be formed as $A//E$. If we want to define a function $f
+\,\colon\, A//E \to Bool$,  Assume we have two $a, b \,\colon A$ such that $E\,a\,b$ but $f\,a \not= f\,b$, then it
+becomes inconsistent since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, the left
+hand side $f\,a$ can be converted to $f\,b$ namely $f\,b \not= f\,b$
+which is contradicted with the equality reflection rule. Only a function respects the equivalence
+relation, namely
 
 $$\forall \, a\,b\,\colon A, E\,a\,b \to f\,a = f\,b$$
 
-We call this \emph{soundness} property in \cite{aan}.
+$f$ is said to be well-defined on the new type. We call this \emph{sound} property in
+\cite{aan} and this project.
 
  After the introduction of quotient types, Mendler further investigates
  this topic from a categorical perspective in ~\cite{men:90}. He uses
  the correspondence between quotient types in \mltt{} and coequalizers
- in a category of types to define a notion called \emph{squash types},
- which is further discussed by Nogin \cite{nog:02}.
+ in a category of types to define a notion called \emph{squash types}
+ which is further discussed by Nogin.
+
 
 To add quotient types to \mltt{}, Hofmann proposes  three models for
 quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
 quotient types. In this model all types are attached with partial
 equivalence relations, namely all types are setoids rather than
 sets. Types without a specific equivalence relation can be seen as
-setoids with the basic intensional equality. This is similar to
-\ett{} in some sense. The second one is groupoid model which solves some problems
+setoids with the basic intensional equality. It looks a bit like
+\ett{}. The second one is groupoid model which solves some problems
 but it is not definable in \itt{}. He also proposes a third model to
 combine the advantages of the first two models, but it also has some
 disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt {}  extended with quotient types and a universe \cite{hof:95:con}.
@@ -679,9 +639,9 @@ disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we hav
 Nogin \cite{nog:02} considers a modular approach to axiomatizing the
 same quotient types in NuPRL as well. Despite the ease of constructing new types
 from base types, he also discusses some
-problems about quotient types. For example, since the equality is
-extensional, we cannot recover the
-witness of the equality.  He suggests including more axioms to
+problems about quotient types. For example, since the the equality is
+extensional, we can not recover the
+witness of the equality.  He suggests to include more axioms to
 conceptualise quotients. He decomposes the formalisation of quotient type
 into several smaller primitives such that they can be handled much
 simpler.
@@ -703,51 +663,36 @@ type from a normalised type as below
 \[ (A, Q, \class\dotph \colon A \to Q) \Rightarrow(A, \lambda \,a \,b\to \class a = \class b)\]
 
 
-Barthe and Geuvers \cite{bar:96} also propose a new notion called
+Barthe and Geuvers \cite{bar:96} also proposes a new notion called
 \emph{congruence types}, which is also a special class of quotient
 types, in which the base type are inductively defined and with a set
 of reduction rules called the term-rewriting system. The idea behind
 it is the $\beta$-equivalence is replaced by a set of
 $\beta$-conversion rules. Congruence types can be treated as an
-alternative to the pattern matching introduced in \cite{coq:92}. The main
-purpose of introducting congruence types is to solve problems in
+alternative to pattern matching introduced in \cite{coq:92}. The main
+purpose of introduction of congruence types is to solve problems in
 term rewriting systems rather than to implement quotient types.
 
 
-Abbott, Altenkirch et al. \cite{abb:04} provides the basis for
-programming with quotient datetypes polymorphically based on their
-works on containers which are datatypes whose instances are
-collections of objects, such as arrays, trees and so on. Generalising
-the notion of container, they define quotient containers as the
-containers quotiented by a collection of isomorphisms on the positions
-within the containers.
-
-Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
-of axioms of Homotopy Type Theory. It is based on the groupoid model
-for \itt{} where isomorphisms are equalities. He firstly implement
-equivalence class and use it to implement quotients which is an
-analogy to the construction of quotient sets in set theory. 
-
 \section{Aims and Objectives of the Project}
-\label{sec:ob}
-
-As we have seen, quotients can enable defining or constructing various kinds of
-mathematical notions or programming datatypes, thus the introduction of
-quotient types will be quite beneficial in theorem provers and
-programming languages based on Type Theory. 
 
 The objective of this project is to investigate and explore the ways of
 implementing quotients in \mltt{}, especially in intensional
-variant where type checking always terminates.
+one where type checking always terminates.
+As we have seen quotients can enable defining various kinds of
+mathematical notions or programming datatypes, the introduction of
+quotient types will be quite beneficial in theorem provers and
+programming languages based on Type Theory. 
 
+The ultimate aim is to extend \itt{} such that all quotients can be
+defined and handled easily and correctly without losing consistency
+and good features of \itt{}.
 
 The project will be undertaken step by step. Firstly, we should make
-the basic notions clear, for example what are quotients and if we want
-quotients in type theory what kind of problems need to be solved. We
-also need to do research on related works on this topic as much as
-possible.
-
-The second step is to work in the current setting of \itt{},
+the basic notions clear, for example what is quotients and if we want
+quotients in Type Theory what kind of problems need to be solved. We
+also need to do research on related works on this topic as much as possible.
+The second step is working in current setting of \itt{},
 investigating some definable quotients, and building the module structure of quotients. The module structure
 and some research on definable quotients has been done in
 \cite{aan}.
@@ -755,50 +700,50 @@ and some research on definable quotients has been done in
 Next we need to investigate some undefinable quotients such as the set
 of real numbers $\R$ and partiality monads and prove why they are undefinable. The
 key different characters between definable and undefinable quotients
-will be studied. A proof of why $\R$ is undefinable is also given in
-\cite{aan}.
+will be studied. You can find the proof of why $\R$ is undefinable in
+\cite{aan} as well.
 
 The development of framework of quotient types in \itt{} is one of the major
-objectives. We need to propose a set of rules to axiomatise quotient
+objective. We need to propose a set of rules to axiomatise quotient
 types in \itt{}. To test our approach with a few typical quotients
-to explore its potential benefits. It is better if we could
-constructed quotients in a general way and the quotient types have
-useful properties that facilitating programming and reasoning.
-The correctness of axiomatisation
+to explore its potential benefits. The correctness of axiomatisation
 and the consistency of extended \itt{} require formal proofs.
 
+A possible intermediate result is to extend the addition of extensionality in \itt{}
+\cite{alt:99}. The conservativity of \itt{} with quotient types over
+\ett{} could be proved following the work in \cite{hof:95:con}. These are part of the extension for quotient types. The nice features of \itt{} should not dissapear along with the extending, such as the termination and decidable type checking.
 
-The ultimate aim is to extend \itt{} such that all quotients can be
-defined and handled easily and correctly without losing the consistency
-and features of \itt{}.
+%future : something on equality, complete preliminary work in Agda
+%Extend without losing nice features of itt, termination, decidable type checking
+%axiomatizing quotients types, adding rules, na 
+% possible quotations, talk to Thorsten
+% 
 
-Finally, we will summarise all these works, including background
-information, literature review, defining quotient types in
+Finally, we will summarise the approach of defining quotient types in
 \itt{}, the benefits of it and the application of it into a PhD Thesis.
 
 
-%\subsection{Theoretical Methods}
+\section{Theoretical Methods}
 
-To do this research, we need to review and compare
-the existing approaches in different implementations of \mltt{},
-and try to determine the best approach by testing it in real cases.
+To do this research, we need to review several related work, compare
+the existing approaches in different implementations of \mltt{}
+and try to figure out the best approach by testing it in real cases.
 
 As we have mentioned before, Agda is a good implementation of
-\itt{}. Conducting this research in Agda will be useful as we can verify our proofs in it and try to apply quotient types
+\itt{}. Conducting this research in Agda will be very efficient and
+useful. We can verify our proofs in it and try to apply quotient types
 to a lot of practical examples.
 
-We also need to advertise our work, get feedback from the users, and
+We also need to advertise our work, get feedbacks from the users and
 improve our approaches such that they are more applicable and easier
 to use.
 
-
 \section{Results and Discussion}
-\label{sec:rd}
+
 
 \subsection{Definitions}
-\label{sec:definitions}
 
-Currently, we are on the first stage and there is some progression on
+Currently, we are on the first stage and there are some progression on
 definable quotients in \itt{} \cite{aan}. Here I will present some necessary knowledge from that paper.
 
 %It is about the definable quotients and some undefinable
@@ -809,8 +754,9 @@ During the first stage, the aim is to explore the potential to define quotients
 in current setting of \itt{}. 
 
 
-Given a setoid $(A,\sim)$, we know what is a quotient type but we cannot define it from the setoid because there are no axiomatised quotient
-types. We can only prove some type is a quotient type of a given
+Given a setoid $(A,\sim)$, we know what is a quotient type but we can
+not define it from the setoid because there is no axiomatised quotient
+types. It means that we can just prove some type is quotient type of given
 setoid. Therefore the only way to introduce possible quotient types $Q
 \,\colon \Set$ is to define it by ourselves. With defined $Q$ and
 $(A,\sim)$, we are required construct some structures of quotients in
@@ -822,7 +768,7 @@ natural numbers. Therefore we can use a pair of natural numbers in a subtraction
 expression to represent the resulting integer.
 For example, $1 - 4 = - 3$ says that the pair of natural numbers $(1,4)$
 represents the integer $- 3$. Assuming we have the necessary definitions
-of natural numbers, the base type of this quotient is:
+of natural numbers, the base type of this quotient is
 
 $$\Z_0=\N \times \N$$
 
@@ -835,21 +781,19 @@ $\sim$ for $\Z_0$ could be defined as
 
 \begin{code}
 
-_∼_ : Rel ℤ₀
-(n1 , n2) ∼ (n3 , n4) = (n1 + n4) ≡ (n3 ℕ+ n2)
+_∼_ : Rel ℤ₀ zero
+(x+ , x-) ∼ (y+ , y-) = (x+ ℕ+ y-) ≡ (y+ ℕ+ x-)
 
 \end{code}
 
-Here |≡| is propositional equality. Of course we must prove |∼| is an
-equivalence relation then we can define the setoid $(\Z_0,\sim)$ in
-Agda as\footnote{the proof |_∼_isEquivalence| is omitted here}
+Here |≡| is the propositional equality. Of course we must prove |∼| is an equivalence relation then we can define the setoid $(\Z_0,\sim)$ in Agda as
 
 \begin{code}
 
 ℤ-Setoid : Setoid
 ℤ-Setoid = record
-  { Carrier           = ℤ₀
-  ; _≈_                = _∼_
+  { Carrier       = ℤ₀
+  ; _≈_           = _∼_
   ; isEquivalence = _∼_isEquivalence
   }
 
@@ -876,10 +820,10 @@ type $\Z$ which should be the normalisation function
 
 \begin{code}
 
-[_]                     : ℤ₀ → ℤ
+[_]                   : ℤ₀ → ℤ
 [ m , 0 ]             = + m
-[ 0 , suc n ]        = -suc n
-[ suc m , suc n ] = [ m , n ]
+[ 0 , ℕ.suc n ]       = -suc n
+[ ℕ.suc m , ℕ.suc n ] = [ m , n ]
 
 \end{code}
 
@@ -887,7 +831,8 @@ The first property to prove is the \emph{sound} property,
 
 \begin{code}
 
-sound                      : ∀ {x y} → x ∼ y → [ x ] ≡ [ y ]
+sound                 : ∀ {x y} → x ∼ y → [ x ] ≡ [ y ]
+sound { x } { y } x∼y = ⌞ compl >∼< x∼y >∼< compl' ⌟ 
 
 \end{code}
 
@@ -901,11 +846,11 @@ record PreQu (S : Setoid) : Set₁ where
   constructor
     Q:_[]:_sound:_
   private
-    A    = Carrier S
+    A   = Carrier S
     _∼_ = _≈_ S
   field
-    Q       : Set
-    [_]      : A → Q
+    Q     : Set
+    [_]   : A → Q
     sound : ∀ {a b : A} → a ∼ b → [ a ] ≡ [ b ]
 
 \end{code}
@@ -935,17 +880,17 @@ record Qu {S : Setoid} (PQ : PreQu S) : Set₁ where
   constructor
     qelim:_qelim-β:_
   private 
-    A       = Carrier S
-    _∼_    = _≈_ S
-    Q       = Q' PQ
-    [_]     = nf PQ
+    A     = Carrier S
+    _∼_   = _≈_ S
+    Q     = Q' PQ
+    [_]   = nf PQ
     sound : ∀{a b : A} → (a ∼ b) → [ a ] ≡ [ b ]
     sound = sound' PQ
   field
     qelim   : {B : Q → Set}
             → (f : (a : A) → B [ a ])
             → ((a b : A) → (p : a ∼ b) 
-            → subst B (sound p) (f a) ≡ f b)
+                → subst B (sound p) (f a) ≡ f b)
             → (q : Q) → B q
     qelim-β : ∀ {B a f} q → qelim {B} f q [ a ]  ≡ f a
 
@@ -960,9 +905,9 @@ record QuE {S : Setoid}{PQ : PreQu S}(QU : Qu PQ) : Set₁ where
   constructor
     exact:_
   private 
-    A       = Carrier S
-    _∼_    = _≈_ S
-    [_]     = nf PQ
+    A     = Carrier S
+    _∼_　　= _≈_ S
+    [_]　　= nf PQ
   field
     exact : ∀ {a b : A} → [ a ] ≡ [ b ] → a ∼ b
        
@@ -977,8 +922,8 @@ record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
     lift:_lift-β:_qind:_
   private 
     A      = Carrier S
-    _∼_   = _≈_ S
-    Q     = Q' PQ
+    _∼_    = _≈_ S
+    Q      = Q' PQ
     [_]    = nf PQ
   field
     lift   : {B : Set}
@@ -1002,7 +947,7 @@ record QuD {S : Setoid}(PQ : PreQu S) : Set₁ where
     emb:_complete:_stable:_
   private 
     A     = Carrier S
-    _∼_  = _≈_ S
+    _∼_   = _≈_ S
     Q     = Q' PQ
     [_]   = nf PQ
   field
@@ -1022,20 +967,22 @@ For integers, it is natural to define a function to choose a representative for 
 
 \begin{code}
 
-⌜_⌝            : ℤ → ℤ₀
-⌜ + n ⌝      = n , 0
-⌜ -suc n ⌝  = 0 , suc n
+⌜_⌝        : ℤ → ℤ₀
+⌜ + n ⌝    = n , 0
+⌜ -suc n ⌝ = 0 , ℕ.suc n
 
 \end{code}
 
-Now we need to prove |⌜_⌝| is the required embedding function, namely
-it is the inverse function of |[_]|.
-
+Now we need to prove |⌜_⌝| is the required embedding function, namely it is the inverse function of |[_]|.
 Firstly |⌜_⌝| is left inverse of |[_]|,
+
 
 \begin{code}
 
-compl                            : ∀ {n} → ⌜ [ n ] ⌝ ∼ n
+compl                   : ∀ {n} → ⌜ [ n ] ⌝ ∼ n
+compl {x , 0}           = refl
+compl {0 , nsuc y}      = refl
+compl {nsuc x , nsuc y} = compl {x , y} >∼<  ⟨ ℕ.sm+n≡m+sn x y ⟩
 
 \end{code}
 
@@ -1045,7 +992,9 @@ Secondly |⌜_⌝| is right inverse of |[_]|,
 
 \begin{code}
 
-stable                : ∀ {n} → [ ⌜ n ⌝ ] ≡ n
+stable            : ∀ {n} → [ ⌜ n ⌝ ] ≡ n
+stable {+ n}      = refl
+stable { -suc n } = refl
 
 \end{code}
 
@@ -1057,16 +1006,16 @@ Now we can form the definable quotient structure with the prequotient we have,
 
 ℤ-QuD : QuD ℤ-PreQu
 ℤ-QuD = record
-  { emb         = ⌜_⌝
+  { emb       = ⌜_⌝
   ; complete  = λ z → compl {z}
-  ; stable        = λ z → stable {z}
+  ; stable    = λ z → stable {z}
   } 
 
 \end{code}
 
 Now we have the mapping between the base type $\Z_0$ and the target type $\Z$, and have proved that |[_]| is a normalisation function.
 
-We can obtain the dependent and non-dependent eliminators by translating the definable quotient into other definitions,
+We can obtain the dependent and non-dependent eliminators by translate the definable quotient into other definitions,
 
 \begin{code}
 
@@ -1078,20 +1027,18 @@ We can obtain the dependent and non-dependent eliminators by translating the def
 
 \end{code}
 
-We can benefit from the interaction between setoids and quotient types
-in a number of ways.
+We can benefit a lot from the interaction between setoids and quotient types.
 
-Firstly the setoid definitions are usually simpler than the normal
+Firstly the setoid definitions are usually more simpler than the normal
 definitions. In the case of integers, the normal form have two
 constructors. For propositions with only one argument, sometimes we
 have to prove them for both cases in the canonical definition. With
 the increasing number of arguments in propositions, the number of
 cases we need to prove would increase exponentially. A real case is
 when trying to prove the distributivity of multiplication over
-addition for integers: the large amount of cases makes the
+addition for integers, there are too many cases which makes the
 proving cumbersome and we can hardly save any effort from any theorems
-we proved. 
-However for the setoid definition of integers, a
+we proved. However for the setoid definition of integers, a
 proposition can be converted into another proposition on natural
 numbers which is much convenient to prove because we do not need to
 prove case by case and we have a bundle of
@@ -1101,12 +1048,14 @@ theorems for natural numbers. For example,
 \begin{code}
 
 distʳ : _*_ DistributesOverʳ _+_
-distʳ (a , b) (c , d) (e , f) = ℕ.dist-lemʳ a b c d e f += ⟨  ℕ.dist-lemʳ b a c d e f ⟩
+distʳ (a , b) (c , d) (e , f) =
+  ℕ.dist-lemʳ a b c d e f +=
+  ⟨  ℕ.dist-lemʳ b a c d e f ⟩
 
 \end{code}
 
 Moreover, as we have constructed the semiring of natural numbers, it
-is even simpler to use the automatic prover \emph{ring solver} to prove simple equation of natural numbers. 
+is even simpler to use an automatic prover \emph{ring solver} to prove simple equation of natural numbers. 
 
 The rest we have to do is to lift the properties proved for setoid definition to the ones for canonical definition.
 We can easily lift n-ary operators defined for $\Z_0$ to the ones for $\Z$ by
@@ -1120,33 +1069,42 @@ liftOp (ℕ.suc n) op = λ x → liftOp n (op ⌜ x ⌝)
 \end{code}
 
 However, this lift function is unsafe because some operations on
-$\N\times\N$ do not make sense when applying this function. It is
+$\N\times\N$ do not make sense by applying this function. It is
 similar to the situation when defining functions on types with
 replaced equality in \ett{}. The solution is to lift functions which
 respects the equivalence relation. I only define the two most commonly
 used safe lifting functions
 
-\small
-{\begin{code}
+\begin{code}
 
-liftOp1safe : (f : Op 1 ℤ₀) → (∀ {a b} → a ∼ b → f a ∼ f b) → Op₁ ℤ
+liftOp1safe : (f : Op 1 ℤ₀) →
+              (∀ {a b} → a ∼ b → f a ∼ f b) →
+               Op₁ ℤ
 liftOp1safe f cong = λ n → [ f ⌜ n ⌝ ]
 
-liftOp2safe : (op : Op 2 ℤ₀) →   (∀ {a b c d} → a ∼ b → c ∼ d → op a c ∼ op b d) → Op₂ ℤ
+liftOp2safe : (op : Op 2 ℤ₀) → 
+              (∀ {a b c d} → a ∼ b → c ∼ d →
+               op a c ∼ op b d) →
+              Op₂ ℤ
 liftOp2safe _op_ cong = λ m n → [ ⌜ m ⌝ op ⌜ n ⌝ ]
 
-\end{code}}
+\end{code}
 
 Then we can obtain the $\beta$-laws which are very useful,
 
 \begin{code}
 
-liftOp1-β : (f : Op 1 ℤ₀) → (cong : ∀ {a b} → a ∼ b → f a ∼ f b) → 
-               ∀ n → liftOp1safe f cong [ n ] ≡ [ f n ]
+liftOp1-β : (f : Op 1 ℤ₀) →
+            (cong : ∀ {a b} → a ∼ b → f a ∼ f b) →
+            ∀ n → liftOp1safe f cong [ n ] ≡ [ f n ]
+liftOp1-β f cong n = sound (cong compl)
 
 
-liftOp2-β : (op : Op 2 ℤ₀) → (cong : ∀ {a b c d} → a ∼ b → c ∼ d → op a c ∼ op b d) →
-              ∀ m n → liftOp2safe op cong [ m ] [ n ] ≡ [ op m n ] 
+liftOp2-β : (op : Op 2 ℤ₀) →
+            (cong : ∀ {a b c d} → a ∼ b → c ∼ d →
+             op a c ∼ op b d) →
+            ∀ m n → liftOp2safe op cong [ m ] [ n ] ≡ [ op m n ] 
+liftOp2-β op cong m n = sound (cong compl compl)
 
 \end{code}
 
@@ -1172,16 +1130,20 @@ When trying to prove theorems for canonical integers, we can lift
 proved properties for the setoid integers, such as commutativity of
 any binary operations,
 
+
 \begin{code}
 
-liftComm : ∀ {op : Op 2 ℤ₀} → P.Commutative _∼_ op → Commutative (liftOp 2 op)
-liftComm {op} comm x y = sound (comm ⌜ x ⌝ ⌜ y ⌝)
+liftComm : ∀ {op : Op 2 ℤ₀} →
+           P.Commutative _∼_ op →
+           Commutative (liftOp 2 op)
+liftComm {op} comm x y = sound $ comm ⌜ x ⌝ ⌜ y ⌝
 
 \end{code}
 
 The generalised lifting function for commutativity is also one of the
 derived theorem of quotients as it only uses |sound| and |⌜_⌝| which are part of the
-quotients. We can then lift the commutativity of addition and multiplication,
+quotients.
+then we can lift the commutativity of addition and multiplication,
 
 \begin{code}
 
@@ -1193,64 +1155,64 @@ quotients. We can then lift the commutativity of addition and multiplication,
 
 \end{code}
 
-It is also much simpler and reasonable to prove the complicated distributivity of multiplication over addition, 
+It is also much simpler to prove the complicated distributivity of multiplication over addition, 
 
 \begin{code}
 
 distʳ : _*_ DistributesOverʳ _+_
-distʳ a b c = sound  (ℤ₀.*-cong (compl {⌜ b ⌝ + ⌜ c ⌝}) zrefl >∼< 
+distʳ a b c = sound $ ℤ₀.*-cong (compl {⌜ b ⌝ ℤ₀+ ⌜ c ⌝}) zrefl >∼< 
               ℤ₀.distʳ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼<
-              ℤ₀.+-cong compl' compl')
+              ℤ₀.+-cong compl' compl'
 
 \end{code}
 
 There is no need to use pattern matching, namely prove the
-propositions inductively. At first, I tried to prove distributivity by
-case analysis, and I found it is especially difficult and the proof is
-too long and it looks like (I omit to write the long proof for each clause):
-
-\begin{code}
-distʳ : _*_ DistributesOverʳ _+_
-distʳ (+ n) (+ n') (+ n0) = ...
-distʳ (+ n) (+ n') (-suc n0) = ...
-distʳ (+ n) (-suc n') (+ n0) = ...
-distʳ (+ n) (-suc n') (-suc n0) = ...
-distʳ (-suc n) (+ n') (+ n0) = ...
-distʳ (-suc n) (+ n') (-suc n0) = ...
-distʳ (-suc n) (-suc n') (+ n0) = ...
-distʳ (-suc n) (-suc n') (-suc n0) = ...
-\end{code}
-
-Even though it must be provable in this way, it is not the best choice
-to prove something like distributivity by induction.
-
- The simplicity of the short proof is achieved by
+propositions inductively. The simplicity of the proof is achieved by
 applying the quotient properties such as |sound|, we can translate or
 convert the proposition into the corresponding proposition for setoid
-integers. Although all the lemmas may be as much as the long proofs by
-induction, they are more meaningful and can be reused. We can further
-translating the propositions for setoid integers into some easier
-propositions for natural numbers. 
-The connections between canonical integers and natural numbers is built by
+integers. We can further translating the propositions for setoid
+integers into some easier propositions for natural numbers. The
+connections between canonical integers and natural numbers is built by
 the definition of quotient.
 
 We can also lift a structure of properties such as monoid,
 
 \begin{code}
-liftId : ∀ {op : Op 2 ℤ₀}(e : ℤ) → Identity _∼_ ⌜ e ⌝ op → Identity e (liftOp 2 op)
 
-liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) → Associative _∼_ op → 
-                   Associative (liftOp2safe op cong)
+liftId : ∀ {op : Op 2 ℤ₀}(e : ℤ) →
+         P.Identity _∼_ ⌜ e ⌝ op →
+         Identity e (liftOp 2 op)
+liftId e (idl , idr) = (λ x → sound (idl ⌜ x ⌝) >≡< stable) ,
+  (λ x → sound (idr ⌜ x ⌝) >≡< stable)
 
-liftMonoid : {op : Op 2 ℤ₀}{e : ℤ}(cong : Cong2 op) → IsMonoid _∼_ op ⌜ e ⌝ →
-                    IsMonoid _≡_ (liftOp 2 op) e
 
-\end{code}
+
+liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) →
+            P.Associative _∼_ op →
+            Associative (liftOp2safe op cong)
+liftAssoc {op} cong assoc a b c = sound $ cong (compl {op ⌜ a ⌝ ⌜ b
+  ⌝}) zrefl >∼< assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< cong zrefl compl'
+
+
+
+liftMonoid : {op : Op 2 ℤ₀}{e : ℤ}(cong : Cong2 op) →
+             IsMonoid _∼_ op  ⌜ e ⌝ →
+             IsMonoid _≡_ (liftOp 2 op) e
+liftMonoid {op} {e} cong im = record 
+  { isSemigroup = record 
+    { isEquivalence = isEquivalence
+    ; assoc = liftAssoc cong (IsMonoid.assoc im)
+    ; ∙-cong = cong₂ (liftOp 2 op)
+    }
+  ; identity = liftId {op} e (IsMonoid.identity im)
+  }
+
+
+\end{code} 
 
 These lift functions for operators and properties can be generalised
-even further such that they can be applied to all quotients that have
-similar algebraic structures.
-They are all derived theorems for quotients which can save a lot of work for
+even further such that they can be applied to all quotients. They are
+all derived theorems for quotients which can save a lot of work for
 us. We can reuse them in the next example, the set of rational numbers $\Q$.
 
 \subsection{Rational numbers}
@@ -1285,8 +1247,8 @@ Therefore the equivalence relation can be defined as,
 
 \begin{code}
 
-_∼_                                : Rel ℚ₀
-n1 /suc d1 ∼ n2 /suc d2 =  n1 * suc d2 ≡ n2 * suc d1
+_∼_   : Rel ℚ₀ zero
+n1 /suc d1 ∼ n2 /suc d2 =  n1 ℤ*ℕ suc d2 ≡ n2 ℤ*ℕ suc d1
 
 \end{code}
 
@@ -1300,9 +1262,9 @@ We can encode it using record type in Agda,
 
 record ℚ : Set where
   field
-    numerator        : ℤ
+    numerator     : ℤ
     denominator-1 : ℕ
-    isCoprime        : True (C.coprime? ∣ numerator ∣ (suc denominator-1))
+    isCoprime     : True (C.coprime? ∣ numerator ∣ (suc denominator-1))
 
 \end{code}
 
@@ -1312,7 +1274,13 @@ divisor can help us reduce the fraction and give us the proof of coprime,
 
 \begin{code}
 
+
 [_] : ℚ₀ → ℚ
+[ (+ 0) /suc d ] = ℤ.+_ 0 ÷ 1
+[ (+ (suc n)) /suc d ] with gcd (suc n) (suc d)
+[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
+[ (-suc n) /suc d ] with gcd (suc n) (suc d)
+... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
 
 \end{code}
 
@@ -1325,16 +1293,15 @@ The embedding function is simple. We only need to forget the coprime proof in th
 
 \end{code} 
 
-Similarly, we are able to construct the setoid, the prequotient and
-then the definable quotient of rational numbers. We can benefit from
-the ease of defining operators and proving theorems on setoids while
-still using the normal form of rational numbers, the lifted operators
-and properties which are safer.
+Similarly, we are able to construct the setoid, the prequotient and then the definable quotient of rational numbers. We can benefit from the ease of defining operators and proving theorems on setoids while still using the normal form of rational numbers which is safer. and the lifted operators and properties.
+
+
+
 
 
 \subsection{Real numbers}
 
-The previous quotient types are all definable in \itt{}, so we can
+The previous quotient types are all definable in \itt{} so that we can
 construct the definable quotients for them. However, there are some
 types undefinable in \itt{}. The set of real numbers $\R$ has been proved to be undefinable in \cite{aan}.
 
@@ -1349,7 +1316,7 @@ We can implement it in Agda. First a sequence of elements of $A$ can be represen
 
 \begin{code}
 
-Seq     : (A : Set) → Set
+Seq : (A : Set) → Set
 Seq A = ℕ → A
 
 \end{code}
@@ -1358,8 +1325,9 @@ And a sequence of rational numbers converges to zero can be expressed as follows
 
 \begin{code}
 
-Converge    : Seq ℚ₀ → Set
-Converge f = ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ m n → ∣ (f (suc lb + m)) - (f (suc lb + n)) ∣ <' ε
+Converge : Seq ℚ₀ → Set
+Converge f = ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ m n →
+                      ∣ (f (suc lb + m)) - (f (suc lb + n)) ∣ <' ε
 
 \end{code}
 
@@ -1380,12 +1348,23 @@ To complete the setoid for real numbers, an equivalence relation is required. In
 $$r \sim s = \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N,
 \forall i:\N, i>m\to \vert  r_i - s_i \vert <\varepsilon$$
 
-The Agda version is in Appendix.
+The Agda version is
+
+\begin{code}
+
+   _Diff_on_ : Seq ℚ₀ → Seq ℚ₀ → Seq ℚ₀*
+   f Diff g on m = ∣ f m - g m ∣
+
+   _~_ : Rel ℝ₀ zero
+   (f: f p: p) ~ (f: f' p: p') =  
+       ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ i → (lb < i) → f Diff f' on i <' ε
+
+\end{code}
 
 In set theory we can construct  quotient set $\R_0 /\sim$. However
-since real numbers have no normal forms we cannot define the quotient
+since real numbers have no normal forms we can not define the quotient
 in \itt{}. Hence the definable quotient definition does not work for
-it. The undefinability of the any type $\R$ which is the quotient type
+it.The undefinability of the any type $\R$ which is the quotient type
 of the setoid $(\R_0, \sim)$ is proved by local continuity \cite{aan}.
 
 \subsection{All epimorphisms are split epimorphisms}
@@ -1397,7 +1376,10 @@ A morphism $e$ is an epimorphism if it is right-cancellative
 \begin{code}
 
 Epi : {A B : Set} → (e : A → B) → (C : Set) → Set
-Epi {A} {B} e C = ∀ (f g : B → C) → (∀ (a : A) → f (e a) ≡ g (e a)) → ∀ (b : B) → f b ≡ g b
+Epi {A} {B} e C =
+      ∀ (f g : B → C) →
+      (∀ (a : A) → f (e a) ≡ g (e a)) →
+      ∀ (b : B) → f b ≡ g b
 
 \end{code}
 
@@ -1487,8 +1469,8 @@ must be decidable,
 
 \begin{code}
 
-postulate g    : B → Bool
-postulate gb  : g b ≡ true
+postulate g : B → Bool
+postulate gb : g b ≡ true
 postulate gb' : ∀ b' → ¬ (b' ≡ b) → false ≡ g b'
 
 \end{code}
@@ -1507,39 +1489,28 @@ Finally we can prove $e$ is not an epi
 \end{code}
 
 This proposition can only been applied to definable types $A$ $B$ in \itt{} and is
-only proved to be true with classic axioms. Therefore it does not make
+only proved to be true with classic axioms.Therefore it does not make
 sense for the epimorphism from $\R_0$ to $\R$.
 
 \section{Conclusion}
-\label{sec:cl}
 
 In the first phase of the project of quotient types in \itt{}, we
 investigate the quotients which are definable in current setting of
 \itt{}. The quotient types are separately defined and then proved to
 be correct by forming definable quotients of some setoids. The
-properties contained in the quotient structure are very helpful in
+properties contained in the quotient structure is very helpful in
 lifting functions and propositions for setoids to quotient types. This
-approach provides us an alternative choice to define functions and
-prove propositions.
-It is probably simpler to define functions on setoids and we can
- reuse proved theorems for the setoids in many cases.
-However it is a little complicated to build the quotients and is only applicable to quotients which are definable in \itt{}.
+approach provides us an alternative choice to define functions and prove propositions. It is probably simpler to define functions on setoids and we can reuse proved theorems for the setoids in many cases. However it is a little complicated to build the quotients and is only applicable to quotients which are definable in \itt{}.
 
 In the next phase we will focus on the undefinable quotients and
 extending \itt{} with axiomatic quotient types. To implement
 undefinable quotients, a new type former with the essential
 introduction and elimination rules is unavoidable. Although the
 quotient structures only works for definable quotients, it can be a
-good guide when axiomatising the quotient types. 
-
-For future works, We can extend the setoid model in \cite{alt:99} to
-quotient types, find an approach to extend \itt{} without losing
-nice features such as termination and decidable type checking. 
-Additional future work could be to give a detailed proof of the
-conservativity of \itt{} with quotient types over \ett{} extending the
-work in \cite{hof:95:con}. Some other models, such as groupoid model
-could also be investigated since Voevodsky has defined quotients in
-Homotopy Type Theory\cite{voe:hset}.
+good guidance to axiomatise the quotient types. We can extend the work
+in \cite{alt:99} and find an approach to extend \itt{} without losing
+nice features such as termination and decidable type checking. Another
+future work could be to give a detailed proof of the conservativity of \itt{} with quotient types over \ett{}.
 
 %future : something on equality, complete preliminary work in Agda
 %Extend without losing nice features of itt, termination, decidable type checking
@@ -1550,106 +1521,11 @@ Homotopy Type Theory\cite{voe:hset}.
 % one thing in one paragraph.
 
 
-%future : something on equality, complete preliminary work in Agda
-%Extend without losing nice features of itt, termination, decidable type checking
-%axiomatizing quotients types, adding rules, na 
-% possible quotations, talk to Thorsten
-% 
 
 
 
 \newpage
 \bibliography{quotients}
 \bibliographystyle{plain}
-
-\newpage
-
-\oddsidemargin=-1cm
-\evensidemargin=-1cm
-\begin{appendix}
-
-\section{Appendix}
-
-\begin{code}
-
-sound                      : ∀ {x y} → x ∼ y → [ x ] ≡ [ y ]
-sound { x } { y } x∼y = ⌞ compl >∼< x∼y >∼< compl' ⌟ 
-
-\end{code}
-
-
-\begin{code}
-
-compl                            : ∀ {n} → ⌜ [ n ] ⌝ ∼ n
-compl {x , 0}                 = refl
-compl {0 , nsuc y}         = refl
-compl {nsuc x , nsuc y} = compl {x , y} >∼<  ⟨ sm+n≡m+sn x y ⟩
-
-\end{code}
-
-
-\begin{code}
-
-stable                : ∀ {n} → [ ⌜ n ⌝ ] ≡ n
-stable {+ n}       = refl
-stable { -suc n } = refl
-
-\end{code}
-
-\begin{code}
-
-liftOp1-β : (f : Op 1 ℤ₀) → (cong : ∀ {a b} → a ∼ b → f a ∼ f b) → 
-               ∀ n → liftOp1safe f cong [ n ] ≡ [ f n ]
-liftOp1-β f cong n = sound (cong compl)
-
-
-liftOp2-β : (op : Op 2 ℤ₀) → (cong : ∀ {a b c d} → a ∼ b → c ∼ d → op a c ∼ op b d) →
-              ∀ m n → liftOp2safe op cong [ m ] [ n ] ≡ [ op m n ] 
-liftOp2-β op cong m n = sound (cong compl compl)
-
-\end{code}
-
-\begin{code}
-liftId : ∀ {op : Op 2 ℤ₀}(e : ℤ) → Identity _∼_ ⌜ e ⌝ op → Identity e (liftOp 2 op)
-liftId e (idl , idr) = (λ x → sound (idl ⌜ x ⌝) >≡< stable) , (λ x → sound (idr ⌜ x ⌝) >≡< stable)
-
-liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) → Associative _∼_ op → Associative (liftOp2safe op cong)
-liftAssoc {op} cong assoc a b c = sound (cong (compl {op ⌜ a ⌝ ⌜ b ⌝}) zrefl >∼< assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< cong zrefl compl')
-
-liftMonoid : {op : Op 2 ℤ₀}{e : ℤ}(cong : Cong2 op) → IsMonoid _∼_ op ⌜ e ⌝ → IsMonoid _≡_ (liftOp 2 op) e
-liftMonoid {op} {e} cong im = record 
-  { isSemigroup = record 
-    { isEquivalence = isEquivalence
-    ; assoc = liftAssoc cong (IsMonoid.assoc im)
-    ; ∙-cong = cong₂ (liftOp 2 op)
-    }
-  ; identity = liftId {op} e (IsMonoid.identity im)
-  }
-\end{code}
-
-
-\begin{code}
-
-[_] : ℚ₀ → ℚ
-[ (+ 0) /suc d ] = ℤ.+_ 0 ÷ 1
-[ (+ (suc n)) /suc d ] with gcd (suc n) (suc d)
-[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
-[ (-suc n) /suc d ] with gcd (suc n) (suc d)
-... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
-
-\end{code}
-
-\begin{code}
-
-   _Diff_on_ : Seq ℚ₀ → Seq ℚ₀ → Seq ℚ₀*
-   f Diff g on m = ∣ f m - g m ∣
-
-   _~_ : Rel ℝ₀
-   (f: f p: p) ~ (f: f' p: p') =  
-       ∀ (ε : ℚ₀*) → ∃ λ lb → ∀ i → (lb < i) → f Diff f' on i <' ε
-
-\end{code}
-
-\end{appendix}
 
 \end{document}

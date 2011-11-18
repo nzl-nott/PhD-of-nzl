@@ -1,0 +1,76 @@
+%include general.fmt
+%include unicode.fmt
+%include subscripts.fmt
+
+%don't include agda.fmt
+
+%format \int_0^t1 = "\int_{0}^{t_1}"
+%format \finite  = "\mathbf{finite}"
+
+%format \SF     = "\constructor{SF}"
+%format -<      = "-\!\!\!\prec"
+
+%format andtheliftingfunctions = "\textrm{and the lifting functions}"
+
+%% Constructors
+
+%format refl     = "\constructor{refl}"
+%format true     = "\constructor{true}"
+%format false    = "\constructor{false}"
+%format nothing  = "\constructor{nothing}"
+%format just     = "\constructor{just}"
+%format unit     = "\constructor{unit}"
+%format inr      = "\constructor{inr}"
+%format inl      = "\constructor{inl}"
+%format zero     = "\constructor{zero}"
+%format succ     = "\constructor{succ}"
+%format zlt      = "\constructor{zlt}"
+%format slt      = "\constructor{slt}"
+
+
+%% Operators
+
+%format _+_     = "\_" + "\_"
+%format _*_     = "\_" * "\_"
+%format _<_     = "\_" < "\_"
+%format __     = _  _
+%format _++_    = _ ++ _
+%format _>>>_   = _ >>> _
+%format _&&&_   = _ &&& _
+%format _***_   = _ *** _
+
+
+%% Intervals
+
+%format __     = _  _
+
+
+%% Temporal Logic
+
+%format Btl     =  "\tl{B}"
+%format Ftl     =  "\tl{F}"
+%format Gtl     =  "\tl{G}"
+%format Htl     =  "\tl{H}"
+%format Ptl     =  "\tl{P}"
+%format Stl     =  "\tl{S}"
+%format Utl     =  "\tl{U}"
+%format Wtl     =  "\tl{W}"
+%format X       =  "\tl{X}"
+
+%format B^r     =  "\tl{B^r}"
+%format F^r     =  "\tl{F^r}"
+%format G^r     =  "\tl{G^r}"
+%format H^r     =  "\tl{H^r}"
+%format P^r     =  "\tl{P^r}"
+%format S^r     =  "\tl{S^r}"
+%format U^r     =  "\tl{U^r}"
+%format W^r     =  "\tl{W^r}"
+
+%format _B_     = _ Btl _
+%format _S_     = _ Stl _
+%format _U_     = _ Utl _
+%format _W_     = _ Wtl _
+%format _B^r_   = _ B^r _
+%format _S^r_   = _ S^r _
+%format _U^r_   = _ U^r _
+%format _W^r_   = _ W^r _

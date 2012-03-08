@@ -1,0 +1,127 @@
+\documentclass{article}
+\def\textmu{}
+\author{Li Nuo}
+\title{Notes on Category with Families}
+
+%\setlength{\textheight}{20cm}
+%\setlength{\textwidth}{5.5in}
+%\setlength{\topmargin}{-0.1in}
+%\setlength{\oddsidemargin}{-1.8mm}
+%\setlength{\evensidemargin}{-1.8mm}
+
+%\institute{University of Nottingham}
+
+\usepackage{dsfont}
+\usepackage{amsthm}
+
+%include agda.fmt
+
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{autofe}
+\usepackage{url}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\DeclareUnicodeCharacter{955}{$\lambda$}
+\DeclareUnicodeCharacter{8988}{$\ulcorner$}
+\DeclareUnicodeCharacter{8990}{$\llcorner$}
+\DeclareUnicodeCharacter{8989}{$\urcorner$}
+\DeclareUnicodeCharacter{8991}{$\lrcorner$}
+\DeclareUnicodeCharacter{946}{$\beta$}
+
+\newcommand{\todo}[1]{\textcolor{red}{TO~DO:~#1}}
+
+\newcommand{\ed}[1]{\textcolor{blue}{#1}}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+
+\newcommand{\dotph}{\,\cdot\,}
+\newcommand{\dotop}{\mathrel{.}}
+\providecommand{\abs}  [1]{\lvert#1\rvert}
+\providecommand{\norm} [1]{\lVert#1\rVert}
+\providecommand{\class}[1]{[#1]}
+\providecommand{\set}  [1]{\left\{#1\right\}}
+\providecommand{\dlift}[1]{\widehat{#1}}
+
+\DeclareMathOperator{\Prop}{\mathbf{Prop}}
+\DeclareMathOperator{\Set}{\mathbf{Set}}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Bool}{Bool}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\sound}{sound}
+\DeclareMathOperator{\qelimbeta}{qelim-\beta}
+\DeclareMathOperator{\qind}{qind}
+\DeclareMathOperator{\exact}{exact}
+\DeclareMathOperator{\subst}{subst}
+\DeclareMathOperator{\emb}{emb}
+\DeclareMathOperator{\complete}{complete}
+\DeclareMathOperator{\stable}{stable}
+\DeclareMathOperator{\List}{List}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\now}{now}
+\DeclareMathOperator{\later}{later}
+\DeclareMathOperator{\nowequal}{now_\sqsubseteq}
+\DeclareMathOperator{\laterequal}{later_\sqsubseteq}
+\DeclareMathOperator{\laterleft}{later_{left}}
+\DeclareMathOperator{\inl}{inl}
+\DeclareMathOperator{\inr}{inr}
+\DeclareMathOperator{\qelim}{qelim}
+\DeclareMathOperator{\lift}{lift}
+\DeclareMathOperator{\LC}{LC}
+\DeclareMathOperator{\liftbeta}{lift-\beta}
+\DeclareMathOperator{\Bijection}{Bijection}
+\DeclareMathOperator{\true}{true}
+\DeclareMathOperator{\false}{false}
+\DeclareMathOperator{\sort}{sort}
+\DeclareMathOperator{\length}{length}
+\DeclareMathOperator{\nub}{nub}
+\DeclareMathOperator{\suc}{suc\,}
+\DeclareMathOperator{\defi}{\stackrel{\text{\tiny def}}{=}}
+\DeclareMathOperator{\coprime}{Coprime}
+
+\DeclareMathOperator{\A/sim}{A\,\, /\sim}
+
+\newcommand{\eqqm}{\overset{\text{\tiny ?}}{=}}
+\newcommand{\sep}{\mathrel{\sharp}}
+
+% Shorthand
+\newcommand{\itt}{Intensional Type Theory}
+\newcommand{\ett}{Extensional Type Theory}
+\newcommand{\mltt}{Martin-L\"{o}f type theory}
+
+\newenvironment{codes}{\tiny\begin{code}}{\end{code}}
+
+\usepackage{varioref}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\begin{abstract}
+\end{abstract}
+
+
+
+
+
+
+
+
+\newpage
+\bibliography{x}
+\bibliographystyle{plain}
+
+\end{document}

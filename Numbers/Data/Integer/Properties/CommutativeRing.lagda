@@ -135,16 +135,6 @@ distʳ : _*_ DistributesOverʳ _+_
 distʳ a b c = sound $ ℤ₀.*-cong (compl {⌜ b ⌝ ℤ₀+ ⌜ c ⌝}) zrefl >∼< ℤ₀.distʳ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong compl' compl'
 
 
-distʳ1 : _*_ DistributesOverʳ _+_
-distʳ1 (+ n) (+ n') (+ n0) = {!!}
-distʳ1 (+ n) (+ n') (-suc n0) = {!!}
-distʳ1 (+ n) (-suc n') (+ n0) = {!!}
-distʳ1 (+ n) (-suc n') (-suc n0) = {!!}
-distʳ1 (-suc n) (+ n') (+ n0) = {!!}
-distʳ1 (-suc n) (+ n') (-suc n0) = {!!}
-distʳ1 (-suc n) (-suc n') (+ n0) = ?
-distʳ1 (-suc n) (-suc n') (-suc n0) = ?
-
 distrib-*-+ : _*_ DistributesOver _+_
 distrib-*-+ = distˡ , distʳ
 

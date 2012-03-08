@@ -12,4 +12,5 @@
 \contentsline {subsection}{\numberline {5.3}Real numbers}{19}
 \contentsline {subsection}{\numberline {5.4}All epimorphisms are split epimorphisms}{20}
 \contentsline {section}{\numberline {6}Conclusion}{22}
-\contentsline {section}{\numberline {A}Appendix}{25}
+\contentsline {subsection}{\numberline {6.1}Future work}{22}
+\contentsline {section}{\numberline {A}Appendix}{26}

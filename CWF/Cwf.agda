@@ -14,17 +14,31 @@ data Prp : Set₁ where
 -}
 Type = Set₁
 
+
+IsProp   : ∀ (P : Set) → Set
+IsProp P = (p q : P) → p ≡ q
+
 record Con : Type where
   infix 4 _≈_
   field
     set    : Set
     _≈_    : set → set → Set
-    isProp : ∀ (x y : set) → (p q : x ≈ y) → p ≡ q -- UIP instead of Prop universe
+    isProp : ∀ (x y : set) → IsProp (x ≈ y) -- UIP instead of Prop universe
     refl   : Reflexive _≈_
     sym    : Symmetric _≈_
     trans  : Transitive _≈_
 
 open Con
+
+pi_close : {A : Set}{B : A → Set} → (∀(x : A) → IsProp (B x)) → IsProp ((x : A) → (B x))
+pi_close ispb a b = {!!}
+
+
+sig_close : {A : Set}{B : A → Set} → IsProp A → (∀(x : A) → IsProp (B x)) → IsProp (Σ[ x ∶ A ] (B x))
+sig_close ispa ispb (a1 , a2) (b1 , b2) with ispa a1 b1
+sig_close ispa ispb (.b1 , a2) (b1 , b2) | PE.refl with ispb b1 a2 b2
+sig_close ispa ispb (.b1 , .b2) (b1 , b2) | PE.refl | PE.refl = PE.refl 
+
 
 infix 5 _⇉_
 

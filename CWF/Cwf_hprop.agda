@@ -35,9 +35,10 @@ record _⇉_ (X Y : Con) : Set where
 
 open _⇉_
 
+{-
 simpl-resp : {X Y : Con} → (xy : X ⇉ Y) → ∀ (x y : set X) →  < [ X ] x ≈ y > → <  [ Y ] (f xy x) ≈ (f xy y) >
 simpl-resp xy x y eq = app (app-d (app-d (resp xy) x) y) eq
-
+-}
 -----------------------
 -- Con forms a category
 
@@ -48,8 +49,10 @@ idCon X = record { f = λ x → x; resp = λ x → ss (λ x' → ss (λ eq → s
 
 -- composition
 
+{-
 _∘_ : {X Y Z : Con} → X ⇉ Y → Y ⇉ Z → X ⇉ Z
 _∘_ {X} {Y} {Z} xy yz = record { f = λ x → f yz (f xy x); resp = λ x → ss (λ x' → ss (λ eq → ss (simpl-resp yz (f xy x) (f xy x') (simpl-resp xy x x' eq)))) }
+-}
 
 -------------------------------------
 -- Types and Terms

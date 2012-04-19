@@ -48,7 +48,7 @@ squash A = hProp (SquashSet A) pirr
 -- squash hprop?
 
 squash' : HProp → HProp
-squash' (hProp P Uni ) = squash P
+squash' (hProp P Uni) = squash P
 
 --  only HProp can be squashed? because it has uni?
 -- so maybe SquashSet should be restricted to only HProp, SquashSet should be declared private
@@ -79,7 +79,7 @@ record ⟦_⟧ (A : HProp) : Set where
 ∀' A P = (x : A) → ⟦ P x ⟧
 
 fa : (A : Set)(P : A → HProp) → HProp
-fa A P = hProp ((x : A) → ⟦ P x ⟧) (λ p q → refl)
+fa A P = hProp (∀' A P) (λ p q → refl)
 
 import Data.Product
 
@@ -126,6 +126,7 @@ record Σ' (A : Set)(B : A → Set) : Set where
   field
     fst : A
     snd : B fst
+open Σ' public
 
 sig-eq : {A : Set}{B : A → Set}{a : A}{a b : A} → (p : a ≡ b) → {c : B a}{d : B b} → (subst (λ x → B x) p c ≡ d) → _≡_ {_} {Σ' A B} (a , c) (b , d)
 sig-eq refl refl = refl
@@ -135,15 +136,18 @@ sig-pir {P} {Q} (fst , snd) (fst' , snd') = sig-eq {< P >} { (λ x → < Q x >)}
 
 -- HProp is closed under Σ-types
 
-Σ : (P : HProp)(Q : < P > → HProp) → HProp
-Σ P Q = hProp (Σ' < P > (λ x → < Q x >)) (sig-pir {P} {Q})
+Σ : (P : HProp)(Q : < P > → HProp) → Set
+Σ P Q = Σ' < P > (λ x → < Q x >)
+
+Σ-p : (P : HProp)(Q : < P > → HProp) → HProp
+Σ-p P Q = hProp (Σ' < P > (λ x → < Q x >)) (sig-pir {P} {Q})
 
 -- independent version is conjunction
 
 infixr 3 _∧_
 
 _∧_ : (P Q : HProp) → HProp
-P ∧ Q = Σ P (λ _ → Q)
+P ∧ Q = Σ-p P (λ _ → Q)
 
 -- negation
 

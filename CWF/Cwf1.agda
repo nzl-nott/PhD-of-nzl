@@ -1,9 +1,9 @@
-module Cwf where
+module Cwf1 where
 
 open import Data.Nat
 open import Data.Product
 open import Data.Rational
-open import Function
+
 open import Level
 
 open import Relation.Binary
@@ -17,28 +17,17 @@ data Prp : Set₁ where
 -}
 
 IsProp   : Set → Set
-IsProp P = ∀(p q : P) → p ≡ q
-
-IsProp'   : Set → Set
-IsProp' P = ∀{p q : P} → p ≡ q
+IsProp P = ∀{p q : P} → p ≡ q
 
 -- The proofs of closedness of Π and Σ of Prop
 
 postulate ext : Extensionality zero zero
 
 Πclose : {A : Set}{B : A → Set} →
-         (∀ x → IsProp' (B x)) → 
-         IsProp' (∀ x → (B x))
+         (∀ x → IsProp (B x)) → 
+         IsProp (∀ x → (B x))
 Πclose ispb = ext (λ x → ispb x)
 
-
-Σclose : {A : Set}{B : A → Set} → 
-         IsProp' A → 
-         (∀ x → IsProp' (B x)) → 
-         IsProp' (Σ[ x ∶ A ] (B x))
-Σclose ispa ispb {a1 , a2} {b1 , b2} with ispa {a1} {b1}
-Σclose ispa ispb {.b1 , a2} {b1 , b2} | PE.refl with ispb b1 {a2} {b2}
-Σclose ispa ispb {.b1 , .b2} {b1 , b2} | PE.refl | PE.refl = PE.refl 
 
 
 -- Definition of Context
@@ -50,7 +39,7 @@ record Con : Type where
   field
     set   : Set
     _≈_   : set → set → Set
-    uip   : ∀ {x y : set} → IsProp' (x ≈ y) -- UIP instead of Prop universe
+    uip   : ∀ (x y : set) → IsProp (x ≈ y) -- UIP instead of Prop universe
     refl  : Reflexive _≈_
     sym   : Symmetric _≈_
     trans : Transitive _≈_
@@ -70,11 +59,11 @@ record _⇉_ (X Y : Con) : Set where
 open _⇉_
 
 lemma1 : ∀ {X Y : Con}(f : X ⇉ Y)(x : ∣ X ∣) → resp f (refl X {x}) ≡ refl Y {fn f x}
-lemma1 {X} {Y} f x = uip Y -- (fn f x) (fn f x)
+lemma1 {X} {Y} f x = uip Y (fn f x) (fn f x)
 
 
 lemma2 :  {X Y : Con}{x y z : ∣ X ∣}(f : X ⇉ Y)(p : [ X ] x ≈ y)(q : [ X ] y ≈ z) → trans Y (resp f p) (resp f q) ≡ resp f (trans X p q)
-lemma2 {X} {Y} {x} {y} {z} f p q = uip Y -- (fn f x) (fn f z)
+lemma2 {X} {Y} {x} {y} {z} f p q = {!!} -- uip Y (fn f x) (fn f z) (resp f (trans X p q)) (trans Y (resp f p) (resp f q))
 
 --verification of categorical laws
 
@@ -85,8 +74,8 @@ idCon X = record { fn = λ x → x; resp = λ x → x }
 
 -- composition
 
-_∘c_ : {X Y Z : Con} → X ⇉ Y → Y ⇉ Z → X ⇉ Z
-xy ∘c yz = record { fn = λ x → fn yz (fn xy x); resp = λ x → resp yz (resp xy x) }
+_∘_ : {X Y Z : Con} → X ⇉ Y → Y ⇉ Z → X ⇉ Z
+xy ∘ yz = record { fn = λ x → fn yz (fn xy x); resp = λ x → resp yz (resp xy x) }
 
 
 
@@ -111,7 +100,7 @@ Ay [ f ] = record
           ; substT = λ {x} {y} p → substT Ay (resp f p)
           ; subst* = λ {x} {y} p → subst* Ay (resp f p)
           ; refl*  = λ x a → subst (λ t → [ fm Ay (fn f x) ] (substT Ay t a) ≈ a) (PE.sym (lemma1 f x)) (refl* Ay (fn f x) a)
-          ; trans* = λ {x} {y} {z} p q a → subst (λ t → [ fm Ay (fn f z) ] substT Ay (resp f q) (substT Ay (resp f p) a) ≈ substT Ay t a)  (lemma2 f p q) (trans* Ay (resp f p) (resp f q) a)
+          ; trans* = {!!} -- λ {x} {y} {z} p q a → subst (λ t → [ fm Ay (fn f z) ] substT Ay (resp f q) (substT Ay (resp f p) a) ≈ (substT Ay t a)) (PE.sym (lemma2 f p q)) (trans* Ay (resp f p) (resp f q) a)
           }
 
 
@@ -127,8 +116,8 @@ open Tm
 
 _[_]m : ∀ {X Y : Con}{A : Ty Y} → Tm A → (f : X ⇉ Y) → Tm (A [ f ])
 _[_]m t f = record 
-          { tm = tm t ∘ fn f
-          ; respt = respt t ∘ resp f 
+          { tm = {!!} -- tm t ∘ fn f
+          ; respt = {!!} -- respt t ∘ resp f 
           }
 
 
@@ -142,7 +131,7 @@ _[_]m t f = record
 ● = record {
       set = ⊤;
       _≈_ = λ _ _ → ⊤;
-      uip = PE.refl;
+      uip = λ x y p q → PE.refl;
       refl = tt;
       sym = λ x → tt;
       trans = λ x x' → tt }
@@ -154,8 +143,7 @@ _&_ : (X : Con) → Ty X → Con
 X & A = record {
           set = Σ[ x ∶ ∣ X ∣ ] ∣ fm A x ∣;
           _≈_ = λ x y → Σ ([ X ] (proj₁ x) ≈ (proj₁ y)) (λ p → [ fm A (proj₁ y) ] (substT A p (proj₂ x)) ≈ (proj₂ y));
-          uip  = λ {x} {y} → Σclose (uip X) (λ x' → uip (fm A (proj₁ y)));
-          refl = λ {x} → (refl X) , refl* A (proj₁ x) (proj₂ x);
-          sym = λ {i} {j} x → (sym X (proj₁ x)) , {!substT ? (sym (fm A (proj₁ j)) (proj₂ x))!};
+          uip  = λ x y p q → {!PE.refl!};
+          refl = {!!};
+          sym = {!!};
           trans = {!!} }
-

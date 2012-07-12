@@ -1,111 +1,96 @@
-module Cwf where
+
+open import Level
+open import Relation.Binary.PropositionalEquality as PE hiding (refl ; sym ; trans; isEquivalence)
+
+module Cwf (ext : Extensionality zero zero) where
 
 open import Data.Nat
 open import Data.Product
 open import Data.Rational
 open import Function
-open import Level
 
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality as PE hiding (refl ; sym ; trans; isEquivalence)
 open import Relation.Binary.Core public using (_≡_; _≢_)
 open import Data.Unit
 
-{-
-data Prp : Set₁ where
-  prf : .Set → Prp
--}
-
-IsProp   : Set → Set
-IsProp P = ∀(p q : P) → p ≡ q
-
-IsProp'   : Set → Set
-IsProp' P = ∀{p q : P} → p ≡ q
-
--- The proofs of closedness of Π and Σ of Prop
-
-postulate ext : Extensionality zero zero
-
-Πclose : {A : Set}{B : A → Set} →
-         (∀ x → IsProp' (B x)) → 
-         IsProp' (∀ x → (B x))
-Πclose ispb = ext (λ x → ispb x)
-
-
-Σclose : {A : Set}{B : A → Set} → 
-         IsProp' A → 
-         (∀ x → IsProp' (B x)) → 
-         IsProp' (Σ[ x ∶ A ] (B x))
-Σclose ispa ispb {a1 , a2} {b1 , b2} with ispa {a1} {b1}
-Σclose ispa ispb {.b1 , a2} {b1 , b2} | PE.refl with ispb b1 {a2} {b2}
-Σclose ispa ispb {.b1 , .b2} {b1 , b2} | PE.refl | PE.refl = PE.refl 
-
+import HProp1
+module x = HProp1 ext
+open x
 
 -- Definition of Context
 
 Type = Set₁
 
+-- Context are interpreted as setoids
+
 record Con : Type where
   infix 4 _≈_
   field
     set   : Set
-    _≈_   : set → set → Set
-    uip   : ∀ {x y : set} → IsProp' (x ≈ y) -- UIP instead of Prop universe
-    refl  : Reflexive _≈_
-    sym   : Symmetric _≈_
-    trans : Transitive _≈_
+    _≈_   : set → set → HProp
+    refl  : {x : set} → < x ≈ x >
+    sym   : {x y : set} → < x ≈ y > → < y ≈ x >
+    trans : {x y z : set} → < x ≈ y > → < y ≈ z > → < x ≈ z >
+  
+  _≈'_ : set → set → Set
+  a ≈' b = < a ≈ b >
+  uip : ∀{a b : set}{p q : a ≈' b} → p ≡ q
+  uip {a} {b} = Uni (a ≈ b)
+open Con renaming (_≈_ to [_]_≈p_ ; _≈'_ to [_]_≈_ ; set to ∣_∣ ; trans to [_]trans)
 
-open Con renaming (_≈_ to [_]_≈_ ; set to ∣_∣)
 
-
--- Context morphism
+-- Context morphism (substitution)
 
 infix 5 _⇉_
 
-record _⇉_ (X Y : Con) : Set where
+record _⇉_ (Γ Δ : Con) : Set where
   field
-    fn   : ∣ X ∣ → ∣ Y ∣
-    resp : ∀{x y : ∣ X ∣} → [ X ] x ≈ y → [ Y ] fn x ≈ fn y
+    fn   : ∣ Γ ∣ → ∣ Δ ∣
+    resp : {x y : ∣ Γ ∣} → 
+           [ Γ ] x ≈ y → 
+           [ Δ ] fn x ≈ fn y
 
 open _⇉_
 
-lemma1 : ∀ {X Y : Con}(f : X ⇉ Y)(x : ∣ X ∣) → resp f (refl X {x}) ≡ refl Y {fn f x}
-lemma1 {X} {Y} f x = uip Y -- (fn f x) (fn f x)
 
+lemma1 : ∀ {Γ Δ : Con}(f : Γ ⇉ Δ)(x : ∣ Γ ∣) →
+         resp f (refl Γ {x}) ≡ refl Δ {fn f x}
+lemma1 {Γ} {Δ} f x = uip Δ
 
-lemma2 :  {X Y : Con}{x y z : ∣ X ∣}(f : X ⇉ Y)(p : [ X ] x ≈ y)(q : [ X ] y ≈ z) → trans Y (resp f p) (resp f q) ≡ resp f (trans X p q)
-lemma2 {X} {Y} {x} {y} {z} f p q = uip Y -- (fn f x) (fn f z)
+lemma2 : {Γ Δ : Con}{x y z : ∣ Γ ∣}(f : Γ ⇉ Δ)
+         (p : [ Γ ] x ≈ y)(q : [ Γ ] y ≈ z) → 
+         [ Δ ]trans (resp f p) (resp f q) ≡ resp f ([ Γ ]trans p q)
+lemma2 {Γ} {Δ} f p q = uip Δ
 
 --verification of categorical laws
 
 -- identity
 
-idCon : (X : Con) → X ⇉ X 
-idCon X = record { fn = λ x → x; resp = λ x → x }
+idCon : (Γ : Con) → Γ ⇉ Γ 
+idCon Γ = record { fn = λ x → x; resp = λ x → x }
 
 -- composition
 
-_∘c_ : {X Y Z : Con} → X ⇉ Y → Y ⇉ Z → X ⇉ Z
+_∘c_ : {Γ Δ Z : Con} → Γ ⇉ Δ → Δ ⇉ Z → Γ ⇉ Z
 xy ∘c yz = record { fn = λ x → fn yz (fn xy x); resp = λ x → resp yz (resp xy x) }
 
 
-
--------------------------------------
+------------------------------------
 -- Types and Terms
 
-record Ty (X : Con) : Type where
+record Ty (Γ : Con) : Type where
   field
-    fm     : ∣ X ∣ → Con
-    substT  : {x y : ∣ X ∣} → [ X ] x ≈ y → ∣ fm x ∣ → ∣ fm y ∣
-    subst* : ∀ {x y : ∣ X ∣}(p : [ X ] x ≈ y)(a b : ∣ fm x ∣) → [ fm x ] a ≈ b
+    fm     : ∣ Γ ∣ → Con
+    substT : {x y : ∣ Γ ∣} → [ Γ ] x ≈ y → ∣ fm x ∣ → ∣ fm y ∣
+    subst* : ∀ {x y : ∣ Γ ∣}(p : [ Γ ] x ≈ y){a b : ∣ fm x ∣} → [ fm x ] a ≈ b
              → [ fm y ] substT p a ≈ substT p b
-    refl*  : ∀ (x : ∣ X ∣)(a : ∣ fm x ∣) → [ fm x ] substT (refl X) a ≈ a
-    trans* : ∀ {x y z : ∣ X ∣}(p : [ X ] x ≈ y)(q : [ X ] y ≈ z)(a : ∣ fm x ∣)
-             → [ fm z ] substT q (substT p a) ≈ substT (trans X p q) a
+    refl*  : ∀ (x : ∣ Γ ∣)(a : ∣ fm x ∣) → [ fm x ] substT (refl Γ) a ≈ a
+    trans* : ∀ {x y z : ∣ Γ ∣}(p : [ Γ ] x ≈ y)(q : [ Γ ] y ≈ z)(a : ∣ fm x ∣)
+             → [ fm z ] substT q (substT p a) ≈ substT ([ Γ ]trans p q) a
 
 open Ty
 
-_[_] : ∀ {X Y : Con} → Ty Y → X ⇉ Y → Ty X
+_[_] : ∀ {Γ Δ : Con} → Ty Δ → Γ ⇉ Δ → Ty Γ
 Ay [ f ] = record 
           { fm      = λ x → fm Ay (fn f x)
           ; substT = λ {x} {y} p → substT Ay (resp f p)
@@ -117,15 +102,15 @@ Ay [ f ] = record
 
 -- verification
 
-record Tm {X : Con}(A : Ty X) : Set where
+record Tm {Γ : Con}(A : Ty Γ) : Set where
   field
-    tm    : (x : ∣ X ∣) → ∣ fm A x ∣
-    respt : ∀{x y : ∣ X ∣} → (p : [ X ] x ≈ y) → [ fm A y ] substT A p (tm x) ≈ tm y
+    tm    : (x : ∣ Γ ∣) → ∣ fm A x ∣
+    respt : ∀{x y : ∣ Γ ∣} → (p : [ Γ ] x ≈ y) → [ fm A y ] substT A p (tm x) ≈ tm y
 
 open Tm
 
 
-_[_]m : ∀ {X Y : Con}{A : Ty Y} → Tm A → (f : X ⇉ Y) → Tm (A [ f ])
+_[_]m : ∀ {Γ Δ : Con}{A : Ty Δ} → Tm A → (f : Γ ⇉ Δ) → Tm (A [ f ])
 _[_]m t f = record 
           { tm = tm t ∘ fn f
           ; respt = respt t ∘ resp f 
@@ -141,21 +126,57 @@ _[_]m t f = record
 ● : Con
 ● = record {
       set = ⊤;
-      _≈_ = λ _ _ → ⊤;
-      uip = PE.refl;
+      _≈_ = λ x x' → ⊤';
       refl = tt;
       sym = λ x → tt;
       trans = λ x x' → tt }
 
+-- 1. subst proof irrelevance
+-- {Γ : Con}{A : Ty Γ}{}[] p ≈ q → substT A p x ≈ substT A q x
+-- can be proved as a separate lemma
+-- 2. trans within certain Context can be simplied into reasoning structure
+-- uncurry can be replaced by lambda pattern matching
+
+_&_ : (Γ : Con) → Ty Γ → Con
+Γ & A = record {
+          set = Σ[ x ∶ ∣ Γ ∣ ] ∣ fm A x ∣;
+          _≈_ = uncurry (λ x a → uncurry (λ y b → 
+                Σ' ([ Γ ] x ≈p y) (λ p → [ fm A y ] substT A p a ≈p b)));
+          refl  = λ {x} → (refl Γ) , refl* A (proj₁ x) (proj₂ x);
+          sym   = λ {i} {j} → uncurry (λ p q → 
+                  (sym Γ p) , 
+                  [ fm A (proj₁ i) ]trans ([ fm A (proj₁ i) ]trans (subst* A (sym Γ p) (sym (fm A (proj₁ j)) q)) ([ fm A (proj₁ i) ]trans (trans* A p (sym Γ p) (proj₂ i)) (subst (λ x → [ fm A (proj₁ i) ] substT A x (proj₂ i) ≈ substT A (refl Γ) (proj₂ i)) (Uni ([ Γ ] proj₁ i ≈p proj₁ i)) (refl (fm A (proj₁ i)))))) (refl* A (proj₁ i) (proj₂ i))) ;
+          trans = λ {i} {j} {k} → uncurry (λ x a → uncurry (λ y b → [ Γ ]trans x y , [ fm A (proj₁ k) ]trans ([ fm A (proj₁ k) ]trans (sym (fm A (proj₁ k)) (trans* A x y (proj₂ i))) (subst* A y a)) b)) }
 
 
+-- empty substitution
 
-_&_ : (X : Con) → Ty X → Con
-X & A = record {
-          set = Σ[ x ∶ ∣ X ∣ ] ∣ fm A x ∣;
-          _≈_ = λ x y → Σ ([ X ] (proj₁ x) ≈ (proj₁ y)) (λ p → [ fm A (proj₁ y) ] (substT A p (proj₂ x)) ≈ (proj₂ y));
-          uip  = λ {x} {y} → Σclose (uip X) (λ x' → uip (fm A (proj₁ y)));
-          refl = λ {x} → (refl X) , refl* A (proj₁ x) (proj₂ x);
-          sym = λ {i} {j} x → (sym X (proj₁ x)) , {!substT ? (sym (fm A (proj₁ j)) (proj₂ x))!};
-          trans = {!!} }
+⍟ : (Δ : Con) → Δ ⇉ ●
+⍟ Δ = record 
+      { fn = λ _ → tt
+      ; resp = λ _ → tt }
 
+
+-- pairing operation
+
+_,,_ : {Γ Δ : Con}{A : Ty Δ}(f : Γ ⇉ Δ) → (Tm (A [ f ])) → Γ ⇉ (Δ & A)
+f ,, t = record 
+         { fn = λ x → (fn f x) , (tm t x)
+         ; resp = λ p → (resp f p) , respt t p }
+
+-- projections
+
+fst : {Γ Δ : Con}{A : Ty Δ} → Γ ⇉ (Δ & A) → Γ ⇉ Δ
+fst f = record 
+        { fn = λ x → proj₁ (fn f x)
+        ; resp = λ p → proj₁ (resp f p) }
+
+
+snd : {Γ Δ : Con}{A : Ty Δ} → (f : Γ ⇉ (Δ & A)) → Tm (A [ fst {A = A} f ])
+snd f = record 
+        { tm = λ x → proj₂ (fn f x)
+        ; respt = λ p → proj₂ (resp f p) }
+
+
+_^_ : {Γ Δ : Con}(f : Γ ⇉ Δ)(A : Ty Δ) → Γ & A [ f ] ⇉ Δ & A
+f ^ A = {!f ∘c ? , snd ?!}

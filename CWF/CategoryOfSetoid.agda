@@ -6,8 +6,8 @@ module CategoryOfSetoid  (ext : Extensionality zero zero) where
 open import Function
 open import Relation.Binary.Core using (_⇒_)
 import HProp
-module x = HProp ext
-open x
+module hpx = HProp ext
+open hpx
 
 record HSetoid : Set₁ where
   constructor _,_,_,_,_
@@ -37,6 +37,7 @@ open HSetoid public renaming (refl to [_]refl; sym to [_]sym; _≈_ to [_]_≈_ 
 [ Γ ]uip {a} {b} = Uni ([ Γ ] a ≈h b)
 
 
+
 -- a variant with explicit arguments for proofs (for speficific use)
 record HSetoid' : Set₁ where
   constructor _,_,_,_,_
@@ -52,7 +53,6 @@ transVariant : HSetoid' → HSetoid
 transVariant (Carrier , _≈h_ , refl , sym , trans) = Carrier , _≈h_ , (λ {x} → refl x) , (λ {x} {y} → sym x y) , (λ {x} {y} {z} → trans x y z)
 
 
-
 -- Arrow between HSetoid
 
 infix 5 _⇉_
@@ -66,11 +66,10 @@ record _⇉_ (A B : HSetoid) : Set where
            [ B ] fn x ≈ fn y
 open _⇉_ public renaming (fn to [_]fn ; resp to [_]resp)
 
-
 -- identity
 
 idCH : {Γ : HSetoid} → Γ ⇉ Γ 
-idCH = record { fn = λ x → x; resp = λ x → x }
+idCH = record { fn = id; resp = id}
 
 -- composition
 

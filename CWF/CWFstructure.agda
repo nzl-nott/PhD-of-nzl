@@ -15,10 +15,10 @@ open Category
 open Functor
 open IsFunctor
 
--- injection
+-- congruence of application or ext-inv
 
-injection : {A : Set}{B : A → Set}{f g : (x : A) → B x} → f ≡ g → ∀ x → f x ≡ g x
-injection refl x = refl
+congApp : {A : Set}{B : A → Set}{f g : (x : A) → B x} → f ≡ g → ∀ x → f x ≡ g x
+congApp refl x = refl
 
 record _hasTerminal (C : Category) : Set where
   field
@@ -55,7 +55,6 @@ Fam = record
                      ; comp = λ α δ f g h → refl
                      }
       }
-
 
 
 

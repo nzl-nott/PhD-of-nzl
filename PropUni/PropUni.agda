@@ -7,8 +7,6 @@ open import Relation.Binary.PropositionalEquality hiding ([_])
 
 open import Quotient
 
--- prop univalence
-
 Prp = Set
 
 _⇔_ : (A B : Prp) → Prp
@@ -18,7 +16,10 @@ module PuImpEff
 -- several axioms
   (uni : (A : Prp)(a b : A) → a ≡ b)
   (PropUni₁ : ∀ {p q : Prp} → (p ⇔ q) → p ≡ q)
+
+-- this PropUni₂ is trivial inhabited by two identity function
   (PropUni₂ : ∀ {p q : Prp} → (p ≡ q) → p ⇔ q)
+
   (S : Setoid _ _)
   (QS : QuSig S)
   (QU : Qu QS)

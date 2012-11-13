@@ -441,13 +441,7 @@ defined as (more details in section~\ref{sec:definitions} on page~\pageref{sec:d
 \[(a , b) \sim (c , d) \defi  a + d \equiv c + b \]
 
 $\sim$ can also be proved to be an equivalence relation. However the
-set of integers $\Z\,\colon\Set$ can also be constructed as 
-
-\begin{code}
-data ℤ : Set where
-  +_ : ℕ → ℤ
-  -suc_ : ℕ → ℤ
-\end{code}
+set of integers $\Z\,\colon\Set$ can also be constructed as
 
 The type $\Z\,\colon\Set$  is just the quotient type corresponding to
 the setoid  $(\N\times\N , \sim)$. 
@@ -845,7 +839,7 @@ $\sim$ for $\Z_0$ could be defined as
 \begin{code}
 
 _∼_ : Rel ℤ₀
-(n1 , n2) ∼ (n3 , n4) = (n1 + n4) ≡ (n3 ℕ+ n2)
+(n1 , n2) ∼ (n3 , n4) = (n1 + n4) ≡ (n3 + n2)
 
 \end{code}
 

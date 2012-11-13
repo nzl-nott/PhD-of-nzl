@@ -26,6 +26,7 @@ open import Data.Nat
 
 -- Relation
 
+
 Rel : {Γ : Con} → Ty Γ → Set₁
 Rel {Γ} A = Ty (Γ & A & A [ fst& {A = A} ])
 

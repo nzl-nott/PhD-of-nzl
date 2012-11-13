@@ -1,3 +1,12 @@
+
+{-
+
+This file contains a proof of follows:
+
+Propositional univalence => All quotients are effective
+
+-}
+
 module PropUni where
 
 open import Data.Product

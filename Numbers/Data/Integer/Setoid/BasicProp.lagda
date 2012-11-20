@@ -16,7 +16,7 @@ open import Data.Nat.Properties+ as ℕ+ hiding (+l-cancel′ ; integrity′ ; s
 open import Data.Product hiding (proj₁)
 open import Data.Sign as Sign using (Sign)
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality as PE
+open import Relation.Binary.PropositionalEquality as PE hiding ([_])
 open import Relation.Nullary.Core
 open import Symbols
 

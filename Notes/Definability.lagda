@@ -63,7 +63,26 @@ data ℤ : Set where
 
 \end{code}
 
-And this is exactly the definition in Agda standard library version 0.6. This definition is easy to use since it has two cases and for each integer you have one unique representation. However intuitively we lose the "special position" held by 0. Of course we can define three cases definition with distinct 0 constructor but too many cases are not ideal for proving.
+And this is exactly the definition in Agda standard library version 0.6. For each integer there is one unique representation so extra equivalence relation is not needed. However intuitively we lose the "special position" held by 0. Of course we can define three cases definition with distinct 0 constructor but too many cases are not ideal for proving. Using this definition we can define addition as
+
+\begin{code}
+
+-- An auxilliary operation: subtraction of natural numbers
+
+_⊖_ : ℕ → ℕ → ℤ
+m       ⊖ ℕ.zero  = + m
+ℕ.zero  ⊖ ℕ.suc n = -[1+ n ]
+ℕ.suc m ⊖ ℕ.suc n = m ⊖ n
+
+_+_ : ℤ → ℤ → ℤ
+-[1+ m ] + -[1+ n ] = -[1+ suc (m ℕ+ n) ]
+-[1+ m ] + +    n   = n ⊖ ℕ.suc m
++    m   + -[1+ n ] = m ⊖ ℕ.suc n
++    m   + +    n   = + (m ℕ+ n)
+
+\end{code}
+
+
 
 Alternatively we have another isomorphism between $\Z$ and
 $\bigslant{\N\times\N}{\sim}$, namely constructing the set of integers
@@ -85,15 +104,120 @@ _∼_                               : Rel ℤ₀ _
 (x1 , x2) ∼ (y1 , y2)   = (x1 ℕ+ y2) ≡ (y1 ℕ+ x2)
 
 \end{code}
- The common operations defined on $\Z_0$($\bigslant{\N\times\N}{\sim}$) has only one case which are much simpler than the one for the previous definition,
+ Since this definition has only one case, we don't need to define or prove for multiple cases. For example, the common operations defined on $\Z_0$($\bigslant{\N\times\N}{\sim}$) has only one case which are simpler than the one for the previous definition,
 
 \begin{code}
 
-_+_ : ℤ₀ → ℤ₀ → ℤ₀
-(x1 , x2) + (y1 , y2) = (x1 ℕ+ y1) , (x2 ℕ+ y2)
+_+₀_ : ℤ₀ → ℤ₀ → ℤ₀
+(x1 , x2) +₀ (y1 , y2) = (x1 ℕ+ y1) , (x2 ℕ+ y2)
 
 \end{code}
-and we only need to prove that it respects the equivalence relation,
+
+The elegant definition leads to elegant proofs of the properties of integers. For example, we can easily prove the distributivity laws for it.
+
+
+\begin{code}
+
+-- distʳ : _*_ DistributesOverʳ _+_
+-- distʳ (a , b) (c , d) (e , f) = ℕ.dist-lemʳ a b c d e f +=
+--                               ⟨  ℕ.dist-lemʳ b a c d e f ⟩
+
+\end{code}
+
+The right distributivity of multiplication over addition can be proved simply by proving something about natural numbers. This is because the definition of setoid integer is to represent integers using natural numbers, the operations is defined from the operations for natural numbers and finally the equality is an equation about natural numbers. That means all these properties are derivable. In fact, we can prove everything even simpler by using the automatic ring solver for natural numbers. The right distributivity for the two-case integers which is the library is much more cumbersome
+
+\begin{verbatim}
+
+
+
+distribʳ : _*_ DistributesOverʳ _+_
+
+distribʳ (+ zero) y z
+  rewrite proj₂ *-zero ∣ y ∣
+        | proj₂ *-zero ∣ z ∣
+        | proj₂ *-zero ∣ y + z ∣
+        = refl
+
+distribʳ x (+ zero) z
+  rewrite proj₁ +-identity z
+        | proj₁ +-identity (sign z S* sign x ◃ ∣ z ∣ ℕ* ∣ x ∣)
+        = refl
+
+distribʳ x y (+ zero)
+  rewrite proj₂ +-identity y
+        | proj₂ +-identity (sign y S* sign x ◃ ∣ y ∣ ℕ* ∣ x ∣)
+        = refl
+
+distribʳ -[1+ a ] -[1+ b ] -[1+ c ] = cong +_ $
+  solve 3 (λ a b c → (con 2 :+ b :+ c) :* (con 1 :+ a)
+                  := (con 1 :+ b) :* (con 1 :+ a) :+
+                     (con 1 :+ c) :* (con 1 :+ a))
+          refl a b c
+
+distribʳ (+ suc a) (+ suc b) (+ suc c) = cong +_ $
+  solve 3 (λ a b c → (con 1 :+ b :+ (con 1 :+ c)) :* (con 1 :+ a)
+                  := (con 1 :+ b) :* (con 1 :+ a) :+
+                     (con 1 :+ c) :* (con 1 :+ a))
+        refl a b c
+
+distribʳ -[1+ a ] (+ suc b) (+ suc c) = cong -[1+_] $
+  solve 3 (λ a b c → a :+ (b :+ (con 1 :+ c)) :* (con 1 :+ a)
+                   := (con 1 :+ b) :* (con 1 :+ a) :+
+                      (a :+ c :* (con 1 :+ a)))
+         refl a b c
+
+distribʳ (+ suc a) -[1+ b ] -[1+ c ] = cong -[1+_] $
+  solve 3 (λ a b c → a :+ (con 1 :+ a :+ (b :+ c) :* (con 1 :+ a))
+                  := (con 1 :+ b) :* (con 1 :+ a) :+
+                     (a :+ c :* (con 1 :+ a)))
+         refl a b c
+
+distribʳ -[1+ a ] -[1+ b ] (+ suc c) = distrib-lemma a b c
+
+distribʳ -[1+ a ] (+ suc b) -[1+ c ] = distrib-lemma a c b
+
+distribʳ (+ suc a) -[1+ b ] (+ suc c)
+  rewrite +-⊖-left-cancel a (c ℕ* suc a) (b ℕ* suc a)
+  with b ≤? c
+... | yes b≤c
+  rewrite ⊖-≥ b≤c
+        | +-comm (- (+ (a ℕ+ b ℕ* suc a))) (+ (a ℕ+ c ℕ* suc a))
+        | ⊖-≥ (b≤c *-mono ≤-refl {x = suc a})
+        | ℕ.*-distrib-∸ʳ (suc a) c b
+        | +‿◃ (c ℕ* suc a ∸ b ℕ* suc a)
+        = refl
+... | no b≰c
+  rewrite sign-⊖-≱ b≰c
+        | ∣⊖∣-≱ b≰c
+        | -‿◃ ((b ∸ c) ℕ* suc a)
+        | ⊖-≱ (b≰c ∘ ℕ.cancel-*-right-≤ b c a)
+        | ℕ.*-distrib-∸ʳ (suc a) b c
+        = refl
+
+distribʳ (+ suc c) (+ suc a) -[1+ b ]
+  rewrite +-⊖-left-cancel c (a ℕ* suc c) (b ℕ* suc c)
+  with b ≤? a
+... | yes b≤a
+  rewrite ⊖-≥ b≤a
+        | ⊖-≥ (b≤a *-mono ≤-refl {x = suc c})
+        | +‿◃ ((a ∸ b) ℕ* suc c)
+        | ℕ.*-distrib-∸ʳ (suc c) a b
+        = refl
+... | no b≰a
+  rewrite sign-⊖-≱ b≰a
+        | ∣⊖∣-≱ b≰a
+        | ⊖-≱ (b≰a ∘ ℕ.cancel-*-right-≤ b a c)
+        | -‿◃ ((b ∸ a) ℕ* suc c)
+        | ℕ.*-distrib-∸ʳ (suc c) b a
+        = refl
+
+\end{verbatim}
+
+
+
+
+
+Back to addition for setoid integers, the operation is only valid when it respects the equivalence relation,
 
 \begin{code}
 
@@ -164,7 +288,7 @@ From the obervations above, there is a pattern between different kinds of number
 
 \section{quotients}
 
-The quotient type is unavailable in \itt{}, since it is extensional. 
+The quotient types enables redefining equality on types and it is also an extensional concept\cite{hot:phd}. It is unavailable in \itt{}, usually we can using setoids instead. However not all types are represented using setoids which means we lose unification for them. We have to define everything twice one for sets and one for setoids. Altenkirch's setoid model solves the problem by representing all sets using setoids. It is possible because usual sets can be seen as setoids whose equality are propositional equality for given sets.
 
 
 

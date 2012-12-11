@@ -25,14 +25,14 @@ infixl 40 _+=_
 
 n+0≡n     : ∀ {n} → n + 0 ≡ n
 n+0≡n {n} = proj₂ +-identity n
-
+{-
 n+0≡n' : ∀ {n} n' m → n' ≡ n → m ≡ 0 → n' + m ≡ n
 n+0≡n' {n} .n .0 refl refl = n+0≡n
 
 n+0+0≡n : ∀ {n} → n + 0 + 0 ≡ n
 n+0+0≡n {zero} = refl
 n+0+0≡n {suc n} = suc ⋆ n+0+0≡n
-
+-}
 n*0≡0 = proj₂ mzero
 
 n*0+0=0 : ∀ {n} → n * 0 + 0 ≡ 0

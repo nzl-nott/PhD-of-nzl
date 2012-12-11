@@ -21,7 +21,7 @@ open import Data.Nat.Properties+ as ℕ using (_+suc_≢0_)
 open import Quotient
 
 open import Relation.Binary hiding (Setoid)
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_])
 open import Relation.Nullary.Core
 open import Symbols
 

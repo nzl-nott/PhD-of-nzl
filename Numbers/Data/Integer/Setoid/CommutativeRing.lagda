@@ -11,7 +11,7 @@ open import Algebra.Structures
 open import Data.Integer.Setoid 
 open import Data.Integer.Setoid.BasicProp  
 open import Data.Nat using () renaming (_+_ to _ℕ+_ ;  _*_ to _ℕ*_)
-open import Data.Nat.Properties+ as ℕ using (_+=_; _*⋆_)
+open import Data.Nat.Properties+ as ℕ using (_<+>_; _*⋆_)
 open import Data.Product
 open import Relation.Binary.Core 
 import Algebra.FunctionProperties as P; open P _∼_
@@ -135,7 +135,7 @@ a) left identity
 \begin{code}
 
 1*z~z : LeftIdentity (1 , 0) _*_
-1*z~z (x+ , x-) =  ℕ.n+0+0≡n {x+} += ⟨  ℕ.n+0+0≡n ⟩
+1*z~z (x+ , x-) =  ? -- ℕ.n+0+0≡n {x+} <+> ⟨  ℕ.n+0+0≡n ⟩
 
 \end{code}
 
@@ -146,8 +146,8 @@ a * 1 ~ a
 
 z*1~z : RightIdentity (1 , 0) _*_
 z*1~z (x+ , x-) =
-  ( ℕ.n*1≡n x+ +=  ℕ.n*0≡0 x- >≡<  ℕ.n+0≡n {x+}) +=
-  ⟨  ℕ.n*0≡0 x+ +=  ℕ.n*1≡n x- ⟩ 
+  ( ℕ.n*1≡n x+ <+>  ℕ.n*0≡0 x- >≡<  ℕ.n+0≡n {x+}) <+>
+  ⟨  ℕ.n*0≡0 x+ <+>  ℕ.n*1≡n x- ⟩ 
 
 *-identity : Identity (1 , 0) _*_
 *-identity = 1*z~z , z*1~z
@@ -162,9 +162,9 @@ a * b ~ b * a
 
 *-comm :  Commutative _*_
 *-comm (x+ , x-) (y+ , y-) = 
-  ℕ.*-comm x+ y+ += ℕ.*-comm x- y- +=
+  ℕ.*-comm x+ y+ <+> ℕ.*-comm x- y- <+>
   (ℕ.+-comm (y+ ℕ* x-) (y- ℕ* x+) >≡< 
-  (ℕ.*-comm y- x+ += ℕ.*-comm y+ x-))
+  (ℕ.*-comm y- x+ <+> ℕ.*-comm y+ x-))
 
 \end{code}
 
@@ -176,7 +176,7 @@ a * b ~ b * a
 
 *-assoc : Associative _*_
 *-assoc (a , b) (c , d) (e , f) = 
-  ℕ.*ass-lem a b c d e f +=
+  ℕ.*ass-lem a b c d e f <+>
   ⟨  ℕ.*ass-lem a b c d f e ⟩
 
 \end{code}
@@ -191,7 +191,7 @@ a * (b + c) ~ a * b + a * c
 
 distˡ :  _*_ DistributesOverˡ _+_
 distˡ (a , b) (c , d) (e , f) = 
-  ℕ.dist-lemˡ a b c d e f +=
+  ℕ.dist-lemˡ a b c d e f <+>
   ⟨  ℕ.dist-lemˡ a b d c f e ⟩
 
 \end{code}
@@ -204,7 +204,7 @@ b) right distributivity
 
 distʳ : _*_ DistributesOverʳ _+_
 distʳ (a , b) (c , d) (e , f) =
-  ℕ.dist-lemʳ a b c d e f +=
+  ℕ.dist-lemʳ a b c d e f <+>
   ⟨  ℕ.dist-lemʳ b a c d e f ⟩
 
 distrib-*-+ : _*_ DistributesOver _+_
@@ -221,7 +221,7 @@ distrib-*-+ = distˡ , distʳ
 +-cong : ∀ {x y u v} → x ∼ y → u ∼ v → x + u ∼ y + v
 +-cong {a , b} {c , d} {e , f} {g , h} x∼y u∼v = 
   ℕ.exchange₃ a e d h >≡<
-  (x∼y += u∼v) >≡<
+  (x∼y <+> u∼v) >≡<
   ℕ.exchange₃ c b g f
 
 \end{code}
@@ -247,13 +247,13 @@ distrib-*-+ = distˡ , distʳ
 *-cong : ∀ {x y u v} → x ∼ y → u ∼ v → x * u ∼ y * v
 *-cong {a , b} {c , d} {e , f} {g , h} eqt1 eqt2 = 
    ℕ.+r-cancel (d ℕ* e ℕ+ c ℕ* f ℕ+ (c ℕ* e ℕ+ d ℕ* f))
-  (⟨  ℕ.distˡʳ e a d +=  ℕ.distˡʳ f c b +=
-  (ℕ.distˡ c e h += ℕ.distˡ d g f) >≡< 
+  (⟨  ℕ.distˡʳ e a d <+>  ℕ.distˡʳ f c b <+>
+  (ℕ.distˡ c e h <+> ℕ.distˡ d g f) >≡< 
   ℕ.*-cong-lem₁ (a ℕ* e) (d ℕ* e) (c ℕ* f) (b ℕ* f) (c ℕ* e)
   (c ℕ* h) (d ℕ* g) (d ℕ* f) ⟩ >≡< 
-  (e *⋆ eqt1 += f *⋆ ⟨ eqt1 ⟩ += (c *⋆ eqt2 += d *⋆ ⟨ eqt2 ⟩)) >≡< 
-  ( ℕ.distˡʳ e c b += ℕ.distˡʳ f a d +=
-  (ℕ.distˡ c g f += ℕ.distˡ d e h)) >≡<
+  (e *⋆ eqt1 <+> f *⋆ ⟨ eqt1 ⟩ <+> (c *⋆ eqt2 <+> d *⋆ ⟨ eqt2 ⟩)) >≡< 
+  ( ℕ.distˡʳ e c b <+> ℕ.distˡʳ f a d <+>
+  (ℕ.distˡ c g f <+> ℕ.distˡ d e h)) >≡<
    ℕ.*-cong-lem₂ (c ℕ* e) (b ℕ* e) (a ℕ* f) (d ℕ* f) (c ℕ* g)
   (c ℕ* f) (d ℕ* e) (d ℕ* h))
 

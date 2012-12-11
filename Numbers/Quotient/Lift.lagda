@@ -5,7 +5,7 @@ Lift operators for definable quotients
 
 open import Quotient
 open import Data.Nat
-open import Relation.Binary.PropositionalEquality as PE hiding (cong)
+open import Relation.Binary.PropositionalEquality as PE hiding (cong ; [_])
 
 module Quotient.Lift
          {S : Setoid}{PQ : PreQu S}(QUD : QuD PQ) where

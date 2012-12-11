@@ -29,7 +29,7 @@ open import Function
 
 open import Relation.Binary.Core
 open import Relation.Binary.PropositionalEquality
-  hiding (isEquivalence)
+  hiding (isEquivalence ; [_])
 
 open import ThomasProperties
 
@@ -230,7 +230,7 @@ QuH→Qu {S} {Q: Q []: [_] sound: sound}
         P : Q → Set
         P c = proj₁ {_} {_} {Q} {B} (lift₀ f q c) ≡ c
         heredity : ∀ x → (p p' : P x) → p ≡ p' 
-        heredity x p p' = ≡-prfIrr ((lift₀ f q x)₁) x p p'  
+        heredity x p p' = ≡-prfIrr (proj₁ (lift₀ f q x)) x p p'  
         base : ∀ a → P [ a ]
         base a = proj₁ ⋆ β
 

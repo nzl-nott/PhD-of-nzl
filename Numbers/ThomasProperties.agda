@@ -8,9 +8,9 @@ open import Data.Nat.Properties as Nat
 private
    module N = CommutativeSemiring Nat.commutativeSemiring
 
-open import Data.Product
+open import Data.Product renaming (proj₁ to _₁ ; proj₂ to _₂)
 
-open import Level
+open import Level hiding (suc)
 
 open import Relation.Binary.PropositionalEquality
 open import Relation.Binary.Core
@@ -36,10 +36,10 @@ congΣ .a' a' refl f = refl
 cong'_,_ : {A : Set } {B : A → Set} → (a : A) →  (b b' : B a) → ( q : b ≡ b') →  _,_ {A = A} {B = B} a b  ≡ a , b'
 cong'_,_ a b .b refl = refl
 
-cong-proj₁ : {A : Set } {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') → proj₁ x ≡ proj₁ x'
+cong-proj₁ : {A : Set } {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') → x ₁ ≡ x' ₁
 cong-proj₁ .x' x' refl = refl
 
-cong-proj₂ : {A : Set } {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') →  subst B (cong-proj₁ x x' p) (proj₂ {A = A} {B = B} x) ≡ proj₂ {A = A} {B = B} x'
+cong-proj₂ : {A : Set } {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') →  subst B (cong-proj₁ x x' p) (_₂ {A = A} {B = B} x) ≡ _₂ {A = A} {B = B} x'
 cong-proj₂ .x' x' refl = refl
 
 -- aa : {A : Set } {B : A → Set} → (a : A) → (b b' : B a) → (p : _,_ {A} {B} a b ≡ (a , b')) → b ≡ b'
@@ -94,12 +94,6 @@ f Preserves' ∼ = f Preserves ∼ ⟶ ∼
 _Preserves₂'_ : ∀ {a} → (a → a → a) → (a → a → Set) → Set
 + Preserves₂' ∼  = + Preserves₂ ∼ ⟶ ∼ ⟶ ∼
 
-_₁ : ∀ {A B} → Σ A B → A
-_₁ = proj₁
-
-_₂ : ∀ {A B} → (p : Σ A B) → B (proj₁ p)
-_₂ = proj₂
-
 ℕ² : Set
 ℕ² = ℕ × ℕ
 
@@ -132,20 +126,3 @@ lem₃ k₁ k₂ l₁ l₂ m₁ m₂ n₁ n₂ p q = lem₁ k₁ m₁ l₂ n₂ 
 lem₄ : ∀ m₁ m₂ n₁ n₂ →  m₁ + n₂ ≡ n₁ + m₂  → m₂ + n₁ ≡ n₂ + m₁
 lem₄ m₁ m₂ n₁ n₂ p = N.+-comm m₂ n₁  ▶  ⟨ p ⟩  ▶  N.+-comm m₁ n₂  
 
-
-
-
-{-
-
-    begin
-    ?
-     ≡⟨ ? ⟩
-    ?
-     ≡⟨ ? ⟩
-    ?
-     ≡⟨ ? ⟩ 
-    ?
-     ≡⟨ ? ⟩
-    ?
-    ∎
--}

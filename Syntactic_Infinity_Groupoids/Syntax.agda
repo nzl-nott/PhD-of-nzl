@@ -15,12 +15,15 @@ data isContr : Con → Set
 data _⇒_ : Con → Con → Set
 
 infix 4 _≅_
+infix 4 _≣_
 
 -- contravariant
 _[_]T  : {Γ Δ : Con}(A : Ty Δ)           (δ : Γ ⇒ Δ) → Ty Γ
-_[_]V  : {Γ Δ : Con}{A : Ty Δ}(a : Var A)(δ : Γ ⇒ Δ) → Tm (A [ δ ]T) -- not Var, because can be replaced by JJ
+_[_]V  : {Γ Δ : Con}{A : Ty Δ}(a : Var A)(δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
 _[_]tm : {Γ Δ : Con}{A : Ty Δ}(a : Tm A) (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
 
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- JM equality for Tm
 
 data _≅_ {Γ : Con}{A : Ty Γ}: {B : Ty Γ} → Tm A → Tm B → Set where
@@ -59,16 +62,22 @@ cohOp refl = refl _
 cong≅ : ∀{Γ Δ}{A : Ty Γ}{γ δ : Δ ⇒ Γ}(f : (x : Δ ⇒ Γ) → Tm (A [ x ]T)) → γ ≡ δ → f γ ≅ f δ
 cong≅ f refl = refl _
 
+
 -- cong by context morphism
 
 _◃_ : {Γ Δ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B}(δ : Δ ⇒ Γ) → a ≅ b → a [ δ ]tm ≅ b [ δ ]tm
 _ ◃ (refl _) = refl _ 
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 infixl 7 _,_
 
 data Con where
   ε   : Con
   _,_ : (Γ : Con)(A : Ty Γ) → Con
+
 
 --weakening rule
 
@@ -79,28 +88,24 @@ _+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ
 
 data Ty Γ where
   *   : Ty Γ -- • can be type of any context
-  hom : {A : Ty Γ}(a b : Tm A) → Ty Γ
+  _≣_ : {A : Ty Γ}(a b : Tm A) → Ty Γ
 
 -- type weakening rule
 
-*         +T B = *
-(hom a b) +T B = hom (a +tm B) (b +tm B)
+*       +T B = *
+(a ≣ b) +T B = a +tm B ≣ b +tm B
 
 -- the equality of hom
-{-
-_*[_] : {Γ : Con}{A B : Ty Γ} → (A ≡ B) → Tm A → Tm B
-p *[ a ]
--}
+
 hom≡ : {Γ : Con}{A A' : Ty Γ}(p : A ≡ A')
                 {a : Tm A}{a' : Tm A'}(q : a ≅ a')
                 {b : Tm A}{b' : Tm A'}(r : b ≅ b')
-                → hom a b ≡ hom a' b'
+                → (a ≣ b) ≡ (a' ≣ b')
 hom≡ refl (refl a) (refl b) = refl
 
 data Var where
   v0 : {Γ : Con}{A : Ty Γ} → Var (A +T A)
   vS : {Γ : Con}{A : Ty Γ}(x : Var A){B : Ty Γ} → Var (A +T B)
-
 
 data Tm where
   var : {Γ : Con}{A : Ty Γ} → Var A → Tm A
@@ -111,19 +116,33 @@ data isContr where
 --  c•   : isContr ε   -- do we really need this?
   c*  : isContr (ε , *) -- actually we don't need this because * is already in • ps2: we need this....
   ext : {Γ : Con} → isContr Γ → {A : Ty Γ}(x : Var A) 
-      → isContr ((Γ , A) , hom (var v0) (var (vS x {A})))
+      → isContr ((Γ , A) , (var (vS x {A}) ≣ var v0))
 
 data _⇒_ where
   •   : {Γ : Con} → Γ ⇒ ε
   _,_ : {Γ Δ : Con}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T)) → Γ ⇒ (Δ , A)
 
-cm-eq : {Γ Δ : Con}{γ δ : Γ ⇒ Δ}{A : Ty Δ}{a : Tm (A [ γ ]T)}{a' : Tm (A [ δ ]T)} → γ ≡ δ → a ≅ a' → _≡_ {_} {Γ ⇒ (Δ , A)} (γ , a) (δ , a')
+cm-eq : {Γ Δ : Con}{γ δ : Γ ⇒ Δ}{A : Ty Δ}
+        {a : Tm (A [ γ ]T)}{a' : Tm (A [ δ ]T)} 
+        → γ ≡ δ → a ≅ a' 
+        → _≡_ {_} {Γ ⇒ (Δ , A)} (γ , a) (δ , a')
 cm-eq refl (refl _) = refl
 
--- basicJ : ∀{Γ : Con}(A : Ty ε) → Tm (A [ • {Γ} ]T)
--- basicJ = JJ c• •
 
+lemmaSubst : {Γ : Con}{A B : Ty Γ}(x : Var A)(p : A ≡ B) → var (subst Var p x) ≡ (var x) ⟦ p ⟫
+lemmaSubst x refl = refl
 
+cohOpV :  {Γ : Con}{A B : Ty Γ}{x : Var A}(p : A ≡ B) → var (subst Var p x) ≅ var x
+cohOpV {x = x} refl = refl (var x)
+
+record PrePolyOp : Set where
+  field
+    fcon : Con → Con
+    fty  : {Γ : Con} → Ty Γ → Ty (fcon Γ)
+    ftm  : {Γ : Con}{A : Ty Γ} → Tm A → Tm (fty A)
+    fsub : {Γ Δ : Con} → Γ ⇒ Δ → fcon Γ ⇒ Δ
+ 
+open PrePolyOp
 -- composition of substitution
 
 _⊚_ : ∀ {Γ Δ Θ} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
@@ -134,85 +153,21 @@ _⊚_ : ∀ {Γ Δ Θ} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
          (θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)(A : Ty Θ)
        → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T
 
-•       ⊚ δ = •
-(δ , a) ⊚ δ' = (δ ⊚ δ') , a [ δ' ]tm ⟦ sym ([⊚]T δ δ' _) ⟫
-
--- freely move the weakening between S T tm
-
-
-*       [ δ ]T = * 
-hom a b [ δ ]T = hom (a [ δ ]tm) (b [ δ ]tm)
-
-
-
--- weakening doesn't introduce new variables
-
-+T[,]T : {Γ Δ : Con}
-         (A : Ty Δ)(δ : Γ ⇒ Δ)
-         {B : Ty Δ}(b : Tm (B [ δ ]T))  
-         → A [ δ ]T ≡ (A +T B) [ δ , b ]T
-
-
-[+S]T : {Γ Δ : Con}
-        (A : Ty Δ)(δ : Γ ⇒ Δ)
-        (B : Ty Γ) 
-        → A [ δ +S B ]T ≡ (A [ δ ]T) +T B
-
-
-+tm[,]tm : {Γ Δ : Con}{A : Ty Δ}
-         (a : Tm A)(δ : Γ ⇒ Δ)(B : Ty Δ)
-         (c : Tm (B [ δ ]T))
-         →  a [ δ ]tm ≅ (a +tm B) [ δ , c ]tm
-
-[+S]tm : {Γ Δ : Con}{A : Ty Δ}
-         (a : Tm A)(δ : Γ ⇒ Δ)
-         (B : Ty Γ)
-         → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
-
-
-[+S]T *         δ B = refl
-[+S]T (hom a b) δ B = hom≡ ([+S]T _ _ _) ([+S]tm a _ _) ([+S]tm b _ _)
-
-•       +S B = •
-(δ , a) +S B = (δ +S B) , (a +tm B) ⟦ sym ([+S]T _ _ _) ⟫
-
-(var x)     +tm B = var (vS x)
-(JJ cΔ δ A) +tm B = (JJ cΔ (δ +S B) A) ⟦ [+S]T _ _ _ ⟫
-
-
-v0   [ δ , a ]V = a ⟦ +T[,]T _ _ _ ⟫
-vS x [ δ , a ]V = (x [ δ ]V) ⟦ +T[,]T _ _ _ ⟫
+[⊚]v : {Γ Δ Θ : Con}
+          (θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)(A : Ty Θ)(x  : Var A)
+          → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
 
 [⊚]tm : {Γ Δ Θ : Con}
         (θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)(A : Ty Θ)(a : Tm A)
         →  a [ θ ⊚ δ ]tm ≅ (a [ θ ]tm) [ δ ]tm
 
-[⊚]T θ δ * = refl
-[⊚]T θ δ (hom {A} a b) = hom≡ ([⊚]T θ δ A) ([⊚]tm _ _ _ _) ([⊚]tm _ _ _ _)
-
-+T[,]T * δ b = refl
-+T[,]T (hom {A} a b) δ c = hom≡ (+T[,]T A δ c) (+tm[,]tm _ _ _ _) (+tm[,]tm _ _ _ _)
-
-var x     [ δ ]tm = x [ δ ]V
-JJ cΔ γ A [ δ ]tm = JJ cΔ (γ ⊚ δ) A ⟦ [⊚]T _ _ _ ⟫
-
-
-lemma-v : {Γ Δ Θ : Con}
-          (θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)(A : Ty Θ)(x  : Var A)
-          → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
-lemma-v (θ , a) δ .(A +T A) (v0 {Γ₁} {A}) = 
-  cohOp (+T[,]T A (θ ⊚ δ) ((a [ δ ]tm) ⟦ sym ([⊚]T θ δ A) ⟫)) 
-  ∾ (cohOp  (sym ([⊚]T θ δ A)) 
-    ∾ ((δ ◃ cohOp (+T[,]T A θ a)) -¹))
-lemma-v (θ , a) δ .(A +T B) (vS {Γ₁} {A} x {B}) = 
-  cohOp (+T[,]T A (θ ⊚ δ) ( a [ δ ]tm ⟦ sym ([⊚]T θ δ B) ⟫))
-  ∾ (lemma-v θ δ A x 
-    ∾ ((δ ◃ cohOp (+T[,]T A θ a)) -¹))
-
-
 ⊚assoc : {Γ Δ Θ Δ₁ : Con}
         (γ : Θ ⇒ Δ₁)(θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)
         → (γ ⊚ θ) ⊚ δ ≡ γ ⊚ (θ ⊚ δ)
+
+•       ⊚ δ = •
+(δ , a) ⊚ δ' = (δ ⊚ δ') , a [ δ' ]tm ⟦ sym ([⊚]T δ δ' _) ⟫
+
 ⊚assoc • θ δ = refl
 ⊚assoc (_,_ γ {A} a) θ δ = 
   cm-eq (⊚assoc γ θ δ) 
@@ -222,7 +177,75 @@ lemma-v (θ , a) δ .(A +T B) (vS {Γ₁} {A} x {B}) =
     ∾ [⊚]tm θ δ (A [ γ ]T) a) -¹)))
 
 
-[⊚]tm θ δ A (var x) = lemma-v θ δ A x
+
+
+
+*       [ δ ]T = * 
+(a ≣ b) [ δ ]T = a [ δ ]tm ≣ b [ δ ]tm
+
+
+[+S]T : {Γ Δ : Con}
+        (A : Ty Δ)(δ : Γ ⇒ Δ)
+        (B : Ty Γ) 
+        → A [ δ +S B ]T ≡ (A [ δ ]T) +T B
+
+[+S]tm : {Γ Δ : Con}{A : Ty Δ}
+         (a : Tm A)(δ : Γ ⇒ Δ)
+         (B : Ty Γ)
+         → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
+
+•       +S B = •
+(δ , a) +S B = (δ +S B) , (a +tm B) ⟦ sym ([+S]T _ _ _) ⟫
+
+
+[+S]T *       δ B = refl
+[+S]T (a ≣ b) δ B = hom≡ ([+S]T _ _ _) ([+S]tm a _ _) ([+S]tm b _ _)
+
+
++tm[,]tm : {Γ Δ : Con}{A : Ty Δ}
+         (a : Tm A)(δ : Γ ⇒ Δ)(B : Ty Δ)
+         (c : Tm (B [ δ ]T))
+         →  a [ δ ]tm ≅ (a +tm B) [ δ , c ]tm
+
+
+(var x)     +tm B = var (vS x)
+(JJ cΔ δ A) +tm B = (JJ cΔ (δ +S B) A) ⟦ [+S]T _ _ _ ⟫
+
+-- weakening doesn't introduce new variables
+
++T[,]T : {Γ Δ : Con}
+         (A : Ty Δ)(δ : Γ ⇒ Δ)
+         {B : Ty Δ}(b : Tm (B [ δ ]T))  
+         → A [ δ ]T ≡ (A +T B) [ δ , b ]T
+
+
+v0   [ δ , a ]V = a          ⟦ +T[,]T _ _ _ ⟫
+vS x [ δ , a ]V = (x [ δ ]V) ⟦ +T[,]T _ _ _ ⟫
+
+
+[⊚]T θ δ * = refl
+[⊚]T θ δ (_≣_ {A} a b) = hom≡ ([⊚]T θ δ A) ([⊚]tm _ _ _ _) ([⊚]tm _ _ _ _)
+
++T[,]T * δ b = refl
++T[,]T (_≣_ {A} a b) δ c = hom≡ (+T[,]T A δ c) (+tm[,]tm _ _ _ _) (+tm[,]tm _ _ _ _)
+
+var x     [ δ ]tm = x [ δ ]V
+JJ cΔ γ A [ δ ]tm = JJ cΔ (γ ⊚ δ) A ⟦ [⊚]T _ _ _ ⟫
+
+
+
+[⊚]v (θ , a) δ .(A +T A) (v0 {Γ₁} {A}) = 
+  cohOp (+T[,]T A (θ ⊚ δ) ((a [ δ ]tm) ⟦ sym ([⊚]T θ δ A) ⟫)) 
+  ∾ (cohOp  (sym ([⊚]T θ δ A)) 
+    ∾ ((δ ◃ cohOp (+T[,]T A θ a)) -¹))
+[⊚]v (θ , a) δ .(A +T B) (vS {Γ₁} {A} x {B}) = 
+  cohOp (+T[,]T A (θ ⊚ δ) ( a [ δ ]tm ⟦ sym ([⊚]T θ δ B) ⟫))
+  ∾ ([⊚]v θ δ A x 
+    ∾ ((δ ◃ cohOp (+T[,]T A θ a)) -¹))
+
+
+
+[⊚]tm θ δ A (var x) = [⊚]v θ δ A x
 [⊚]tm θ δ .(A [ γ ]T) (JJ c γ A) = 
   cohOp ([⊚]T γ (θ ⊚ δ) A) 
   ∾ (((δ ◃ cohOp ([⊚]T γ θ A)) 
@@ -269,3 +292,26 @@ lem+Stm (_,_ δ {A} a) γ B =
 
 [+S]tm (var x) δ B = [+S]V x δ B
 [+S]tm (JJ x δ A) γ B = cohOp ([⊚]T δ (γ +S B) A) ∾ ((cong≅ (λ t → JJ x t A) (lem+Stm δ γ B) ∾ (cohOp ([+S]T A (δ ⊚ γ) B) -¹)) ∾ cong+tm ([⊚]T δ γ A))
+
+
+
+
+cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B} → A ≡ B → a ≅ b → a +tm C ≅ b +tm C
+cong+tm2 {Γ} {.B} {B} {C} {.b} {b} refl (refl .b) = refl _
+
+
+
+weakening : ((Γ : Con) → Ty Γ) → PrePolyOp
+weakening B = record { fcon = λ x → x , B x ; fty = λ x → x +T _; ftm = λ x → x +tm _; fsub = λ γ → γ +S _ }
+
+
+record isPolyOp (P : PrePolyOp) : Set where
+
+  field
+    [fs]T : {Γ Δ : Con} (A : Ty Δ)(δ : Γ ⇒ Δ)
+        → A [ fsub P δ ]T ≡ fty P (A [ δ ]T)
+    
+    [fs]tm : {Γ Δ : Con}{A : Ty Δ}
+           (a : Tm A)(δ : Γ ⇒ Δ)
+           (B : Ty Γ)
+           → a [ fsub P δ ]tm ≅ ftm P (a [ δ ]tm)

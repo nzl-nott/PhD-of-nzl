@@ -28,7 +28,7 @@ open _hasTerminal
 
 -- families of sets
 
-FamSets : Set₁
+
 FamSets = Σ[ I ∶ Set ] (I → Set)
 
 {-

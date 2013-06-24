@@ -93,3 +93,8 @@ id₂ ch = PE.refl
 comp : ∀ {Γ Δ Φ Ψ} (f : Γ ⇉ Δ) (g : Δ ⇉ Φ) (h : Φ ⇉ Ψ)
        → h ∘c g ∘c f ≡ h ∘c (g ∘c f)
 comp f g h = PE.refl
+
+
+
+_f≈_ :  ∀{Γ Z : HSetoid} → (f g : Γ ⇉ Z) → HProp
+_f≈_ {Carrier , _≈h_ , refl , sym , trans} {Carrier₁ , _≈h₁_ , refl₁ , sym₁ , trans₁} (fn: fn resp: resp) (fn: fn₁ resp: resp₁) = {!!}

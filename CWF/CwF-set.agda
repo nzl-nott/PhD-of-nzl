@@ -117,7 +117,7 @@ record CWF : Set₁ where
 
   substComp : {Γ Δ Φ : Con}{A : Ty Γ}(γ : ConHom Δ Γ)(δ : ConHom Φ Δ) →
               A [ [ Φ ⇒ Γ ] γ ∘CH δ ] ≡ A [ γ ] [ δ ]
-  substComp {Γ} {Δ} {Φ} {A} γ δ = injection (map∘ (isFunctor ([ Op C ⇒ SET ] FamIndex F∘ T)) Γ Φ γ δ) A 
+  substComp {Γ} {Δ} {Φ} {A} γ δ = {!!} -- injection (map∘ (isFunctor ([ Op C ⇒ SET ] FamIndex F∘ T)) Γ Φ γ δ) A 
 
 
 

@@ -1,15 +1,17 @@
+{-# OPTIONS --type-in-type #-}
+
 import Level
 open import Relation.Binary.PropositionalEquality as PE hiding (refl ; sym ; trans; isEquivalence; [_])
 
-module Cwf-ctd (ext : Extensionality Level.zero Level.zero) where
+module CwF-ctd (ext : Extensionality Level.zero Level.zero) where
 
 open import Data.Unit
 open import Function
 open import Data.Product
 
-import Cwf
+import CwF-setoid
 
-open Cwf ext
+open CwF-setoid ext
 
 
 import CategoryOfSetoid
@@ -28,7 +30,7 @@ open import Data.Nat
 
 
 Rel : {Γ : Con} → Ty Γ → Set₁
-Rel {Γ} A = Ty (Γ & A & A [ fst& {A = A} ])
+Rel {Γ} A = Ty (Γ & A & A [ fst& {A = A} ]T)
 
 {-
 RecN : (P : ℕ → Set) → 
@@ -142,7 +144,7 @@ module Natural (Γ : Con) where
 
   elfm : Σ ∣ Γ ∣ (λ x → ⟦U⟧⁰) → HSetoid
   elfm (γ , nat) = [ ⟦Nat⟧ ]fm γ
-  elfm (γ , arr< a , b >) = [ Γ , γ ] elfm (γ , a) ⇨fm elfm (γ , b)
+  elfm (γ , arr< a , b >) = [ Γ , γ ] elfm (γ , a) ⇒fm elfm (γ , b)
 
 
 
@@ -196,7 +198,7 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
     }
 
 
-  ⟦refl⟧⁰ : Tm {Γ & A} (⟦Id⟧ [ record { fn = λ x' → x' , proj₂ x' ; resp = λ x' → x' , proj₂ x' } ]) 
+  ⟦refl⟧⁰ : Tm {Γ & A} (⟦Id⟧ [ record { fn = λ x' → x' , proj₂ x' ; resp = λ x' → x' , proj₂ x' } ]T) 
   ⟦refl⟧⁰ = record
            { tm = λ {(x , a) → [ [ A ]fm x ]refl {a} }
            ; respt = λ p → tt
@@ -206,9 +208,9 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
 
   module substIn (B : Ty (Γ & A)) where
   
-    ⟦subst⟧⁰ : Tm {Γ & A & (A [ fst& {A = A} ]) 
-               & ⟦Id⟧ & B [ fst& {A = A [ fst& {A = A} ]}  ] [ fst& {A = ⟦Id⟧} ]} 
-             (B [ record { fn = λ x → (proj₁ (proj₁ (proj₁ (proj₁ x)))) , (proj₂ (proj₁ (proj₁ x))) ; resp = λ x → proj₁ (proj₁ (proj₁ (proj₁ x))) , proj₂ (proj₁ (proj₁ x)) } ])
+    ⟦subst⟧⁰ : Tm {Γ & A & (A [ fst& {A = A} ]T) 
+               & ⟦Id⟧ & B [ fst& {A = A [ fst& {A = A} ]T}  ]T [ fst& {A = ⟦Id⟧} ]T} 
+             (B [ record { fn = λ x → (proj₁ (proj₁ (proj₁ (proj₁ x)))) , (proj₂ (proj₁ (proj₁ x))) ; resp = λ x → proj₁ (proj₁ (proj₁ (proj₁ x))) , proj₂ (proj₁ (proj₁ x)) } ]T)
 
     ⟦subst⟧⁰ = record
            { tm = λ {((((x , a) , b) , p) , PA) → [ B ]subst ([ Γ ]refl , [ [ A ]fm _ ]trans ([ A ]refl* _ _) p) PA }

@@ -1,10 +1,14 @@
+{-# OPTIONS --type-in-type #-}
+
 open import Level
 open import Relation.Binary.PropositionalEquality as PE hiding (refl; sym ; trans; isEquivalence)
 
 module CategoryOfSetoid  (ext : Extensionality zero zero) where
 
+open import Cats.Category
 open import Function
 open import Relation.Binary.Core using (_⇒_)
+open import Data.Empty
 import HProp
 module hpx = HProp ext
 open hpx
@@ -37,22 +41,6 @@ open HSetoid public renaming (refl to [_]refl; sym to [_]sym; _≈_ to [_]_≈_ 
 [ Γ ]uip {a} {b} = Uni ([ Γ ] a ≈h b)
 
 
-
--- a variant with explicit arguments for proofs (for speficific use)
-record HSetoid' : Set₁ where
-  constructor _,_,_,_,_
-  infix 4 _≈h_
-  field
-    Carrier : Set
-    _≈h_     : Carrier → Carrier → HProp
-    refl    : (x : Carrier) → < x ≈h x >
-    sym     : (x y : Carrier) → < x ≈h y > → < y ≈h x >
-    trans   : (x y z : Carrier) → < x ≈h y > → < y ≈h z > → < x ≈h z >
-  
-transVariant : HSetoid' → HSetoid
-transVariant (Carrier , _≈h_ , refl , sym , trans) = Carrier , _≈h_ , (λ {x} → refl x) , (λ {x} {y} → sym x y) , (λ {x} {y} {z} → trans x y z)
-
-
 -- Arrow between HSetoid
 
 infix 5 _⇉_
@@ -75,7 +63,7 @@ idCH = record { fn = id; resp = id}
 
 infixl 5 _∘c_
 
-_∘c_ : ∀{Γ Δ Z} → Δ ⇉ Z → Γ ⇉ Δ →  Γ ⇉ Z
+_∘c_ : ∀{Γ Δ Z} → Δ ⇉ Z → Γ ⇉ Δ → Γ ⇉ Z
 yz ∘c xy = record 
            { fn = [ yz ]fn ∘ [ xy ]fn
            ; resp = [ yz ]resp ∘ [ xy ]resp
@@ -96,5 +84,15 @@ comp f g h = PE.refl
 
 
 
-_f≈_ :  ∀{Γ Z : HSetoid} → (f g : Γ ⇉ Z) → HProp
-_f≈_ {Carrier , _≈h_ , refl , sym , trans} {Carrier₁ , _≈h₁_ , refl₁ , sym₁ , trans₁} (fn: fn resp: resp) (fn: fn₁ resp: resp₁) = {!!}
+_f≈_ :  ∀{Γ Δ : HSetoid} → (f g : Γ ⇉ Δ) → HProp
+_f≈_ {Γ , _≈h_ , refl , sym , trans} {Δ , _≈h₁_ , refl₁ , sym₁ , trans₁} (fn: fn resp: fresp) (fn: gn resp: gresp) 
+  = record 
+           { prf = (g : Γ) → < fn g ≈h₁ gn g >
+           ; Uni = ext (λ g → Uni (fn g ≈h₁ gn g))
+           }
+
+
+
+setoid-Cat : Category
+setoid-Cat = CatC HSetoid _⇉_ (λ _ → idCH) (λ _ _ → _∘c_) 
+             (IsCatC (λ α β f → PE.refl) (λ α β f → PE.refl) (λ α δ f g h → PE.refl))

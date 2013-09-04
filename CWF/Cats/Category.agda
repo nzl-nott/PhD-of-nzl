@@ -7,9 +7,6 @@ open import Relation.Binary.PropositionalEquality
 
 open import Level
 
-postulate
-  ext : Extensionality zero zero
-
 record IsCategory
   (obj      : Set)
 
@@ -51,6 +48,7 @@ record Category : Set where
 
     isCategory : IsCategory obj hom id [_⇒_]_∘_
 
+  open IsCategory public
   
 --   Op : Category
 --   Op = record { hom = λ a b → hom b a ; [_⇒_]_∘_ = λ α γ g f → [ γ ⇒ α ] f ∘ g }

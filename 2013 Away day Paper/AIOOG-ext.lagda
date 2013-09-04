@@ -1,44 +1,9 @@
-\documentclass{article}
-
-%agda literal file
-\usepackage{agda}
-
-\usepackage{dsfont}
-\usepackage{amsthm}
-\usepackage{relsize}
-\usepackage{color}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{autofe}
-\usepackage{stmaryrd}
-\usepackage{textgreek}
-\usepackage{ucs}
-\usepackage[utf8x]{inputenc}
-
-
-\newcommand{\wig}{weak $\infty$-groupoids}
-\newcommand{\mltt}{Martin-L\"{o}f Type Theory}
-\newcommand{\og}{ $\omega$-groupoids}
-\newcommand{\wog}{weak $\omega$-groupoids}
-\newcommand{\hott}{Homotopy Type Theory}
-\newcommand{\ott}{Observational Type Theory}
-\newcommand{\tig}{$\mathlarger{\tau} _{\infty-groupoid}$}
-\begin{document}
-\pagenumbering{gobble}
-\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
-
-\author{Li Nuo}
-
-\maketitle
-
-
 \AgdaHide{
 \begin{code}
 {-# OPTIONS --type-in-type --no-positivity-check --no-termination-check #-}
 
 
-module AIOOG where 
+module AIOOG-ext where 
 
 
 open import Relation.Binary.PropositionalEquality
@@ -48,60 +13,9 @@ open import Data.Product renaming (_,_ to _,,_)
 
 infix 4 _≅_
 infix 4 _=h_
-infixl 6 _+T_ _+S_ _+tm_
-infixl 5 _,_
-infixl 7 _⊚_
 
 \end{code}
 }
-
-\begin{abstract}
-
-In \hott{}, a variant of \mltt{}, we reject proof-irrelevance so that the common interpretation of types as setoids has to be generalised. With the univalence axiom, we treat equivalence as equality and interpret types as \og{}. Inspired by Altenkirch's work \cite{txa:csl} and Brunerie's notes \cite{gb:wog}, we study and implement a syntactic definition of Grothendieck \wog{} in Agda which is a popular variant of \mltt{} and a famous theorem prover. It is the first step to model type theory with \wog{} so that we could eliminate the univalence axiom.
-
-
-\end{abstract}
-
-
-\section{Introduction}
-
-
-% Background
-
-%why do we need to use omega groupoid
-
-In Type Theory, a type could be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alt:99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proof terms namely inhabitants are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. To make it more precise, a weak equivalence
-between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
-corresponding inverse morphism $ g : B \to A$, but instead of the
-proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
-2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$. 
-
-
-It has been proved by Vladimir Voevodsky that the univalence axiom implies functional extensionality (a coq proof of this could be found in \cite{uafe}) which results in the problem of non-canonical terms in Type Theory. Altenkirch has proposed a solution in \cite{alt:99} to solve the problem caused by functional extensionality
-based on setoid model and also refines it \cite{alti:ott-conf} to \ott{} to justify functional extensionality.
-However as mentioned before, setoids require UIP which is incompatible with \hott{}. To solve the problem we should generalise the notion of setoids, namely to enrich the structure of the identity proofs. 
-
-
-
-The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous Manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplication of \wog{} in \cite{ara:wog}. Categorically
-speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
-category, a setoid is a category where every morphism is unique between
-two objects. A groupoid is more generalised, every morphism is
-isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
-n-groupoid is an n-category in which morphisms on all levels are
-equivalence. \og{} which are also called $\infty$-groupoids is an
-infinite version of n-groupoids. To model Type Theory without UIP we
-also require the equalities to be non-strict, in other words, they are
-not definitionally equalities. Finally we should use \wog{} to interpret types and eliminate the univalence axiom.
-
-There are several approaches to formalise \wog{} in Type Theory. For instance, Altenkirch \cite{txa:csl}, and Bruneries' notes \cite{gb:wog}.
-This paper mainly explains an implementation of \wog{} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional \mltt{}. The approach is to specify when a globular set is a weak $\omega$-groupoid by first defining a type theory called \tig{} to describe the internal language
-of Grothendieck \wog{}, then interpret it with a globular set and a dependent function. All coherence laws of the \wog{} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
-
-\section{Syntax}
-
-Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
-
 
 \paragraph{Basic Objects}
 
@@ -133,7 +47,7 @@ data Con where
 
 
 data Ty Γ where
-  *    : Ty Γ
+  *   : Ty Γ
   _=h_ : {A : Ty Γ}(a b : Tm A) → Ty Γ
 \end{code}
 
@@ -146,7 +60,6 @@ When we used the common identity types which is homogeneous, we had to use $subs
 data _≅_ {Γ : Con}{A : Ty Γ} 
          : {B : Ty Γ} → Tm A → Tm B → Set where
   refl : (b : Tm A) → b ≅ b
-
 \end{code}
 
 \AgdaHide{
@@ -191,10 +104,7 @@ cohOp refl = refl _
 
 cohOp-eq : {Γ : Con}{A B : Ty Γ}{a b : Tm B}{p : A ≡ B} → (a ≅ b) 
          → (a ⟦ p ⟫ ≅ b ⟦ p ⟫)
-cohOp-eq {Γ} {.B} {B} {a} {b} {refl} r = r
-
-cohOp-hom : {Γ : Con}{A B : Ty Γ}{a b : Tm B}(p : A ≡ B) → (a ⟦ p ⟫ =h b ⟦ p ⟫) ≡ (a =h b)
-cohOp-hom refl = refl
+cohOp-eq (refl _) = refl _
 
 \end{code}
 }
@@ -209,9 +119,17 @@ composition of contexts can be understood as substitution for context morphisms 
 _[_]T  : {Γ Δ : Con}(A : Ty Δ)           (δ : Γ ⇒ Δ) → Ty Γ
 _[_]V  : {Γ Δ : Con}{A : Ty Δ}(a : Var A)(δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
 _[_]tm : {Γ Δ : Con}{A : Ty Δ}(a : Tm A) (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
-_⊚_    : {Γ Δ Θ : Con}      →  Δ ⇒ Θ → (δ : Γ ⇒ Δ) → Γ ⇒ Θ
+_⊚_    : {Γ Δ Θ : Con}            →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
 \end{code}
 
+
+\AgdaHide{
+\begin{code}
+
+infixl 7 _,_
+
+\end{code}
+}
 
 \paragraph{Weakening Rules}
 
@@ -229,7 +147,6 @@ _+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ
 
 \AgdaHide{
 \begin{code}
-
 
 *        +T B = *
 (a =h b) +T B = a +tm B =h b +tm B
@@ -264,13 +181,6 @@ data Tm where
 
 \AgdaHide{
 \begin{code}
-
-cohOpV :  {Γ : Con}{A B : Ty Γ}{x : Var A}(p : A ≡ B) → var (subst Var p x) ≅ var x
-cohOpV {x = x} refl = refl (var x)
-
-cohOpVs : {Γ : Con}{A B C : Ty Γ}{x : Var A}(p : A ≡ B) → var (vS {B = C} (subst Var p x)) ≅ var (vS x)
-cohOpVs {x = x} refl = refl (var (vS x))
-
 JJ-eq : {Γ Δ : Con}{isc : isContr Δ}{γ δ : Γ ⇒ Δ}{A : Ty Δ} → γ ≡ δ → JJ isc γ A ≅ JJ isc δ A 
 JJ-eq refl = refl _
 
@@ -306,7 +216,7 @@ hom≡ : {Γ : Con}{A A' : Ty Γ}
                 {a : Tm A}{a' : Tm A'}(q : a ≅ a')
                 {b : Tm A}{b' : Tm A'}(r : b ≅ b')
                 → (a =h b) ≡ (a' =h b')
-hom≡ {Γ} {.A'} {A'} {.a'} {a'} (refl .a') {.b'} {b'} (refl .b') = refl
+hom≡ (refl _) (refl _) = refl
 
 
 cm-eq : {Γ Δ : Con}{γ δ : Γ ⇒ Δ}{A : Ty Δ}
@@ -332,15 +242,15 @@ composition of substitution.
        → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T
 
 [⊚]v : {Γ Δ Θ : Con}
-       {A : Ty Θ}(x  : Var A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+          (θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)(A : Ty Θ)(x  : Var A)
           → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
 
-[⊚]tm : {Γ Δ Θ : Con}{A : Ty Θ}(a : Tm A)
-        {θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+[⊚]tm : {Γ Δ Θ : Con}
+        (θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)(A : Ty Θ)(a : Tm A)
         →  a [ θ ⊚ δ ]tm ≅ (a [ θ ]tm) [ δ ]tm
 
 ⊚assoc : {Γ Δ Θ Δ₁ : Con}
-        (γ : Θ ⇒ Δ₁){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+        (γ : Θ ⇒ Δ₁)(θ : Δ ⇒ Θ)(δ : Γ ⇒ Δ)
         → (γ ⊚ θ) ⊚ δ ≡ γ ⊚ (θ ⊚ δ)
 
 
@@ -403,8 +313,8 @@ since weakening doesn't introduce new variables in types and terms.
          → (A +T B) [ δ , b ]T ≡ A [ δ ]T
 
 +tm[,]tm : {Γ Δ : Con}{A : Ty Δ}
-         (a : Tm A){δ : Γ ⇒ Δ}{B : Ty Δ}
-         {c : Tm (B [ δ ]T)}
+         (a : Tm A)(δ : Γ ⇒ Δ)(B : Ty Δ)
+         (c : Tm (B [ δ ]T))
          → (a +tm B) [ δ , c ]tm ≅ a [ δ ]tm 
 \end{code}
 
@@ -419,10 +329,6 @@ wk-T : {Δ : Con}
        {A B C : Ty Δ}
        → A ≡ B → A +T C ≡ B +T C
 wk-T refl = refl
-
-
-cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
-cong+tm2 (refl _) = refl _
 
 wk-tm : {Γ Δ : Con}
          {A : Ty Δ}{δ : Γ ⇒ Δ}
@@ -453,7 +359,7 @@ wk-hom : {Γ Δ : Con}
          {B : Ty Δ}{b : Tm (B [ δ ]T)}  
          {x y : Tm (A [ δ ]T)}
          → (wk-tm {B = B} {b = b} x =h wk-tm {B = B} {b = b} y) ≡ (x =h y)
-wk-hom = hom≡ wk-coh wk-coh
+wk-hom = hom≡ wk-coh wk-coh -- +T[,]T
 
 
 wk-hom+ : {Γ Δ : Con}
@@ -469,10 +375,10 @@ wk-⊚ : {Γ Δ Θ : Con}
 wk-⊚ t = t ⟦ [⊚]T ⟫
 
 [⊚]T {A = *} = refl
-[⊚]T {A = _=h_ {A} a b} = hom≡ ([⊚]tm _) ([⊚]tm _) 
+[⊚]T {A = _=h_ {A} a b} = hom≡ ([⊚]tm _ _ _ _) ([⊚]tm _ _ _ _) --   [⊚]T
 
 +T[,]T {A = *} = refl
-+T[,]T {A = _=h_ {A} a b} = hom≡  (+tm[,]tm _) (+tm[,]tm _)
++T[,]T {A = _=h_ {A} a b} = hom≡  (+tm[,]tm _ _ _ _) (+tm[,]tm _ _ _ _) -- +T[,]T
 
 \end{code}
 }
@@ -493,54 +399,49 @@ JJ cΔ γ A [ δ ]tm = JJ cΔ (γ ⊚ δ) A ⟦ sym [⊚]T ⟫
 
 -- congruence
 
-congT : ∀ {Γ Δ : Con}{A B : Ty Δ}{γ : Γ ⇒ Δ} → A ≡ B → A [ γ ]T ≡ B [ γ ]T 
-congT refl = refl
 
-
-congT2 : ∀ {Γ Δ} → {δ γ : Δ ⇒ Γ}{A : Ty Γ} → δ ≡ γ → A [ δ ]T ≡ A [ γ ]T
-congT2 refl = refl 
-
-congV : {Γ Δ : Con}{A B : Ty Δ}{a : Var A}{b : Var B} →
+_◃V_ : {Γ Δ : Con}{A B : Ty Δ}{a : Var A}{b : Var B} →
      var a ≅ var b → 
-     {δ : Γ ⇒ Δ} 
+     (δ : Γ ⇒ Δ) 
      → a [ δ ]V ≅ b [ δ ]V
-congV {Γ} {Δ} {.B} {B} {.b} {b} (refl .(var b)) = refl _
+_◃V_ {Γ} {Δ} {.B} {B} {.b} {b} (refl .(var b)) δ  = refl _
 
-congtm : {Γ Δ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B}
+
+_◃_ : {Γ Δ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B}
       (p : a ≅ b) → 
-      {δ : Δ ⇒ Γ}
+      (δ : Δ ⇒ Γ) 
       → a [ δ ]tm ≅ b [ δ ]tm
-congtm (refl _) = refl _ 
+(refl _) ◃ _ = refl _ 
 
 
-⊚assoc • = refl
-⊚assoc (_,_ γ {A} a) =
-  cm-eq (⊚assoc γ) 
+⊚assoc • θ δ = refl
+⊚assoc (_,_ γ {A} a) θ δ =
+  cm-eq (⊚assoc γ θ δ) 
     (cohOp [⊚]T 
-    ∾ (congtm (cohOp [⊚]T)
+    ∾ ((cohOp [⊚]T ◃ δ) 
     ∾ ((cohOp [⊚]T 
-    ∾ [⊚]tm a) -¹)))
+    ∾ [⊚]tm θ δ (A [ γ ]T) a) -¹)))
 
 
 
-[⊚]v (v0 {Γ₁} {A}) {θ , a}  = wk-coh ∾ cohOp [⊚]T ∾ congtm (cohOp +T[,]T -¹) 
-[⊚]v (vS {Γ₁} {A} {B} x) {θ , a}  = 
+[⊚]v (θ , a) δ .(A +T A) (v0 {Γ₁} {A}) = wk-coh ∾ cohOp [⊚]T ∾ (cohOp +T[,]T -¹) ◃ δ
+[⊚]v (θ , a) δ .(A +T B) (vS {Γ₁} {A} {B} x) = 
   wk-coh
-  ∾ ([⊚]v x
-    ∾ (congtm (cohOp +T[,]T) -¹))
+  ∾ ([⊚]v θ δ A x 
+    ∾ ((cohOp +T[,]T ◃ δ) -¹))
 
 
 
-[⊚]tm (var x) = [⊚]v x
-[⊚]tm (JJ c γ A) = cohOp (sym [⊚]T) ∾ (JJ-eq (sym (⊚assoc γ)) ∾ cohOp (sym [⊚]T) -¹) ∾ congtm (cohOp (sym [⊚]T) -¹)
+[⊚]tm θ δ A (var x) = [⊚]v θ δ A x
+[⊚]tm θ δ .(A [ γ ]T) (JJ c γ A) = cohOp (sym [⊚]T) ∾ (JJ-eq (sym (⊚assoc γ θ δ)) ∾ cohOp (sym [⊚]T) -¹) ∾ (cohOp (sym [⊚]T) -¹) ◃ δ
 
 
-⊚wk : ∀{Γ Δ Δ₁}{B : Ty Δ}(γ : Δ ⇒ Δ₁){δ : Γ ⇒ Δ}{c : Tm (B [ δ ]T)} → (γ +S B) ⊚ (δ , c) ≡ γ ⊚ δ
-⊚wk • = refl
-⊚wk (_,_ γ {A} a) = cm-eq (⊚wk γ) (cohOp [⊚]T ∾ (congtm (cohOp [+S]T) ∾ +tm[,]tm a) ∾ cohOp [⊚]T -¹)
+⊚wk : ∀{Γ Δ Δ₁}(B : Ty Δ)(γ : Δ ⇒ Δ₁)(δ : Γ ⇒ Δ)(c : Tm (B [ δ ]T)) → (γ +S B) ⊚ (δ , c) ≡ γ ⊚ δ
+⊚wk B • δ c = refl
+⊚wk B (_,_ γ {A} a) δ c = cm-eq (⊚wk B γ δ c) (cohOp [⊚]T ∾ (cohOp [+S]T ◃ (δ , c) ∾ +tm[,]tm a δ B c) ∾ cohOp [⊚]T -¹)
 
-+tm[,]tm (var x) = cohOp +T[,]T
-+tm[,]tm (JJ x γ A) = congtm (cohOp (sym [+S]T)) ∾ cohOp (sym [⊚]T) ∾ JJ-eq (⊚wk γ) ∾ cohOp (sym [⊚]T) -¹
++tm[,]tm (var x) δ B c = cohOp +T[,]T
++tm[,]tm (JJ x γ A) δ B c = cohOp (sym [+S]T) ◃ (δ , c) ∾ cohOp (sym [⊚]T) ∾ JJ-eq (⊚wk B γ δ c) ∾ cohOp (sym [⊚]T) -¹
 
 
 --lemma
@@ -559,51 +460,11 @@ lem+Stm • γ B = refl
 lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm [⊚]T) ∾ wk-coh+ -¹)
 
 
+cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
+cong+tm2 (refl _) = refl _
 
 [+S]tm (var x) {δ} {B} = [+S]V x
 [+S]tm (JJ x δ A) {γ} {B} = cohOp (sym [⊚]T) ∾ JJ-eq (lem+Stm δ γ B) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm (sym [⊚]T)
 
 \end{code}
 }
-
-\section{Some Important Derivable Constructions}
-
-\input{AIOOGS2}
-\input{GroupoidLaws}
-
-
-
-\input{Suspension}
-
-\section{Semantics}
-
-\paragraph{Globular Sets}
-
-\input{GlobularSets}
-
-
-\input{Semantics}
-% relation with categories with families
-
-% different ideas of how to do solve refl
-
-
-
-\section{Conclusion}
-
-In this paper, we present an implementation of \wog{} following the Brunerie's work. Briefly speaking, we define the syntax of the type theory \tig{}, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we use heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We construct the identity morphisms and verify some groupoid laws in the syntactic framework. The suspensions for all sorts of objects are also defined for other later constructions.
-
-There are still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathlarger{\tau}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $Coh$ if we can prove that the $\mathlarger{\tau}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. Altenkirch also suggests to use explicit substitution and QIIP which is an alternative way to define the syntax. 
-
-We would like to formalise a proof of that Id$\omega$ is an \wog{}, but the base set in a globular set is an h-set which is incompatible with Id$\omega$. Perhaps we could solve the problem by making a syntactic proof. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
-
-
-
-
-
-
-\newpage
-\bibliography{my}
-\bibliographystyle{plain}
-
-\end{document}

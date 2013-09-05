@@ -10,3 +10,4 @@
 *.cls
 *.bbl
 *.ddf
+.DS_Store

@@ -51,5 +51,11 @@ p1 = IdCm _ +S _
 p2 : ∀ {Γ A} → Tm {Γ , A} (A [ p1 ]T)
 p2 = var v0 ⟦ trans [+S]T (wk-T (IC-T _)) ⟫
 
+p2-v0 : ∀ {Γ A} → p2 {Γ} {A} ≅ var v0
+p2-v0 {A = A} = cohOp (trans [+S]T (wk-T (IC-T A)))
+
+Con-eq : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : Γ ≡ Δ) → subst Ty eq A ≡ B → _≡_ {_} {Con} (Γ , A) (Δ , B)
+Con-eq refl refl = refl
+
 \end{code}
 }

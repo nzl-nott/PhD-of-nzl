@@ -189,12 +189,14 @@ cohOp refl = refl _
 \AgdaHide{
 \begin{code}
 
+
 cohOp-eq : {Γ : Con}{A B : Ty Γ}{a b : Tm B}{p : A ≡ B} → (a ≅ b) 
          → (a ⟦ p ⟫ ≅ b ⟦ p ⟫)
 cohOp-eq {Γ} {.B} {B} {a} {b} {refl} r = r
 
 cohOp-hom : {Γ : Con}{A B : Ty Γ}{a b : Tm B}(p : A ≡ B) → (a ⟦ p ⟫ =h b ⟦ p ⟫) ≡ (a =h b)
 cohOp-hom refl = refl
+
 
 \end{code}
 }
@@ -421,6 +423,14 @@ wk-T : {Δ : Con}
 wk-T refl = refl
 
 
+wk+S+T : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}{γ}{C} → A [ γ ]T ≡ C → A [ γ +S B ]T ≡ C +T B
+wk+S+T T = trans [+S]T (wk-T T)
+
+
+
+cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
+cong+tm2 refl = refl _
+
 cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
 cong+tm2 (refl _) = refl _
 
@@ -543,9 +553,6 @@ congtm (refl _) = refl _
 +tm[,]tm (JJ x γ A) = congtm (cohOp (sym [+S]T)) ∾ cohOp (sym [⊚]T) ∾ JJ-eq (⊚wk γ) ∾ cohOp (sym [⊚]T) -¹
 
 
---lemma
-cong+tm : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
-cong+tm refl = refl _
 
 [+S]V : {Γ Δ : Con}{A : Ty Δ}
          (x : Var A){δ : Γ ⇒ Δ}

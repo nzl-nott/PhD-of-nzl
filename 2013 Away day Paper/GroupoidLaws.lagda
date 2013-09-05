@@ -130,7 +130,39 @@ The second problem is to define the context morphism, namely the substitution be
 
 \begin{code}
 Tm-refl' :  (ne : Con*) → Tm {∥ ne ∥} (var v0 =h var v0)
-Tm-refl' (Γ ,, A) = rpl-tm Γ (ε , *) A refl* [ p1 ++cm δ ]tm) ⟦ trans (trans prf1 (congT2 (sym (cor-inv δ)))) [⊚]T ⟫
+Tm-refl' (Γ ,, A) = rpl-tm' (ε , *) A refl*  [ δ ]tm ⟦ prf1 ⟫
+
+  where
+    δ : (Γ , A) ⇒ rpl' (ε , *) A
+    δ = 1-1cm-same (rep-T-p1 A)
+
+    prf : rpl-tm' (ε , *) A (var v0) [ δ ]tm ≅ var v0
+    prf = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
+           (1-1cm-same-v0 (rep-T-p1 A))
+
+    prf1 : (var v0 =h var v0) ≡ rpl-T' (ε , *) A (var v0 =h var v0) [ δ ]T
+    prf1 = sym (trans (congT (rpl-T'-p2 (ε , *) A)) (hom≡ prf prf))
+
+{-
+Tm-refl' (Γ ,, A) = rpl-tm Γ (ε , *) A refl* [ δ ]tm ⟦ prf1 ⟫
+
+  where
+    δ : (Γ , A) ⇒ (Γ ++ rep-C A (ε , *))
+    δ = rpl'-p3 (ε , *) A ⊚ 1-1cm-same (rep-T-p1 A)
+
+    
+    prf2 : (rep-tm A (var v0) [ rpl'-p2 (ε , *) A ]tm) [ 1-1cm-same (rep-T-p1 A) ]tm ≅ var v0
+    prf2 = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
+           (htrans wk-coh (cohOp (trans [+S]T (wk-T (trans (IC-T (rep-T A * [ filter-cm A ]T)) (rep-T-p1 A))))))
+
+    prf1 : (var v0 =h var v0) ≡ rpl-T (ε , *) A (var v0 =h var v0) [ δ ]T
+    prf1 = sym (trans [⊚]T (trans (congT (trans (rpl'-p4 (ε , *) A _) (congT (rep-T-p2 A))))
+                              (hom≡ prf2 prf2)))
+-}
+{-
+
+
+-- [ p1 ++cm δ ]tm) ⟦ trans (trans prf1 (congT2 (sym (cor-inv δ)))) [⊚]T ⟫
 
 -- this is a more general method to use replace function in defining terms
 
@@ -144,6 +176,8 @@ Tm-refl' (Γ ,, A) = rpl-tm Γ (ε , *) A refl* [ p1 ++cm δ ]tm) ⟦ trans (tra
 
     prf1 : (var v0 =h var v0) ≡ rep-T A (var v0 =h var v0) [ δ ]T
     prf1 = sym (trans (congT (rep-T-p2 A)) (hom≡ prf2 prf2))
+
+-}
 
 \end{code}
 
@@ -224,21 +258,31 @@ Tm-sym* : Tm {ε , * , *} ((var (vS v0)) =h (var v0))
 Tm-sym* t = (t [ (• , (var v0)) , (var (vS v0)) ]tm)
 -}
 
-Tm-sym* : Tm {ε , * , * , _} (((var v0) =h (var (vS v0))) +T ((var (vS v0)) =h (var v0)))
+Tm-sym* : Tm {ε , * , * , _} (((var v0) =h (var (vS v0))) +T _)
 Tm-sym* = anyTypeInh (ext c* v0)
 
+Tm-sym' : (Γ : Con)(A : Ty Γ)
+        → Tm (rpl-T'  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
+Tm-sym' Γ A = rpl-tm' (ε , * , * , _) A Tm-sym*
 
+{-
 Tm-sym' : (Γ : Con)(A : Ty Γ) 
        → Tm {Γ , A , A +T A , _} (((var v0) =h (var (vS v0))) +T ((var (vS v0)) =h (var v0)))
-Tm-sym' Γ A = (rpl-tm _ (ε , * , * , _) A Tm-sym* [ (p1 ⊚ p1 ⊚ p1) ++cm δ ]tm) ⟦ {!!} ⟫
+Tm-sym' Γ A = rpl-tm' (ε , * , * , _) A Tm-sym* [ δ ]tm ⟦ {!!} ⟫
    where
-    δ :  (Γ , A , A +T A , (var (vS v0) =h var v0)) ⇒ rep-C A (ε , * , * , (var (vS v0) =h var v0))
-    δ = rep-C-cm-spl A (var (vS v0) =h var v0) ⊚ (rep-C-cm-spl A * ⊚ ((rep-C-cm-spl A * ⊚ ((filter-cm A +S A , var v0 ⟦ trans [+S]T (wk-T (rep-T-p1 A)) ⟫) +S _)) , (var v0 ⟦ {!trans (rep-T-p1 A)!} ⟫)) +S _ , {!!}) -- (rep-C-cm-spl A *) ⊚ ((filter-cm A +S A) , (var v0 ⟦ trans [+S]T (wk-T (rep-T-p1 A)) ⟫))
-    
-Tm-sym-sp : (Γ : Con)(A : Ty Γ) 
-       → Tm {Γ , A , A +T A} (var (vS v0) =h var v0) 
-       → Tm {Γ , A , A +T A} (var v0 =h var (vS v0))
-Tm-sym-sp Γ A t = {!!} -- rpl-tm Γ (ε , * , *) A (Tm-sym* {!!}) [ {!!} ]tm ⟦ {!!} ⟫
+    δ :  (Γ , A , A +T A , (var (vS v0) =h var v0)) ⇒ rpl' (ε , * , * , (var (vS v0) =h var v0)) A
+    δ = 1-1cm (1-1cm (1-1cm (IdCm _) 
+              (trans (IC-T _) (rep-T-p1 A)))
+              (trans (congT (trans [⊚]T {!!}))
+                 (1-1cm-T (trans (IC-T (rep-T A * [ filter-cm A ]T)) (rep-T-p1 A))))) 
+              {!!}
+-}
+
+
+Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
+       → Tm (rpl-T'  (ε , * , *) A (var (vS v0) =h var v0)) 
+       → Tm (rpl-T'  (ε , * , *) A (var v0 =h var (vS v0)))
+Tm-sym-fun Γ A = fun (Tm-sym' Γ A ⟦ sym (rpl-T'-p3 {Γ} {ε , * , *} A) ⟫)
 
 Tm-sym : (Γ : Con)(A : Ty Γ) 
        → Tm {Γ , A , A +T A} (var (vS v0) =h var v0) 
@@ -256,23 +300,18 @@ Tm-sym Γ A t =
     wk-id = (IdCm Γ +S A) +S (A +T A)
   
     eq1 : A [ wk-id ]T ≡ (A +T A) +T (A +T A) 
-    eq1 = wkComm (wkComm (IC-T _))
+    eq1 = wk+S+T (wk+S+T (IC-T _))
 
     eq2 : (A +T A) [ wk-id , (var v0 ⟦ eq1 ⟫) ]T 
             ≡ (A +T A) +T (A +T A) 
     eq2 = trans +T[,]T eq1
 
-{-
-Tm-sym' :  (Γ : Con)(A : Ty Γ) 
-        → (x y : Tm A) → Tm (x =h y) → Tm (y =h x)
-Tm-sym' Γ A x y t = (Tm-sym Γ A {!!}
-          [ ((IdCm Γ) , (x ⟦ IC-T A ⟫)) , y ⟦ trans +T[,]T (IC-T A) ⟫ ]tm) ⟦ {!!} ⟫ 
-  
+Tm-sym-x : (Γ : Con)(A : Ty Γ)(a b : Tm A) 
+       → Tm ((b =h a) +T (a =h b))
+Tm-sym-x Γ A a b =  apply (apply (Tm-sym' Γ A) (b [ p1 ⊚ p1 ]tm ⟦ {!!} ⟫)) (a [ {!!} ]tm ⟦ {!!} ⟫) [ {!!} ]tm ⟦ {!!} ⟫
+-- sym (hom≡ apply-x apply-x)
+--  (Tm-sym' Γ A [ ((p1 , (a ⟦ rep-T-p1 A ⟫) [ p1 ]tm) , {!b ⟦ ? ⟫ [ ? ]tm!}) , {!!} ]tm) ⟦ {!!} ⟫
 
-  where 
-    wk-id : (Γ , A , A +T A , (var (vS v0) =h var v0)) ⇒ Γ 
-    wk-id = (IdCm Γ +S A) +S (A +T A) +S (var (vS v0) =h var v0)
--}
 \end{code}
 
 Then the transitivity for three consecutive variables at the last of a context is as follows.
@@ -301,7 +340,7 @@ Tm-trans Γ A p q =
     wk-ty = ((A +T A) +T (A +T A)) +T ((A +T A) +T (A +T A))
 
     eq1 : A [ wk-id ]T ≡ wk-ty
-    eq1 = wkComm (wkComm (wkComm (IC-T _)))
+    eq1 = wk+S+T (wk+S+T (wk+S+T (IC-T _)))
 
     wk-id2 : transCon A ⇒ (Γ , A)
     wk-id2 = (IdCm _ +S (A +T A)) +S ((A +T A) +T (A +T A))

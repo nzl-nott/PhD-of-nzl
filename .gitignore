@@ -11,3 +11,7 @@
 *.bbl
 *.ddf
 .DS_Store
+
+*.tex
+
+*.pdf

@@ -189,12 +189,14 @@ cohOp refl = refl _
 \AgdaHide{
 \begin{code}
 
+
 cohOp-eq : {Γ : Con}{A B : Ty Γ}{a b : Tm B}{p : A ≡ B} → (a ≅ b) 
          → (a ⟦ p ⟫ ≅ b ⟦ p ⟫)
 cohOp-eq {Γ} {.B} {B} {a} {b} {refl} r = r
 
 cohOp-hom : {Γ : Con}{A B : Ty Γ}{a b : Tm B}(p : A ≡ B) → (a ⟦ p ⟫ =h b ⟦ p ⟫) ≡ (a =h b)
 cohOp-hom refl = refl
+
 
 \end{code}
 }
@@ -421,8 +423,16 @@ wk-T : {Δ : Con}
 wk-T refl = refl
 
 
-cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
-cong+tm2 (refl _) = refl _
+wk+S+T : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}{γ}{C} → A [ γ ]T ≡ C → A [ γ +S B ]T ≡ C +T B
+wk+S+T T = trans [+S]T (wk-T T)
+
+
+cong+tm : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
+cong+tm (refl _) = refl _
+
+cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
+cong+tm2 refl = refl _
+
 
 wk-tm : {Γ Δ : Con}
          {A : Ty Δ}{δ : Γ ⇒ Δ}
@@ -543,25 +553,22 @@ congtm (refl _) = refl _
 +tm[,]tm (JJ x γ A) = congtm (cohOp (sym [+S]T)) ∾ cohOp (sym [⊚]T) ∾ JJ-eq (⊚wk γ) ∾ cohOp (sym [⊚]T) -¹
 
 
---lemma
-cong+tm : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
-cong+tm refl = refl _
 
 [+S]V : {Γ Δ : Con}{A : Ty Δ}
          (x : Var A){δ : Γ ⇒ Δ}
          {B : Ty Γ}
          → x [ δ +S B ]V ≅ (x [ δ ]V) +tm B
-[+S]V v0 {_,_ δ {A} a} = wk-coh ∾ wk-coh+ ∾ cong+tm +T[,]T
-[+S]V (vS x) {δ , a} = wk-coh ∾ [+S]V x ∾ cong+tm +T[,]T
+[+S]V v0 {_,_ δ {A} a} = wk-coh ∾ wk-coh+ ∾ cong+tm2 +T[,]T
+[+S]V (vS x) {δ , a} = wk-coh ∾ [+S]V x ∾ cong+tm2 +T[,]T
 
 lem+Stm : ∀{Γ Δ Δ₁ : Con}(δ : Δ ⇒ Δ₁)(γ : Γ ⇒ Δ)(B : Ty Γ) → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
 lem+Stm • γ B = refl
-lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm [⊚]T) ∾ wk-coh+ -¹)
+lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm2 [⊚]T) ∾ wk-coh+ -¹)
 
 
 
 [+S]tm (var x) {δ} {B} = [+S]V x
-[+S]tm (JJ x δ A) {γ} {B} = cohOp (sym [⊚]T) ∾ JJ-eq (lem+Stm δ γ B) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm (sym [⊚]T)
+[+S]tm (JJ x δ A) {γ} {B} = cohOp (sym [⊚]T) ∾ JJ-eq (lem+Stm δ γ B) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
 
 \end{code}
 }

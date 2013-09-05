@@ -35,7 +35,7 @@ IC-T {Γ} (a =h b) = hom≡ (IC-tm a) (IC-tm b)
 
 IC-v {.(Γ , A)} {.(A +T A)} (v0 {Γ} {A}) = wk-coh ∾ wk-coh+ ∾ cohOp (wk-T (IC-T A))
 
-IC-v {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) = wk-coh ∾ [+S]V x ∾ cong+tm2 (IC-v x)
+IC-v {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) = wk-coh ∾ [+S]V x ∾ cong+tm (IC-v x)
 
 IC-⊚ • = refl
 IC-⊚ {Γ} (_,_ δ {A} a) = cm-eq (IC-⊚ δ) (cohOp [⊚]T ∾ IC-tm a) 
@@ -50,6 +50,12 @@ p1 = IdCm _ +S _
 
 p2 : ∀ {Γ A} → Tm {Γ , A} (A [ p1 ]T)
 p2 = var v0 ⟦ trans [+S]T (wk-T (IC-T _)) ⟫
+
+p2-v0 : ∀ {Γ A} → p2 {Γ} {A} ≅ var v0
+p2-v0 {A = A} = cohOp (trans [+S]T (wk-T (IC-T A)))
+
+Con-eq : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : Γ ≡ Δ) → subst Ty eq A ≡ B → _≡_ {_} {Con} (Γ , A) (Δ , B)
+Con-eq refl refl = refl
 
 \end{code}
 }

@@ -26,9 +26,11 @@
 \newcommand{\tig}{$\mathlarger{\tau} _{\infty-groupoid}$}
 \begin{document}
 \pagenumbering{gobble}
-\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
+%\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
+\title{$\omega$-Groupoids and beyond}
 
-\author{Li Nuo}
+\author{Thorsten Altenkirch \and Li Nuo \and Ondrej Rypacek}
+\newcommand{\txa}[1]{\marginpar{txa:#1}}
 
 \maketitle
 
@@ -59,18 +61,20 @@ infixl 7 _⊚_
 
 In \hott{}, a variant of \mltt{}, we reject proof-irrelevance so that the common interpretation of types as setoids has to be generalised. With the univalence axiom, we treat equivalence as equality and interpret types as \og{}. Inspired by Altenkirch's work \cite{txa:csl} and Brunerie's notes \cite{gb:wog}, we study and implement a syntactic definition of Grothendieck \wog{} in Agda which is a popular variant of \mltt{} and a famous theorem prover. It is the first step to model type theory with \wog{} so that we could eliminate the univalence axiom.
 
+\txa{Rewrite abstract at the end}
 
 \end{abstract}
 
 
 \section{Introduction}
 
+\txa{Rewrite text.}
 
 % Background
 
 %why do we need to use omega groupoid
 
-In Type Theory, a type could be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alt:99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proof terms namely inhabitants are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. To make it more precise, a weak equivalence
+In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alt:99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. To make it more precise, a weak equivalence
 between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
 corresponding inverse morphism $ g : B \to A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
@@ -99,6 +103,8 @@ This paper mainly explains an implementation of \wog{} following Brunerie's appr
 of Grothendieck \wog{}, then interpret it with a globular set and a dependent function. All coherence laws of the \wog{} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 
 \section{Syntax}
+
+\txa{More explanation what is going on}
 
 Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
 
@@ -579,6 +585,8 @@ lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm 
 
 \section{Some Important Derivable Constructions}
 
+\txa{Needs to be reordered, and better explained}
+
 \input{AIOOGS2}
 \input{GroupoidLaws}
 
@@ -586,12 +594,16 @@ lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm 
 
 \input{Suspension}
 
+\txa{Prove the laws of groupoid. Maybe even some higher order?}
+
 \section{Semantics}
 
 \paragraph{Globular Sets}
 
 \input{GlobularSets}
 
+\txa{Can we show that substitution is correct}
+\txa{Some discussion on why we don't need coherence laws.}
 
 \input{Semantics}
 % relation with categories with families

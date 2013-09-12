@@ -1,7 +1,7 @@
 #!/bin/bash
 
 for f in ./*.lagda; do 
-   agda --latex --include-path="/Users/nuoli/.agda" --include-path="." ${f%.lagda}.lagda 
+   agda --latex --include-path="/Users/txa/Agda/lib/src" --include-path="." ${f%.lagda}.lagda 
 done
 
 cd latex

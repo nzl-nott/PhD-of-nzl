@@ -289,14 +289,14 @@ data isContr where
   c*  : isContr (ε , *)
   ext : {Γ : Con} 
       → isContr Γ → {A : Ty Γ}(x : Var A) 
-        → isContr ((Γ , A) , (var (vS x) =h var v0))
+      → isContr (Γ , A , (var (vS x) =h var v0))
 \end{code}
 
 Context morphisms are defined inductively similar to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of this morphism.
 
 \begin{code}
 data _⇒_ where
-  •    : {Γ : Con} → Γ ⇒ ε
+  •   : {Γ : Con} → Γ ⇒ ε
   _,_ : {Γ Δ : Con}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T)) 
       → Γ ⇒ (Δ , A)
 \end{code}
@@ -417,6 +417,13 @@ since weakening doesn't introduce new variables in types and terms.
 (JJ cΔ δ A) +tm B = JJ cΔ (δ +S B) A ⟦ sym [+S]T ⟫ 
 
 
+
+cong+tm : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
+cong+tm (refl _) = refl _
+
+cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
+cong+tm2 refl = refl _
+
 wk-T : {Δ : Con}
        {A B C : Ty Δ}
        → A ≡ B → A +T C ≡ B +T C
@@ -424,14 +431,11 @@ wk-T refl = refl
 
 
 wk+S+T : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}{γ}{C} → A [ γ ]T ≡ C → A [ γ +S B ]T ≡ C +T B
-wk+S+T T = trans [+S]T (wk-T T)
+wk+S+T eq = trans [+S]T (wk-T eq)
 
+wk+S+tm : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}(a : Tm A){C : Ty Δ}{γ : Δ ⇒ Γ}{c : Tm C} → a [ γ ]tm ≅ c → a [ γ +S B ]tm ≅ c +tm B
+wk+S+tm _ eq = [+S]tm _ ∾ cong+tm eq
 
-cong+tm : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
-cong+tm (refl _) = refl _
-
-cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
-cong+tm2 refl = refl _
 
 
 wk-tm : {Γ Δ : Con}

@@ -27,15 +27,15 @@ IC-tm : ∀{Γ : Con}{A : Ty Γ}(a : Tm A) → a [ IdCm Γ ]tm ≅ a
 
 \AgdaHide{
 \begin{code}
+
 IdCm ε = •
-IdCm (Γ , A) = ((IdCm Γ) +S A) , wk-tm+ A (var v0 ⟦ wk-T (IC-T A) ⟫)
+IdCm (Γ , A) = (IdCm Γ) +S _ , var v0 ⟦ wk+S+T (IC-T _) ⟫
 
 IC-T {Γ} * = refl
 IC-T {Γ} (a =h b) = hom≡ (IC-tm a) (IC-tm b)
 
-IC-v {.(Γ , A)} {.(A +T A)} (v0 {Γ} {A}) = wk-coh ∾ wk-coh+ ∾ cohOp (wk-T (IC-T A))
-
-IC-v {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) = wk-coh ∾ [+S]V x ∾ cong+tm (IC-v x)
+IC-v {.(Γ , A)} {.(A +T A)} (v0 {Γ} {A}) = wk-coh ∾ cohOp (wk+S+T (IC-T _))
+IC-v {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) = wk-coh ∾ wk+S+tm (var x) (IC-v _)
 
 IC-⊚ • = refl
 IC-⊚ {Γ} (_,_ δ {A} a) = cm-eq (IC-⊚ δ) (cohOp [⊚]T ∾ IC-tm a) 
@@ -45,14 +45,27 @@ IC-tm {Γ} {A} (var x) = IC-v x
 IC-tm {Γ} {.(A [ δ ]T)} (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq (IC-⊚ δ)
 
 
+
 p1 : ∀ {Γ A} → (Γ , A) ⇒ Γ
 p1 = IdCm _ +S _
 
+
+p1-wk-T : ∀{Γ : Con}{A B : Ty Γ} → A [ p1 ]T ≡ A +T B
+p1-wk-T = wk+S+T (IC-T _)
+
+p1-wk-tm : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A} → a [ p1 ]tm ≅ a +tm B
+p1-wk-tm {a = a} = wk+S+tm a (IC-tm a)
+
+
 p2 : ∀ {Γ A} → Tm {Γ , A} (A [ p1 ]T)
-p2 = var v0 ⟦ trans [+S]T (wk-T (IC-T _)) ⟫
+p2 = var v0 ⟦ wk+S+T (IC-T _) ⟫
 
 p2-v0 : ∀ {Γ A} → p2 {Γ} {A} ≅ var v0
 p2-v0 {A = A} = cohOp (trans [+S]T (wk-T (IC-T A)))
+
+
+pr-beta : ∀ {Γ A} → (p1 {Γ} {A} , p2) ≡ IdCm _
+pr-beta = refl
 
 Con-eq : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : Γ ≡ Δ) → subst Ty eq A ≡ B → _≡_ {_} {Con} (Γ , A) (Δ , B)
 Con-eq refl refl = refl

@@ -30,21 +30,6 @@ To show the syntax framework is a valid internal language of \wog{}, as a first 
 
 We use a context with a type to denote the non-empty context.
 
-\begin{code}
-Con* = Σ Con Ty
-
-preCon : Con* → Con
-preCon = proj₁
-
-∥_∥ : Con* → Con
-∥_∥ = uncurry _,_
-
-lastTy : (Γ : Con*) → Ty (preCon Γ)
-lastTy  = proj₂
-
-lastTy' : (Γ : Con*) → Ty ∥ Γ ∥
-lastTy' (_ ,, A) = A +T A
-\end{code}
 
 We tried several ways to get the reflexivity terms. One of them is to define the suspension of contexts first and then suspend a term of the base type n times to get the n-cell reflexivity. The encoding of the suspension is finished and will be showed later, however we found that there is a simpler way to do it.
 
@@ -58,10 +43,13 @@ Here we are going to use some special contexts which are called \emph{loop conte
 A loop context is either a singleton context with only one variable of the base set, or it is inductively defined by adding a new variable of the same type as the last variable from a loop context and a morphism between these two variables. We will use a function to show what is a loop context.
 
 \begin{code}
+{-
 ΩCon : ℕ → Con*
 ΩCon 0 = ε ,, *
 ΩCon (suc n) = let (Γ ,, A) = ΩCon n in
                    (Γ , A , A +T A) ,, (var (vS v0) =h var v0)
+-}
+
 \end{code}
 
 A variable of the base type is a 0-cell, and the morphism between any two n-cells is an $n+1$-cell as mentioned before. A level-n loop context is the minimum non-empty context where the last variable is n-cell. We could easily prove such a context is contractible. Intuitively it is a special kind of contractible context where the branching approach is unique as we always create an $n+1$ cell for level-n loop context to get a level-(n+1) loop context. Since a loop context is contractible, all types are inhabited.  The approach to get the reflexivity is to use J-term with a corresponding loop context. The idea is easy but there are three difficult steps.
@@ -77,8 +65,10 @@ tylevel * = 0
 tylevel (_=h_ {A} a b) = suc (tylevel A)
 
 
+{-
 loopΩ-count : Con* → Con*
 loopΩ-count (_ ,, A) = ΩCon (tylevel A)
+-}
 
 \end{code}
 }
@@ -86,6 +76,8 @@ loopΩ-count (_ ,, A) = ΩCon (tylevel A)
 First we need to define a function called $loop\Omega$ to get the required loop context. $loop\Omega'$ is the complete version which returns five different things, the previous context, the last type, a context morphism between the input previous context and output previous context, a proof term that substitute the output last type with the context morphism is equal to the input last type and another proof term that it is a contractible context. It is necessary to combine them together, because it will become much more involved if they are defined separately.
 
 \begin{code}
+
+{-
 loopΩ' : (Γ : Con)(A : Ty Γ) 
        → Σ[ Ω ∶ Con ] Σ[ ω ∶ Ty Ω ] Σ[ γ ∶ Γ ⇒ Ω ] 
          Σ[ prf ∶ ω [ γ ]T ≡ A ] isContr (Ω , ω)
@@ -101,27 +93,28 @@ loopΩ' Γ (_=h_ {A} a b) with loopΩ' Γ A
 loopΩ : Con* → Con*
 loopΩ (Γ ,, A) with (loopΩ' Γ A)
 ... |  (Γ' ,, A' ,, γ' ,, prf' ,, isc) = Γ' ,, A'
+
+-}
 \end{code}
 
 
 \AgdaHide{
 \begin{code}
-
+{-
 loopΩ-Contr : (ne : Con*) → isContr ∥ loopΩ ne ∥
 loopΩ-Contr (Γ ,, A) with (loopΩ' Γ A)
 ... |  (Γ' ,, A' ,, γ' ,, prf' ,, isc) = isc
 
 
-
-Reflexive : Con* → Set
-Reflexive Γ = Tm {∥ Γ ∥} (var v0 =h var v0)
-
-refl* : Reflexive (ε ,, *)
-refl* = anyTypeInh c* -- this decides the type!!!
-
 loopΩ-refl : (ne : Con*) → Reflexive (loopΩ ne)
 loopΩ-refl ne = anyTypeInh (loopΩ-Contr ne)
+-}
 
+Reflexive : (Γ : Con)(A : Ty Γ) → Set
+Reflexive Γ A = Tm {Γ , A} (var v0 =h var v0)
+
+refl* : Reflexive ε *
+refl* = anyTypeInh c*
 
 \end{code}
 }
@@ -129,66 +122,24 @@ loopΩ-refl ne = anyTypeInh (loopΩ-Contr ne)
 The second problem is to define the context morphism, namely the substitution between the orignal context and the corresponding loop context. And the third problem is to prove type unification for the J-terms. The auxiliary functions make the proofs look much simpler that it was earlier. rep-T-p1
 
 \begin{code}
-Tm-refl' :  (ne : Con*) → Tm {∥ ne ∥} (var v0 =h var v0)
-Tm-refl' (Γ ,, A) = rpl-tm' (ε , *) A refl*  [ δ ]tm ⟦ prf1 ⟫
+
+Tm-refl'' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T  (ε , *) A (var v0 =h var v0))
+Tm-refl'' Γ A = rpl-tm (ε , *) A refl*
+
+Tm-refl' :  (Γ : Con)(A : Ty Γ) → Reflexive Γ A
+Tm-refl' Γ A = (Tm-refl'' Γ A)  [ δ ]tm ⟦ prf1 ⟫
   where
-    δ : (Γ , A) ⇒ rpl' (ε , *) A
+    δ : (Γ , A) ⇒ rpl (ε , *) A
     δ = 1-1cm-same (rep-T-p1 A)
 
-    prf : rpl-tm' (ε , *) A (var v0) [ δ ]tm ≅ var v0
+    prf : rpl-tm (ε , *) A (var v0) [ δ ]tm ≅ var v0
     prf = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
            (1-1cm-same-v0 (rep-T-p1 A))
 
-    prf1 : (var v0 =h var v0) ≡ rpl-T' (ε , *) A (var v0 =h var v0) [ δ ]T
-    prf1 = sym (trans (congT (rpl-T'-p2 (ε , *) A)) (hom≡ prf prf))
-
-\end{code}
-
-\AgdaHide{
-\begin{code}
-{-
-Tm-refl' (Γ ,, A) = rpl-tm Γ (ε , *) A refl* [ δ ]tm ⟦ prf1 ⟫
-
-  where
-    δ : (Γ , A) ⇒ (Γ ++ rep-C A (ε , *))
-    δ = rpl'-p3 (ε , *) A ⊚ 1-1cm-same (rep-T-p1 A)
-
-    
-    prf2 : (rep-tm A (var v0) [ rpl'-p2 (ε , *) A ]tm) [ 1-1cm-same (rep-T-p1 A) ]tm ≅ var v0
-    prf2 = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
-           (htrans wk-coh (cohOp (trans [+S]T (wk-T (trans (IC-T (rep-T A * [ filter-cm A ]T)) (rep-T-p1 A))))))
-
     prf1 : (var v0 =h var v0) ≡ rpl-T (ε , *) A (var v0 =h var v0) [ δ ]T
-    prf1 = sym (trans [⊚]T (trans (congT (trans (rpl'-p4 (ε , *) A _) (congT (rep-T-p2 A))))
-                              (hom≡ prf2 prf2)))
--}
-{-
+    prf1 = sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ prf prf))
 
-
--- [ p1 ++cm δ ]tm) ⟦ trans (trans prf1 (congT2 (sym (cor-inv δ)))) [⊚]T ⟫
-
--- this is a more general method to use replace function in defining terms
-
--- [ rpl'-p1 (ε , *) A ⊚ 1-1cm-same (trans (sym [⊚]T) (trans (congT2 (cor-inv _)) (rep-T-p1 A))) ]tm ⟦ {!!} ⟫
-  where
-    δ :  (Γ , A) ⇒ rep-C A (ε , *)
-    δ = (rep-C-cm-spl A *) ⊚ ((filter-cm A +S A) , (var v0 ⟦ trans [+S]T (wk-T (rep-T-p1 A)) ⟫))
-    
-    prf2 : rep-tm A (var v0) [ δ ]tm ≅ var v0
-    prf2 = htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh (cohOp (trans [+S]T (wk-T (rep-T-p1 A))))))
-
-    prf1 : (var v0 =h var v0) ≡ rep-T A (var v0 =h var v0) [ δ ]T
-    prf1 = sym (trans (congT (rep-T-p2 A)) (hom≡ prf2 prf2))
-
--- the old version
-Tm-refl' (Γ ,, A) with loopΩ' Γ A
-... | ΩΓ ,, ΩA ,, γ ,, prf ,, isc = 
-      JJ isc (γ +S A , wk-tm+ A (var v0 ⟦ wk-T prf ⟫)) (var v0 =h var v0) 
-      ⟦ sym (trans wk-hom (trans wk-hom+ (hom≡ (cohOp (wk-T prf))
-      (cohOp (wk-T prf))))) ⟫
--}
 \end{code}
-}
 
 The one above is special for the reflexivity of the last variable in a non-empty context. We also define a more general version which is the reflexivity for any term of any type in given context. 
 
@@ -243,26 +194,6 @@ apply-3 : {Γ : Con}
          →  Tm (apply-T (apply-T (apply-T D z) y) x)
 apply-3 f x y z = ((f [ apply-cm z ]tm) [ apply-cm y ]tm) [ apply-cm x ]tm
 
-
-Tm-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
-Tm-refl Γ A x = apply (Tm-refl' (Γ ,, A)) x ⟦ sym (hom≡ apply-x apply-x) ⟫ 
-
-\end{code}
-
-\AgdaHide{
-\begin{code}
-{- --old version : use loopΩ
-
-        (Tm-refl' (Γ ,, A) [ (IdCm _) , (x ⟦ IC-T A ⟫) ]tm) 
-        ⟦ sym (trans wk-hom (hom≡ (cohOp (IC-T A)) (cohOp (IC-T A)))) ⟫
--}
-\end{code}
-}
-
-We also construct the symmetry for the morphism between the last two variables.
-
-\begin{code}
-
 {-
 abs : {Γ : Con}{A B : Ty Γ} → 
            (Tm {Γ} A → Tm {Γ} B) 
@@ -277,23 +208,28 @@ fun : {Γ : Con}{A B : Ty Γ} →
     → (Tm {Γ} A → Tm {Γ} B) 
 fun t a = (t [ apply-cm a ]tm) ⟦ sym (trans +T[,]T (IC-T _)) ⟫
 
-{-
-Tm-sym* : Tm {ε , * , *} ((var (vS v0)) =h (var v0))
-        → Tm {ε , * , *} ((var v0) =h (var (vS v0)))
-Tm-sym* t = (t [ (• , (var v0)) , (var (vS v0)) ]tm)
--}
+
+Tm-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
+Tm-refl Γ A x = apply (Tm-refl' Γ A) x ⟦ sym (hom≡ apply-x apply-x) ⟫ 
+
+\end{code}
+
+We also construct the symmetry for the morphism between the last two variables.
+
+\begin{code}
+
 
 Tm-sym* : Tm {ε , * , * , _} (((var v0) =h (var (vS v0))) +T _)
 Tm-sym* = anyTypeInh (ext c* v0)
 
 Tm-sym' : (Γ : Con)(A : Ty Γ)
-        → Tm (rpl-T'  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
-Tm-sym' Γ A = rpl-tm' (ε , * , * , _) A Tm-sym*
+        → Tm (rpl-T  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
+Tm-sym' Γ A = rpl-tm (ε , * , * , _) A Tm-sym*
 
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
-       → Tm (rpl-T'  (ε , * , *) A (var (vS v0) =h var v0)) 
-       → Tm (rpl-T'  (ε , * , *) A (var v0 =h var (vS v0)))
-Tm-sym-fun Γ A = fun (Tm-sym' Γ A ⟦ sym (rpl-T'-p3 (ε , * , *) A) ⟫)
+       → Tm (rpl-T  (ε , * , *) A (var (vS v0) =h var v0)) 
+       → Tm (rpl-T  (ε , * , *) A (var v0 =h var (vS v0)))
+Tm-sym-fun Γ A = fun (Tm-sym' Γ A ⟦ sym (rpl-T-p3 (ε , * , *) A) ⟫)
 
 Tm-sym-fun2 : (Γ : Con)(A : Ty Γ) 
        → Tm {Γ , A , A +T A} (var (vS v0) =h var v0) 
@@ -323,23 +259,23 @@ Tm-sym : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
        → Tm (b =h a)
 Tm-sym Γ A a b t = (Tm-sym' Γ A) [ (((IdCm _) , (a ⟦ prf1 ⟫)) , (b ⟦ prf2 ⟫)) , 
                      t ⟦ prf3 ⟫ ]tm 
-                 ⟦ sym (trans (congT (rpl-T'-p3 {Γ} (ε , * , *) A {var (vS v0) =h var v0}
+                 ⟦ sym (trans (congT (rpl-T-p3 {Γ} (ε , * , *) A {var (vS v0) =h var v0}
                                         {var v0 =h var (vS v0)})) (trans +T[,]T 
-                 (trans (congT (rpl-T'-p2 (ε , * , *) A)) 
-                      (hom≡ (rpl-tm'-p1 (ε , *) A prf2 b) (htrans (rpl-tm'-p2 (ε , *) A prf2 v0) (rpl-tm'-p1 ε A prf1 a)))))) ⟫
+                 (trans (congT (rpl-T-p2 (ε , * , *) A)) 
+                      (hom≡ (rpl-tm-p1 (ε , *) A prf2 b) (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)))))) ⟫
 
   where
-    prf1 : (rep-T A * [ rpl'-pr2 ε A ]T) [ IdCm Γ ]T ≡ A
+    prf1 : (rep-T A * [ rpl-pr2 ε A ]T) [ IdCm Γ ]T ≡ A
     prf1 = trans (IC-T _) (rep-T-p1 A)
 
-    prf2 : (rep-T A * [ rpl'-pr2 (ε , *) A ]T) [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
-    prf2 = trans (congT (rpl-T'-p3 ε A)) (trans +T[,]T prf1)
+    prf2 : (rep-T A * [ rpl-pr2 (ε , *) A ]T) [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
+    prf2 = trans (congT (rpl-T-p3 ε A)) (trans +T[,]T prf1)
 
-    prf3 :  (rep-T A (var (vS v0) =h var v0) [ rpl'-pr2 (ε , * , *) A ]T) [
+    prf3 :  (rep-T A (var (vS v0) =h var v0) [ rpl-pr2 (ε , * , *) A ]T) [
               IdCm Γ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ ]T
               ≡ (a =h b)
-    prf3 = trans (congT (rpl-T'-p2 (ε , * , *) A)) 
-                     (hom≡ (htrans (rpl-tm'-p2 (ε , *) A prf2 v0) (rpl-tm'-p1 ε A prf1 a)) (rpl-tm'-p1 (ε , *) A prf2 b))
+    prf3 = trans (congT (rpl-T-p2 (ε , * , *) A)) 
+                     (hom≡ (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)) (rpl-tm-p1 (ε , *) A prf2 b))
 
 
 \end{code}
@@ -391,24 +327,23 @@ trans-Con : Con
 trans-Con = ε , * , * , (var (vS v0) =h var v0) , * , (var (vS (vS v0)) =h var v0)
 
 trans-Con' : {Γ : Con}(A : Ty Γ) → Con
-trans-Con' A = rpl' trans-Con A
+trans-Con' A = rpl trans-Con A
 
 trans-Ty : Ty trans-Con
 trans-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
 
 trans-Ty' : {Γ : Con}(A : Ty Γ) → Ty (trans-Con' A)
-trans-Ty' A = rpl-T' trans-Con A trans-Ty -- (var (vS (vS (vS (vS v0)))) =h var (vS v0))
-
+trans-Ty' A = rpl-T trans-Con A trans-Ty
 
 Tm-trans* : Tm trans-Ty
-Tm-trans* = anyTypeInh (ext (ext c* v0) (vS v0)) -- JJ (ext (ext c* v0) (vS v0)) (IdCm _) trans-Ty
+Tm-trans* = anyTypeInh (ext (ext c* v0) (vS v0))
 
-Tm-trans : {Γ : Con}(A : Ty Γ) → Tm (trans-Ty' A)
-Tm-trans A = rpl-tm' trans-Con A Tm-trans*
+Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (trans-Ty' A)
+Tm-trans' A = rpl-tm trans-Con A Tm-trans*
 
-Tm-trans' : (Γ : Con)(A : Ty Γ) 
+Tm-trans : (Γ : Con)(A : Ty Γ) 
          → Tm (rep-T A trans-Ty)
-Tm-trans' Γ A = rep-tm A Tm-trans*
+Tm-trans Γ A = rep-tm A Tm-trans*
 
 {-
 interpret-eq : {Γ : Con}(A : Ty Γ)(a b : Tm A)(p : Tm (a =h b)) → a ≅ b

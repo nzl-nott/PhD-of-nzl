@@ -21,7 +21,7 @@ data isContr       : Con → Set
 
 transportC : {Γ Δ : Con}{p : Γ ~Con Δ}(P : Con → Set) → P Γ → P Δ
 
-transportTy : 
+transportTy : {Γ Δ : Con}{p : Γ ~Con Δ} → (A : Ty Γ)(B : Ty Δ)(A ~Ty B) → (P : Ty Δ → Set) → P (transportC (λ x → P x → Set) p A) → P B
 
 data Con where
   ε   : Con

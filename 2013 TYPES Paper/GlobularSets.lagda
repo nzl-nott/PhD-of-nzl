@@ -2,6 +2,7 @@
 \AgdaHide{
 
 \begin{code}
+
 module GlobularSets where
 
 open import Data.Product
@@ -38,12 +39,22 @@ Idω A = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
 
 \begin{code}
 
+
+data _≅'_ {A : Glob} : {B : Glob} → ∣ A ∣ →  ∣ B ∣ → Set where
+  refl : (a : ∣ A ∣) → _≅'_ {A} {A} a a
+
+
 EqGlob : (A B : Glob) → (A ≡ B) → Σ (∣ A ∣ ≡ ∣ B ∣) (λ p → subst (λ x → x → x → ∞ Glob) p (homo A) ≡ homo B)
 EqGlob .B B refl = refl , refl
 
 EqHomo : {A B : Glob} → (p : A ≡ B) → {x y : ∣ A ∣} → {m n : ∣ B ∣} → (subst ∣_∣ p x ≡ m) → (subst ∣_∣ p y ≡ n) → ♭ (homo A x y) ≡ ♭ (homo B m n)
 EqHomo {.B} {B} refl {.m} {.n} {m} {n} refl refl = refl
 
+subst-p1 : {A B : Glob}(x : ∣ A ∣)(p q : A ≡ B) → subst ∣_∣ p x ≡ subst ∣_∣ q x
+subst-p1 {.∣_∣ ∣∣ .homo} {∣_∣ ∣∣ homo} x refl refl = refl
+
+subst-p2 : {A B C : Glob}(x : ∣ A ∣)(p : B ≡ C)(q : A ≡ B) → subst ∣_∣ p (subst ∣_∣ q x) ≡ subst ∣_∣ (trans q p) x
+subst-p2 {.∣_∣ ∣∣ .homo} {∣_∣ ∣∣ homo} x refl refl = refl
 
 data [_]_≅s_ {A : Glob}
          : (B : Glob) → ∣ A ∣ → ∣ B ∣ → Set where

@@ -217,6 +217,8 @@ Tm-refl Γ A x = apply (Tm-refl' Γ A) x ⟦ sym (hom≡ apply-x apply-x) ⟫
 
 We also construct the symmetry for the morphism between the last two variables.
 
+
+\AgdaHide{
 \begin{code}
 
 
@@ -325,9 +327,11 @@ Tm-sym Γ A a b t = (Tm-sym' Γ A [ rpl-sub-ind2 ε A (IdCm _) (IC-⊚ _) a b t 
                      (hom≡ (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)) (rpl-tm-p1 (ε , *) A prf2 b))
 -}
 \end{code}
+}
 
 Then the transitivity for three consecutive variables at the last of a context is as follows.
 
+\AgdaHide{
 \begin{code}
 
 transCon : {Γ : Con}(A : Ty Γ) → Con
@@ -362,7 +366,7 @@ Tm-trans-semantic Γ A p q =
     eq2 = trans +T[,]T eq1 
 
 \end{code}
-
+}
 
 
 \AgdaHide{

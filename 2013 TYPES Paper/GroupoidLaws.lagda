@@ -75,6 +75,7 @@ loopΩ-count (_ ,, A) = ΩCon (tylevel A)
 
 First we need to define a function called $loop\Omega$ to get the required loop context. $loop\Omega'$ is the complete version which returns five different things, the previous context, the last type, a context morphism between the input previous context and output previous context, a proof term that substitute the output last type with the context morphism is equal to the input last type and another proof term that it is a contractible context. It is necessary to combine them together, because it will become much more involved if they are defined separately.
 
+\AgdaHide{
 \begin{code}
 
 {-
@@ -96,7 +97,7 @@ loopΩ (Γ ,, A) with (loopΩ' Γ A)
 
 -}
 \end{code}
-
+}
 
 \AgdaHide{
 \begin{code}

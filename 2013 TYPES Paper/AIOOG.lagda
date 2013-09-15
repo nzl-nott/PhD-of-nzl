@@ -626,7 +626,7 @@ We would like to formalise a proof of that Id$\omega$ is an \wog{}, but the base
 
 
 \newpage
-\bibliography{my}
+\bibliography{my.bib}
 \bibliographystyle{plain}
 
 \end{document}

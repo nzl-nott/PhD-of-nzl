@@ -109,9 +109,15 @@ cong⟦⟧tm .B B γ t refl = refl
 Eq-product : {A : Set}{B : A → Set}{x y : A}{m : B x}{n : B y} → (p : x ≡ y) → subst B p m ≡ n → _≡_ {_} {Σ A B} (x , m) (y , n)
 Eq-product refl q = cong (λ x → _ , x) q
 
+
+postulate semWK-cm' : ∀ {Γ Δ : Con}(B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
+             (δ : Γ ⇒ Δ) → ⟦ δ ⟧cm γ ≡ ⟦ δ +S B ⟧cm (γ , v)
+
+semWK-cm = semWK-cm'
+{-
 semWK-cm B γ v • = refl
 semWK-cm B γ v (δ , a) = Eq-product (semWK-cm B γ v δ) {!!}
-
+-}
 postulate semWK-tm' : ∀ {Γ : Con}(A B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
              (a : Tm A) → subst ∣_∣ (semWK-ty A B γ v) (⟦ a ⟧tm γ) ≡ ⟦ a +tm B ⟧tm (γ , v)
 
@@ -141,29 +147,26 @@ ht.trans (ht.≡-subst-removable ∣_∣ (lemTy {A = B} δ γ) ((J Δ x B (⟦ �
 -- {! ⟦ JJ x (δ +S A) A₁ ⟦ [+S]T A₁ δ A ⟫ ⟧tm (γ , a) !}
 
 postulate lemTm' : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C) (a : Tm A) → subst ∣_∣ (lemTy A δ γ) (⟦ a ⟧tm (⟦ δ ⟧cm γ)) ≡  ⟦ a [ δ ]tm ⟧tm γ
--- lemTm = lemTm'
+lemTm = lemTm'
 
 -- subst
 
+{-
 
 lemTm .(A +T A) (δ , a) γ (var (v0 {Γ₁} {A})) = {!!}
 lemTm .(A +T B) δ γ (var (vS {Γ₁} {A} {B} x)) = {!!}
 lemTm .(A [ θ ]T) δ γ (JJ x θ A) = {!!}
-
-postulate semWK-cm' : ∀ {Γ Δ : Con}(B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
-             (δ : Γ ⇒ Δ) → ⟦ δ ⟧cm γ ≡ ⟦ δ +S B ⟧cm (γ , v)
-
-
+-}
 -- ⟦ JJ {Δ = Δ} x δ A ⟧tm γ ≡ Coh Δ x A (⟦ δ ⟧ γ)
 
 {-
 Id-tm : {Γ : Con}{A : Ty Γ}(t : Tm A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ Tm-refl _ _ t ⟧tm γ ∣
 Id-tm t γ = {!γ!}
--}
 
 R : (θ : Con)(isC : isContr θ) → ⟦ ε , * ⟧C → ⟦ θ ⟧C
 R .(ε , *) c* t = t
 R .(Γ , A , (var (vS x) =h var v0)) (ext {Γ} isC {A} x) (tt , g) = (R Γ isC (tt , g) , ⟦ var x ⟧tm (R Γ isC (tt , g))) , {!!} -- ⟦ Tm-refl _ _ (var x) ⟧tm {!!} -- {!!} , {!!}
+-}
 
 \end{code}
 }

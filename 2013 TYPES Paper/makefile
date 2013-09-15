@@ -1,3 +1,7 @@
+ifeq ($(AGDA_LIB),)
+	AGDA_LIB=~/Agda/lib/src
+endif
+
 all : pdf
 
 latex/%.tex : %.lagda

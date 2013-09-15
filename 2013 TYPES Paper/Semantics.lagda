@@ -15,6 +15,7 @@ open import Data.Unit
 open import Data.Product
 open import Coinduction
 open import Relation.Binary.PropositionalEquality
+open import GroupoidLaws
 
 \end{code}
 }
@@ -38,8 +39,6 @@ We temporarily postulate $Coh$ function so that we could define the interpretati
 
 \AgdaHide{
 \begin{code}
-
-
 
 postulate Coh' : (Θ : Con)(ic : isContr Θ)(A : Ty Θ) → (θ : ⟦ Θ ⟧C) 
              → ∣ ⟦ A ⟧T θ ∣
@@ -116,12 +115,17 @@ semWK-cm B γ v (δ , a) = Eq-product (semWK-cm B γ v δ) {!!}
 postulate semWK-tm' : ∀ {Γ : Con}(A B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
              (a : Tm A) → subst ∣_∣ (semWK-ty A B γ v) (⟦ a ⟧tm γ) ≡ ⟦ a +tm B ⟧tm (γ , v)
 
+
+semWK-tm = semWK-tm'
+{-
 semWK-tm A B γ v (var x) = refl
-semWK-tm .(A [ δ ]T) B γ v (JJ {Γ} {Δ} x δ A) = trans (subst-p2 (Coh' Δ x A (⟦ δ ⟧cm γ)) (semWK-ty (A [ δ ]T) B γ v)
-                                                         (lemTy A δ γ)) (sym (trans (cong⟦⟧tm _ _ (γ , v) (JJ x (δ +S B) A) [+S]T) {!!}))
+semWK-tm .(A [ δ ]T) B γ v (JJ {Γ} {Δ} x δ A) = {!!} trans (subst-p2 (Coh' Δ x A (⟦ δ ⟧cm γ)) (semWK-ty (A [ δ ]T) B γ v)
+                                                         (lemTy A δ γ)) (sym (trans (cong⟦⟧tm _ _ (γ , v) (JJ x (δ +S B) A) [+S]T) 
+         (trans (cong (λ y → subst (λ x₁ → ∣ ⟦ x₁ ⟧T (γ , v) ∣) [+S]T  (subst ∣_∣ (lemTy A (δ +S B) (γ , v)) y))  prf) {!!})))
   where
     prf : (Coh' Δ x A (⟦ δ +S B ⟧cm (γ , v))) ≡ subst (λ y → ∣ ⟦ A ⟧T y ∣) (semWK-cm B γ v δ) (Coh' Δ x A (⟦ δ ⟧cm γ))
     prf = {!!}
+-}
 
 
 {-
@@ -151,5 +155,15 @@ postulate semWK-cm' : ∀ {Γ Δ : Con}(B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦
 
 
 -- ⟦ JJ {Δ = Δ} x δ A ⟧tm γ ≡ Coh Δ x A (⟦ δ ⟧ γ)
+
+{-
+Id-tm : {Γ : Con}{A : Ty Γ}(t : Tm A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ Tm-refl _ _ t ⟧tm γ ∣
+Id-tm t γ = {!γ!}
+-}
+
+R : (θ : Con)(isC : isContr θ) → ⟦ ε , * ⟧C → ⟦ θ ⟧C
+R .(ε , *) c* t = t
+R .(Γ , A , (var (vS x) =h var v0)) (ext {Γ} isC {A} x) (tt , g) = (R Γ isC (tt , g) , ⟦ var x ⟧tm (R Γ isC (tt , g))) , {!!} -- ⟦ Tm-refl _ _ (var x) ⟧tm {!!} -- {!!} , {!!}
+
 \end{code}
 }

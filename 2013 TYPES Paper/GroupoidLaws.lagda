@@ -255,30 +255,75 @@ Tm-sym-fun2 Γ A t =
     eq2 = trans +T[,]T eq1
 
 
+rpl-sub : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
+          Tm (a =h b)
+     → Γ ⇒ rpl (ε , * , * , (var (vS v0) =h var v0)) A
+rpl-sub Γ A a b t = IdCm _ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ , t ⟦ prf3 ⟫
+  
+  where
+
+    prf1 : rpl-T ε A * [ IdCm Γ ]T ≡ A
+    prf1 = trans (IC-T _) (rep-T-p1 A)
+
+    prf2 : rpl-T (ε , *) A * [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
+    prf2 = trans (congT (rpl-T-p3 ε A)) (trans +T[,]T prf1)
+
+    prf3 :  rpl-T (ε , * , *) A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ ]T
+              ≡ (a =h b)
+    prf3 = trans (congT (rpl-T-p2 (ε , * , *) A)) 
+                     (hom≡ (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)) (rpl-tm-p1 (ε , *) A prf2 b))
+
+
+
+rpl-sub-ind : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
+     → Γ ⇒ rpl (Δ , *) A
+rpl-sub-ind Δ A γ p a =  γ , a ⟦ trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (trans (congT2 p) (IC-T _))) ⟫ -- a [ ? ]tm -- a [ γ ]tm
+
+rpl-sub-ind-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
+     → rpl-pr1 (Δ , *) A ⊚ (rpl-sub-ind Δ A γ p a) ≡ IdCm _
+rpl-sub-ind-p1 Δ A γ p a = trans (⊚wk (rpl-pr1 Δ A)) p
+
+{-
+rpl-sub-ind-p2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
+     → rpl-tm (Δ , *) A (var v0)  [ rpl-sub-ind Δ A γ p a ]tm ≅ a
+rpl-sub-ind-p2 Δ A γ p a = {!!} -- rpl-tm-p1 Δ A (trans (trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (congT2 p))) (IC-T _)) a
+
+
+rpl-sub-ind2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a b : Tm A) → (t : Tm (a =h b))
+     → Γ ⇒ rpl (Δ , * , * , ((var (vS v0)) =h (var v0))) A
+rpl-sub-ind2 Δ A γ p a b t =  (rpl-sub-ind (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b) , t ⟦ trans (congT (rpl-T-p2 (Δ , * , *) A)) (hom≡ {!!} {!(rpl-tm-p1)!}) ⟫
+--  (rpl-sub-ind-p2 (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b))
+
 Tm-sym : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
           Tm (a =h b)
        → Tm (b =h a)
-Tm-sym Γ A a b t = (Tm-sym' Γ A) [ (((IdCm _) , (a ⟦ prf1 ⟫)) , (b ⟦ prf2 ⟫)) , 
-                     t ⟦ prf3 ⟫ ]tm 
+Tm-sym Γ A a b t = (Tm-sym' Γ A [ rpl-sub-ind2 ε A (IdCm _) (IC-⊚ _) a b t ]tm) ⟦ {!!} ⟫ --  (Tm-sym' Γ A) [ rpl-sub-ind (rpl-sub-ind (rpl-sub-ind (IdCm _) a) {!b!}) {!!} ]tm ⟦ {!!} ⟫
+-}
+-- rpl-sub-ind (rpl-sub-ind (rpl-sub-ind (IdCm _) {!!}) {!!}) {!!}
+
+{-(Tm-sym' Γ A) [ IdCm _ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ , t ⟦ prf3 ⟫ ]tm 
                  ⟦ sym (trans (congT (rpl-T-p3 {Γ} (ε , * , *) A {var (vS v0) =h var v0}
                                         {var v0 =h var (vS v0)})) (trans +T[,]T 
                  (trans (congT (rpl-T-p2 (ε , * , *) A)) 
                       (hom≡ (rpl-tm-p1 (ε , *) A prf2 b) (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)))))) ⟫
 
   where
-    prf1 : (rep-T A * [ rpl-pr2 ε A ]T) [ IdCm Γ ]T ≡ A
+
+    prf1 : rpl-T ε A * [ IdCm Γ ]T ≡ A
     prf1 = trans (IC-T _) (rep-T-p1 A)
 
-    prf2 : (rep-T A * [ rpl-pr2 (ε , *) A ]T) [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
+    prf2 : rpl-T (ε , *) A * [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
     prf2 = trans (congT (rpl-T-p3 ε A)) (trans +T[,]T prf1)
 
-    prf3 :  (rep-T A (var (vS v0) =h var v0) [ rpl-pr2 (ε , * , *) A ]T) [
-              IdCm Γ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ ]T
+    prf3 :  rpl-T (ε , * , *) A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ ]T
               ≡ (a =h b)
     prf3 = trans (congT (rpl-T-p2 (ε , * , *) A)) 
                      (hom≡ (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)) (rpl-tm-p1 (ε , *) A prf2 b))
-
-
+-}
 \end{code}
 
 Then the transitivity for three consecutive variables at the last of a context is as follows.
@@ -341,10 +386,21 @@ Tm-trans* = anyTypeInh (ext (ext c* v0) (vS v0))
 
 Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (trans-Ty' A)
 Tm-trans' A = rpl-tm trans-Con A Tm-trans*
-
-Tm-trans : (Γ : Con)(A : Ty Γ) 
-         → Tm (rep-T A trans-Ty)
-Tm-trans Γ A = rep-tm A Tm-trans*
+{-
+Tm-trans : (Γ : Con)(A : Ty Γ)(x y z : Tm A)(p : Tm (x =h y))(q : Tm (y =h z))
+         → Tm (x =h z)
+Tm-trans Γ A x y z p q = (Tm-trans' A [ {!!} ]tm) ⟦ {!!} ⟫ -- rep-tm A Tm-trans*
+  where
+    γ : Γ ⇒ trans-Con' A
+    γ = IdCm _ , x ⟦ trans (IC-T _) (rep-T-p1 A) ⟫ , 
+                 y ⟦ trans (trans (congT (rpl-T-p1 (ε , *) A)) (congT [+S]T)) (trans +T[,]T (trans (IC-T _) (IC-T _))) ⟫ , 
+                 p ⟦ {!!} ⟫ , 
+                 {!z!} , 
+                 {!!}
+-}
+{-
+Tm-ρ : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tmtrans (Tm-refl Γ A x)
+-}
 
 {-
 interpret-eq : {Γ : Con}(A : Ty Γ)(a b : Tm A)(p : Tm (a =h b)) → a ≅ b

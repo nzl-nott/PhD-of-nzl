@@ -10,5 +10,5 @@ latex/%.tex : %.lagda
 latex/my.bbl : latex/my.bib latex/AIOOG.aux
 	bibtex latex/AIOOG
 
-pdf : latex/AIOOGS2.tex latex/GlobularSets.tex latex/GroupoidLaws.tex  latex/Suspension.tex latex/AIOOG.tex latex/AIOOG.bbl
+pdf : latex/AIOOGS2.tex latex/GlobularSets.tex latex/BasicLaws.tex latex/GroupoidLaws.tex  latex/Suspension.tex latex/AIOOG.tex latex/AIOOG.bbl
 	cd latex ; pdflatex AIOOG.tex ;	cd .. 

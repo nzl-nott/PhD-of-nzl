@@ -22,7 +22,11 @@ open import Data.Empty
           {γ : Γ ⇒ Δ} → (eq : B [ γ ]T ≡ A) → (B +T B) [ 1-1cm γ eq ]T ≡ A +T A
 1-1cm-T eq = trans +T[,]T (trans [+S]T (wk-T eq))
 
+tsp-Ty : {Γ Δ : Con}(eq : Γ ≡ Δ) → Ty Γ → Ty Δ
+tsp-Ty refl A = A
 
+tsp-Tm : {Γ Δ : Con}(eq : Γ ≡ Δ)(A : Ty Γ) → Tm A → Tm (tsp-Ty eq A)
+tsp-Tm refl A t = t
 
 ht-IdCm : {Γ Δ : Con} → Γ ≡ Δ → Γ ⇒ Δ
 ht-IdCm refl = IdCm _
@@ -376,6 +380,10 @@ rpl-T-p1 (Δ , A) A₁ = trans [⊚]T (trans (congT (rep-T-wk A₁ A)) (trans +T
 
 
 rpl-tm Δ A a = rep-tm A a [ rpl-pr2 Δ A ]tm
+
+
+lift-tm : {Γ : Con}{A : Ty Γ} → Tm A → Tm (rpl-T ε A *)
+lift-tm x =  x ⟦ rep-T-p1 _ ⟫
 
 
 rpl-T-p2 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{a b : Tm B}  → rpl-T Δ A (a =h b) ≡ (rpl-tm Δ A a =h rpl-tm Δ A b)

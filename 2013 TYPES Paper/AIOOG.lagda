@@ -481,7 +481,7 @@ wk-hom+ : {Γ Δ : Con}
          {B : Ty Γ} 
          {x y : Tm (A [ δ ]T +T B)}
          → (wk-tm+ B x =h wk-tm+ B y) ≡ (x =h y)
-wk-hom+ = hom≡ wk-coh+ wk-coh+  -- [+S]T
+wk-hom+ = hom≡ wk-coh+ wk-coh+
 
 wk-⊚ : {Γ Δ Θ : Con}
        {θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}{A : Ty Θ}
@@ -588,11 +588,13 @@ lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm 
 \txa{Needs to be reordered, and better explained}
 
 \input{AIOOGS2}
-\input{GroupoidLaws}
-
-
+% This includes Identity context morphism and projection
 
 \input{Suspension}
+
+\input{BasicLaws}
+
+\input{GroupoidLaws}
 
 \txa{Prove the laws of groupoid. Maybe even some higher order?}
 
@@ -606,9 +608,6 @@ lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm 
 \txa{Some discussion on why we don't need coherence laws.}
 
 \input{Semantics}
-% relation with categories with families
-
-% different ideas of how to do solve refl
 
 
 

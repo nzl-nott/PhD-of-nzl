@@ -11,6 +11,7 @@ open import AIOOGS2
 open import Relation.Binary.PropositionalEquality 
 open import Data.Product renaming (_,_ to _,,_)
 open import Data.Empty
+open import Data.Nat
 
 
 1-1cm : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → 
@@ -25,8 +26,8 @@ open import Data.Empty
 tsp-Ty : {Γ Δ : Con}(eq : Γ ≡ Δ) → Ty Γ → Ty Δ
 tsp-Ty refl A = A
 
-tsp-Tm : {Γ Δ : Con}(eq : Γ ≡ Δ)(A : Ty Γ) → Tm A → Tm (tsp-Ty eq A)
-tsp-Tm refl A t = t
+tsp-Tm : {Γ Δ : Con}(eq : Γ ≡ Δ){A : Ty Γ}{B : Ty Δ} → tsp-Ty eq A ≡ B → Tm A → Tm B
+tsp-Tm refl refl t = t
 
 ht-IdCm : {Γ Δ : Con} → Γ ≡ Δ → Γ ⇒ Δ
 ht-IdCm refl = IdCm _
@@ -52,6 +53,45 @@ ht-IdCm refl = IdCm _
                (eq : B ≡ A) → var v0 [ 1-1cm-same eq ]tm ≅ var v0
 1-1cm-same-v0 eq = wk-coh ∾ cohOp (congT eq) ∾ p2-v0
 
+
+-- append for contexts and context morphisms
+
+_++_ : Con → Con → Con
+
+
+cor : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Δ
+
+repeat-p1 : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Γ
+
+
+Γ ++ ε = Γ
+Γ ++ (Δ , A) = Γ ++ Δ , A [ cor Δ ]T
+
+
+repeat-p1 ε = IdCm _
+repeat-p1 (Δ , A) = repeat-p1 Δ ⊚ p1
+
+
+cor ε = •
+cor (Δ , A) = (cor Δ +S _) , var v0 ⟦ [+S]T ⟫
+
+
+
+_++cm_ : ∀ {Γ Δ Θ} → Γ ⇒ Δ → Γ ⇒ Θ → Γ ⇒ (Δ ++ Θ)
+cor-inv : ∀ {Γ Δ Θ} → {γ : Γ ⇒ Δ}(δ : Γ ⇒ Θ) → cor Θ ⊚ (γ ++cm δ) ≡ δ
+
+γ ++cm • = γ
+γ ++cm (δ , a) = γ ++cm δ , a ⟦ trans (sym [⊚]T) (congT2 (cor-inv _)) ⟫ 
+
+cor-inv • = refl
+cor-inv (δ , a) = cm-eq (trans (⊚wk _) (cor-inv δ)) 
+        (cohOp [⊚]T ∾ congtm (cohOp [+S]T) 
+        ∾ cohOp +T[,]T 
+        ∾ cohOp (trans (sym [⊚]T) (congT2 (cor-inv _))))
+
+
+id-cm++ : {Γ : Con}(Δ Θ : Con) → (Δ ⇒ Θ) → (Γ ++ Δ) ⇒ (Γ ++ Θ)
+id-cm++ Δ Θ γ = repeat-p1 Δ ++cm (γ ⊚ cor _)
 
 \end{code}
 }
@@ -266,6 +306,13 @@ rep-C-cm-spl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) →
 rep-C-cm-spl * B = IdCm _
 rep-C-cm-spl (_=h_ {A} a b) B = Σs (rep-C-cm-spl A B)
 
+
+rep-C-cm-spl-¹ : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → 
+                rep-C A (Δ , B) ⇒ (rep-C A Δ , rep-T A B)
+rep-C-cm-spl-¹ * B = IdCm _
+rep-C-cm-spl-¹ (_=h_ {A} a b) B = Σs (rep-C-cm-spl-¹ A B)
+
+
 rep-C-cm-spl2 : {Γ : Con}(A : Ty Γ)
               → (rep-C A ε , rep-T A * ,  rep-T A * +T _) ⇒ ΣC (rep-C A ε)
 rep-C-cm-spl2 * = IdCm _
@@ -355,6 +402,12 @@ rpl-pr1  : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl Δ A ⇒ Γ
 
 rpl-pr2 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl Δ A ⇒ rep-C A Δ
 
+{-
+rpl-pr-beta : {Γ : Con}(Δ : Con)(A : Ty Γ) 
+            → Γ ⇒ Γ 
+            → Γ ⇒ rep-C A Δ 
+            → Γ ⇒ rpl Δ A
+-}
 \end{code}
 
 \AgdaHide{
@@ -372,6 +425,10 @@ rpl-T Δ A B = rep-T A B [ rpl-pr2 Δ A ]T
 rpl-pr2 ε A = filter-cm A
 rpl-pr2 (Δ , A) A₁ =  rep-C-cm-spl A₁ A ⊚ ((rpl-pr2 Δ A₁ +S _) , var v0 ⟦ [+S]T ⟫)
 
+{-
+rpl-pr-beta ε A idc γ = idc
+rpl-pr-beta (Δ , B) A idc γ = rpl-pr-beta Δ A idc (p1 ⊚ rep-C-cm-spl-¹ A B ⊚ γ) , {!p2 {γ}!}
+-}
 
 rpl-T-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-T Δ A * ≡ A [ rpl-pr1 Δ A ]T
 rpl-T-p1 ε A = trans (rep-T-p1 A) (sym (IC-T _))
@@ -394,18 +451,85 @@ rpl-T-p3 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{C : Ty Δ}
           → rpl-T (Δ , B) A (C +T B) ≡ rpl-T Δ A C +T _
 rpl-T-p3 _ A = trans [⊚]T (trans (congT (rep-T-p3 A)) (trans +T[,]T [+S]T))
 
+rpl-T-p3-wk : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{C : Ty Δ}{γ : Γ ⇒ rpl Δ A}{b : Tm ((rep-T A B [ rpl-pr2 Δ A ]T) [ γ ]T)}
+          → rpl-T (Δ , B) A (C +T B) [ γ , b ]T ≡ rpl-T Δ A C [ γ ]T
+rpl-T-p3-wk Δ A = trans (congT (rpl-T-p3 Δ A)) +T[,]T
 
 
-rpl-tm-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{γ : Γ ⇒ rpl Δ A}(prf : (rep-T A B [ rpl-pr2 Δ A ]T) [ γ ]T ≡ A)
-             (b : Tm A) → rpl-tm (Δ , B) A (var v0) [ γ , b ⟦ prf ⟫ ]tm ≅ b
-rpl-tm-p1 Δ A prf b = congtm ([⊚]tm (rep-tm A (var v0)) ∾ congtm (rep-tm-p1 A) ∾ wk-coh ∾ wk-coh+) ∾ wk-coh ∾ cohOp prf
+rpl-tm-v0 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{γ : Γ ⇒ rpl Δ A}(prf : (rep-T A B [ rpl-pr2 Δ A ]T) [ γ ]T ≡ A)
+             {b : Tm A} → rpl-tm (Δ , B) A (var v0) [ γ , b ⟦ prf ⟫ ]tm ≅ b
+rpl-tm-v0 Δ A prf = congtm ([⊚]tm (rep-tm A (var v0)) ∾ congtm (rep-tm-p1 A) ∾ wk-coh ∾ wk-coh+) ∾ wk-coh ∾ cohOp prf
 
 
-rpl-tm-p2 : {Γ : Con}(Δ : Con)(A : Ty Γ){B C : Ty Δ}{γ : Γ ⇒ rpl Δ A}(prf : (rep-T A B [ rpl-pr2 Δ A ]T) [ γ ]T ≡ A)
-             {b : Tm A}(x : Var C) → rpl-tm (Δ , B) A (var (vS x)) [ γ , b ⟦ prf ⟫ ]tm ≅ rpl-tm Δ A (var x) [ γ ]tm
-rpl-tm-p2 Δ A prf x = congtm ([⊚]tm (rep-tm A (var (vS x))) ∾ (congtm (rep-tm-p2 A x))  ∾ +tm[,]tm (rep-tm A (var x))  ∾ ([+S]tm (rep-tm A (var x)))  ) ∾ +tm[,]tm (rep-tm A (var x) [ rpl-pr2 Δ A ]tm)
+rpl-tm-vS : {Γ : Con}(Δ : Con)(A : Ty Γ){B C : Ty Δ}{γ : Γ ⇒ rpl Δ A}
+             {b : Tm (rpl-T Δ A B [ γ ]T)}{x : Var C} → rpl-tm (Δ , B) A (var (vS x)) [ γ , b ]tm ≅ rpl-tm Δ A (var x) [ γ ]tm
+rpl-tm-vS Δ A {x = x} = congtm ([⊚]tm (rep-tm A (var (vS x))) ∾ (congtm (rep-tm-p2 A x))  ∾ +tm[,]tm (rep-tm A (var x))  ∾ ([+S]tm (rep-tm A (var x)))) ∾ +tm[,]tm (rep-tm A (var x) [ rpl-pr2 _ A ]tm)
 
 
+-- basic example
+
+base-1 : {Γ : Con}{A : Ty Γ} → rpl (ε , *) A ≡ (Γ , A)
+base-1 = Con-eq refl (rep-T-p1 _)
+
+
+-- some useful lemmas
+
+rpl*-A : {Γ : Con}{A : Ty Γ} → rpl-T ε A * [ IdCm Γ ]T ≡ A
+rpl*-A = trans (IC-T _) (rep-T-p1 _)
+
+rpl*-a : {Γ : Con}(A : Ty Γ){a : Tm A} → rpl-tm (ε , *) A (var v0) [ IdCm Γ , a ⟦ rpl*-A ⟫ ]tm ≅ a
+rpl*-a A = rpl-tm-v0 ε A (rpl*-A)
+
+rpl*-A2 : {Γ : Con}(A : Ty Γ){a : Tm (rpl-T ε A * [ IdCm Γ ]T)} 
+        → rpl-T (ε , *) A * [ IdCm Γ , a ]T ≡ A
+rpl*-A2 A = trans (rpl-T-p3-wk ε A) rpl*-A
+
+{-
+rpl*-An : {Γ Δ : Con}(A : Ty Γ)(γ : Γ ⇒ rep-C A Δ) -- ( ≡ Γ ++ rep-C A Δ != rpl Δ A)
+        → rpl-T Δ A * [ {!!} ]T ≡ A
+rpl*-An = {!!}
+-}
+rpl-xy :  {Γ : Con}(A : Ty Γ)(a b : Tm A)
+       → rpl-T (ε , * , *) A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ ]T
+              ≡ (a =h b)
+rpl-xy A a b = trans (congT (rpl-T-p2 (ε , * , *) A)) 
+             (hom≡ ((rpl-tm-vS (ε , *) A)  ∾ rpl*-a A) 
+                   (rpl-tm-v0 (ε , *) A (rpl*-A2 A)))
+
+
+
+rpl-sub : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
+          Tm (a =h b)
+        → Γ ⇒ rpl (ε , * , * , (var (vS v0) =h var v0)) A
+rpl-sub Γ A a b t = IdCm _ , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ , t ⟦ rpl-xy A a b ⟫
+  
+
+
+{-
+rpl-sub-ind : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
+     → Γ ⇒ rpl (Δ , *) A
+rpl-sub-ind Δ A γ p a =  γ , a ⟦ trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (trans (congT2 p) (IC-T _))) ⟫
+
+rpl-sub-ind-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
+     → rpl-pr1 (Δ , *) A ⊚ (rpl-sub-ind Δ A γ p a) ≡ IdCm _
+rpl-sub-ind-p1 Δ A γ p a = trans (⊚wk (rpl-pr1 Δ A)) p
+
+
+rpl-sub-ind-p2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
+     → rpl-tm (Δ , *) A (var v0)  [ rpl-sub-ind Δ A γ p a ]tm ≅ a
+rpl-sub-ind-p2 {Γ} Δ A γ p a = {!!} -- htrans (rpl-tm-p1 {Γ} Δ A {*} {γ} {!!} {!!}) {!!}  -- rpl-tm-p1 Δ A (trans (trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (congT2 p))) (IC-T _)) a
+
+
+rpl-sub-ind2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
+     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a b : Tm A) → (t : Tm (a =h b))
+     → Γ ⇒ rpl (Δ , * , * , ((var (vS v0)) =h (var v0))) A
+rpl-sub-ind2 Δ A γ p a b t =  (rpl-sub-ind (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b) , t ⟦ trans (congT (rpl-T-p2 (Δ , * , *) A)) (hom≡ {!!} {!(rpl-tm-p1)!}) ⟫
+--  (rpl-sub-ind-p2 (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b))
+
+-}
 
 
 
@@ -439,43 +563,5 @@ filter-cm-p (_=h_ {A} a b) = Σs (filter-cm-p A)
 
 
 
-{-
-_++_ : Con → Con → Con
-
-
-cor : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Δ
-
-repeat-p1 : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Γ
-
-
-Γ ++ ε = Γ
-Γ ++ (Δ , A) = Γ ++ Δ , A [ cor Δ ]T
-
-
-repeat-p1 ε = IdCm _
-repeat-p1 (Δ , A) = repeat-p1 Δ ⊚ p1
-
-
-cor ε = •
-cor (Δ , A) = (cor Δ +S _) , var v0 ⟦ [+S]T ⟫
-
-
-
-_++cm_ : ∀ {Γ Δ Θ} → Γ ⇒ Δ → Γ ⇒ Θ → Γ ⇒ (Δ ++ Θ)
-cor-inv : ∀ {Γ Δ Θ} → {γ : Γ ⇒ Δ}(δ : Γ ⇒ Θ) → cor Θ ⊚ (γ ++cm δ) ≡ δ
-
-γ ++cm • = γ
-γ ++cm (δ , a) = γ ++cm δ , a ⟦ trans (sym [⊚]T) (congT2 (cor-inv _)) ⟫ 
-
-cor-inv • = refl
-cor-inv (δ , a) = cm-eq (trans (⊚wk _) (cor-inv δ)) 
-        (cohOp [⊚]T ∾ congtm (cohOp [+S]T) 
-        ∾ cohOp +T[,]T 
-        ∾ cohOp (trans (sym [⊚]T) (congT2 (cor-inv _))))
-
-
-id-cm++ : {Γ : Con}(Δ Θ : Con) → (Δ ⇒ Θ) → (Γ ++ Δ) ⇒ (Γ ++ Θ)
-id-cm++ Δ Θ γ = repeat-p1 Δ ++cm (γ ⊚ cor _)
--}
 \end{code}
 }

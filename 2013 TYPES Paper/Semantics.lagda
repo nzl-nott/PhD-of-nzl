@@ -49,7 +49,7 @@ Coh = Coh'
 
 
 ⟦ * ⟧T γ = G
-⟦ _=h_ {A} u v ⟧T γ = ♭ (homo (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
+⟦ _=h_ {A} u v ⟧T γ = ♭ (hom (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
 
 \end{code}
 }
@@ -73,7 +73,7 @@ semWK-cm : ∀ {Γ Δ : Con}(B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ 
 \begin{code}
 
 semWK-ty * B γ v = refl
-semWK-ty (_=h_ {A} a b) B γ v = EqHomo (semWK-ty A _ _ _) (semWK-tm _ _ _ _ a) (semWK-tm _ _ _ _ b)
+semWK-ty (_=h_ {A} a b) B γ v = EqHom (semWK-ty A _ _ _) (semWK-tm _ _ _ _ a) (semWK-tm _ _ _ _ b)
 
 -- lemma 11
 π : {Γ : Con}{A : Ty Γ}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
@@ -92,7 +92,7 @@ lemTm : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C) (a : Tm A) → 
 
 
 lemTy {Γ} {Δ} * δ γ = refl
-lemTy {Γ} {Δ} (_=h_ {A} a b) δ γ = EqHomo (lemTy A _ _) (lemTm _ _ _ a) (lemTm _ _ _ b) -- cong ♭ (≅-to-≡ (Eqhomo (lemTy {A = A} δ γ) (lemTm _ _ a) (lemTm _ _ b)))
+lemTy {Γ} {Δ} (_=h_ {A} a b) δ γ = EqHom (lemTy A _ _) (lemTm _ _ _ a) (lemTm _ _ _ b) -- cong ♭ (≅-to-≡ (Eqhomo (lemTy {A = A} δ γ) (lemTm _ _ a) (lemTm _ _ b)))
 
 ⟦_⟧tm (var x) γ = π x γ
 ⟦_⟧tm {Γ} (JJ {Δ = Δ} x δ A) γ = subst ∣_∣ (lemTy A δ γ) (Coh Δ x A (⟦ δ ⟧cm γ))

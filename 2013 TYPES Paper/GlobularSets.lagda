@@ -18,9 +18,9 @@ To interpret the syntax, we need globular sets. Globular sets are defined coindu
 record Glob : Set₁ where
   constructor _∣∣_
   field
-    ∣_∣   : Set
-    homo : ∣_∣ →  ∣_∣ → ∞ Glob
-open Glob public
+    obj  : Set
+    hom : obj →  obj → ∞ Glob
+open Glob public renaming (obj to ∣_∣) 
 \end{code}
 
 Indeed we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
@@ -44,17 +44,17 @@ data _≅'_ {A : Glob} : {B : Glob} → ∣ A ∣ →  ∣ B ∣ → Set where
   refl : (a : ∣ A ∣) → _≅'_ {A} {A} a a
 
 
-EqGlob : (A B : Glob) → (A ≡ B) → Σ (∣ A ∣ ≡ ∣ B ∣) (λ p → subst (λ x → x → x → ∞ Glob) p (homo A) ≡ homo B)
+EqGlob : (A B : Glob) → (A ≡ B) → Σ (∣ A ∣ ≡ ∣ B ∣) (λ p → subst (λ x → x → x → ∞ Glob) p (hom A) ≡ hom B)
 EqGlob .B B refl = refl , refl
 
-EqHomo : {A B : Glob} → (p : A ≡ B) → {x y : ∣ A ∣} → {m n : ∣ B ∣} → (subst ∣_∣ p x ≡ m) → (subst ∣_∣ p y ≡ n) → ♭ (homo A x y) ≡ ♭ (homo B m n)
-EqHomo {.B} {B} refl {.m} {.n} {m} {n} refl refl = refl
+EqHom : {A B : Glob} → (p : A ≡ B) → {x y : ∣ A ∣} → {m n : ∣ B ∣} → (subst ∣_∣ p x ≡ m) → (subst ∣_∣ p y ≡ n) → ♭ (hom A x y) ≡ ♭ (hom B m n)
+EqHom {.B} {B} refl {.m} {.n} {m} {n} refl refl = refl
 
 subst-p1 : {A B : Glob}(x : ∣ A ∣)(p q : A ≡ B) → subst ∣_∣ p x ≡ subst ∣_∣ q x
-subst-p1 {.∣_∣ ∣∣ .homo} {∣_∣ ∣∣ homo} x refl refl = refl
+subst-p1 {.∣_∣ ∣∣ .hom} {∣_∣ ∣∣ hom} x refl refl = refl
 
 subst-p2 : {A B C : Glob}(x : ∣ A ∣)(p : B ≡ C)(q : A ≡ B) → subst ∣_∣ p (subst ∣_∣ q x) ≡ subst ∣_∣ (trans q p) x
-subst-p2 {.∣_∣ ∣∣ .homo} {∣_∣ ∣∣ homo} x refl refl = refl
+subst-p2 {.∣_∣ ∣∣ .hom} {∣_∣ ∣∣ hom} x refl refl = refl
 
 data [_]_≅s_ {A : Glob}
          : (B : Glob) → ∣ A ∣ → ∣ B ∣ → Set where
@@ -67,7 +67,7 @@ module UniverseGS (U : Set)(El : U → Set) where
   record uGlob : Set where
     field
       ∣_∣u   : U
-      uhomo : El ∣_∣u → El ∣_∣u → ∞ uGlob
+      uhom : El ∣_∣u → El ∣_∣u → ∞ uGlob
   open uGlob
 
 
@@ -76,7 +76,7 @@ module UniverseGS (U : Set)(El : U → Set) where
   Π A B = 
     record 
     { ∣_∣u = {!El ∣ A ∣u !}
-    ; uhomo = {!!} 
+    ; uhom = {!!} 
     }
 -}
 -- Globular Sets indexed by Types
@@ -84,8 +84,8 @@ module UniverseGS (U : Set)(El : U → Set) where
 Π : (A : Set)(B : A → Glob) → Glob
 Π A B = 
   record 
-  { ∣_∣ = (a : A) → ∣ B a ∣
-  ; homo = λ f g → ♯ Π A (λ x → ♭ (homo (B x) (f x) (g x)))
+  { obj = (a : A) → ∣ B a ∣
+  ; hom = λ f g → ♯ Π A (λ x → ♭ (hom (B x) (f x) (g x)))
   }
 
 -- Globular Sets indexed by Globular Sets
@@ -94,7 +94,7 @@ module UniverseGS (U : Set)(El : U → Set) where
 record _⇒Glob (A : Glob) : Set₁ where
   field
     ∣_∣f   : ∣ A ∣ → Set
-    homof : (a a' : ∣ A ∣) → ∣_∣f a → ∣_∣f a' → ♭ (homo A a a') ⇒Glob
+    homf : (a a' : ∣ A ∣) → ∣_∣f a → ∣_∣f a' → ♭ (hom A a a') ⇒Glob
 open _⇒Glob
 
 

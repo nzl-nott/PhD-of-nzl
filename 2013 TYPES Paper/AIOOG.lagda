@@ -590,7 +590,7 @@ lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm 
 \input{AIOOGS2}
 % This includes Identity context morphism and projection
 
-\input{Suspension}
+\input{Suspension & lifting functions}
 
 \input{BasicLaws}
 

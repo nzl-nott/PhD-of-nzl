@@ -22,8 +22,16 @@ open import Suspension
 One of the most important feature of the contractible contexts is that any type in a contractible context is inhabited. It can be simply proved by using J-term and identity morphism.
 
 \begin{code}
-anyTypeInh : ∀{Γ} → {A : Ty Γ} → isContr Γ → Tm {Γ} A
-anyTypeInh {A = A} ctr = JJ ctr (IdCm _)  A ⟦ sym (IC-T _) ⟫
+Coh-Contr : {Γ : Con}{A : Ty Γ} →
+             isContr Γ 
+           → Tm A
+Coh-Contr isC = JJ isC (IdCm _) _ ⟦ sym (IC-T _) ⟫
+
+
+Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) →
+             isContr Δ
+           → Tm {rpl Δ A} (rpl-T Δ A B)
+Coh-rpl {Γ} {Δ} A B isc = JJ (rep-C-ε-Contr A isc) (rpl-pr2 Δ A) (rep-T A B)
 
 
 apply-cm : {Γ : Con}{A : Ty Γ} →
@@ -53,7 +61,6 @@ apply : {Γ : Con}{A : Ty Γ}{B : Ty (Γ , A)} →
         (x : Tm A) 
       → Tm (apply-T B x)
 apply t x = t [ apply-cm x ]tm
-
 
 apply-2 : {Γ : Con}
           {A : Ty Γ}
@@ -92,16 +99,14 @@ We tried several ways to get the reflexivity terms. One of them is to define the
 \begin{code}
 
 refl* :  Tm {ε , *} (var v0 =h var v0)
-refl* = anyTypeInh c*
+refl* = Coh-Contr c*
 
 
+Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T  (ε , *) A (var v0 =h var v0))
+Tm-refl' Γ A = rpl-tm (ε , *) A refl*
 
-fun-refl :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T  (ε , *) A (var v0 =h var v0))
-fun-refl Γ A = rpl-tm (ε , *) A refl*
-
-
-Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
-Tm-refl' Γ A = (fun-refl Γ A)  [ δ ]tm ⟦ prf1 ⟫
+Tm-refl :  (Γ : Con)(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
+Tm-refl Γ A = (Tm-refl' Γ A)  [ δ ]tm ⟦ prf1 ⟫
   where
     δ : (Γ , A) ⇒ rpl (ε , *) A
     δ = 1-1cm-same (rep-T-p1 A)
@@ -119,10 +124,13 @@ The one above is special for the reflexivity of the last variable in a non-empty
 
 \begin{code}
 
-Tm-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
-Tm-refl Γ A x = apply (Tm-refl' Γ A) x ⟦ sym (hom≡ apply-x apply-x) ⟫ 
---  sym (trans (congT (congT (rep-T-p2 A))) {!!})
--- apply (fun-refl Γ A) (lift-tm x) ⟦ sym (trans {!!} (hom≡ apply-x apply-x)) ⟫
+Fun-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
+Fun-refl Γ A x = (Tm-refl' Γ A) 
+                 [ (IdCm _) , x ⟦ rpl*-A ⟫ ]tm 
+                 ⟦ sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫ 
+
+-- apply (Tm-refl Γ A) x ⟦ sym (hom≡ apply-x apply-x) ⟫
+
 \end{code}
 
 We also construct the symmetry for the morphism between the last two variables.
@@ -133,16 +141,16 @@ We also construct the symmetry for the morphism between the last two variables.
 
 
 Tm-sym* : Tm {ε , * , * , _} (((var v0) =h (var (vS v0))) +T _)
-Tm-sym* = anyTypeInh (ext c* v0)
+Tm-sym* = Coh-Contr (ext c* v0)
 
-Tm-sym' : (Γ : Con)(A : Ty Γ)
+Tm-sym : (Γ : Con)(A : Ty Γ)
         → Tm (rpl-T  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
-Tm-sym' Γ A = rpl-tm (ε , * , * , _) A Tm-sym*
+Tm-sym Γ A = rpl-tm (ε , * , * , _) A Tm-sym*
 
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
        → Tm (rpl-T  (ε , * , *) A (var (vS v0) =h var v0)) 
        → Tm (rpl-T  (ε , * , *) A (var v0 =h var (vS v0)))
-Tm-sym-fun Γ A = fun (Tm-sym' Γ A ⟦ sym (rpl-T-p3 (ε , * , *) A) ⟫)
+Tm-sym-fun Γ A = fun (Tm-sym Γ A ⟦ sym (rpl-T-p3 (ε , * , *) A) ⟫)
 
 Tm-sym-fun2 : (Γ : Con)(A : Ty Γ) 
        → Tm {Γ , A , A +T A} (var (vS v0) =h var v0) 
@@ -167,75 +175,14 @@ Tm-sym-fun2 Γ A t =
     eq2 = trans +T[,]T eq1
 
 
-rpl-sub : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
-          Tm (a =h b)
-     → Γ ⇒ rpl (ε , * , * , (var (vS v0) =h var v0)) A
-rpl-sub Γ A a b t = IdCm _ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ , t ⟦ prf3 ⟫
-  
-  where
-
-    prf1 : rpl-T ε A * [ IdCm Γ ]T ≡ A
-    prf1 = trans (IC-T _) (rep-T-p1 A)
-
-    prf2 : rpl-T (ε , *) A * [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
-    prf2 = trans (congT (rpl-T-p3 ε A)) (trans +T[,]T prf1)
-
-    prf3 :  rpl-T (ε , * , *) A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ ]T
-              ≡ (a =h b)
-    prf3 = trans (congT (rpl-T-p2 (ε , * , *) A)) 
-                     (hom≡ (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)) (rpl-tm-p1 (ε , *) A prf2 b))
-
-
-
-rpl-sub-ind : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
-     → Γ ⇒ rpl (Δ , *) A
-rpl-sub-ind Δ A γ p a =  γ , a ⟦ trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (trans (congT2 p) (IC-T _))) ⟫ -- a [ ? ]tm -- a [ γ ]tm
-
-rpl-sub-ind-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
-     → rpl-pr1 (Δ , *) A ⊚ (rpl-sub-ind Δ A γ p a) ≡ IdCm _
-rpl-sub-ind-p1 Δ A γ p a = trans (⊚wk (rpl-pr1 Δ A)) p
-
-{-
-rpl-sub-ind-p2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
-     → rpl-tm (Δ , *) A (var v0)  [ rpl-sub-ind Δ A γ p a ]tm ≅ a
-rpl-sub-ind-p2 {Γ} Δ A γ p a = htrans (rpl-tm-p1 {Γ} Δ A {*} {γ} {!!} {!!}) {!!}  -- rpl-tm-p1 Δ A (trans (trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (congT2 p))) (IC-T _)) a
-
-
-rpl-sub-ind2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a b : Tm A) → (t : Tm (a =h b))
-     → Γ ⇒ rpl (Δ , * , * , ((var (vS v0)) =h (var v0))) A
-rpl-sub-ind2 Δ A γ p a b t =  (rpl-sub-ind (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b) , t ⟦ trans (congT (rpl-T-p2 (Δ , * , *) A)) (hom≡ {!!} {!(rpl-tm-p1)!}) ⟫
---  (rpl-sub-ind-p2 (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b))
-
-Tm-sym : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
+Fun-sym : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
           Tm (a =h b)
        → Tm (b =h a)
-Tm-sym Γ A a b t = (Tm-sym' Γ A [ rpl-sub-ind2 ε A (IdCm _) (IC-⊚ _) a b t ]tm) ⟦ {!!} ⟫ --  (Tm-sym' Γ A) [ rpl-sub-ind (rpl-sub-ind (rpl-sub-ind (IdCm _) a) {!b!}) {!!} ]tm ⟦ {!!} ⟫
--}
--- rpl-sub-ind (rpl-sub-ind (rpl-sub-ind (IdCm _) {!!}) {!!}) {!!}
+Fun-sym Γ A a b t = (Tm-sym Γ A) [ rpl-sub Γ A a b t ]tm 
+         ⟦ sym (trans (rpl-T-p3-wk (ε , * , *) A) (trans (congT (rpl-T-p2 (ε , * , *) A)) 
+           (hom≡ (rpl-tm-v0 (ε , *) A (rpl*-A2 A)) (htrans (rpl-tm-vS (ε , *) A)
+                 (rpl*-a A))))) ⟫
 
-{-(Tm-sym' Γ A) [ IdCm _ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ , t ⟦ prf3 ⟫ ]tm 
-                 ⟦ sym (trans (congT (rpl-T-p3 {Γ} (ε , * , *) A {var (vS v0) =h var v0}
-                                        {var v0 =h var (vS v0)})) (trans +T[,]T 
-                 (trans (congT (rpl-T-p2 (ε , * , *) A)) 
-                      (hom≡ (rpl-tm-p1 (ε , *) A prf2 b) (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)))))) ⟫
-
-  where
-
-    prf1 : rpl-T ε A * [ IdCm Γ ]T ≡ A
-    prf1 = trans (IC-T _) (rep-T-p1 A)
-
-    prf2 : rpl-T (ε , *) A * [ IdCm Γ , a ⟦ prf1 ⟫ ]T ≡ A
-    prf2 = trans (congT (rpl-T-p3 ε A)) (trans +T[,]T prf1)
-
-    prf3 :  rpl-T (ε , * , *) A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ prf1 ⟫ , b ⟦ prf2 ⟫ ]T
-              ≡ (a =h b)
-    prf3 = trans (congT (rpl-T-p2 (ε , * , *) A)) 
-                     (hom≡ (htrans (rpl-tm-p2 (ε , *) A prf2 v0) (rpl-tm-p1 ε A prf1 a)) (rpl-tm-p1 (ε , *) A prf2 b))
--}
 \end{code}
 }
 
@@ -244,14 +191,38 @@ Then the transitivity for three consecutive variables at the last of a context i
 \AgdaHide{
 \begin{code}
 
+\end{code}
+}
+
+
+\AgdaHide{
+
+\begin{code}
+
+trans*-Con : Con
+trans*-Con = ε , * , * , (var (vS v0) =h var v0) , * , (var (vS (vS v0)) =h var v0)
+
+trans*-Ty : Ty trans*-Con
+trans*-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
+
+trans*-Tm : Tm trans*-Ty
+trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
+
+Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (rpl-T trans*-Con A trans*-Ty)
+Tm-trans' A = rpl-tm trans*-Con A trans*-Tm
+
+-- rpl-T trans*-Con A trans*-Ty ≡ (rpl-T (ε , * , * , (var (vS v0) =h var v0) , *) A (var (vS (vS (vS v0))) =h var v0)) +T _
+
+
+{-
 transCon : {Γ : Con}(A : Ty Γ) → Con
 transCon {Γ} A = (Γ , A , A +T A , (A +T A) +T (A +T A))
 
-Tm-trans-semantic : (Γ : Con)(A : Ty Γ) 
+Fun-trans : (Γ : Con)(A : Ty Γ) 
          → Tm {transCon A} (var (vS (vS v0)) =h var (vS v0))
          → Tm {transCon A} (var (vS v0) =h var v0) 
          → Tm {transCon A} (var (vS (vS v0)) =h var v0)
-Tm-trans-semantic Γ A p q = 
+Fun-trans Γ A p q = 
   (q [ (( wk-id , 
           var (vS (vS v0)) ⟦ eq1 ⟫) , 
           var (vS (vS v0)) ⟦ eq2 ⟫) , 
@@ -274,47 +245,25 @@ Tm-trans-semantic Γ A p q =
 
     eq2 : (A +T A) [ wk-id , (var (vS (vS v0)) ⟦ eq1 ⟫) ]T ≡ wk-ty
     eq2 = trans +T[,]T eq1 
+-}
 
-\end{code}
-}
-
-
-\AgdaHide{
-
-\begin{code}
-
-trans-Con : Con
-trans-Con = ε , * , * , (var (vS v0) =h var v0) , * , (var (vS (vS v0)) =h var v0)
-
-trans-Con' : {Γ : Con}(A : Ty Γ) → Con
-trans-Con' A = rpl trans-Con A
-
-trans-Ty : Ty trans-Con
-trans-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
-
-trans-Ty' : {Γ : Con}(A : Ty Γ) → Ty (trans-Con' A)
-trans-Ty' A = rpl-T trans-Con A trans-Ty
-
-Tm-trans* : Tm trans-Ty
-Tm-trans* = anyTypeInh (ext (ext c* v0) (vS v0))
-
-Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (trans-Ty' A)
-Tm-trans' A = rpl-tm trans-Con A Tm-trans*
 {-
 Tm-trans : (Γ : Con)(A : Ty Γ)(x y z : Tm A)(p : Tm (x =h y))(q : Tm (y =h z))
          → Tm (x =h z)
-Tm-trans Γ A x y z p q = (Tm-trans' A [ {!!} ]tm) ⟦ {!!} ⟫ -- rep-tm A Tm-trans*
-  where
-    γ : Γ ⇒ trans-Con' A
-    γ = IdCm _ , x ⟦ trans (IC-T _) (rep-T-p1 A) ⟫ , 
-                 y ⟦ trans (trans (congT (rpl-T-p1 (ε , *) A)) (congT [+S]T)) (trans +T[,]T (trans (IC-T _) (IC-T _))) ⟫ , 
-                 p ⟦ {!!} ⟫ , 
-                 {!z!} , 
-                 {!!}
+Tm-trans Γ A x y z p q = Tm-trans' A 
+                         [ (((IdCm _) , x ⟦ rpl*-A ⟫) , y ⟦ rpl*-A2 A ⟫) , p ⟦ rpl-xy A x y ⟫ , 
+                           {!z!} , {!!} ]tm 
+                         ⟦ {!!} ⟫
 -}
+
 {-
-Tm-ρ : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tmtrans (Tm-refl Γ A x)
+z ⟦ trans (rpl-T-p3-wk (ε , * , *) A) (trans (rpl-T-p3-wk (ε , *) A) (rpl*-A2 A)) ⟫ 
+                         , q ⟦ trans (congT (rpl-T-p2 (ε , * , * , (var (vS v0) =h var v0) , *) A)) 
+                               (hom≡ (htrans (rpl-tm-vS (ε , * , * , (var (vS v0) =h var v0)) A) (htrans (rpl-tm-vS (ε , * , *) A) (rpl-tm-v0 (ε , *) A (rpl*-A2 A)))) (rpl-tm-v0 (ε , * , * , (var (vS v0) =h var v0)) A (trans (rpl-T-p3-wk (ε , * , *) A) (trans (rpl-T-p3-wk (ε , *) A) (rpl*-A2 A))) )) ⟫
+
 -}
+-- sym (trans (congT (trans (rpl-T-p3 (ε , * , * , (var (vS v0) =h var v0) , *) A) ?)) {!!})
+
 
 {-
 interpret-eq : {Γ : Con}(A : Ty Γ)(a b : Tm A)(p : Tm (a =h b)) → a ≅ b

@@ -14,9 +14,9 @@ open import AIOOGS2
 open import Suspension
 
 
-
+{-
 Tm-ρ : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tmtrans (Tm-refl Γ A x)
 Tm-ρ Γ A x = ?
-
+-}
 \end{code}
 }

@@ -40,10 +40,23 @@ apply-cm : {Γ : Con}{A : Ty Γ} →
 apply-cm x = (IdCm _) , (x ⟦ IC-T _ ⟫)
 
 
+apply-cm' : {Γ : Con}{A B : Ty Γ} →
+            (x : Tm A)(prf : B ≡ A)
+          → Γ ⇒ (Γ , B)
+apply-cm' x prf = (IdCm _) , x ⟦ trans (IC-T _) prf ⟫
+
+
 apply-x : {Γ : Con}{A : Ty Γ} →
           {x : Tm A} 
         → var v0 [ apply-cm x ]tm ≅ x
 apply-x = htrans wk-coh (cohOp (IC-T _))
+
+
+apply-x' : {Γ : Con}{A B : Ty Γ} →
+          {x : Tm A}{prf : B ≡ A}
+        → var v0 [ apply-cm' x prf ]tm ≅ x
+apply-x' = htrans wk-coh (cohOp (trans (IC-T _) _))
+
 
 apply-id : {Γ : Con}{A B : Ty Γ} →
            {x : Tm A}(y : Tm B)
@@ -125,11 +138,9 @@ The one above is special for the reflexivity of the last variable in a non-empty
 \begin{code}
 
 Fun-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
-Fun-refl Γ A x = (Tm-refl' Γ A) 
-                 [ (IdCm _) , x ⟦ rpl*-A ⟫ ]tm 
-                 ⟦ sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫ 
-
--- apply (Tm-refl Γ A) x ⟦ sym (hom≡ apply-x apply-x) ⟫
+Fun-refl Γ A x =  (Tm-refl' Γ A) 
+                 [ apply-cm' x (rep-T-p1 _) ]tm 
+                 ⟦ sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
 
 \end{code}
 
@@ -147,6 +158,15 @@ Tm-sym : (Γ : Con)(A : Ty Γ)
         → Tm (rpl-T  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
 Tm-sym Γ A = rpl-tm (ε , * , * , _) A Tm-sym*
 
+{-
+sameCon-sym : (Γ : Con)(A : Ty Γ)
+            → rpl (ε , * , * , (var (vS v0) =h var v0)) A ≡ (Γ , A , A +T A , (var (vS v0) =h var v0))
+sameCon-sym Γ A = Con-eq {!!} {!!}
+
+Tm-sym' : (Γ : Con)(A : Ty Γ)
+        → Tm {Γ , A , A +T A , ((var (vS v0)) =h (var v0))} (((var v0) =h (var (vS v0))) +T _)
+Tm-sym' Γ A = (Tm-sym Γ A [ {!!} ]tm) ⟦ {!!} ⟫
+-}
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
        → Tm (rpl-T  (ε , * , *) A (var (vS v0) =h var v0)) 
        → Tm (rpl-T  (ε , * , *) A (var v0 =h var (vS v0)))
@@ -210,6 +230,7 @@ trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
 
 Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (rpl-T trans*-Con A trans*-Ty)
 Tm-trans' A = rpl-tm trans*-Con A trans*-Tm
+
 
 -- rpl-T trans*-Con A trans*-Ty ≡ (rpl-T (ε , * , * , (var (vS v0) =h var v0) , *) A (var (vS (vS (vS v0))) =h var v0)) +T _
 

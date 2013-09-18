@@ -29,9 +29,6 @@ tsp-Ty refl A = A
 tsp-Tm : {Γ Δ : Con}(eq : Γ ≡ Δ){A : Ty Γ}{B : Ty Δ} → tsp-Ty eq A ≡ B → Tm A → Tm B
 tsp-Tm refl refl t = t
 
-ht-IdCm : {Γ Δ : Con} → Γ ≡ Δ → Γ ⇒ Δ
-ht-IdCm refl = IdCm _
-
 1-1cm' : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → 
         (eq : Γ ≡ Δ) → subst Ty eq A ≡ B → (Γ , A) ⇒ (Δ , B)
 1-1cm' refl refl = IdCm _
@@ -425,10 +422,6 @@ rpl-T Δ A B = rep-T A B [ rpl-pr2 Δ A ]T
 rpl-pr2 ε A = filter-cm A
 rpl-pr2 (Δ , A) A₁ =  rep-C-cm-spl A₁ A ⊚ ((rpl-pr2 Δ A₁ +S _) , var v0 ⟦ [+S]T ⟫)
 
-{-
-rpl-pr-beta ε A idc γ = idc
-rpl-pr-beta (Δ , B) A idc γ = rpl-pr-beta Δ A idc (p1 ⊚ rep-C-cm-spl-¹ A B ⊚ γ) , {!p2 {γ}!}
--}
 
 rpl-T-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-T Δ A * ≡ A [ rpl-pr1 Δ A ]T
 rpl-T-p1 ε A = trans (rep-T-p1 A) (sym (IC-T _))
@@ -469,7 +462,7 @@ rpl-tm-vS Δ A {x = x} = congtm ([⊚]tm (rep-tm A (var (vS x))) ∾ (congtm (re
 -- basic example
 
 base-1 : {Γ : Con}{A : Ty Γ} → rpl (ε , *) A ≡ (Γ , A)
-base-1 = Con-eq refl (rep-T-p1 _)
+base-1 = Con-eq refl (trans (rep-T-p1 _) (sym (IC-T _)))
 
 
 -- some useful lemmas

@@ -29,10 +29,6 @@ tsp-Ty refl A = A
 tsp-Tm : {Γ Δ : Con}(eq : Γ ≡ Δ){A : Ty Γ}{B : Ty Δ} → tsp-Ty eq A ≡ B → Tm A → Tm B
 tsp-Tm refl refl t = t
 
-1-1cm' : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → 
-        (eq : Γ ≡ Δ) → subst Ty eq A ≡ B → (Γ , A) ⇒ (Δ , B)
-1-1cm' refl refl = IdCm _
-
 1-1cm-same : {Γ : Con}{A B : Ty Γ} → 
             B ≡ A → (Γ , A) ⇒ (Γ , B)
 1-1cm-same eq = p1 , p2 ⟦ congT eq ⟫ 
@@ -54,7 +50,6 @@ tsp-Tm refl refl t = t
 -- append for contexts and context morphisms
 
 _++_ : Con → Con → Con
-
 
 cor : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Δ
 
@@ -163,7 +158,7 @@ There are some lemmas which are neceesary for the definitions. The suspension of
 
 Σtm-p2-sp : {Γ : Con}(A : Ty Γ)(B : Ty (Γ , A)) → Σtm {Γ , A , B} (var (vS v0)) ≅ (var v0) +tm _
 Σtm-p2-sp A B = Σtm-p2 (A +T A) B v0 ∾  cong+tm (Σtm-p1 A)
--- cohOpV (sym (ΣT[+T] (A +T A) B)) 
+
 
 Σs• : ∀ (Γ : Con) → ΣC Γ ⇒ ΣC ε
 Σs• ε = IdCm _
@@ -399,12 +394,6 @@ rpl-pr1  : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl Δ A ⇒ Γ
 
 rpl-pr2 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl Δ A ⇒ rep-C A Δ
 
-{-
-rpl-pr-beta : {Γ : Con}(Δ : Con)(A : Ty Γ) 
-            → Γ ⇒ Γ 
-            → Γ ⇒ rep-C A Δ 
-            → Γ ⇒ rpl Δ A
--}
 \end{code}
 
 \AgdaHide{
@@ -426,8 +415,6 @@ rpl-pr2 (Δ , A) A₁ =  rep-C-cm-spl A₁ A ⊚ ((rpl-pr2 Δ A₁ +S _) , var v
 rpl-T-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-T Δ A * ≡ A [ rpl-pr1 Δ A ]T
 rpl-T-p1 ε A = trans (rep-T-p1 A) (sym (IC-T _))
 rpl-T-p1 (Δ , A) A₁ = trans [⊚]T (trans (congT (rep-T-wk A₁ A)) (trans +T[,]T (trans [+S]T (trans (wk-T (rpl-T-p1 Δ A₁)) (sym [+S]T)))))
-
-
 
 rpl-tm Δ A a = rep-tm A a [ rpl-pr2 Δ A ]tm
 

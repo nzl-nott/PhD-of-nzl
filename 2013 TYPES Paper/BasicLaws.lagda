@@ -115,9 +115,15 @@ refl* :  Tm {ε , *} (var v0 =h var v0)
 refl* = Coh-Contr c*
 
 
-Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T  (ε , *) A (var v0 =h var v0))
+Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T (ε , *) A (var v0 =h var v0))
 Tm-refl' Γ A = rpl-tm (ε , *) A refl*
 
+simplify-Con : (Γ : Con)(A : Ty Γ) → (rpl (ε , *) A) ≡ (Γ , A)
+simplify-Con Γ A = cong (λ x → _ , x) (rep-T-p1 _)
+{-
+Ty-unifi : (Γ : Con)(A : Ty Γ) → (rpl-T (ε , *) A (var v0 =h var v0)) ≡ (var v0 =h var v0)
+Ty-unifi Γ A = {!!}
+-}
 Tm-refl :  (Γ : Con)(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
 Tm-refl Γ A = (Tm-refl' Γ A)  [ δ ]tm ⟦ prf1 ⟫
   where

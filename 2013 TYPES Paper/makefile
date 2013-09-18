@@ -16,9 +16,5 @@ latex/AIOOG.aux : $(DEPS)
 latex/AIOOG.bbl : latex/my.bib latex/AIOOG.aux
 	bibtex latex/AIOOG
 
-<<<<<<< HEAD
-pdf : latex/AIOOGS2.tex  latex/Semantics.tex latex/GlobularSets.tex latex/BasicLaws.tex latex/GroupoidLaws.tex  latex/Suspension.tex latex/AIOOG.tex latex/AIOOG.bbl
-=======
 pdf : $(DEPS)
->>>>>>> bb1363024ffccb5023b11d2390886f862aede8a1
 	cd latex ; pdflatex AIOOG.tex ;	cd .. 

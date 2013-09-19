@@ -10,7 +10,7 @@ open import Data.Nat
 
 open import AIOOG renaming (_∾_ to htrans)
 open import AIOOGS2
-open import Suspension
+
 
 
 

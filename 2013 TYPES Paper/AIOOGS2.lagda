@@ -67,11 +67,13 @@ p2-v0 {A = A} = cohOp (trans [+S]T (wk-T (IC-T A)))
 pr-beta : ∀ {Γ A} → (p1 {Γ} {A} , p2) ≡ IdCm _
 pr-beta = refl
 
-IdCm' : {Γ Δ : Con} → Γ ≡ Δ → Γ ⇒ Δ
+IdCm' : {Γ Δ : Con} → Γ ≡ Δ → Δ ⇒ Γ
 IdCm' refl = IdCm _
 
+IC-tm'-v0 : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : (Γ , A) ≡ (Δ , B)) → var v0 [ IdCm' eq ]tm ≅ var v0
+IC-tm'-v0 refl = wk-coh ∾ cohOp (wk+S+T (IC-T _))
 
-Con-eq : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : Γ ≡ Δ) → A ≡ B [ IdCm' eq ]T → _≡_ {_} {Con} (Γ , A) (Δ , B)
+Con-eq : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : Γ ≡ Δ) → A [ IdCm' eq ]T ≡ B → _≡_ {_} {Con} (Δ , B) (Γ , A)
 Con-eq refl refl = cong (λ x → _ , x) (IC-T _)
 
 \end{code}

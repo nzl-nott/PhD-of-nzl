@@ -534,20 +534,16 @@ congtm (refl _) = refl _
 
 
 ⊚assoc • = refl
-⊚assoc (_,_ γ {A} a) =
-  cm-eq (⊚assoc γ) 
+⊚assoc (_,_ γ {A} a) = cm-eq (⊚assoc γ) 
     (cohOp [⊚]T 
     ∾ (congtm (cohOp [⊚]T)
     ∾ ((cohOp [⊚]T 
     ∾ [⊚]tm a) -¹)))
 
 
-
 [⊚]v (v0 {Γ₁} {A}) {θ , a}  = wk-coh ∾ cohOp [⊚]T ∾ congtm (cohOp +T[,]T -¹) 
-[⊚]v (vS {Γ₁} {A} {B} x) {θ , a}  = 
-  wk-coh
-  ∾ ([⊚]v x
-    ∾ (congtm (cohOp +T[,]T) -¹))
+[⊚]v (vS {Γ₁} {A} {B} x) {θ , a} = 
+  wk-coh ∾ ([⊚]v x ∾ (congtm (cohOp +T[,]T) -¹))
 
 
 
@@ -571,14 +567,13 @@ congtm (refl _) = refl _
 [+S]V v0 {_,_ δ {A} a} = wk-coh ∾ wk-coh+ ∾ cong+tm2 +T[,]T
 [+S]V (vS x) {δ , a} = wk-coh ∾ [+S]V x ∾ cong+tm2 +T[,]T
 
-lem+Stm : ∀{Γ Δ Δ₁ : Con}(δ : Δ ⇒ Δ₁)(γ : Γ ⇒ Δ)(B : Ty Γ) → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
-lem+Stm • γ B = refl
-lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm2 [⊚]T) ∾ wk-coh+ -¹)
+lem+Stm : ∀{Γ Δ Δ₁ : Con}(δ : Δ ⇒ Δ₁){γ : Γ ⇒ Δ}{B : Ty Γ} → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
+lem+Stm • = refl
+lem+Stm (_,_ δ {A} a) = cm-eq (lem+Stm δ) (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm2 [⊚]T) ∾ wk-coh+ -¹)
 
 
-
-[+S]tm (var x) {δ} {B} = [+S]V x
-[+S]tm (JJ x δ A) {γ} {B} = cohOp (sym [⊚]T) ∾ JJ-eq (lem+Stm δ γ B) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
+[+S]tm (var x) = [+S]V x
+[+S]tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq (lem+Stm δ) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
 
 \end{code}
 }

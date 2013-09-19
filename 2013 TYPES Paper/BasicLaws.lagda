@@ -30,7 +30,7 @@ Coh-Contr isC = JJ isC (IdCm _) _ ⟦ sym (IC-T _) ⟫
 
 Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) →
              isContr Δ
-           → Tm {rpl Δ A} (rpl-T Δ A B)
+           → Tm {rpl Δ A} (rpl-T A B)
 Coh-rpl {Γ} {Δ} A B isc = JJ (rep-C-ε-Contr A isc) (rpl-pr2 Δ A) (rep-T A B)
 
 
@@ -111,33 +111,46 @@ We tried several ways to get the reflexivity terms. One of them is to define the
 
 \begin{code}
 
+
+refl*-Con : Con
+refl*-Con = ε , *
+
 refl* :  Tm {ε , *} (var v0 =h var v0)
 refl* = Coh-Contr c*
 
 
-Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T (ε , *) A (var v0 =h var v0))
-Tm-refl' Γ A = rpl-tm (ε , *) A refl*
+Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T {Δ = ε , *} A (var v0 =h var v0))
+Tm-refl' Γ A = rpl-tm A refl*
 
-simplify-Con : (Γ : Con)(A : Ty Γ) → (rpl (ε , *) A) ≡ (Γ , A)
-simplify-Con Γ A = cong (λ x → _ , x) (rep-T-p1 _)
-{-
-Ty-unifi : (Γ : Con)(A : Ty Γ) → (rpl-T (ε , *) A (var v0 =h var v0)) ≡ (var v0 =h var v0)
-Ty-unifi Γ A = {!!}
--}
-Tm-refl :  (Γ : Con)(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
-Tm-refl Γ A = (Tm-refl' Γ A)  [ δ ]tm ⟦ prf1 ⟫
-  where
-    δ : (Γ , A) ⇒ rpl (ε , *) A
-    δ = 1-1cm-same (rep-T-p1 A)
-
-    prf : rpl-tm (ε , *) A (var v0) [ δ ]tm ≅ var v0
-    prf = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
-           (1-1cm-same-v0 (rep-T-p1 A))
-
-    prf1 : (var v0 =h var v0) ≡ rpl-T (ε , *) A (var v0 =h var v0) [ δ ]T
-    prf1 = sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ prf prf))
 
 \end{code}
+
+\AgdaHide{
+\begin{code}
+
+Tm-refl :  (Γ : Con)(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
+Tm-refl Γ A = (Tm-refl' Γ A)  [ map-1 ]tm ⟦ prf1 ⟫
+  where
+    prf : rpl-tm {Δ = ε , *} A (var v0) [ map-1 ]tm ≅ var v0
+    prf = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) 
+          (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
+           (1-1cm-same-v0 (rep-T-p1 A))
+
+    prf1 : (var v0 =h var v0) ≡ rpl-T {Δ = ε , *} A (var v0 =h var v0) [ map-1 ]T
+    prf1 = sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ prf prf))
+
+{-
+tsp-Tm base-1 T-eq (Tm-refl' Γ A)
+  where
+    t-eq : rpl-tm (ε , *) A (var v0) [  IdCm' base-1 ]tm ≅ var v0
+    t-eq = htrans (congtm (rpl-tm-v0' ε A)) (IC-tm'-v0 base-1)
+
+    T-eq :  (rpl-T (ε , *) A (var v0 =h var v0))  [ IdCm' base-1 ]T ≡ (var v0 =h var v0)
+    T-eq = trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ t-eq t-eq)
+
+-}
+\end{code}
+}
 
 The one above is special for the reflexivity of the last variable in a non-empty context. We also define a more general version which is the reflexivity for any term of any type in given context. 
 
@@ -153,29 +166,25 @@ Fun-refl Γ A x =  (Tm-refl' Γ A)
 We also construct the symmetry for the morphism between the last two variables.
 
 
-\AgdaHide{
 \begin{code}
 
+sym*-Con : Con
+sym*-Con = refl*-Con , * , (var (vS v0) =h var v0)
 
-Tm-sym* : Tm {ε , * , * , _} (((var v0) =h (var (vS v0))) +T _)
+Tm-sym* : Tm {sym*-Con} (((var v0) =h (var (vS v0))) +T _)
 Tm-sym* = Coh-Contr (ext c* v0)
 
 Tm-sym : (Γ : Con)(A : Ty Γ)
-        → Tm (rpl-T  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
-Tm-sym Γ A = rpl-tm (ε , * , * , _) A Tm-sym*
+        → Tm (rpl-T  {Δ = sym*-Con} A (((var v0) =h (var (vS v0))) +T _))
+Tm-sym Γ A = rpl-tm A Tm-sym*
 
-{-
-sameCon-sym : (Γ : Con)(A : Ty Γ)
-            → rpl (ε , * , * , (var (vS v0) =h var v0)) A ≡ (Γ , A , A +T A , (var (vS v0) =h var v0))
-sameCon-sym Γ A = Con-eq {!!} {!!}
+\end{code}
 
-Tm-sym' : (Γ : Con)(A : Ty Γ)
-        → Tm {Γ , A , A +T A , ((var (vS v0)) =h (var v0))} (((var v0) =h (var (vS v0))) +T _)
-Tm-sym' Γ A = (Tm-sym Γ A [ {!!} ]tm) ⟦ {!!} ⟫
--}
+\AgdaHide{
+\begin{code}
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
-       → Tm (rpl-T  (ε , * , *) A (var (vS v0) =h var v0)) 
-       → Tm (rpl-T  (ε , * , *) A (var v0 =h var (vS v0)))
+       → Tm (rpl-T  {Δ = ε , * , *} A (var (vS v0) =h var v0)) 
+       → Tm (rpl-T  {Δ = ε , * , *} A (var v0 =h var (vS v0)))
 Tm-sym-fun Γ A = fun (Tm-sym Γ A ⟦ sym (rpl-T-p3 (ε , * , *) A) ⟫)
 
 Tm-sym-fun2 : (Γ : Con)(A : Ty Γ) 
@@ -214,19 +223,10 @@ Fun-sym Γ A a b t = (Tm-sym Γ A) [ rpl-sub Γ A a b t ]tm
 
 Then the transitivity for three consecutive variables at the last of a context is as follows.
 
-\AgdaHide{
-\begin{code}
-
-\end{code}
-}
-
-
-\AgdaHide{
-
 \begin{code}
 
 trans*-Con : Con
-trans*-Con = ε , * , * , (var (vS v0) =h var v0) , * , (var (vS (vS v0)) =h var v0)
+trans*-Con = sym*-Con , * , (var (vS (vS v0)) =h var v0)
 
 trans*-Ty : Ty trans*-Con
 trans*-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
@@ -234,8 +234,17 @@ trans*-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
 trans*-Tm : Tm trans*-Ty
 trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
 
-Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (rpl-T trans*-Con A trans*-Ty)
-Tm-trans' A = rpl-tm trans*-Con A trans*-Tm
+Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
+Tm-trans' A = rpl-tm A trans*-Tm
+
+\end{code}
+
+
+
+\AgdaHide{
+
+\begin{code}
+
 
 
 -- rpl-T trans*-Con A trans*-Ty ≡ (rpl-T (ε , * , * , (var (vS v0) =h var v0) , *) A (var (vS (vS (vS v0))) =h var v0)) +T _

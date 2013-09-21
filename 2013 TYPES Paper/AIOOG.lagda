@@ -123,7 +123,6 @@ data Ty (Γ : Con)  : Set
 data Tm            : {Γ : Con}(A : Ty Γ) → Set
 data Var           : {Γ : Con}(A : Ty Γ) → Set
 data _⇒_           : Con → Con → Set
-
 data isContr       : Con → Set
 \end{code}
 
@@ -157,17 +156,19 @@ data _≅_ {Γ : Con}{A : Ty Γ}
 
 \AgdaHide{
 \begin{code}
---  We also use different notations for symmetry and transitivity. 
-
--- sym
 
 _-¹ : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B} → a ≅ b → b ≅ a
 (refl _) -¹ = refl _
 
 infixr 4 _∾_ 
 
-_∾_ : ∀{Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}{c : Tm C} → a ≅ b → b ≅ c → a ≅ c
-_∾_ {Γ} {.C} {.C} {C} {.c} {.c} {c} (refl .c) (refl .c) = refl c
+_∾_ : {Γ : Con}
+      {A B C : Ty Γ}
+      {a : Tm A}{b : Tm B}{c : Tm C} →
+      a ≅ b → 
+      b ≅ c 
+    → a ≅ c
+_∾_ {c = c} (refl .c) (refl .c) = refl c
 
 
 \end{code}
@@ -195,7 +196,6 @@ cohOp refl = refl _
 \AgdaHide{
 \begin{code}
 
-
 cohOp-eq : {Γ : Con}{A B : Ty Γ}{a b : Tm B}{p : A ≡ B} → (a ≅ b) 
          → (a ⟦ p ⟫ ≅ b ⟦ p ⟫)
 cohOp-eq {Γ} {.B} {B} {a} {b} {refl} r = r
@@ -203,6 +203,11 @@ cohOp-eq {Γ} {.B} {B} {a} {b} {refl} r = r
 cohOp-hom : {Γ : Con}{A B : Ty Γ}{a b : Tm B}(p : A ≡ B) → (a ⟦ p ⟫ =h b ⟦ p ⟫) ≡ (a =h b)
 cohOp-hom refl = refl
 
+cong≅ : {Γ Δ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B}{D : Ty Γ → Ty Δ} →
+        (f : {C : Ty Γ} → Tm C → Tm (D C)) → 
+        a ≅ b 
+      → f a ≅ f b
+cong≅ f (refl _) = refl _
 
 \end{code}
 }
@@ -273,7 +278,7 @@ data Tm where
 \AgdaHide{
 \begin{code}
 
-cohOpV :  {Γ : Con}{A B : Ty Γ}{x : Var A}(p : A ≡ B) → var (subst Var p x) ≅ var x
+cohOpV : {Γ : Con}{A B : Ty Γ}{x : Var A}(p : A ≡ B) → var (subst Var p x) ≅ var x
 cohOpV {x = x} refl = refl (var x)
 
 cohOpVs : {Γ : Con}{A B C : Ty Γ}{x : Var A}(p : A ≡ B) → var (vS {B = C} (subst Var p x)) ≅ var (vS x)
@@ -376,6 +381,9 @@ Weakening inside substitution is equivalent to weakening outside.
          (a : Tm A){δ : Γ ⇒ Δ}
          {B : Ty Γ}
          → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
+
+[+S]S : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{B : Ty Γ} → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
+
 \end{code}
 
 They are useful to derive some auxiliary functions. The following is one of them which is used a lot in proofs.
@@ -422,27 +430,21 @@ since weakening doesn't introduce new variables in types and terms.
 (var x)     +tm B = var (vS x)
 (JJ cΔ δ A) +tm B = JJ cΔ (δ +S B) A ⟦ sym [+S]T ⟫ 
 
-
-
-cong+tm : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B}→ a ≅ b → a +tm C ≅ b +tm C
+cong+tm : {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B} → 
+          a ≅ b
+        → a +tm C ≅ b +tm C
 cong+tm (refl _) = refl _
 
-cong+tm2 : ∀ {Γ : Con}{A B C : Ty Γ}{a : Tm B}(p : A ≡ B) → a +tm C ≅ a ⟦ p ⟫ +tm C
+cong+tm2 : {Γ : Con}{A B C : Ty Γ}
+           {a : Tm B}(p : A ≡ B) 
+         → a +tm C ≅ a ⟦ p ⟫ +tm C
 cong+tm2 refl = refl _
+
 
 wk-T : {Δ : Con}
        {A B C : Ty Δ}
        → A ≡ B → A +T C ≡ B +T C
 wk-T refl = refl
-
-
-wk+S+T : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}{γ}{C} → A [ γ ]T ≡ C → A [ γ +S B ]T ≡ C +T B
-wk+S+T eq = trans [+S]T (wk-T eq)
-
-wk+S+tm : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}(a : Tm A){C : Ty Δ}{γ : Δ ⇒ Γ}{c : Tm C} → a [ γ ]tm ≅ c → a [ γ +S B ]tm ≅ c +tm B
-wk+S+tm _ eq = [+S]tm _ ∾ cong+tm eq
-
-
 
 wk-tm : {Γ Δ : Con}
          {A : Ty Δ}{δ : Γ ⇒ Δ}
@@ -483,10 +485,34 @@ wk-hom+ : {Γ Δ : Con}
          → (wk-tm+ B x =h wk-tm+ B y) ≡ (x =h y)
 wk-hom+ = hom≡ wk-coh+ wk-coh+
 
+
 wk-⊚ : {Γ Δ Θ : Con}
        {θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}{A : Ty Θ}
        → Tm ((A [ θ ]T)[ δ ]T) → Tm (A [ θ ⊚ δ ]T)
 wk-⊚ t = t ⟦ [⊚]T ⟫
+
+[+S]S {δ = •} = refl
+[+S]S {δ = δ , a} = cm-eq [+S]S (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm2 [⊚]T) ∾ wk-coh+ -¹)
+
+
+wk+S+T : ∀{Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}
+          {γ}{C} → 
+          A [ γ ]T ≡ C 
+       → A [ γ +S B ]T ≡ C +T B
+wk+S+T eq = trans [+S]T (wk-T eq)
+
+wk+S+tm : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}
+          (a : Tm A){C : Ty Δ}{γ : Δ ⇒ Γ}{c : Tm C} →
+          a [ γ ]tm ≅ c 
+        → a [ γ +S B ]tm ≅ c +tm B
+wk+S+tm _ eq = [+S]tm _ ∾ cong+tm eq
+
+
+wk+S+S : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{ω : Γ ⇒ Δ₁}{B : Ty Γ}
+       → δ ⊚ γ ≡ ω
+       → δ ⊚ (γ +S B) ≡ ω +S B
+wk+S+S eq = trans [+S]S (cong (λ x → x +S _) eq)
+
 
 [⊚]T {A = *} = refl
 [⊚]T {A = _=h_ {A} a b} = hom≡ ([⊚]tm _) ([⊚]tm _) 
@@ -532,6 +558,11 @@ congtm : {Γ Δ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B}
       → a [ δ ]tm ≅ b [ δ ]tm
 congtm (refl _) = refl _ 
 
+congtm2 : {Γ Δ : Con}{A : Ty Γ}{a : Tm A}
+          {δ γ : Δ ⇒ Γ} →
+          (p : δ ≡ γ)
+        → a [ δ ]tm ≅ a [ γ ]tm
+congtm2 refl = refl _
 
 ⊚assoc • = refl
 ⊚assoc (_,_ γ {A} a) = cm-eq (⊚assoc γ) 
@@ -567,13 +598,9 @@ congtm (refl _) = refl _
 [+S]V v0 {_,_ δ {A} a} = wk-coh ∾ wk-coh+ ∾ cong+tm2 +T[,]T
 [+S]V (vS x) {δ , a} = wk-coh ∾ [+S]V x ∾ cong+tm2 +T[,]T
 
-lem+Stm : ∀{Γ Δ Δ₁ : Con}(δ : Δ ⇒ Δ₁){γ : Γ ⇒ Δ}{B : Ty Γ} → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
-lem+Stm • = refl
-lem+Stm (_,_ δ {A} a) = cm-eq (lem+Stm δ) (cohOp [⊚]T ∾ ([+S]tm a ∾ cong+tm2 [⊚]T) ∾ wk-coh+ -¹)
-
 
 [+S]tm (var x) = [+S]V x
-[+S]tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq (lem+Stm δ) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
+[+S]tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq [+S]S ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
 
 \end{code}
 }

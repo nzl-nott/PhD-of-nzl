@@ -35,15 +35,15 @@ vXY : Tm {G*-Con} (vX =h vY)
 vXY = var v0
 
 reflX : Tm (vX =h vX)
-reflX = Tm-refl' ε * +tm _ +tm _
+reflX = Tm-refl' * +tm _ +tm _
 
 reflY : Tm (vY =h vY)
-reflY =  Tm-refl' (ε , *) * +tm _
+reflY =  Tm-refl' * +tm _
 
-Tm-G1* : Tm (trans*-Tm [ (IdCm _) , vY , reflY ]tm =h vXY)
+Tm-G1* : Tm (trans*-Tm [ IdCm _ , vY , reflY ]tm =h vXY)
 Tm-G1* = Coh-Contr (ext c* v0)
 
-Tm-G2* : Tm (trans*-Tm [ ((IdCm _ ⊚ p1 ⊚ p1) , vX) , reflX , vY , vXY ]tm =h vXY)
+Tm-G2* : Tm (trans*-Tm [ ((IdCm _ ⊚ pr1 ⊚ pr1) , vX) , reflX , vY , vXY ]tm =h vXY)
 Tm-G2* = Coh-Contr (ext c* v0)
 
 
@@ -82,13 +82,13 @@ vPQ = var v0
 
 Ty-G5* : Ty G5*-Con
 Ty-G5* = (trans*-Tm [ ((((• , vM) , vP) , 
-                    (trans*-Tm [ IdCm _ +S _ +S _ ]tm)) , vQ) , vPQ ]tm =h 
+                    (trans*-Tm [ pr1 ⊚ pr1 ]tm)) , vQ) , vPQ ]tm =h 
           trans*-Tm [ (IdCm _ +S _ +S _ +S _ +S _ , vQ) , 
                     (trans*-Tm [ ((((• , vN) , vP) , vNP) , vQ) , vPQ ]tm) ]tm)
 
 Tm-G5* : Tm (trans*-Tm [ ((((• , vM) , vP) , 
-                       (trans*-Tm [ IdCm _ +S _ +S _ ]tm)) , vQ) , vPQ ]tm =h 
-             trans*-Tm [ (IdCm _ +S _ +S _ +S _ +S _ , vQ) , 
+                       (trans*-Tm [ pr1 ⊚ pr1 ]tm)) , vQ) , vPQ ]tm =h 
+             trans*-Tm [ (pr1 ⊚ pr1 ⊚ pr1 ⊚ pr1 , vQ) , 
                        (trans*-Tm [ ((((• , vN) , vP) , vNP) , vQ) , vPQ ]tm) ]tm)
 Tm-G5* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) (vS v0))
 

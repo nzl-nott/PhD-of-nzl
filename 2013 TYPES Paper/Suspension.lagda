@@ -13,24 +13,11 @@ open import Data.Product renaming (_,_ to _,,_)
 open import Data.Empty
 open import Data.Nat
 
-1-1cm : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → 
-        (γ : Γ ⇒ Δ) → B [ γ ]T ≡ A → (Γ , A) ⇒ (Δ , B)
-1-1cm γ eq = (γ +S _) , (var v0 ⟦ wk+S+T eq ⟫)
-
-
-1-1cm-T : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → 
-          {γ : Γ ⇒ Δ} → (eq : B [ γ ]T ≡ A) → (B +T B) [ 1-1cm γ eq ]T ≡ A +T A
-1-1cm-T eq = trans +T[,]T (trans [+S]T (wk-T eq))
-
-tsp-Ty : {Γ Δ : Con}(eq : Γ ≡ Δ) → Ty Γ → Ty Δ
-tsp-Ty eq A = A [ IdCm' eq ]T
-
-tsp-Tm :  {Γ Δ : Con}(eq : Γ ≡ Δ){A : Ty Γ}{B : Ty Δ} → A [ IdCm' eq ]T ≡ B → Tm A → Tm B
-tsp-Tm eq eq2 a = (a [ IdCm' eq ]tm) ⟦ sym eq2 ⟫
 
 1-1cm-same : {Γ : Con}{A B : Ty Γ} → 
             B ≡ A → (Γ , A) ⇒ (Γ , B)
-1-1cm-same eq = p1 , p2 ⟦ congT eq ⟫ 
+1-1cm-same eq = pr1 , pr2 ⟦ congT eq ⟫ 
+
 
 1-1cm-same-T : {Γ : Con}{A B : Ty Γ} → 
                (eq : B ≡ A) → (A +T B) [ 1-1cm-same eq ]T ≡ A +T A
@@ -43,10 +30,8 @@ tsp-Tm eq eq2 a = (a [ IdCm' eq ]tm) ⟦ sym eq2 ⟫
 
 1-1cm-same-v0 : ∀ {Γ : Con}{A B : Ty Γ} → 
                (eq : B ≡ A) → var v0 [ 1-1cm-same eq ]tm ≅ var v0
-1-1cm-same-v0 eq = wk-coh ∾ cohOp (congT eq) ∾ p2-v0
+1-1cm-same-v0 eq = wk-coh ∾ cohOp (congT eq) ∾ pr2-v0
 
-
--- append for contexts and context morphisms
 
 _++_ : Con → Con → Con
 
@@ -54,13 +39,12 @@ cor : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Δ
 
 repeat-p1 : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Γ
 
-
 Γ ++ ε = Γ
 Γ ++ (Δ , A) = Γ ++ Δ , A [ cor Δ ]T
 
 
 repeat-p1 ε = IdCm _
-repeat-p1 (Δ , A) = repeat-p1 Δ ⊚ p1
+repeat-p1 (Δ , A) = repeat-p1 Δ ⊚ pr1
 
 
 cor ε = •
@@ -118,6 +102,10 @@ The suspension of a context is to substitute the base type with the equality of 
 
 ΣT {Γ} * = *' {Γ}
 ΣT (a =h b) = Σtm a =h Σtm b
+
+filter-cm' : {Γ : Con} → ΣC Γ ⇒ ΣC ε
+filter-cm' {ε} = IdCm _
+filter-cm' {Γ , A} = filter-cm' {Γ} +S _
 
 \end{code}
 
@@ -323,6 +311,10 @@ rep-T-p3 * = trans +T[,]T (wk+S+T (IC-T _))
 rep-T-p3 (_=h_ {A} a b) {B} {C} = trans (ΣT[Σs]T (rep-T A (C +T B)) (rep-C-cm-spl A B)) (trans (cong ΣT (rep-T-p3 A)) (ΣT[+T] (rep-T A C) (rep-T A B)))
 
 
+filter-cm-lem : ∀ {Γ : Con}(A : Ty Γ) → ΣC (rep-C A ε) ⇒ rep-C A ε
+filter-cm-lem * = •
+filter-cm-lem (_=h_ {A} a b) = Σs (filter-cm-lem A)
+
 filter-cm * = •
 filter-cm {Γ} (_=h_ {A} a b) = rep-C-cm-spl2 A ⊚ ((filter-cm A , (a ⟦ rep-T-p1 A ⟫)) , (wk-tm (b ⟦ rep-T-p1 A ⟫)))
 
@@ -330,6 +322,10 @@ filter-cm {Γ} (_=h_ {A} a b) = rep-C-cm-spl2 A ⊚ ((filter-cm A , (a ⟦ rep-T
 rep-C-ε-Contr :  ∀ {Γ Δ : Con}(A : Ty Γ) → isContr Δ → isContr (rep-C A Δ)
 rep-C-ε-Contr * isC = isC
 rep-C-ε-Contr (_=h_ {A} a b) isC = ΣC-Contr _ (rep-C-ε-Contr A isC)
+
+
+wk-rep : ∀ {Γ : Con}(A : Ty Γ)(a : Tm A) → a ⟦ rep-T-p1 A ⟫ ≅ a
+wk-rep A a = cohOp (rep-T-p1 A)
 
 fci-l1 : ∀ {Γ : Con}(A : Ty Γ) → ΣT (rep-T A *) [ rep-C-cm-spl2 A ]T ≡ (var (vS v0) =h var v0)
 
@@ -344,9 +340,11 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
                                          (congtm (Σtm-p1 (rep-T A * +T rep-T A *)) ∾
                                             1-1cm-same-v0 (ΣT[+T] (rep-T A *) (rep-T A *)))) )
 
-
 rep-T-p1  * = refl
-rep-T-p1 (_=h_ {A} a b) = trans [⊚]T (trans (congT (fci-l1 A)) (hom≡ (wk-coh ∾ wk-coh ∾ cohOp (rep-T-p1 A)) (wk-coh ∾ wk-coh ∾ cohOp (rep-T-p1 A))))
+rep-T-p1 (_=h_ {A} a b) = trans [⊚]T (trans (congT (fci-l1 A)) (hom≡ (prf a) (prf b)))
+  where
+    prf : (a : Tm A) → ((a ⟦ rep-T-p1 A ⟫) ⟦ +T[,]T ⟫) ⟦ +T[,]T ⟫ ≅ a
+    prf a = wk-coh ∾ wk-coh ∾ wk-rep A a
  
 
 
@@ -361,8 +359,6 @@ rep-tm-p2 * x = wk-coh ∾ [+S]V x ∾ cong+tm (IC-v x)
 rep-tm-p2 {Γ} {Δ} (_=h_ {A} a b) {B} {C} x = Σtm[Σs]tm (rep-tm A (var (vS x))) (rep-C-cm-spl A C) ∾
                                                congΣtm (rep-tm-p2 {Γ} {Δ} A {B} x) ∾
                                                Σtm[+tm] (rep-tm A (var x)) (rep-T A C)
-
-
 
 
 \end{code}
@@ -435,9 +431,10 @@ rpl-tm-v0' : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}
            → rpl-tm {Δ = Δ , B} A (var v0) ≅ var v0
 rpl-tm-v0' Δ A = [⊚]tm (rep-tm A (var v0)) ∾ congtm (rep-tm-p1 A) ∾ wk-coh ∾ wk-coh+
 
-rpl-tm-v0 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{γ : Γ ⇒ rpl Δ A}(prf : (rep-T A B [ rpl-pr2 Δ A ]T) [ γ ]T ≡ A)
-             {b : Tm A} → rpl-tm {Δ = Δ , B} A (var v0) [ γ , b ⟦ prf ⟫ ]tm ≅ b
-rpl-tm-v0 Δ A prf = congtm (rpl-tm-v0' Δ A) ∾ wk-coh ∾ cohOp prf
+rpl-tm-v0 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{γ : Γ ⇒ rpl Δ A}{b : Tm A}{b' : Tm ((rep-T A B [ rpl-pr2 Δ A ]T) [ γ ]T)}
+          → (prf : b' ≅ b)
+          → rpl-tm {Δ = Δ , B} A (var v0) [ γ , b' ]tm ≅ b
+rpl-tm-v0 Δ A prf = congtm (rpl-tm-v0' Δ A) ∾ wk-coh ∾ prf
 
 
 rpl-tm-vS : {Γ : Con}(Δ : Con)(A : Ty Γ){B C : Ty Δ}{γ : Γ ⇒ rpl Δ A}
@@ -471,8 +468,8 @@ map-2 = (map-1 +S _) , (var v0) ⟦ wk+S+T T-1 ⟫
 rpl*-A : {Γ : Con}{A : Ty Γ} → rpl-T {Δ = ε} A * [ IdCm Γ ]T ≡ A
 rpl*-A = trans (IC-T _) (rep-T-p1 _)
 
-rpl*-a : {Γ : Con}(A : Ty Γ){a : Tm A} → rpl-tm {Δ = ε , *} A (var v0) [ IdCm Γ , a ⟦ rpl*-A ⟫ ]tm ≅ a
-rpl*-a A = rpl-tm-v0 ε A (rpl*-A)
+rpl*-a : {Γ : Con}(A : Ty Γ){a : Tm A} → rpl-tm {Δ = ε , *} A (var v0) [ IdCm _ , a ⟦ rpl*-A ⟫ ]tm ≅ a
+rpl*-a A = rpl-tm-v0 ε A  (cohOp (rpl*-A {A = A}))
 
 rpl*-A2 : {Γ : Con}(A : Ty Γ){a : Tm (rpl-T A (* {ε}) [ IdCm Γ ]T)} 
         → rpl-T A (* {ε , *}) [ IdCm Γ , a ]T ≡ A
@@ -486,9 +483,9 @@ rpl*-An = {!!}
 rpl-xy :  {Γ : Con}(A : Ty Γ)(a b : Tm A)
        → rpl-T {Δ = ε , * , *} A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ ]T
               ≡ (a =h b)
-rpl-xy A a b = trans (congT (rpl-T-p2 (ε , * , *) A)) 
+rpl-xy A a b =  trans (congT (rpl-T-p2 (ε , * , *) A)) 
              (hom≡ ((rpl-tm-vS (ε , *) A)  ∾ rpl*-a A) 
-                   (rpl-tm-v0 (ε , *) A (rpl*-A2 A)))
+                   (rpl-tm-v0 (ε , *) A (cohOp (rpl*-A2 A))))
 
 
 
@@ -497,34 +494,6 @@ rpl-sub : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
         → Γ ⇒ rpl (ε , * , * , (var (vS v0) =h var v0)) A
 rpl-sub Γ A a b t = IdCm _ , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ , t ⟦ rpl-xy A a b ⟫
   
-
-
-{-
-rpl-sub-ind : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
-     → Γ ⇒ rpl (Δ , *) A
-rpl-sub-ind Δ A γ p a =  γ , a ⟦ trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (trans (congT2 p) (IC-T _))) ⟫
-
-rpl-sub-ind-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
-     → rpl-pr1 (Δ , *) A ⊚ (rpl-sub-ind Δ A γ p a) ≡ IdCm _
-rpl-sub-ind-p1 Δ A γ p a = trans (⊚wk (rpl-pr1 Δ A)) p
-
-
-rpl-sub-ind-p2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a : Tm A)
-     → rpl-tm (Δ , *) A (var v0)  [ rpl-sub-ind Δ A γ p a ]tm ≅ a
-rpl-sub-ind-p2 {Γ} Δ A γ p a = {!!} -- htrans (rpl-tm-p1 {Γ} Δ A {*} {γ} {!!} {!!}) {!!}  -- rpl-tm-p1 Δ A (trans (trans (congT (rpl-T-p1 Δ A)) (trans (sym [⊚]T) (congT2 p))) (IC-T _)) a
-
-
-rpl-sub-ind2 : {Γ : Con}(Δ : Con)(A : Ty Γ)
-     → (γ : Γ ⇒ rpl Δ A)(p : rpl-pr1 Δ A ⊚ γ ≡ IdCm _) → (a b : Tm A) → (t : Tm (a =h b))
-     → Γ ⇒ rpl (Δ , * , * , ((var (vS v0)) =h (var v0))) A
-rpl-sub-ind2 Δ A γ p a b t =  (rpl-sub-ind (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b) , t ⟦ trans (congT (rpl-T-p2 (Δ , * , *) A)) (hom≡ {!!} {!(rpl-tm-p1)!}) ⟫
---  (rpl-sub-ind-p2 (Δ , *) A (rpl-sub-ind Δ A γ p a) (rpl-sub-ind-p1 Δ A γ p a) b))
-
--}
-
 
 {-
 

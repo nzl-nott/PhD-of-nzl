@@ -116,8 +116,8 @@ For each $n$ there is a context morphism $\overline{i_n}: S_n
 \end{align*}
 %
 The substitution of $\overline{\sigma}_{n+1}$ along $\overline{i_n}$,
-$\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$, is equal to $n
-=_\mathsf{h} n$ in $S_n$. So in order to extend $\overline{i_n}$ to
+$\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$, is equal to $2n
+=_\mathsf{h} 2n$ in $S_n$. So in order to extend $\overline{i_n}$ to
 $i_n : S_n \Rightarrow S_{n+1}$ we must define a term in
 $\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$.  We can
 readily do that by $\mathsf{JJ}$:
@@ -128,16 +128,92 @@ i_n~ = ~ \overline{i_n}\, ,
 \noindent It's easy to check that $i_n$ satisfies \eqref{eq:refl-glob}. 
 
 For each $n$ consider the chain 
-\[S_0 \to^{i_0} S_1 \to^{i_1} S_2 \to \cdots \to^{i_{n-1}} S_n\]
+\[i_0^n \quad \equiv \quad S_0 \to^{i_0} S_1 \to^{i_1} S_2 \to \cdots \to^{i_{n-1}} S_n\]
 %
 The substitution
 $\sigma_n[i_0]_\mathsf{T}\cdots[i_{n-2}]_\mathsf{T}[i_{n-1}]_\mathsf{T}
-\equiv \sigma_n[i_{n-1}\cdots i_0]_\mathsf{T}$ is
+\equiv \sigma_n[i_0^n]_\mathsf{T}$ is
 a type, $\lambda_n$, in $S_0$.
 We call $\lambda_n$ the \emph{n\text{-}iterated loop type} on 
-$0$. The term $(2n) [i_{n-1}\cdots i_0]_\mathsf{tm}$ is
+$0$. The term $S_0 \vdash (2n) [i_0^n]_\mathsf{tm} : \lambda_n$ is
 the iterated identity term on $0$. 
+
+\newbox\anglebox
+\setbox\anglebox=\hbox{\xy \POS(75,0)\ar@{-} (0,0) \ar@{-} (75,75)\endxy}
+\def\angle{\copy\anglebox}
+
+\newbox\coanglebox
+\setbox\coanglebox=\hbox{\xy \POS(0,75)\ar@{-} (75,75) \ar@{-} (0,0)\endxy}
+\def\coangle{\copy\coanglebox}
+
 
 \subsection{Composition}
 \label{sec:composition}
 %
+For $m>n$ write $s^m_n$, $t^m_n$ for $m-n$ iteration of $s$ and $t$,
+respectively. Explicitly:
+\begin{align*}
+s_n^m &~=~ s_{m-1}\cdots s_n &:~ S_m \Rightarrow S_n\\
+t_n^m &~=~ t_{m-1}\cdots t_n &:~ S_m \Rightarrow S_n
+\end{align*}
+%
+For each $n\in \mathbb{N}$ define context $Y_n$ by the pullback in:
+\[\bfig
+\square/<-`<-`<-`<-/[S_0`S_n`S_n`Y_n;t^n_0`s^n_0`l_n`r_n]
+\place(400,100)[\coangle]
+\efig\]
+%
+By definition of pullbacks, $Y_n$ looks like a pair of spans $S_n$
+together with the proviso that the variable $1$ of one is always
+equal to variable $0$ of the other. I.e. $Y_n$ has the shape of two
+spans pasted target-to-source at level $0$. It is easy to check that
+this indeed a pullback\oxr{This could be done more properly by
+  defining equalisers of projections, and thus pullback of pairs of
+  projections. But is it necessary?} . 
+%
+
+By the globular identities the two outer squares in the diagram below
+commute and by the universal property of the pullback imply a pair
+of mediating arrows as indicated. 
+\[\bfig
+\square/<-`<-`<-`<-/[S_0`S_n`S_n`Y_n;t^n_0`s^n_0`l_n`r_n]
+\place(400,100)[\coangle]
+\morphism(500,500)/<-/<500,0>[S_n`S_{n+1};s_n]
+%\morphism(500,500)/{@{<-}@<.5em>}/<500,0>[S_n`S_{n+1};t_n]
+%\morphism(0,0)/{@{<-}@<-.5em>}/<0,-500>[S_n`S_{n+1};s_n]
+\morphism(0,0)|l|/<-/<0,-500>[S_n`S_{n+1};s_n]
+\morphism(1000,500)|r|/<-/<0,-1000>[S_{n+1}`Y_{n+1};l_{n+1}]
+\morphism(0,-500)|b|/<-/<1000,0>[S_{n+1}`Y_{n+1};r_{n+1}]
+\place(900,-400)[\coangle]
+\morphism(500,0)/<--/<500,-500>[Y_n`Y_{n+1};\langle s , s \rangle_n]
+\efig\]
+%
+Similarly we obtain an arrow $Rr_n : Y_{n+1} \to Y_n$. The morphisms
+$l_n$ and $r_n$ provide projections onto the left and right span of
+$Y_n$ respectively. The mediating arrows $\langle s, s\rangle_n$ and
+$\langle t , t \rangle_n$ provide
+projections out of $Y_{n+1}$ onto the join of the sources and targets of the left
+and right parts respectively.\oxr{I don't suppose anyone understands
+  any of this. Either drop or provide better explanation.}
+
+In order to define composition we define for each $n$ a third morphism
+$c_n: Y_n \Rightarrow S_n$ with the property that both the $s$-squares
+and $t$-squares below commute. 
+\begin{equation}\label{eq:comp}
+\bfig
+\square/`<-`<-`/[S_n`S_{n+1}`Y_n`Y_{n+1};`c_n`c_{n+1}`]
+\morphism(0,500)|a|/{@{<-}@<.5em>}/[S_n`S_{n+1};s_n]
+\morphism(0,500)|b|/{@{<-}@<-.5em>}/[S_n`S_{n+1};t_n]
+\morphism(0,0)|a|/{@{<-}@<.5em>}/[Y_n`Y_{n+1};\langle s , s \rangle_n]
+\morphism(0,0)|b|/{@{<-}@<-.5em>}/[Y_n`Y_{n+1};\langle t , t \rangle_n]
+\efig
+\end{equation}
+% 
+The commutativity of \eqref{eq:comp} expresses the fact that the
+source of a composition is a composition of sources and the target of
+a composition is a composition of target. 
+
+It follows from all of this that for a context $\Gamma$ and a pair of
+spans $a , b : \Gamma \to S_n$, there is a span $c \langle a , b \rangle
+: \Gamma \to S_n$ from $s^n_0 a to t^n_0 b$ which is the composition
+of $a$ and $b$.

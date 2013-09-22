@@ -34,6 +34,7 @@
 
 \author{Thorsten Altenkirch \and Li Nuo \and Ond\v{r}ej Ryp\'a\v{c}ek}
 \newcommand{\txa}[1]{\marginpar{txa:#1}}
+\newcommand{\oxr}[1]{\marginpar{\footnotesize oxr:#1}}
 
 \maketitle
 

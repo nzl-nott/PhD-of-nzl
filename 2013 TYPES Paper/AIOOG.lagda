@@ -15,6 +15,7 @@
 \usepackage{textgreek}
 \usepackage{ucs}
 \usepackage[utf8x]{inputenc}
+\usepackage{diagxy}
 
 
 \newcommand{\wig}{weak $\infty$-groupoids}
@@ -29,7 +30,9 @@
 %\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
 \title{$\omega$-Groupoids and beyond}
 
-\author{Thorsten Altenkirch \and Li Nuo \and Ondrej Rypacek}
+\newtheorem{lemma}{Lemma}
+
+\author{Thorsten Altenkirch \and Li Nuo \and Ond\v{r}ej Ryp\'a\v{c}ek}
 \newcommand{\txa}[1]{\marginpar{txa:#1}}
 
 \maketitle
@@ -597,6 +600,8 @@ lem+Stm (_,_ δ {A} a) γ B = cm-eq (lem+Stm δ γ B) (cohOp [⊚]T ∾ ([+S]tm 
 \input{GroupoidLaws}
 
 \txa{Prove the laws of groupoid. Maybe even some higher order?}
+
+\input{Telescopes}
 
 \section{Semantics}
 

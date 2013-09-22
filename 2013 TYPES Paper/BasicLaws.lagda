@@ -19,88 +19,23 @@ open import Suspension
 \end{code}
 }
 
-One of the most important feature of the contractible contexts is that any type in a contractible context is inhabited. It can be simply proved by using J-term and identity morphism.
-
+All the syntax constructions of this model rely on the basis that any type in a contractible context is inhabited. It is naturally derivable with the identity morphism we have. 
 \begin{code}
 Coh-Contr : {Γ : Con}{A : Ty Γ} →
              isContr Γ 
            → Tm A
 Coh-Contr isC = JJ isC (IdCm _) _ ⟦ sym (IC-T _) ⟫
+\end{code}
 
+Since a partially lifted contractible context is also contractible, any type lifted from a contractible context is also inhabited.
 
+\begin{code}
 Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) →
              isContr Δ
-           → Tm {rpl Δ A} (rpl-T Δ A B)
+           → Tm {rpl Δ A} (rpl-T A B)
 Coh-rpl {Γ} {Δ} A B isc = JJ (rep-C-ε-Contr A isc) (rpl-pr2 Δ A) (rep-T A B)
-
-
-apply-cm : {Γ : Con}{A : Ty Γ} →
-           (x : Tm A) 
-         → Γ ⇒ (Γ , A)
-apply-cm x = (IdCm _) , (x ⟦ IC-T _ ⟫)
-
-
-apply-cm' : {Γ : Con}{A B : Ty Γ} →
-            (x : Tm A)(prf : B ≡ A)
-          → Γ ⇒ (Γ , B)
-apply-cm' x prf = (IdCm _) , x ⟦ trans (IC-T _) prf ⟫
-
-
-apply-x : {Γ : Con}{A : Ty Γ} →
-          {x : Tm A} 
-        → var v0 [ apply-cm x ]tm ≅ x
-apply-x = htrans wk-coh (cohOp (IC-T _))
-
-
-apply-x' : {Γ : Con}{A B : Ty Γ} →
-          {x : Tm A}{prf : B ≡ A}
-        → var v0 [ apply-cm' x prf ]tm ≅ x
-apply-x' = htrans wk-coh (cohOp (trans (IC-T _) _))
-
-
-apply-id : {Γ : Con}{A B : Ty Γ} →
-           {x : Tm A}(y : Tm B)
-        → (y +tm A) [ apply-cm x ]tm ≅ y
-apply-id y = htrans (+tm[,]tm y) (IC-tm _)
-
-apply-T : {Γ : Con}{A : Ty Γ}(B : Ty (Γ , A)) →
-          (x : Tm A) 
-        → Ty Γ
-apply-T B x = B [ apply-cm x ]T
-
-
-apply : {Γ : Con}{A : Ty Γ}{B : Ty (Γ , A)} →
-        (f : Tm {Γ , A} B) → 
-        (x : Tm A) 
-      → Tm (apply-T B x)
-apply t x = t [ apply-cm x ]tm
-
-apply-2 : {Γ : Con}
-          {A : Ty Γ}
-          {B : Ty (Γ , A)}
-          {C : Ty (Γ , A , B)}
-          (f : Tm {Γ , A , B} C)
-          (x : Tm A)(y : Tm B)
-        → Tm (apply-T (apply-T C y) x)
-apply-2 f x y = (f [ apply-cm y ]tm) [ apply-cm x ]tm
-
-apply-3 : {Γ : Con}
-          {A : Ty Γ}
-          {B : Ty (Γ , A)}
-          {C : Ty (Γ , A , B)}
-          {D : Ty (Γ , A , B , C)}
-          (f : Tm {Γ , A , B , C} D)
-          (x : Tm A)(y : Tm B)(z : Tm C)
-         →  Tm (apply-T (apply-T (apply-T D z) y) x)
-apply-3 f x y z = ((f [ apply-cm z ]tm) [ apply-cm y ]tm) [ apply-cm x ]tm
-
-fun : {Γ : Con}{A B : Ty Γ} → 
-      Tm (B +T A)
-    → (Tm {Γ} A → Tm {Γ} B) 
-fun t a = (t [ apply-cm a ]tm) ⟦ sym (trans +T[,]T (IC-T _)) ⟫
-
-
 \end{code}
+
 
 To show the syntax framework is a valid internal language of \wog{}, as a first step, we should produce a reflexivity term for the equality of any type.
 
@@ -111,66 +46,75 @@ We tried several ways to get the reflexivity terms. One of them is to define the
 
 \begin{code}
 
+
+refl*-Con : Con
+refl*-Con = ε , *
+
 refl* :  Tm {ε , *} (var v0 =h var v0)
 refl* = Coh-Contr c*
 
 
-Tm-refl' :  (Γ : Con)(A : Ty Γ) → Tm (rpl-T  (ε , *) A (var v0 =h var v0))
-Tm-refl' Γ A = rpl-tm (ε , *) A refl*
+Tm-refl' :  {Γ : Con}(A : Ty Γ) → Tm (rpl-T {Δ = ε , *} A (var v0 =h var v0))
+Tm-refl' A = rpl-tm A refl*
 
-Tm-refl :  (Γ : Con)(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
-Tm-refl Γ A = (Tm-refl' Γ A)  [ δ ]tm ⟦ prf1 ⟫
-  where
-    δ : (Γ , A) ⇒ rpl (ε , *) A
-    δ = 1-1cm-same (rep-T-p1 A)
-
-    prf : rpl-tm (ε , *) A (var v0) [ δ ]tm ≅ var v0
-    prf = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
-           (1-1cm-same-v0 (rep-T-p1 A))
-
-    prf1 : (var v0 =h var v0) ≡ rpl-T (ε , *) A (var v0 =h var v0) [ δ ]T
-    prf1 = sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ prf prf))
 
 \end{code}
-
-The one above is special for the reflexivity of the last variable in a non-empty context. We also define a more general version which is the reflexivity for any term of any type in given context. 
-
-\begin{code}
-
-Fun-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
-Fun-refl Γ A x =  (Tm-refl' Γ A) 
-                 [ apply-cm' x (rep-T-p1 _) ]tm 
-                 ⟦ sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
-
-\end{code}
-
-We also construct the symmetry for the morphism between the last two variables.
-
 
 \AgdaHide{
 \begin{code}
 
+Tm-refl :  {Γ : Con}(A : Ty Γ) → Tm {Γ , A} (var v0 =h var v0)
+Tm-refl A = (Tm-refl' A)  [ map-1 ]tm ⟦ prf1 ⟫
+  where
+    prf : rpl-tm {Δ = ε , *} A (var v0) [ map-1 ]tm ≅ var v0
+    prf = htrans (congtm (htrans ([⊚]tm (rep-tm A (var v0))) 
+          (htrans (congtm (rep-tm-p1 A)) (htrans wk-coh wk-coh+)))) 
+           (1-1cm-same-v0 (rep-T-p1 A))
 
-Tm-sym* : Tm {ε , * , * , _} (((var v0) =h (var (vS v0))) +T _)
-Tm-sym* = Coh-Contr (ext c* v0)
-
-Tm-sym : (Γ : Con)(A : Ty Γ)
-        → Tm (rpl-T  (ε , * , * , _) A (((var v0) =h (var (vS v0))) +T _))
-Tm-sym Γ A = rpl-tm (ε , * , * , _) A Tm-sym*
+    prf1 : (var v0 =h var v0) ≡ rpl-T {Δ = ε , *} A (var v0 =h var v0) [ map-1 ]T
+    prf1 = sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ prf prf))
 
 {-
-sameCon-sym : (Γ : Con)(A : Ty Γ)
-            → rpl (ε , * , * , (var (vS v0) =h var v0)) A ≡ (Γ , A , A +T A , (var (vS v0) =h var v0))
-sameCon-sym Γ A = Con-eq {!!} {!!}
+tsp-Tm base-1 T-eq (Tm-refl' Γ A)
+  where
+    t-eq : rpl-tm (ε , *) A (var v0) [  IdCm' base-1 ]tm ≅ var v0
+    t-eq = htrans (congtm (rpl-tm-v0' ε A)) (IC-tm'-v0 base-1)
 
-Tm-sym' : (Γ : Con)(A : Ty Γ)
-        → Tm {Γ , A , A +T A , ((var (vS v0)) =h (var v0))} (((var v0) =h (var (vS v0))) +T _)
-Tm-sym' Γ A = (Tm-sym Γ A [ {!!} ]tm) ⟦ {!!} ⟫
+    T-eq :  (rpl-T (ε , *) A (var v0 =h var v0))  [ IdCm' base-1 ]T ≡ (var v0 =h var v0)
+    T-eq = trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ t-eq t-eq)
+
 -}
+Fun-refl : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
+Fun-refl Γ A x =  (Tm-refl' A) 
+                 [ IdCm _ , x ⟦ rpl*-A ⟫ ]tm 
+                 ⟦ sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫ -- ⟦ sym (trans (congT (rpl-T-p2 (ε , *) A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
+
+\end{code}
+}
+
+We also construct the symmetry for the morphism between the last two variables.
+
+
+\begin{code}
+
+sym*-Con : Con
+sym*-Con = refl*-Con , * , (var (vS v0) =h var v0)
+
+Tm-sym* : Tm {sym*-Con} (((var v0) =h (var (vS v0))) +T _)
+Tm-sym* = Coh-Contr (ext c* v0)
+
+Tm-sym : {Γ : Con}(A : Ty Γ)
+        → Tm (rpl-T  {Δ = sym*-Con} A (((var v0) =h (var (vS v0))) +T _))
+Tm-sym A = rpl-tm A Tm-sym*
+
+\end{code}
+
+\AgdaHide{
+\begin{code}
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
-       → Tm (rpl-T  (ε , * , *) A (var (vS v0) =h var v0)) 
-       → Tm (rpl-T  (ε , * , *) A (var v0 =h var (vS v0)))
-Tm-sym-fun Γ A = fun (Tm-sym Γ A ⟦ sym (rpl-T-p3 (ε , * , *) A) ⟫)
+       → Tm (rpl-T  {Δ = ε , * , *} A (var (vS v0) =h var v0)) 
+       → Tm (rpl-T  {Δ = ε , * , *} A (var v0 =h var (vS v0)))
+Tm-sym-fun Γ A = fun (Tm-sym A ⟦ sym (rpl-T-p3 (ε , * , *) A) ⟫)
 
 Tm-sym-fun2 : (Γ : Con)(A : Ty Γ) 
        → Tm {Γ , A , A +T A} (var (vS v0) =h var v0) 
@@ -194,13 +138,12 @@ Tm-sym-fun2 Γ A t =
             ≡ (A +T A) +T (A +T A) 
     eq2 = trans +T[,]T eq1
 
-
 Fun-sym : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
           Tm (a =h b)
        → Tm (b =h a)
-Fun-sym Γ A a b t = (Tm-sym Γ A) [ rpl-sub Γ A a b t ]tm 
+Fun-sym Γ A a b t = (Tm-sym A) [ rpl-sub Γ A a b t ]tm 
          ⟦ sym (trans (rpl-T-p3-wk (ε , * , *) A) (trans (congT (rpl-T-p2 (ε , * , *) A)) 
-           (hom≡ (rpl-tm-v0 (ε , *) A (rpl*-A2 A)) (htrans (rpl-tm-vS (ε , *) A)
+           (hom≡ (rpl-tm-v0 (ε , *) A (cohOp (rpl*-A2 A))) (htrans (rpl-tm-vS (ε , *) A)
                  (rpl*-a A))))) ⟫
 
 \end{code}
@@ -208,19 +151,10 @@ Fun-sym Γ A a b t = (Tm-sym Γ A) [ rpl-sub Γ A a b t ]tm
 
 Then the transitivity for three consecutive variables at the last of a context is as follows.
 
-\AgdaHide{
-\begin{code}
-
-\end{code}
-}
-
-
-\AgdaHide{
-
 \begin{code}
 
 trans*-Con : Con
-trans*-Con = ε , * , * , (var (vS v0) =h var v0) , * , (var (vS (vS v0)) =h var v0)
+trans*-Con = sym*-Con , * , (var (vS (vS v0)) =h var v0)
 
 trans*-Ty : Ty trans*-Con
 trans*-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
@@ -228,13 +162,23 @@ trans*-Ty = (var (vS (vS (vS v0))) =h var v0) +T _
 trans*-Tm : Tm trans*-Ty
 trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
 
-Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (rpl-T trans*-Con A trans*-Ty)
-Tm-trans' A = rpl-tm trans*-Con A trans*-Tm
+Tm-trans' : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
+Tm-trans' A = rpl-tm A trans*-Tm
+
+\end{code}
 
 
--- rpl-T trans*-Con A trans*-Ty ≡ (rpl-T (ε , * , * , (var (vS v0) =h var v0) , *) A (var (vS (vS (vS v0))) =h var v0)) +T _
+
+\AgdaHide{
+
+\begin{code}
 
 
+{-
+J*-Tm : {Γ : Con}{A : Ty Γ}(P : Ty (Γ , A , A +T A , (var (vS v0) =h var v0)))  -- → (refla : Tm {ε , *} (P [ (IdCm _ , var v0) , Tm-refl' * ]T))
+     → Tm {Γ , A , A +T A , (var (vS v0) =h var v0) , P [ IdCm _ +S _ +S _ , var (vS (vS v0)) ⟦ wk+S+T (wk+S+T (trans +T[,]T (wk+S+T (IC-T _)))) ⟫ , ((Tm-refl' A) [ (IdCm _ +S _ +S _ +S _) , (var (vS (vS v0)) ⟦ wk+S+T (wk+S+T (wk+S+T (trans (IC-T _) (rep-T-p1 _)))) ⟫) ]tm ⟦ {!!} ⟫) ]T } (P +T _)
+J*-Tm P = var v0 ⟦ trans +T[,]T (wk+S+T {!!}) ⟫ -- Coh-Contr (ext c* v0)
+-}
 {-
 transCon : {Γ : Con}(A : Ty Γ) → Con
 transCon {Γ} A = (Γ , A , A +T A , (A +T A) +T (A +T A))

@@ -11,24 +11,24 @@ open import Data.Product renaming (_,_ to _,,_)
 \end{code}
 }
 
-There are some important notions which are missing but are derivable from the syntax. The groupoid laws on all levels should also be derivable using the J-terms. We will show some of them in this section.
+There are some important notions which are missing but are derivable from the syntax. The groupoid laws on all levels should also be derivable using the J-terms. We will show the construction of some of them in this section.
 
-Identity context morphism is not a primitive notion in this framework. To define it, we have to declare all the properties it should hold as an identity morphism. In other words, substitution with identity morphism should keep everything unchanged.
+First of all, one of the important notions is identity context morphism which returns the same value for all substitution. Unfortunately, due to the choice of definition of context morphisms in this model, identity morphism is not primitive. All properties of it have to be proved at the same time because their definitions are dependent on each others.
 
 
 \begin{code}
 IdCm : ∀ Γ → Γ ⇒ Γ
 
-IC-T  : ∀ {Γ : Con}(A : Ty Γ) → A [ IdCm Γ ]T ≡ A
-IC-v  : ∀{Γ : Con}{A : Ty Γ}(x : Var A) →  x [ IdCm Γ ]V ≅ var x
-IC-⊚  : ∀{Γ Δ : Con}(δ : Γ ⇒ Δ) → δ ⊚ IdCm Γ ≡ δ
+IC-T  : ∀{Γ : Con}(A : Ty Γ)            → A [ IdCm Γ ]T ≡ A
+IC-v  : ∀{Γ : Con}{A : Ty Γ}(x : Var A) → x [ IdCm Γ ]V ≅ var x
+IC-cm  : ∀{Γ Δ : Con}(δ : Γ ⇒ Δ)        → δ ⊚ IdCm Γ ≡ δ
 IC-tm : ∀{Γ : Con}{A : Ty Γ}(a : Tm A) → a [ IdCm Γ ]tm ≅ a
 \end{code}
 
 \AgdaHide{
 \begin{code}
 
-IdCm ε = •
+IdCm ε       = •
 IdCm (Γ , A) = (IdCm Γ) +S _ , var v0 ⟦ wk+S+T (IC-T _) ⟫
 
 IC-T {Γ} * = refl
@@ -37,42 +37,137 @@ IC-T {Γ} (a =h b) = hom≡ (IC-tm a) (IC-tm b)
 IC-v {.(Γ , A)} {.(A +T A)} (v0 {Γ} {A}) = wk-coh ∾ cohOp (wk+S+T (IC-T _))
 IC-v {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) = wk-coh ∾ wk+S+tm (var x) (IC-v _)
 
-IC-⊚ • = refl
-IC-⊚ {Γ} (_,_ δ {A} a) = cm-eq (IC-⊚ δ) (cohOp [⊚]T ∾ IC-tm a) 
+IC-cm • = refl
+IC-cm (δ , a) = cm-eq (IC-cm δ) (cohOp [⊚]T ∾ IC-tm a) 
 
-IC-tm {Γ} {A} (var x) = IC-v x
-
-IC-tm {Γ} {.(A [ δ ]T)} (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq (IC-⊚ δ)
-
-
-
-p1 : ∀ {Γ A} → (Γ , A) ⇒ Γ
-p1 = IdCm _ +S _
-
-
-p1-wk-T : ∀{Γ : Con}{A B : Ty Γ} → A [ p1 ]T ≡ A +T B
-p1-wk-T = wk+S+T (IC-T _)
-
-p1-wk-tm : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A} → a [ p1 ]tm ≅ a +tm B
-p1-wk-tm {a = a} = wk+S+tm a (IC-tm a)
-
-
-p2 : ∀ {Γ A} → Tm {Γ , A} (A [ p1 ]T)
-p2 = var v0 ⟦ wk+S+T (IC-T _) ⟫
-
-p2-v0 : ∀ {Γ A} → p2 {Γ} {A} ≅ var v0
-p2-v0 {A = A} = cohOp (trans [+S]T (wk-T (IC-T A)))
-
-
-pr-beta : ∀ {Γ A} → (p1 {Γ} {A} , p2) ≡ IdCm _
-pr-beta = refl
-
-IdCm' : {Γ Δ : Con} → Γ ≡ Δ → Γ ⇒ Δ
-IdCm' refl = IdCm _
-
-
-Con-eq : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ} → (eq : Γ ≡ Δ) → A ≡ B [ IdCm' eq ]T → _≡_ {_} {Con} (Γ , A) (Δ , B)
-Con-eq refl refl = cong (λ x → _ , x) (IC-T _)
+IC-tm (var x) = IC-v x
+IC-tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq (IC-cm δ)
 
 \end{code}
+}
+
+The projection morphisms follows from the indentity morphism. The first projection is same as weakening.
+
+\begin{code}
+pr1 : ∀ {Γ A} → (Γ , A) ⇒ Γ
+pr2 : ∀ {Γ A} → Tm {Γ , A} (A [ pr1 ]T)
+
+pr1-wk-T  : ∀{Γ : Con}{A B : Ty Γ} → A [ pr1 ]T ≡ A +T B
+pr1-wk-tm : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A} → a [ pr1 ]tm ≅ a +tm B
+pr1-wk-cm : ∀{Γ Δ : Con}{A B : Ty Γ}(δ : Γ ⇒ Δ) → δ ⊚ (pr1 {Γ} {B}) ≡ δ +S _
+
+pr2-v0 : ∀ {Γ A} → pr2 {Γ} {A} ≅ var v0
+
+pr-beta : ∀ {Γ A} → (pr1 {Γ} {A} , pr2) ≡ IdCm _
+\end{code}
+
+\AgdaHide{
+\begin{code}
+pr1 {Γ} = IdCm _ +S _
+
+pr1-wk-T = wk+S+T (IC-T _)
+
+pr1-wk-tm {a = a} = wk+S+tm a (IC-tm a)
+
+pr1-wk-cm δ = wk+S+S (IC-cm _)
+
+pr2 = var v0 ⟦ wk+S+T (IC-T _) ⟫
+
+pr2-v0 {A = A} = cohOp (trans [+S]T (wk-T (IC-T A)))
+
+pr-beta = refl
+
+
+data IsId : {Γ Δ : Con}(γ : Γ ⇒ Δ) → Set where
+  isId-bsc : {γ : ε ⇒ ε} → IsId γ
+  isId-ind : {Γ Δ : Con}{γ : Γ ⇒ Δ} → IsId γ → 
+             {A : Ty Γ}{B : Ty Δ} → 
+             (eq : B [ γ ]T ≡ A) 
+           → IsId {Γ , A} {Δ , B} (γ +S _ , var v0 ⟦ wk+S+T eq ⟫)
+
+
+IC-IsId : {Γ : Con} → IsId (IdCm Γ)
+IC-IsId {ε} = isId-bsc
+IC-IsId {Γ , A} = isId-ind (IC-IsId {Γ}) (IC-T _)
+
+
+IC-tm'-v0 : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}{γ : (Γ , A) ⇒ (Δ , B)} → IsId γ → var v0 [ γ ]tm ≅ var v0
+IC-tm'-v0 (isId-ind isd refl) = wk-coh ∾ cohOp (trans [+S]T refl)
+
+\end{code}
+
+
+
+
+\begin{code}
+
+
+Id-with : {Γ : Con}{A : Ty Γ} →
+           (x : Tm A) 
+         → Γ ⇒ (Γ , A)
+Id-with x = (IdCm _) , (x ⟦ IC-T _ ⟫)
+
+
+apply-cm'' : {Γ Δ : Con}{A : Ty Γ} →
+             (x : Tm A)(γ : Γ ⇒ Δ){B : Ty Δ}(p : B [ γ ]T ≡ A)
+          → Γ ⇒ (Δ , B)
+apply-cm'' x γ p = γ , (x ⟦ p ⟫)
+
+
+apply'' : {Γ Δ : Con}{A : Ty Γ}
+          (x : Tm A)(γ : Γ ⇒ Δ){B : Ty Δ}
+          (p : B [ γ ]T ≡ A){C : Ty (Δ , B)}
+          (f : Tm {Δ , B} C)
+        → Tm (C [ apply-cm'' x γ p ]T)
+apply'' x γ p f = f [ apply-cm'' x γ p ]tm
+
+apply-x : {Γ : Con}{A : Ty Γ} →
+          {x : Tm A} 
+        → var v0 [ Id-with x ]tm ≅ x
+apply-x = wk-coh ∾ (cohOp (IC-T _))
+
+apply-id : {Γ : Con}{A B : Ty Γ} →
+           {x : Tm A}(y : Tm B)
+        → (y +tm A) [ Id-with x ]tm ≅ y
+apply-id y = (+tm[,]tm y) ∾ (IC-tm _)
+
+apply-T : {Γ : Con}{A : Ty Γ}(B : Ty (Γ , A)) →
+          (x : Tm A) 
+        → Ty Γ
+apply-T B x = B [ Id-with x ]T
+
+
+apply : {Γ : Con}{A : Ty Γ}{B : Ty (Γ , A)} →
+        (f : Tm {Γ , A} B) → 
+        (x : Tm A) 
+      → Tm (apply-T B x)
+apply t x = t [ Id-with x ]tm
+
+apply-2 : {Γ : Con}
+          {A : Ty Γ}
+          {B : Ty (Γ , A)}
+          {C : Ty (Γ , A , B)}
+          (f : Tm {Γ , A , B} C)
+          (x : Tm A)(y : Tm B)
+        → Tm (apply-T (apply-T C y) x)
+apply-2 f x y = (f [  Id-with y ]tm) [  Id-with x ]tm
+
+apply-3 : {Γ : Con}
+          {A : Ty Γ}
+          {B : Ty (Γ , A)}
+          {C : Ty (Γ , A , B)}
+          {D : Ty (Γ , A , B , C)}
+          (f : Tm {Γ , A , B , C} D)
+          (x : Tm A)(y : Tm B)(z : Tm C)
+         →  Tm (apply-T (apply-T (apply-T D z) y) x)
+apply-3 f x y z = ((f [  Id-with z ]tm) [  Id-with y ]tm) [ Id-with x ]tm
+
+fun : {Γ : Con}{A B : Ty Γ} → 
+      Tm (B +T A)
+    → (Tm {Γ} A → Tm {Γ} B) 
+fun t a = (t [ Id-with a ]tm) ⟦ sym (trans +T[,]T (IC-T _)) ⟫
+
+
+\end{code}
+
 }

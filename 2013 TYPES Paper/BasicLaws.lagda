@@ -51,7 +51,7 @@ Given contexts $\Gamma$, $\Delta$, types $A : Ty \Gamma$, $B : Ty \Delta$, if $\
 Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) →
              isContr Δ
            → Tm {rpl-C A Δ} (rpl-T A B)
-Coh-rpl {Γ} {Δ} A B isc = JJ (lift-C-ε-Contr A isc) (filter-cm Δ A) (lift-T A B)
+Coh-rpl {Δ = Δ} A B isc = JJ (lift-C-ε-Contr A isc) (filter-cm Δ A) (lift-T A B)
 \end{code}
 
 To verify it is a correct model of \wog{}, the reflexivity, symmetry and transitivity terms of any type should be inhabited. Let's start from the basic case as for the base type "*". It is trivially inhabited because the context is the basic case of a contractible context and the Lemma~\ref{Coh-Contr} we proved before.
@@ -67,7 +67,8 @@ refl* = Coh-Contr c*
 To obtain the reflexivity term for any given type, we just need to use the lifting function with the term of the base case.
 
 \begin{code}
-refl-Tm :  {Γ : Con}(A : Ty Γ) → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
+refl-Tm :  {Γ : Con}(A : Ty Γ) 
+        → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
 refl-Tm A = rpl-tm A refl*
 \end{code}
 
@@ -111,11 +112,14 @@ vα = var v0
 
 \begin{code}
 
-sym*-Tm : Tm {x:*,y:*,α:x=y} (vY =h vX)
+sym*-Ty : Ty x:*,y:*,α:x=y
+sym*-Ty = vY =h vX
+
+sym*-Tm : Tm {x:*,y:*,α:x=y} sym*-Ty
 sym*-Tm = Coh-Contr (ext c* v0)
 
 sym-Tm : {Γ : Con}(A : Ty Γ)
-        → Tm (rpl-T  {Δ = x:*,y:*,α:x=y} A (vY =h vX))
+        → Tm (rpl-T A sym*-Ty)
 sym-Tm A = rpl-tm A sym*-Tm
 
 \end{code}
@@ -172,7 +176,6 @@ vβ = var v0
 }
 
 \begin{code}
-
 trans*-Ty : Ty x:*,y:*,α:x=y,z:*,β:y=z
 trans*-Ty = (vX +tm _ +tm _) =h vZ
 

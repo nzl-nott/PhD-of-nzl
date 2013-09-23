@@ -53,8 +53,10 @@ pr1 : ∀ {Γ A} → (Γ , A) ⇒ Γ
 pr2 : ∀ {Γ A} → Tm {Γ , A} (A [ pr1 ]T)
 
 pr1-wk-T  : ∀{Γ : Con}{A B : Ty Γ} → A [ pr1 ]T ≡ A +T B
-pr1-wk-tm : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A} → a [ pr1 ]tm ≅ a +tm B
-pr1-wk-cm : ∀{Γ Δ : Con}{A B : Ty Γ}(δ : Γ ⇒ Δ) → δ ⊚ (pr1 {Γ} {B}) ≡ δ +S _
+pr1-wk-tm : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A} 
+          → a [ pr1 ]tm ≅ a +tm B
+pr1-wk-cm : ∀{Γ Δ : Con}{A B : Ty Γ}(δ : Γ ⇒ Δ) 
+          → δ ⊚ (pr1 {Γ} {B}) ≡ δ +S _
 
 pr2-v0 : ∀ {Γ A} → pr2 {Γ} {A} ≅ var v0
 

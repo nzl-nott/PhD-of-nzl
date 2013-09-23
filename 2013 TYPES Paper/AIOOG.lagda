@@ -224,10 +224,10 @@ With context morphism, we could define substitutions for types variables and ter
 composition of contexts can be understood as substitution for context morphisms as well.
 
 \begin{code}
-_[_]T  : {Γ Δ : Con}(A : Ty Δ)           (δ : Γ ⇒ Δ) → Ty Γ
-_[_]V  : {Γ Δ : Con}{A : Ty Δ}(a : Var A)(δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
-_[_]tm : {Γ Δ : Con}{A : Ty Δ}(a : Tm A) (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
-_⊚_    : {Γ Δ Θ : Con}      →  Δ ⇒ Θ → (δ : Γ ⇒ Δ) → Γ ⇒ Θ
+_[_]T  : {Γ Δ : Con}(A : Ty Δ) → Γ ⇒ Δ → Ty Γ
+_[_]V  : {Γ Δ : Con}{A : Ty Δ} → Var A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
+_[_]tm : {Γ Δ : Con}{A : Ty Δ} → Tm A  → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
+_⊚_    : {Γ Δ Θ : Con} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
 \end{code}
 
 
@@ -387,7 +387,8 @@ Weakening inside substitution is equivalent to weakening outside.
          {B : Ty Γ}
          → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
 
-[+S]S : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{B : Ty Γ} → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
+[+S]S : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{B : Ty Γ} 
+      → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
 
 \end{code}
 
@@ -612,10 +613,9 @@ congtm2 refl = refl _
 
 \section{Some Important Derivable Constructions}
 
-\txa{Needs to be reordered, and better explained}
+\txa{Needs to be better explained}
 
 \input{AIOOGS2}
-% This includes Identity context morphism and projection
 
 \input{Suspension}
 

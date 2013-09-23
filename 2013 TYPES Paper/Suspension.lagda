@@ -72,7 +72,7 @@ id-cm++ Δ Θ γ = repeat-p1 Δ ++cm (γ ⊚ cor _)
 }
 
 
-\subsection{Lifting and Replacing functions}
+\subsection{Lifting and replacing functions}
 
 For arbitrary type $A$ in context $\Gamma$, there should be a context which only contains the minimum required variables for it.
 We design an approach to filter these variables out. Briefly speaking, we construct 
@@ -234,12 +234,12 @@ lift-T : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (lift-C A Δ)
 
 lift-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B → Tm (lift-T A B)
 
-lift-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (lift-C A Θ) ⇒ (lift-C A Δ)
-
 \end{code}
 
 \AgdaHide{
 \begin{code}
+
+lift-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (lift-C A Θ) ⇒ (lift-C A Δ)
 
 lift-C * Δ = Δ
 lift-C (_=h_ {A} a b) Δ = ΣC (lift-C A Δ)
@@ -256,7 +256,7 @@ lift-cm (_=h_ {A} a b) γ = Σs (lift-cm A γ)
 \end{code}
 }
 
-We observe that while the context to be lifted is empty, it is just the minimum context for type $A$. A context morphism which filters out the minimum context would be very useful later since we can turn lifted types and terms back to the ones for the orignal context. We name it as minimum morphism.
+We observe that while the context to be lifted is empty, it is just the minimum context for type $A$. A context morphism which filters out the minimum context would be very useful later since we can turn lifted types and terms back to the ones for the orignal context. We name it as \emph{minimum morphism}.
 
 \begin{code}
 

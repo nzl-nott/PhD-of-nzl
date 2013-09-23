@@ -17,9 +17,10 @@
 \usepackage[utf8x]{inputenc}
 \usepackage{diagxy}
 
+\usepackage{mypack}
+
 
 \newcommand{\wig}{weak $\infty$-groupoids}
-\newcommand{\mltt}{Martin-L\"{o}f Type Theory}
 \newcommand{\og}{ $\omega$-groupoids}
 \newcommand{\wog}{weak $\omega$-groupoids}
 \newcommand{\hott}{Homotopy Type Theory}

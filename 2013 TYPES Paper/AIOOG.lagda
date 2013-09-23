@@ -1,4 +1,8 @@
-\documentclass{article}
+\documentclass[a4paper,UKenglish,draft]{lipics}
+
+\PassOptionsToPackage{utf8x}{inputenc}
+
+\bibliographystyle{plain}
 
 %agda literal file
 \usepackage{agda}
@@ -31,9 +35,15 @@
 %\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
 \title{$\omega$-Groupoids and beyond}
 
-\newtheorem{lemma}{Lemma}
 
-\author{Thorsten Altenkirch \and Li Nuo \and Ond\v{r}ej Ryp\'a\v{c}ek}
+
+\author[1]{Thorsten Altenkirch}
+\author[1]{Nuo Li}
+\author[2]{Ond\v{r}ej Ryp\'a\v{c}ek}
+\affil[1]{University of Nottingham}
+\affil[2]{University of Oxford}
+\authorrunning{T.Altenkirch, N.Li and O.Ryp\'a\v{c}ek}
+
 \newcommand{\txa}[1]{\marginpar{txa:#1}}
 \newcommand{\oxr}[1]{\marginpar{\footnotesize oxr:#1}}
 
@@ -655,6 +665,5 @@ We would like to formalise a proof of that Id$\omega$ is an \wog{}, but the base
 
 \newpage
 \bibliography{my.bib}
-\bibliographystyle{plain}
 
 \end{document}

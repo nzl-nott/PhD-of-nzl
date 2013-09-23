@@ -167,7 +167,7 @@ By definition of pullbacks, $Y_n$ looks like a pair of spans $S_n$
 together with the proviso that the variable $1$ of one is always
 equal to variable $0$ of the other. I.e. $Y_n$ has the shape of two
 spans pasted target-to-source at level $0$. It is easy to check that
-this indeed a pullback\oxr{This could be done more properly by
+this is indeed a pullback\oxr{This could be done more properly by
   defining equalisers of projections, and thus pullback of pairs of
   projections. But is it necessary?} . 
 %
@@ -215,5 +215,5 @@ a composition is a composition of target.
 
 It follows from all of this that for a context $\Gamma$ and a pair of
 spans $a , b : \Gamma \to S_n$, there is a span $c \langle a , b \rangle
-: \Gamma \to S_n$ from $s^n_0 a to t^n_0 b$ which is the composition
+: \Gamma \to S_n$ from $s^n_0 a \to t^n_0 b$ which is the composition
 of $a$ and $b$.

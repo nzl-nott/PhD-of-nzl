@@ -215,5 +215,5 @@ a composition is a composition of target.
 
 It follows from all of this that for a context $\Gamma$ and a pair of
 spans $a , b : \Gamma \to S_n$, there is a span $c \langle a , b \rangle
-: \Gamma \to S_n$ from $s^n_0 a to t^n_0 b$ which is the composition
+: \Gamma \to S_n$ from $s^n_0 a$ to $t^n_0 b$ which is the composition
 of $a$ and $b$.

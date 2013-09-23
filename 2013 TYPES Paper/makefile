@@ -7,7 +7,7 @@ DEPS = latex/AIOOGS2.tex latex/GlobularSets.tex latex/BasicLaws.tex latex/Groupo
 all : pdf
 
 latex/%.tex : %.lagda
-	agda --latex  -i . -i $(AGDA_LIB) $<
+	agda $(AGDA_ARGS) --latex  -i . -i $(AGDA_LIB) $<
 
 
 latex/AIOOG.aux : $(DEPS)

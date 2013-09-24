@@ -23,7 +23,7 @@ record Glob : Set₁ where
 open Glob public renaming (obj to ∣_∣) 
 \end{code}
 
-Indeed we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
+Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
 
 As an example, we could contruct the identity globular set called $Idω$.
 

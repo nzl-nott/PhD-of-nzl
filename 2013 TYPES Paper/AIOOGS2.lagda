@@ -96,14 +96,6 @@ IC-IsId {Γ , A} = isId-ind (IC-IsId {Γ}) IC-T
 IC-tm'-v0 : {Γ Δ : Con}{A : Ty Γ}{B : Ty Δ}{γ : (Γ , A) ⇒ (Δ , B)} → IsId γ → var v0 [ γ ]tm ≅ var v0
 IC-tm'-v0 (isId-ind isd refl) = wk-coh ∾ cohOp (trans [+S]T refl)
 
-\end{code}
-
-
-
-
-\begin{code}
-
-
 Id-with : {Γ : Con}{A : Ty Γ} →
            (x : Tm A) 
          → Γ ⇒ (Γ , A)

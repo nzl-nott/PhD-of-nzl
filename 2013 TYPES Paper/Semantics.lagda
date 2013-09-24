@@ -14,9 +14,47 @@ open import AIOOG
 open import Data.Unit
 open import Data.Product
 open import Coinduction
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_])
 open import GroupoidLaws
 
+
+record Semantic (G : Glob) : Set₁ where
+  field
+    ⟦_⟧C : Con → Set
+    ⟦_⟧cm : ∀{Γ Δ : Con} → (Γ ⇒ Δ) → ⟦ Γ ⟧C → ⟦ Δ ⟧C
+    ⟦_⟧T : ∀{Γ}(A : Ty Γ)(γ : ⟦ Γ ⟧C) → Glob
+    ⟦_⟧tm : ∀{Γ A}(v : Tm A)(γ :  ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣ 
+    Coh : (Θ : Con)(ic : isContr Θ)(A : Ty Θ) → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
+    π : {Γ : Con}{A : Ty Γ}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
+
+    sC-b1 : ⟦ ε ⟧C ≡ ⊤
+    sC-b2 : ∀ {Γ A} → ⟦ Γ , A ⟧C ≡ Σ ⟦ Γ ⟧C (λ γ  → ∣ ⟦ A ⟧T γ ∣)
+    
+    sT-b1 : ∀{Γ}{γ : ⟦ Γ ⟧C} → ⟦ * ⟧T γ ≡ G
+    sT-b2 : ∀{Γ}{A}{u v}{γ : ⟦ Γ ⟧C} → ⟦ u =h v ⟧T γ ≡ ♭ (hom (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
+
+    lemTy : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C) → ⟦ A ⟧T (⟦ δ ⟧cm γ) ≡ ⟦ A [ δ ]T ⟧T γ
+
+    stm-b1 : ∀{Γ}{A}{x : Var A}{γ : ⟦ Γ ⟧C} → ⟦ var x ⟧tm γ ≡ π x γ
+    stm-b2 : ∀{Γ Δ A x δ}{γ : ⟦ Γ ⟧C} → ⟦ JJ x δ A ⟧tm γ ≡ subst ∣_∣ (lemTy A δ γ) (Coh Δ x A (⟦ δ ⟧cm γ))
+
+    
+    lemTm : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C) (a : Tm A) → subst ∣_∣ (lemTy A δ γ) (⟦ a ⟧tm (⟦ δ ⟧cm γ)) ≡ ⟦ a [ δ ]tm ⟧tm γ
+  
+    
+    semWK-ty : ∀ {Γ : Con}(A B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣) 
+             → ⟦ A ⟧T γ ≡ ⟦ A +T B ⟧T (subst (λ x → x) (sym sC-b2) (γ , v))
+
+    semWK-tm : ∀ {Γ : Con}(A B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
+                 (a : Tm A) → subst ∣_∣ (semWK-ty A B γ v) (⟦ a ⟧tm γ) 
+                        ≡ ⟦ a +tm B ⟧tm (subst (λ x → x) (sym sC-b2) (γ , v))
+
+    semWK-cm : ∀ {Γ Δ : Con}(B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
+                 (δ : Γ ⇒ Δ) → ⟦ δ ⟧cm γ ≡ ⟦ δ +S B ⟧cm (subst (λ x → x) (sym sC-b2) (γ , v))
+
+
+    coh-comm : ∀ {Γ : Con}(A B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(ic : isContr Γ)(ic' : isContr (Γ , B))
+                 → subst ∣_∣ (semWK-ty A B γ v) (Coh Γ ic A γ) ≡ Coh (Γ , B) ic' (A +T B) (subst (λ x → x) (sym sC-b2) (γ , v))
 \end{code}
 }
 
@@ -80,11 +118,6 @@ semWK-ty (_=h_ {A} a b) B γ v = EqHom (semWK-ty A _ _ _) (semWK-tm _ _ _ _ a) (
 π {.(Γ , A)} {.(A +T A)} (v0 {Γ} {A}) (γ , v) = subst ∣_∣ (semWK-ty A A γ v) v
 π {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) (γ , v) = subst ∣_∣ (semWK-ty A B γ v) (π x γ)
 
-
-{- we hav π so no need ⟦_⟧V
-⟦ v0 {Γ} {A} ⟧V (γ , v) = semWK A A γ {!!} {!!} -- transport ws v -- ws v -- ⟦ vs u ⟧V {!!}
-⟦ vS u ⟧V (γ , v) = {!!} -- transport ws (⟦ u ⟧V γ)
--}
 
 lemTy : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C) → ⟦ A ⟧T (⟦ δ ⟧cm γ) ≡ ⟦ A [ δ ]T ⟧T γ
 

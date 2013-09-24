@@ -33,7 +33,7 @@ Given a context $\Gamma$, and a type $A : Ty \Gamma$, if $\Gamma$ is contractibl
 Coh-Contr : {Γ : Con}{A : Ty Γ} →
              isContr Γ 
            → Tm A
-Coh-Contr isC = JJ isC (IdCm _) _ ⟦ sym (IC-T _) ⟫
+Coh-Contr isC = JJ isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
 
 
@@ -57,8 +57,6 @@ Coh-rpl {Δ = Δ} A B isc = JJ (lift-C-ε-Contr A isc) (filter-cm Δ A) (lift-T 
 To verify it is a correct model of \wog{}, the reflexivity, symmetry and transitivity terms of any type should be inhabited. Let's start from the basic case as for the base type "*". It is trivially inhabited because the context is the basic case of a contractible context and the Lemma~\ref{Coh-Contr} we proved before.
 
 \begin{code}
-x:* : Con
-x:* = ε , *
 
 refl* :  Tm {x:*} (var v0 =h var v0)
 refl* = Coh-Contr c*
@@ -90,21 +88,10 @@ refl-Tm' A = (refl-Tm A)  [ map-1 ]tm ⟦ prf1 ⟫
 
 refl-Fun : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
 refl-Fun Γ A x =  (refl-Tm A) 
-                 [ IdCm _ , x ⟦ rpl*-A ⟫ ]tm 
+                 [ IdCm , x ⟦ rpl*-A ⟫ ]tm 
                  ⟦ sym (trans (congT (rpl-T-p2 x:* A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
 
 
-x:*,y:*,α:x=y : Con
-x:*,y:*,α:x=y = x:* , * , (var (vS v0) =h var v0)
-
-vX : Tm {x:*,y:*,α:x=y} *
-vX = var (vS (vS v0))
-
-vY : Tm {x:*,y:*,α:x=y} *
-vY = var (vS v0)
-
-vα : Tm {x:*,y:*,α:x=y} (vX =h vY)
-vα = var v0
 
 \end{code}
 }
@@ -144,10 +131,10 @@ Tm-sym-fun2 Γ A t =
 
   where 
     wk-id : (Γ , A , A +T A) ⇒ Γ 
-    wk-id = (IdCm Γ +S A) +S (A +T A)
+    wk-id = (IdCm +S A) +S (A +T A)
   
     eq1 : A [ wk-id ]T ≡ (A +T A) +T (A +T A) 
-    eq1 = wk+S+T (wk+S+T (IC-T _))
+    eq1 = wk+S+T (wk+S+T IC-T)
 
     eq2 : (A +T A) [ wk-id , (var v0 ⟦ eq1 ⟫) ]T 
             ≡ (A +T A) +T (A +T A) 
@@ -160,16 +147,6 @@ Fun-sym Γ A a b t = (sym-Tm A) [ rpl-sub Γ A a b t ]tm
          ⟦ sym (trans (rpl-T-p3-wk (ε , * , *) A) (trans (congT (rpl-T-p2 (ε , * , *) A)) 
            (hom≡ (rpl-tm-v0 (ε , *) A (cohOp (rpl*-A2 A))) (htrans (rpl-tm-vS (ε , *) A)
                  (rpl*-a A))))) ⟫
-
-x:*,y:*,α:x=y,z:*,β:y=z : Con
-x:*,y:*,α:x=y,z:*,β:y=z = x:*,y:*,α:x=y , * , (var (vS (vS v0)) =h var v0)
-
-vZ : Tm {x:*,y:*,α:x=y,z:*,β:y=z} *
-vZ = var (vS v0)
-
-
-vβ : Tm {x:*,y:*,α:x=y,z:*,β:y=z} (vY +tm _ +tm _ =h vZ)
-vβ = var v0
 
 
 \end{code}

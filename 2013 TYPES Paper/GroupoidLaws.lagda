@@ -34,16 +34,16 @@ reflY = refl-Tm * +tm _
 
 \begin{code}
 Tm-right-identity* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ IdCm _ , vY , reflY ]tm =h vα)
+         (trans*-Tm [ IdCm , vY , reflY ]tm =h vα)
 Tm-right-identity* = Coh-Contr (ext c* v0)
 
 Tm-left-identity* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ ((IdCm _ ⊚ pr1 ⊚ pr1) , vX) , reflX , vY , vα ]tm =h vα)
+         (trans*-Tm [ ((IdCm ⊚ pr1 ⊚ pr1) , vX) , reflX , vY , vα ]tm =h vα)
 Tm-left-identity* = Coh-Contr (ext c* v0)
 
 
 Tm-right-inverse* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ ((IdCm _) , vX) , sym*-Tm ]tm =h reflX)
+         (trans*-Tm [ (IdCm , vX) , sym*-Tm ]tm =h reflX)
 Tm-right-inverse* = Coh-Contr (ext c* v0)
 
 

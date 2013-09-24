@@ -618,6 +618,33 @@ congtm2 refl = refl _
 [+S]tm (var x) = [+S]V x
 [+S]tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq [+S]S ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
 
+
+-- some widely-used contexts
+
+x:* : Con
+x:* = ε , *
+
+x:*,y:*,α:x=y : Con
+x:*,y:*,α:x=y = x:* , * , (var (vS v0) =h var v0)
+
+vX : Tm {x:*,y:*,α:x=y} *
+vX = var (vS (vS v0))
+
+vY : Tm {x:*,y:*,α:x=y} *
+vY = var (vS v0)
+
+vα : Tm {x:*,y:*,α:x=y} (vX =h vY)
+vα = var v0
+
+x:*,y:*,α:x=y,z:*,β:y=z : Con
+x:*,y:*,α:x=y,z:*,β:y=z = x:*,y:*,α:x=y , * , (var (vS (vS v0)) =h var v0)
+
+vZ : Tm {x:*,y:*,α:x=y,z:*,β:y=z} *
+vZ = var (vS v0)
+
+vβ : Tm {x:*,y:*,α:x=y,z:*,β:y=z} (vY +tm _ +tm _ =h vZ)
+vβ = var v0
+
 \end{code}
 }
 

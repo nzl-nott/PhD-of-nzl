@@ -21,7 +21,7 @@ open import Data.Nat
 
 1-1cm-same-T : {Γ : Con}{A B : Ty Γ} → 
                (eq : B ≡ A) → (A +T B) [ 1-1cm-same eq ]T ≡ A +T A
-1-1cm-same-T eq = trans +T[,]T (trans [+S]T (wk-T (IC-T _)))
+1-1cm-same-T eq = trans +T[,]T (trans [+S]T (wk-T IC-T))
 
 
 1-1cm-same-tm : ∀ {Γ : Con}{A : Ty Γ}{B : Ty Γ} → 
@@ -43,7 +43,7 @@ repeat-p1 : {Γ : Con}(Δ : Con) → (Γ ++ Δ) ⇒ Γ
 Γ ++ (Δ , A) = Γ ++ Δ , A [ cor Δ ]T
 
 
-repeat-p1 ε = IdCm _
+repeat-p1 ε = IdCm
 repeat-p1 (Δ , A) = repeat-p1 Δ ⊚ pr1
 
 
@@ -113,7 +113,7 @@ For the definition and other lemmas for these functions, they are too cumbersome
 
 
 Σs• : (Γ : Con) → ΣC Γ ⇒ ΣC ε
-Σs• ε = IdCm _
+Σs• ε = IdCm
 Σs• (Γ , A) = Σs• Γ +S _
 
 \end{code}
@@ -158,8 +158,12 @@ For the definition and other lemmas for these functions, they are too cumbersome
 Σs {Γ} • = Σs• Γ
 
 
+congΣtm : {Γ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B} → a ≅ b → Σtm a ≅ Σtm b
+congΣtm (refl _) = refl _
+
 cohOpΣtm : ∀ {Δ : Con}{A B : Ty Δ}(t : Tm B)(p : A ≡ B) → Σtm (t ⟦ p ⟫) ≅ Σtm t
-cohOpΣtm t refl = refl _
+cohOpΣtm t p =  congΣtm (cohOp p)
+
 
 Σs⊚ : ∀ {Δ Δ₁ Γ}(δ : Δ ⇒ Δ₁)(γ : Γ ⇒ Δ) → Σs (δ ⊚ γ) ≡ Σs δ ⊚ Σs γ
 
@@ -217,8 +221,6 @@ cohOpΣtm t refl = refl _
                                                                  (ext (ΣC-Contr Γ r) {ΣT A} (Σv x))
 
 
-congΣtm : {Γ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B} → a ≅ b → Σtm a ≅ Σtm b
-congΣtm {Γ} {.B} {B} {.b} {b} (refl .b) = refl _
 \end{code}
 }
 
@@ -230,9 +232,11 @@ To define lifting function, we only need to recursively call suspension function
 \begin{code}
 lift-C : {Γ : Con}(A : Ty Γ) → Con → Con
 
-lift-T : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (lift-C A Δ)
+lift-T : {Γ Δ : Con}(A : Ty Γ) → 
+         Ty Δ → Ty (lift-C A Δ)
 
-lift-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B → Tm (lift-T A B)
+lift-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} →
+          Tm B → Tm (lift-T A B)
 
 \end{code}
 
@@ -286,19 +290,19 @@ lift-C-cm-spl' (_=h_ {A} a b) B = cong ΣC (lift-C-cm-spl' A B)
 
 lift-C-cm-spl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → 
                (lift-C A Δ , lift-T A B) ⇒ lift-C A (Δ , B)
-lift-C-cm-spl * B = IdCm _
+lift-C-cm-spl * B = IdCm
 lift-C-cm-spl (_=h_ {A} a b) B = Σs (lift-C-cm-spl A B)
 
 
 lift-C-cm-spl-¹ : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → 
                 lift-C A (Δ , B) ⇒ (lift-C A Δ , lift-T A B)
-lift-C-cm-spl-¹ * B = IdCm _
+lift-C-cm-spl-¹ * B = IdCm
 lift-C-cm-spl-¹ (_=h_ {A} a b) B = Σs (lift-C-cm-spl-¹ A B)
 
 
 lift-C-cm-spl2 : {Γ : Con}(A : Ty Γ)
               → (lift-C A ε , lift-T A * ,  lift-T A * +T _) ⇒ ΣC (lift-C A ε)
-lift-C-cm-spl2 * = IdCm _
+lift-C-cm-spl2 * = IdCm
 lift-C-cm-spl2 (_=h_ {A} a b) = Σs (lift-C-cm-spl2 A) ⊚ 1-1cm-same (ΣT[+T] (lift-T A *) (lift-T A *))
 
 
@@ -314,7 +318,7 @@ lift-T-p2 (_=h_ {A} _ _) = cong ΣT (lift-T-p2 A)
 
 
 lift-T-p3 : {Γ Δ : Con}(A : Ty Γ){B C : Ty Δ} → lift-T A (C +T B) [ lift-C-cm-spl A B ]T ≡ lift-T A C +T _ 
-lift-T-p3 * = trans +T[,]T (wk+S+T (IC-T _))
+lift-T-p3 * = trans +T[,]T (wk+S+T IC-T)
 lift-T-p3 (_=h_ {A} a b) {B} {C} = trans (ΣT[Σs]T (lift-T A (C +T B)) (lift-C-cm-spl A B)) (trans (cong ΣT (lift-T-p3 A)) (ΣT[+T] (lift-T A C) (lift-T A B)))
 
 
@@ -352,7 +356,7 @@ lift-T-p1 (_=h_ {A} a b) = trans [⊚]T (trans (congT (fci-l1 A)) (hom≡ (prf a
 
 
 lift-tm-p1 : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → lift-tm A (var v0) [ lift-C-cm-spl A B ]tm ≅ var v0
-lift-tm-p1 * {B} = wk-coh ∾ cohOp (wk+S+T (IC-T _))
+lift-tm-p1 * {B} = wk-coh ∾ cohOp (wk+S+T IC-T)
 lift-tm-p1 (_=h_ {A} a b) {B} = Σtm[Σs]tm (lift-tm A (var v0)) (lift-C-cm-spl A B) ∾ congΣtm (lift-tm-p1 A) ∾ cohOpV (sym (ΣT[+T] (lift-T A B) (lift-T A B)))
 
 
@@ -409,7 +413,7 @@ rpl-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (rpl-C A Θ) ⇒ (rpl-C A
 rpl-C {Γ} A ε = Γ
 rpl-C A (Δ , B) = rpl-C A Δ , rpl-T A B
 
-rpl-pr1 ε A = IdCm _
+rpl-pr1 ε A = IdCm
 rpl-pr1 (Δ , A) A₁ = rpl-pr1 Δ A₁ +S _
 
 rpl-T A B = lift-T A B [ filter-cm _ A ]T
@@ -419,7 +423,7 @@ filter-cm (Δ , A) A₁ =  lift-C-cm-spl A₁ A ⊚ ((filter-cm Δ A₁ +S _) , 
 
 
 rpl-T-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-T A * ≡ A [ rpl-pr1 Δ A ]T
-rpl-T-p1 ε A = trans (lift-T-p1 A) (sym (IC-T _))
+rpl-T-p1 ε A = trans (lift-T-p1 A) (sym IC-T)
 rpl-T-p1 (Δ , A) A₁ = trans [⊚]T (trans (congT (lift-T-wk A₁ A)) (trans +T[,]T (trans [+S]T (trans (wk-T (rpl-T-p1 Δ A₁)) (sym [+S]T)))))
 
 rpl-tm A a = lift-tm A a [ filter-cm _ A ]tm
@@ -488,23 +492,18 @@ map-2 = (map-1 +S _) , (var v0) ⟦ wk+S+T T-1 ⟫
 -}
 -- some useful lemmas
 
-rpl*-A : {Γ : Con}{A : Ty Γ} → rpl-T {Δ = ε} A * [ IdCm Γ ]T ≡ A
-rpl*-A = trans (IC-T _) (lift-T-p1 _)
+rpl*-A : {Γ : Con}{A : Ty Γ} → rpl-T {Δ = ε} A * [ IdCm ]T ≡ A
+rpl*-A = trans IC-T (lift-T-p1 _)
 
-rpl*-a : {Γ : Con}(A : Ty Γ){a : Tm A} → rpl-tm {Δ = ε , *} A (var v0) [ IdCm _ , a ⟦ rpl*-A ⟫ ]tm ≅ a
+rpl*-a : {Γ : Con}(A : Ty Γ){a : Tm A} → rpl-tm {Δ = ε , *} A (var v0) [ IdCm , a ⟦ rpl*-A ⟫ ]tm ≅ a
 rpl*-a A = rpl-tm-v0 ε A  (cohOp (rpl*-A {A = A}))
 
-rpl*-A2 : {Γ : Con}(A : Ty Γ){a : Tm (rpl-T A (* {ε}) [ IdCm Γ ]T)} 
-        → rpl-T A (* {ε , *}) [ IdCm Γ , a ]T ≡ A
+rpl*-A2 : {Γ : Con}(A : Ty Γ){a : Tm (rpl-T A (* {ε}) [ IdCm ]T)} 
+        → rpl-T A (* {ε , *}) [ IdCm , a ]T ≡ A
 rpl*-A2 A = trans (rpl-T-p3-wk ε A) rpl*-A
 
-{-
-rpl*-An : {Γ Δ : Con}(A : Ty Γ)(γ : Γ ⇒ lift-C A Δ) -- ( ≡ Γ ++ lift-C A Δ != rpl Δ A)
-        → rpl-T Δ A * [ {!!} ]T ≡ A
-rpl*-An = {!!}
--}
 rpl-xy :  {Γ : Con}(A : Ty Γ)(a b : Tm A)
-       → rpl-T {Δ = ε , * , *} A (var (vS v0) =h var v0) [ IdCm Γ , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ ]T
+       → rpl-T {Δ = ε , * , *} A (var (vS v0) =h var v0) [ IdCm , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ ]T
               ≡ (a =h b)
 rpl-xy A a b =  trans (congT (rpl-T-p2 (ε , * , *) A)) 
              (hom≡ ((rpl-tm-vS (ε , *) A)  ∾ rpl*-a A) 
@@ -515,67 +514,8 @@ rpl-xy A a b =  trans (congT (rpl-T-p2 (ε , * , *) A))
 rpl-sub : (Γ : Con)(A : Ty Γ)(a b : Tm A) →
           Tm (a =h b)
         → Γ ⇒ rpl-C A (ε , * , * , (var (vS v0) =h var v0))
-rpl-sub Γ A a b t = IdCm _ , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ , t ⟦ rpl-xy A a b ⟫
+rpl-sub Γ A a b t = IdCm , a ⟦ rpl*-A ⟫ , b ⟦ rpl*-A2 A ⟫ , t ⟦ rpl-xy A a b ⟫
   
-
-{-
-
-loop-C : {Γ : Con}(A : Ty Γ) → Con
-loop-T : {Γ : Con}(A : Ty Γ) → Ty (loop-C A)
-loop-cm : {Γ : Con}(A : Ty Γ) → Γ ⇒ loop-C A
-loop-p1 : {Γ : Con}(A : Ty Γ) → loop-T A [ loop-cm A ]T ≡ A
-
-loop-C * = ε
-loop-C (_=h_ {A} a b) = loop-C A , loop-T A , loop-T A +T _
-
-
-loop-T * = *
-loop-T (_=h_ {A} a b) = var (vS v0) =h var v0
-
-loop-cm * = •
-loop-cm (_=h_ {A} a b) = loop-cm A , a ⟦ loop-p1 A ⟫ , wk-tm (b ⟦ loop-p1 A ⟫)
-
-loop-p1 * = refl
-loop-p1 (_=h_ {A} a b) = trans wk-hom (trans wk-hom (cohOp-hom (loop-p1 A)))
-
-loop-Contr : {Γ : Con}(A : Ty Γ) → isContr (loop-C A , loop-T A)
-loop-Contr * = c*
-loop-Contr (_=h_ {A} _ _) = ext (loop-Contr A) v0
-
-
-
-lift' : {Γ : Con}(A : Ty Γ) → Con → Con
-
-lift-T' : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (lift' A Δ)
-
-lift-tm' : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B → Tm (lift-T' A B)
-
-lift-cm' : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (lift' A Θ) ⇒ (lift' A Δ)
-
-
-lift'-pr1 : ∀ {Γ : Con}(A : Ty Γ)(Δ : Con) → (lift' A Δ) ⇒ loop-C A
-
-lift' A ε = loop-C A
-lift' A (Δ , B) = lift' A Δ , lift-T' A B
-
-lift-T' {Γ} {ε} A * = loop-T A
-lift-T' {Γ} {Δ , _} A * = lift-T' {Γ} {Δ} A * +T _ --  loop-T A [ lift'-pr1 A Δ ]T
-lift-T' A (a =h b) = lift-tm' A a =h lift-tm' A b
- 
-lift-tm' A t = {!t!}
-
-lift-cm' A cm = {!!}
-
-lift'-pr1 A ε = IdCm _
-lift'-pr1 A (Δ , A₁) = lift'-pr1 A Δ +S _
-
-
-minimum-cm-p : ∀ {Γ : Con}(A : Ty Γ) → ΣC (lift-C A ε) ⇒ lift-C A ε
-minimum-cm-p * = •
-minimum-cm-p (_=h_ {A} a b) = Σs (minimum-cm-p A)
--}
-
-
 
 \end{code}
 }

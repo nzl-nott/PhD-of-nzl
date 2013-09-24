@@ -46,7 +46,7 @@ the ordering of the variables is suggestive of their levels and types.
 S_0&S_1&S_2&S_3&S_4
 \end{array}
 \]
-%
+%p
 In each case we call the sole variable at level $n$ the
 \emph{peak}. Note that each $S_n$ is contractible because $S_0$ is
 trivially, and $S_{n+1}$ arises from $S_n$ by addition of one new

@@ -431,10 +431,10 @@ n = 0&n=1&n=2&n=3&n=4
 After we have lifted a context by inserting an appropriate number of
 variables, we may proceed to a substitution which fills the stalk for
 $A$ with $A$. The context morphism representing this substitution is
-called $\mathsf{filter-cm}$. In the final step we combine it with
+called $\mathsf{filter}$. In the final step we combine it with
 $\Gamma$, the context of $A$.  The new context contains two parts, the
 first is the same as $\Gamma$, and the second is the lifted $\Delta$
-substituted by $\mathsf{filter-cm}$. However, we also have to drop
+substituted by $\mathsf{filter}$. However, we also have to drop
 the stalk of $A$ becuse it already exists in $\Gamma$.
 
 Geometrically speaking, the context resulting from replacing $*$ in $\Delta$ by
@@ -451,18 +451,18 @@ rpl-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B
       → Tm (rpl-T A B)
 \end{code}
 
-Replacement for contexts, $\mathsf{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
+Replacement for contexts, $\AgdaFunction{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
 a context which begins as $\Gamma$ and follows by each type of $\Delta$ with $*$ replaced with (pasted onto)  $A$. 
-To this end we must define the substitution $\mathsf{filter-cm}$ which
+To this end we must define the substitution $\mathsf{filter}$ which
 pulls back each type from lifted $\Delta$ to the new context. 
 
 \begin{code}
-filter-cm : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-C A Δ ⇒ ΣC-it A Δ
+filter : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-C A Δ ⇒ ΣC-it A Δ
 
 rpl-C {Γ} A ε = Γ
 rpl-C A (Δ , B) = rpl-C A Δ , rpl-T A B
 
-rpl-T A B = ΣT-it A B [ filter-cm _ A ]T
+rpl-T A B = ΣT-it A B [ filter _ A ]T
 \end{code}
 
 \AgdaHide{
@@ -470,7 +470,7 @@ rpl-T A B = ΣT-it A B [ filter-cm _ A ]T
 rpl-pr1  : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-C A Δ ⇒ Γ
 
 {-
-filter-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (rpl-C A Θ) ⇒ (rpl-C A Δ)
+filter : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (rpl-C A Θ) ⇒ (rpl-C A Δ)
 -}
 
 rpl-pr1 ε A = IdCm
@@ -478,15 +478,15 @@ rpl-pr1 (Δ , A) A₁ = rpl-pr1 Δ A₁ +S _
 
 
 
-filter-cm ε A = minimum-cm A
-filter-cm (Δ , A) A₁ =  ΣC-it-cm-spl A₁ A ⊚ ((filter-cm Δ A₁ +S _) , var v0 ⟦ [+S]T ⟫)
+filter ε A = minimum-cm A
+filter (Δ , A) A₁ =  ΣC-it-cm-spl A₁ A ⊚ ((filter Δ A₁ +S _) , var v0 ⟦ [+S]T ⟫)
 
 
 rpl-T-p1 : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-T A * ≡ A [ rpl-pr1 Δ A ]T
 rpl-T-p1 ε A = trans (ΣT-it-p1 A) (sym IC-T)
 rpl-T-p1 (Δ , A) A₁ = trans [⊚]T (trans (congT (ΣT-it-wk A₁ A)) (trans +T[,]T (trans [+S]T (trans (wk-T (rpl-T-p1 Δ A₁)) (sym [+S]T)))))
 
-rpl-tm A a = Σtm-it A a [ filter-cm _ A ]tm
+rpl-tm A a = Σtm-it A a [ filter _ A ]tm
 
 
 rpl-tm-id : {Γ : Con}{A : Ty Γ} → Tm A → Tm (rpl-T {Δ = ε} A *)
@@ -501,7 +501,7 @@ rpl-T-p3 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{C : Ty Δ}
           → rpl-T A (C +T B) ≡ rpl-T A C +T _
 rpl-T-p3 _ A = trans [⊚]T (trans (congT (ΣT-it-p3 A)) (trans +T[,]T [+S]T))
 
-rpl-T-p3-wk : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{C : Ty Δ}{γ : Γ ⇒ rpl-C A Δ}{b : Tm ((ΣT-it A B [ filter-cm Δ A ]T) [ γ ]T)}
+rpl-T-p3-wk : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{C : Ty Δ}{γ : Γ ⇒ rpl-C A Δ}{b : Tm ((ΣT-it A B [ filter Δ A ]T) [ γ ]T)}
           → rpl-T A (C +T B) [ γ , b ]T ≡ rpl-T A C [ γ ]T
 rpl-T-p3-wk Δ A = trans (congT (rpl-T-p3 Δ A)) +T[,]T
 
@@ -509,7 +509,7 @@ rpl-tm-v0' : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}
            → rpl-tm {Δ = Δ , B} A (var v0) ≅ var v0
 rpl-tm-v0' Δ A = [⊚]tm (Σtm-it A (var v0)) ∾ congtm (Σtm-it-p1 A) ∾ wk-coh ∾ wk-coh+
 
-rpl-tm-v0 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{γ : Γ ⇒ rpl-C A Δ}{b : Tm A}{b' : Tm ((ΣT-it A B [ filter-cm Δ A ]T) [ γ ]T)}
+rpl-tm-v0 : {Γ : Con}(Δ : Con)(A : Ty Γ){B : Ty Δ}{γ : Γ ⇒ rpl-C A Δ}{b : Tm A}{b' : Tm ((ΣT-it A B [ filter Δ A ]T) [ γ ]T)}
           → (prf : b' ≅ b)
           → rpl-tm {Δ = Δ , B} A (var v0) [ γ , b' ]tm ≅ b
 rpl-tm-v0 Δ A prf = congtm (rpl-tm-v0' Δ A) ∾ wk-coh ∾ prf
@@ -517,17 +517,17 @@ rpl-tm-v0 Δ A prf = congtm (rpl-tm-v0' Δ A) ∾ wk-coh ∾ prf
 
 rpl-tm-vS : {Γ : Con}(Δ : Con)(A : Ty Γ){B C : Ty Δ}{γ : Γ ⇒ rpl-C A Δ}
              {b : Tm (rpl-T A B [ γ ]T)}{x : Var C} → rpl-tm {Δ = Δ , B} A (var (vS x)) [ γ , b ]tm ≅ rpl-tm A (var x) [ γ ]tm
-rpl-tm-vS Δ A {x = x} = congtm ([⊚]tm (Σtm-it A (var (vS x))) ∾ (congtm (Σtm-it-p2 A x))  ∾ +tm[,]tm (Σtm-it A (var x))  ∾ ([+S]tm (Σtm-it A (var x)))) ∾ +tm[,]tm (Σtm-it A (var x) [ filter-cm _ A ]tm)
+rpl-tm-vS Δ A {x = x} = congtm ([⊚]tm (Σtm-it A (var (vS x))) ∾ (congtm (Σtm-it-p2 A x))  ∾ +tm[,]tm (Σtm-it A (var x))  ∾ ([+S]tm (Σtm-it A (var x)))) ∾ +tm[,]tm (Σtm-it A (var x) [ filter _ A ]tm)
 
 {-
-filter-cm-p1 : {Γ Δ Θ : Con}{A : Ty Γ}{B : Ty Δ}(γ : Θ ⇒ Δ) → rpl-T A B [ filter-cm A γ ]T ≡ rpl-T A (B [ γ ]T)
+filter-p1 : {Γ Δ Θ : Con}{A : Ty Γ}{B : Ty Δ}(γ : Θ ⇒ Δ) → rpl-T A B [ filter A γ ]T ≡ rpl-T A (B [ γ ]T)
 
-filter-cm {Θ = Θ} A • = rpl-pr1 Θ A
-filter-cm B (γ , a) = filter-cm B γ , (rpl-tm B a) ⟦ filter-cm-p1 γ ⟫
+filter {Θ = Θ} A • = rpl-pr1 Θ A
+filter B (γ , a) = filter B γ , (rpl-tm B a) ⟦ filter-p1 γ ⟫
 
 
-filter-cm-p1 {Γ} {Θ = Θ} • = {!!}
-filter-cm-p1 (γ , a) = {!!}
+filter-p1 {Γ} {Θ = Θ} • = {!!}
+filter-p1 (γ , a) = {!!}
 -}
 -- basic example
 

@@ -35,10 +35,10 @@ context is also inhabited.
 \begin{code}
 Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → isContr Δ
            → Tm {rpl-C A Δ} (rpl-T A B)
-Coh-rpl {Δ = Δ} A B isc = JJ (ΣC-it-ε-Contr A isc) (filter-cm Δ A) (ΣT-it A B)
+Coh-rpl {Δ = Δ} A B isc = JJ (ΣC-it-ε-Contr A isc) (filter Δ A) (ΣT-it A B)
 \end{code}
 
-Next we define the reflexivity, symmetry and transitivity terms of any type . Let's start from the basic case as for the base type "*". It is trivially inhabited because the context is the basic case of a contractible context.
+Next we define the reflexivity, symmetry and transitivity terms of any type . Let's start from the basic case as for the base type *. It is trivially inhabited because the context is the basic case of a contractible context.
 
 \begin{code}
 refl* :  Tm {x:*} (var v0 =h var v0)

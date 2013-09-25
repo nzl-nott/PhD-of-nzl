@@ -16,53 +16,44 @@ open import GroupoidLaws
 \end{code}
 }
 
-\section{Higher Structure}
+\subsection{Higher Structure}
+%
+In this section we show how also higher groupoid structure can be
+introduced in the syntactical framework. Because the full details of
+the formal development would be rather overbearing and are not in
+principle interesting, we use the more abstract language of category
+theory as much as possible. To this end note that contexts and context
+morphisms form a category up to definitional
+quality. Because equality of contexts is decideable we may assume \textsf{UIP}
+on context morphisms and we are therefore working in a honest
+1-category where equality of arrows is definitional equality of
+context morphisms. This category will be denoted $\mathsf{Con}$.
 
-\subsection{Spans}
+\subsubsection{Spans}
 \label{sec:spans}
 
-For each $n\in \mathbf{N}$, we define a context $S_n$ called
-\emph{span} which has $2n+1$ variables organised in such a way that
-\begin{itemize}
-\item the \emph{type} of variables $0$ and $1$ is $\ast$ 
-\item the type of each variable $k>1$ is $\lfloor k / 2 \rfloor -1 
-  =_\mathsf{h} \lfloor k / 2 \rfloor$
-\item to each variable $k$ we assign a \emph{level} as $\lfloor k / 2 \rfloor$
-\end{itemize}
-%
-So except for the top level, $n$, there are two variables on each
+For each type of level $n\in \mathbf{N}$, we have defined in Section \ref{sec:replacement} a context called
+\emph{span} which has $2n+1$ variables
+which except for the top level, $n$, there are two variables on each
 level whose type is the equality type of the two variables on the
-level below, except for the bottom-level variables which are, of
-course, of type $\ast$. Here is a picture of the first few spans where
-the ordering of the variables is suggestive of their levels and types.
-\[
-\begin{array}{c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}}}
-&&&&8\\
-&&&6&6\quad 7\\
-&&4&4\quad 5&4 \quad 5\\
-&2&2\quad 3&2\quad 3&2\quad 3\\
-0&0\quad 1&0\quad 1&0\quad 1&0\quad 1\\
-\\
-S_0&S_1&S_2&S_3&S_4
-\end{array}
-\]
-%p
-In each case we call the sole variable at level $n$ the
-\emph{peak}. Note that each $S_n$ is contractible because $S_0$ is
-trivially, and $S_{n+1}$ arises from $S_n$ by addition of one new
-variable and another variable into it, exactly as \textsf{ext} of
-\textsf{isContr} requires. We call the proof of $S_n$'s contractibility 
-$\mathsf{is\text{-}contr}\,S_n$. 
+level below, except for the bottom-level variables which are of type $\ast$. 
+We call denote a span of any type of level $n$, $S_n$. Note that all
+such spans are isomorphic. 
 
-In each $S_n$ define the type $\sigma_n$ as $2n-2
-~=_\mathsf{h}~2n-1$. We are going to show that the following 
+%p
+In each case we call the last variable the
+\emph{peak}. Note that each $S_n$ is contractible because it is a
+suspension of a contractible context. We call the proof of
+contractibility of $S_n$ $\mathsf{is\text{-}contr}~S_n$. 
+
+In each $S_n$ define the type $\sigma_n$ as $x_{2n-2}\,=_\mathsf{h}\,x_{2n-1}$. It is the type of the top variable. We are going to show that the following 
 \[
 S_0 \three/<-`>`<-/^{s_0}|{i_0}_{t_0} S_1 \three/<-`>`<-/^{s_1}|{i_1}_{t_1} S_2 \cdots S_n
 \three/<-`>`<-/^{s_n}|{i_n}_{t_n} S_{n+1} \cdots
 \]
-is a \emph{reflexive globular object} in $\mathsf{Con}$, the category
-of contexts and context morphisms. I.e. that it satisfies the
-following (usual) \emph{globular identities}:
+is a \emph{reflexive globular object} in $\mathsf{Con}$. I.e. we define
+morphisms $s_n$, $t_n$, $i_n$ beween spans that it satisfy the
+following usual \emph{globular identities}:
 \begin{equation}\label{eq:glob}
 \begin{array}{rl}
 s_n t_{n+1}&~=~s_n s_{n+1}\\
@@ -76,13 +67,13 @@ together with
   s_n i_n ~= ~\mathsf{id}~=~ t_ni_n
 \end{equation}
 
-For each $n$, define context morphisms $s_n, t_n  : S_{n+1}
+To this end, for each $n$, define context morphisms $s_n, t_n  : S_{n+1}
 \Rightarrow S_n$ by the substitutions
 \begin{align*}
-s_n &~=~& k &~\mapsfrom~k &k < 2n\\
-&&2n &~\mapsfrom~2n \\
-t_n &~=~& k &~\mapsfrom~k &k < 2n\\
-&&2n &~\mapsfrom~2n+1
+s_n &~=~& x_k &~\mapsfrom~x_k &k < 2n\\
+&&x_{2n} &~\mapsfrom~x_{2n} \\
+t_n &~=~& x_k &~\mapsfrom~x_k &k < 2n\\
+&&x_{2n} &~\mapsfrom~2n+1
 \end{align*}
 %
 In words, $s_n$ forgets the last two variables of $S_{n+1}$ and
@@ -91,39 +82,29 @@ $t$ indeed satisfy \eqref{eq:glob}.
 
 
 In order to define $i_n :  S_n \Rightarrow S_{n+1}$, 
-we must consider contexts $\overline{S_n}$ which are like
+we must consider stalks (see Section \ref{sec:susp-and-repl}), which
+are contexts, hereby denoted $\overline{S_n}$, which are like
 $S_n$ without the last variable, together with types
 $\overline{\sigma}_n$ which are like $\sigma_n$ but considered in the
-smaller context: 
-%
-\[
-\begin{array}{c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}}}
-&&&&6\quad 7\\
-&&&4\quad 5&4 \quad 5\\
-&&2\quad 3&2\quad 3&2\quad 3\\
-&0\quad 1&0\quad 1&0\quad 1&0\quad 1\\
-\\
-\overline{S}_0&\overline{S}_1&\overline{S}_2&\overline{S}
-_3&\overline{S}_4
-\end{array}
-\]
+smaller context. 
+
 %
 For each $n$ there is a context morphism $\overline{i_n}: S_n
 \Rightarrow \overline{S}_{n+1}$ defined by
 \begin{align*}
-\overline{i_n} &~=~& k &~\mapsfrom ~ k & k \le 2n\\
-&& 2n+1 &~\mapsfrom~2n 
+\overline{i_n} &~=~& x_k &~\mapsfrom ~ x_k & k \le 2n\\
+&& x_{2n+1} &~\mapsfrom~x_{2n}
 \end{align*}
 %
 The substitution of $\overline{\sigma}_{n+1}$ along $\overline{i_n}$,
-$\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$, is equal to $2n
-=_\mathsf{h} 2n$ in $S_n$. So in order to extend $\overline{i_n}$ to
+$\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$, is equal to $x_{2n}
+=_\mathsf{h} x_{2n}$ in $S_n$. So in order to extend $\overline{i_n}$ to
 $i_n : S_n \Rightarrow S_{n+1}$ we must define a term in
 $\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$.  We can
 readily do that by $\mathsf{JJ}$:
 \[
 i_n~ = ~ \overline{i_n}\, ,
-\,\mathsf{JJ}~(\mathsf{IdCm\,S_n})~(2n\,=_\mathsf{h}\,2n)~(\mathsf{is\text{-}contr}~S_n)
+\,\mathsf{JJ}~(\mathsf{IdCm\,S_n})~(x_{2n}\,=_\mathsf{h}\,x_{2n})~(\mathsf{is\text{-}contr}~S_n)
 \]
 \noindent It's easy to check that $i_n$ satisfies \eqref{eq:refl-glob}. 
 
@@ -135,7 +116,7 @@ $\sigma_n[i_0]_\mathsf{T}\cdots[i_{n-2}]_\mathsf{T}[i_{n-1}]_\mathsf{T}
 \equiv \sigma_n[i_0^n]_\mathsf{T}$ is
 a type, $\lambda_n$, in $S_0$.
 We call $\lambda_n$ the \emph{n\text{-}iterated loop type} on 
-$0$. The term $S_0 \vdash (2n) [i_0^n]_\mathsf{tm} : \lambda_n$ is
+$0$. The term $S_0 \vdash (\mathsf{var}~x_{2n}) [i_0^n]_\mathsf{tm} : \lambda_n$ is
 the iterated identity term on $0$. 
 
 \newbox\anglebox
@@ -147,7 +128,7 @@ the iterated identity term on $0$.
 \def\coangle{\copy\coanglebox}
 
 
-\subsection{Composition}
+\subsubsection{Composition}
 \label{sec:composition}
 %
 For $m>n$ write $s^m_n$, $t^m_n$ for $m-n$ iteration of $s$ and $t$,
@@ -167,9 +148,7 @@ By definition of pullbacks, $Y_n$ looks like a pair of spans $S_n$
 together with the proviso that the variable $1$ of one is always
 equal to variable $0$ of the other. I.e. $Y_n$ has the shape of two
 spans pasted target-to-source at level $0$. It is easy to check that
-this is indeed a pullback\oxr{This could be done more properly by
-  defining equalisers of projections, and thus pullback of pairs of
-  projections. But is it necessary?} . 
+this is indeed a pullback. 
 %
 
 By the globular identities the two outer squares in the diagram below
@@ -193,8 +172,8 @@ $l_n$ and $r_n$ provide projections onto the left and right span of
 $Y_n$ respectively. The mediating arrows $\langle s, s\rangle_n$ and
 $\langle t , t \rangle_n$ provide
 projections out of $Y_{n+1}$ onto the join of the sources and targets of the left
-and right parts respectively.\oxr{I don't suppose anyone understands
-  any of this. Either drop or provide better explanation.}
+and right parts respectively.\oxr{We must say a bit more: how is this
+  mophism defined? By recursion. }
 
 In order to define composition we define for each $n$ a third morphism
 $c_n: Y_n \Rightarrow S_n$ with the property that both the $s$-squares
@@ -214,6 +193,6 @@ source of a composition is a composition of sources and the target of
 a composition is a composition of target. 
 
 It follows from all of this that for a context $\Gamma$ and a pair of
-spans $a , b : \Gamma \to S_n$, there is a span $c \langle a , b \rangle
-: \Gamma \to S_n$ from $s^n_0 a$ to $t^n_0 b$ which is the composition
+morphisms $a , b : \Gamma \Rightarrow S_n$, there is a context morphism $c \langle a , b \rangle
+: \Gamma \Rightarrow S_n$ from $s^n_0 a$ to $t^n_0 b$ which is the composition
 of $a$ and $b$.

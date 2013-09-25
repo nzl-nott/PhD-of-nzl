@@ -72,39 +72,43 @@ id-cm++ Δ Θ γ = repeat-p1 Δ ++cm (γ ⊚ cor _)
 }
 
 
-\subsection{Lifting and Replacement}
+\subsection{Suspension and Replacement}
+\label{sec:susp-and-repl}
 %
 For an arbitrary type $A$ in $\Gamma$ of level $n$ one can
 define a context with $2n$
 variables, called the (variable) \emph{stalk} of $A$. Moreover one can
-define a morhpism from $\Gamma$ to the stalk of $A$ such that its
+define a morphism from $\Gamma$ to the stalk of $A$ such that its
 substitution into the maximal type in the stalk of $A$ gives back
 $A$. The stalk of $A$ depends only on the level of $A$, the terms in
 $A$ define the substitution. Here is an example of stalks of small
-levels:
-\[
-\begin{array}{c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}}}
-&&&&6\quad 7\\
-&&&4\quad 5&4 \quad 5\\
-&&2\quad 3&2\quad 3&2\quad 3\\
-&0\quad 1&0\quad 1&0\quad 1&0\quad 1\\
-\\
-n = 0 & n = 1 & n = 2 & n = 3 & n = 4 
-\end{array}
-\]
+levels: $\epsilon$ (the empty context) for $n=0$; $(x_0 : *, x_1 : *)$ for
+$n=1$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
+x_0\,=_\mathsf{h}\,x_1)$ for $n=2$, etc. 
+% \[
+% \begin{array}{c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}}}
+% &&&&6\quad 7\\
+% &&&4\quad 5&4 \quad 5\\
+% &&2\quad 3&2\quad 3&2\quad 3\\
+% &0\quad 1&0\quad 1&0\quad 1&0\quad 1\\
+% \\
+% n = 0 & n = 1 & n = 2 & n = 3 & n = 4 
+% \end{array}
+% \]
 
 This is the $\Delta = \epsilon$ case of a more general construction
-where in we \emph{lift} an arbitrary context $\Delta$ by adding $2n$
-variables to the beginning of it, and reindexing the rest of the
-variables appropriately so that type $*$ becomes $2n-2 =_\mathsf{h}
-2n-1$. A crucial property of lifting is that it preserves
+where in we \emph{suspend} an arbitrary context $\Delta$ by adding $2n$
+variables to the beginning of it, and weakening the rest of the
+variables appropriately so that type $*$ becomes $x_{2n-2} =_\mathsf{h}
+x_{2n-1}$. A crucial property of suspension is that it preserves
 contractibility. 
 
 
-\subsubsection{Lifting}
+\subsubsection{Suspension}
+\label{sec:susp}
 
-\emph{Lifting} is defined by iteration level-$A$-times the following
-operation of one-level lifting. \AgdaFunction{ΣC} takes a
+\emph{Suspension} is defined by iteration level-$A$-times the following
+operation of one-level suspension. \AgdaFunction{ΣC} takes a
 context and gives a context with two new variables of type $*$ added
 at the beginning, and with all remaining types in the context lifted
 by one level. 
@@ -142,13 +146,13 @@ recursion. In particular we lift variables, terms and context morphisms:
 }
 
 \noindent The following lemma establishes preservation of contractibility by
-one-step lifting:
+one-step suspension:
 
 \begin{code}
 ΣC-Contr : (Δ : Con) → isContr Δ → isContr (ΣC Δ)
 \end{code}
 
-\noindent It is also essential that lifting respects weakening and substitution:
+\noindent It is also essential that suspension respects weakening and substitution:
 
 \begin{code}
 ΣT[+T]   : {Γ : Con}(A : Ty Γ)(B : Ty Γ) 
@@ -255,9 +259,9 @@ cohOpΣtm t p =  congΣtm (cohOp p)
 }
 
 
-General lifting to the level of a type $A$ is defined by iteration of
-one-level lifting. For symmetry and ease of reading the following
-lifting function take as a parameter a type $A$ in $\Gamma$, while the
+General suspension to the level of a type $A$ is defined by iteration of
+one-level suspension. For symmetry and ease of reading the following
+suspension function take as a parameter a type $A$ in $\Gamma$, while they
 depend only on its level. 
 
 
@@ -396,7 +400,7 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 \end{code}
 }
 
-Finally it is clear that iterated lifting preserves contractibility. 
+\noindent Finally it is clear that iterated suspension preserves contractibility. 
 
 \begin{code}
 ΣC-it-Contr : ∀ {Γ Δ}(A : Ty Γ) → isContr Δ → isContr (ΣC-it A Δ)
@@ -408,25 +412,29 @@ Finally it is clear that iterated lifting preserves contractibility.
 \end{code}
 }
 
-By lifting the minimal contractible context,
-\AgdaInductiveConstructor{*}, we obtain a so-called span. Spans play
+By suspending the minimal contractible context,
+\AgdaInductiveConstructor{*}, we obtain a so-called span. They are
+also stalks with a top variable added. For example $(x_0: *)$ (the one-variable
+context) for $n=0$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1)$ for
+$n=1$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
+x_0\,=_{\mathsf{h}}\,x_1, x_4 : x_2\,=_\mathsf{h}\,x_3)$ for $n=2$, etc. 
+Spans play
 an important role later in the definition of composition. 
-Following is a picture of the first few spans for increasing levels $n$ of \AgdaBound{A}.
-\[
-\begin{array}{c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}}}
-&&&&8\\
-&&&6&6\quad 7\\
-&&4&4\quad 5&4 \quad 5\\
-&2&2\quad 3&2\quad 3&2\quad 3\\
-0&0\quad 1&0\quad 1&0\quad 1&0\quad 1\\
-\\
-n = 0&n=1&n=2&n=3&n=4
-\end{array}
-\]
-
-
+% Following is a picture of the first few spans for increasing levels $n$ of \AgdaBound{A}.
+% \[
+% \begin{array}{c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}} c@{\hspace{1.5cm}}}
+% &&&&8\\
+% &&&6&6\quad 7\\
+% &&4&4\quad 5&4 \quad 5\\
+% &2&2\quad 3&2\quad 3&2\quad 3\\
+% 0&0\quad 1&0\quad 1&0\quad 1&0\quad 1\\
+% \\
+% n = 0&n=1&n=2&n=3&n=4
+% \end{array}
+% \]
 
 \subsubsection{Replacement}
+\label{sec:replacement}
 
 After we have lifted a context by inserting an appropriate number of
 variables, we may proceed to a substitution which fills the stalk for

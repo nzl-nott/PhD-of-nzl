@@ -73,7 +73,7 @@ $\Delta$, a type $\Delta\vdash T$ and a context morphism $\delta :
 \]
 %
 Because in a contractible context all types are inhabitted we may in a
-way work freely in $\Delta$ and them pull back all terms to $A$ using
+way work freely in $\Delta$ and then pull back all terms to $A$ using
 $\delta$. 
 To show this formally, we must first define identity context morphisms
 which complete the definition of a \emph{category} of contexts and
@@ -99,9 +99,9 @@ Coh-Contr isC = JJ isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
 
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
-want to define we construct construct a minimal contractible context
+want to define, we construct a minimal contractible context
 built out of variables (variable context) together with a context morphism
-that populates the context with values, and a lemma allows us to fit
+that populates the context with values, and a lemma that allows us to fit
 the substitution into the orginal type. 
 
 \AgdaHide{

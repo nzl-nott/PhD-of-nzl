@@ -96,7 +96,7 @@ x_0\,=_\mathsf{h}\,x_1)$ for $n=2$, etc.
 % \end{array}
 % \]
 
-This is the $\Delta = \epsilon$ case of a more general construction
+This is the $\Delta = \varepsilon$ case of a more general construction
 where in we \emph{suspend} an arbitrary context $\Delta$ by adding $2n$
 variables to the beginning of it, and weakening the rest of the
 variables appropriately so that type $*$ becomes $x_{2n-2} =_\mathsf{h}
@@ -110,7 +110,7 @@ contractibility.
 \emph{Suspension} is defined by iteration level-$A$-times the following
 operation of one-level suspension. \AgdaFunction{ΣC} takes a
 context and gives a context with two new variables of type $*$ added
-at the beginning, and with all remaining types in the context lifted
+at the beginning, and with all remaining types in the context suspended
 by one level. 
 
 \begin{code}
@@ -122,7 +122,7 @@ by one level.
 \end{code}
 
 \noindent The rest of the definitions is straightforward by structural
-recursion. In particular we lift variables, terms and context morphisms:
+recursion. In particular we suspend variables, terms and context morphisms:
 
 \begin{code}
 Σv : {Γ : Con}{A : Ty Γ} → Var A → Var (ΣT A)
@@ -279,7 +279,7 @@ depend only on its level.
 \AgdaHide{
 \begin{code}
 
-lift-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (ΣC-it A Θ) ⇒ (ΣC-it A Δ)
+suspend-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (ΣC-it A Θ) ⇒ (ΣC-it A Δ)
 
 ΣC-it * Δ = Δ
 ΣC-it (_=h_ {A} a b) Δ = ΣC (ΣC-it A Δ)
@@ -290,8 +290,8 @@ lift-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (ΣC-it A Θ) ⇒ (ΣC-i
 Σtm-it * t = t
 Σtm-it (_=h_ {A} a b) t = Σtm (Σtm-it A t)
 
-lift-cm * γ = γ
-lift-cm (_=h_ {A} a b) γ = Σs (lift-cm A γ)
+suspend-cm * γ = γ
+suspend-cm (_=h_ {A} a b) γ = Σs (suspend-cm A γ)
 
 \end{code}
 }
@@ -360,8 +360,8 @@ minimum-cm {Γ} (_=h_ {A} a b) = ΣC-it-cm-spl2 A ⊚ ((minimum-cm A , (a ⟦ Σ
 ΣC-it-ε-Contr (_=h_ {A} a b) isC = ΣC-Contr _ (ΣC-it-ε-Contr A isC)
 
 
-wk-lift : ∀ {Γ : Con}(A : Ty Γ)(a : Tm A) → a ⟦ ΣT-it-p1 A ⟫ ≅ a
-wk-lift A a = cohOp (ΣT-it-p1 A)
+wk-susp : ∀ {Γ : Con}(A : Ty Γ)(a : Tm A) → a ⟦ ΣT-it-p1 A ⟫ ≅ a
+wk-susp A a = cohOp (ΣT-it-p1 A)
 
 fci-l1 : ∀ {Γ : Con}(A : Ty Γ) → ΣT (ΣT-it A *) [ ΣC-it-cm-spl2 A ]T ≡ (var (vS v0) =h var v0)
 
@@ -380,7 +380,7 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 ΣT-it-p1 (_=h_ {A} a b) = trans [⊚]T (trans (congT (fci-l1 A)) (hom≡ (prf a) (prf b)))
   where
     prf : (a : Tm A) → ((a ⟦ ΣT-it-p1 A ⟫) ⟦ +T[,]T ⟫) ⟦ +T[,]T ⟫ ≅ a
-    prf a = wk-coh ∾ wk-coh ∾ wk-lift A a
+    prf a = wk-coh ∾ wk-coh ∾ wk-susp A a
  
 
 
@@ -436,12 +436,12 @@ an important role later in the definition of composition.
 \subsubsection{Replacement}
 \label{sec:replacement}
 
-After we have lifted a context by inserting an appropriate number of
+After we have suspended a context by inserting an appropriate number of
 variables, we may proceed to a substitution which fills the stalk for
 $A$ with $A$. The context morphism representing this substitution is
 called $\mathsf{filter}$. In the final step we combine it with
 $\Gamma$, the context of $A$.  The new context contains two parts, the
-first is the same as $\Gamma$, and the second is the lifted $\Delta$
+first is the same as $\Gamma$, and the second is the suspended $\Delta$
 substituted by $\mathsf{filter}$. However, we also have to drop
 the stalk of $A$ becuse it already exists in $\Gamma$.
 
@@ -462,7 +462,7 @@ rpl-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B
 Replacement for contexts, $\AgdaFunction{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
 a context which begins as $\Gamma$ and follows by each type of $\Delta$ with $*$ replaced with (pasted onto)  $A$. 
 To this end we must define the substitution $\mathsf{filter}$ which
-pulls back each type from lifted $\Delta$ to the new context. 
+pulls back each type from suspended $\Delta$ to the new context. 
 
 \begin{code}
 filter : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-C A Δ ⇒ ΣC-it A Δ

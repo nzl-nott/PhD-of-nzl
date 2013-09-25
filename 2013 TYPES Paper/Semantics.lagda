@@ -19,7 +19,7 @@ open import GroupoidLaws
 \end{code}
 }
 
-given a globular set G, we could interpret the objects in syntactic frameworks.
+given a globular set G, we can interpret the syntactic objects.
 
 The record definition also require some semantic weakening and semantic substitution laws. The semantic weakening rules tell us how to deal with the weakening inside interpretation.
 
@@ -111,7 +111,7 @@ At last, the semantic substitution lemmas for terms, context morphisms.
              → ⟦ θ ⊚ δ ⟧cm γ ≡ ⟦ θ ⟧cm (⟦ δ ⟧cm γ)
 \end{code}
 
-We don't know whether we should more coherence laws for thesse interpretations.
+If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle |Idω| is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$ groupoids.
 
 \AgdaHide{
 

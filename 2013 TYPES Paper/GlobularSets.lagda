@@ -12,7 +12,9 @@ open import Relation.Binary.PropositionalEquality
 \end{code}
 }
 
-To interpret the syntax, we need globular sets. Globular sets are defined coinductively as follows.
+To interpret the syntax, we need globular types
+\footnote{Even though we use the Agda |Set|, this isn't necessarily a set in the sense of Homotopy Type Theory.}
+. Globular types are defined coinductively as follows.
 
 \begin{code}
 record Glob : Set₁ where
@@ -23,15 +25,18 @@ record Glob : Set₁ where
 open Glob public renaming (obj to ∣_∣) 
 \end{code}
 
-Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
+If all the object types are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
 
-As an example, we could contruct the identity globular set called $Idω$.
+%Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
+
+As an example, we could contruct the identity globular type called $Idω$.
 
 \begin{code}
 Idω : (A : Set) → Glob
 Idω A = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
 \end{code}
 
+Note that this is usually not a globular set.
 
 
 \AgdaHide{

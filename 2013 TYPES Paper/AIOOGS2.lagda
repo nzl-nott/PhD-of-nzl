@@ -17,7 +17,7 @@ open import Data.Nat
 
 
 
-In this section show that it is possible to reonstruct the structure
+In this section we show that it is possible to reconstruct the structure
 of a (weak) $\omega$-groupoid from the syntactical framework presented
 in Section \ref{sec:syntax} in the style of \cite{txa:csl}. To 
 this end, let us call a term $a : \Tm~\AgdaBound{A}$ an $n$-cell if

@@ -29,7 +29,7 @@ working in a honest 1-category where equality of arrows is
 definitional equality of context morphisms. This category will be
 denoted $\mathsf{Con}$.
 
-\subsubsection{Spans}
+\subsubsection{Identities}
 \label{sec:spans}
 
 For each type of level $n\in \mathbf{N}$, we have defined in Section \ref{sec:replacement} a context called

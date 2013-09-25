@@ -57,7 +57,7 @@ an $\omega$-groupoid is repeated on each level. As we are working purely syntact
 may make use of this fact and define all groupoid structure only at level
 $m=1$ and provide a so-called \emph{replacement operation} which allows us to lift
 any cell to an arbitrary type $A$. It is called 'replacement' because
-we are syntactically replacing the base type $*$ with and arbitrary
+we are syntactically replacing the base type $*$ with an arbitrary
 type, $A$.
 
 An important general mechanism we rely on throught the development

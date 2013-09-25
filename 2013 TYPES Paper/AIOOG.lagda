@@ -25,7 +25,7 @@
 
 
 \newcommand{\wig}{weak $\infty$-groupoids}
-\newcommand{\og}{ $\omega$-groupoids}
+\newcommand{\og}{$\omega$-groupoids}
 \newcommand{\wog}{weak $\omega$-groupoids}
 \newcommand{\hott}{Homotopy Type Theory}
 \newcommand{\ott}{Observational Type Theory}
@@ -96,32 +96,33 @@ infixl 7 _⊚_
 
 %why do we need to use omega groupoid
 
-In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alt:99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. To make it more precise, a weak equivalence
+In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alt:99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. For example, a weak equivalence
 between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
 corresponding inverse morphism $ g : B \to A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
 2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$. 
 
 
-It has been proved by Vladimir Voevodsky that the univalence axiom implies functional extensionality (a coq proof of this could be found in \cite{uafe}) which results in the problem of non-canonical terms in Type Theory. Altenkirch has proposed a solution in \cite{alt:99} to solve the problem caused by functional extensionality
+\oxr{This paragraph is maybe too terse to be intelligible. Does functional extensionality result in non-canonicity, or is it rather the addition of an axiom? Jumps from extensionality to univalence back.}
+It has been proved by Vladimir Voevodsky that the univalence axiom implies functional extensionality (a coq proof of this can be found in \cite{uafe}) which results in the problem of non-canonical terms in Type Theory. Altenkirch has proposed a solution in \cite{alt:99} to solve the problem caused by functional extensionality
 based on setoid model and also refines it \cite{alti:ott-conf} to \ott{} to justify functional extensionality.
 However as mentioned before, setoids require UIP which is incompatible with \hott{}. To solve the problem we should generalise the notion of setoids, namely to enrich the structure of the identity proofs. 
 
 
-The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplication of \wog{} in \cite{ara:wog}. Categorically
+The generalised notion is called Grothendieck {\og}\oxr{Shouldn't it be "the generalised notion is calld {\wog}"?}. Grothendieck introduced the notion of {\og} in 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog}\oxr{I'm confused. Is it {\og} or {\wog}?} in \cite{ara:wog}. Categorically
 speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
 isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
 n-groupoid is an n-category in which morphisms on all levels are
-equivalence. \og{} which are also called $\infty$-groupoids is an
+equivalence. {\og} which are also called $\infty$-groupoids is an
 infinite version of n-groupoids. To model Type Theory without UIP we
 also require the equalities to be non-strict, in other words, they are
-not definitionally equalities. Finally we should use \wog{} to interpret types and eliminate the univalence axiom.
+not definitionally equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
-There are several approaches to formalise \wog{} in Type Theory. For instance, Altenkirch \cite{txa:csl}, and Bruneries' notes \cite{gb:wog}.
-This paper mainly explains an implementation of \wog{} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional \mltt{}. The approach is to specify when a globular set is a weak $\omega$-groupoid by first defining a type theory called \tig{} to describe the internal language
-of Grothendieck \wog{}, then interpret it with a globular set and a dependent function. All coherence laws of the \wog{} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
+There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Bruneries' notes \cite{gb:wog}.
+This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. The approach is to specify when a globular set is a {\wog} by first defining a type theory called {\tig} to describe the internal language
+of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 
 \section{Syntax}\label{sec:syntax}
 
@@ -186,8 +187,8 @@ data Ty Γ where
 
 \subsection{Heterogeneous Equality for Terms}
 
-One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential wehn defining substitution.
-When we used the common identity types which is homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. However we found that the syntactic equality of types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equalities of types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The equality is inhabited only when they are definitionally equal.
+One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential when defining substitution.
+When we used the common identity types which are homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. However we found that the syntactic equality of types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equalities of types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The equality is inhabited only when they are definitionally equal.
 
 \begin{code}
 data _≅_ {Γ : Con}{A : Ty Γ} 
@@ -216,7 +217,7 @@ _∾_ {c = c} (refl .c) (refl .c) = refl c
 \end{code}
 }
 
-Once we have the heterogeneous equality for terms, we could define a proof-irrelevant substitution which we call coercion here
+Once we have the heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call coercion here
 since it gives us a term of type A if we have a term of type B and the
 two types are equal. We can also prove that the coerced term is heterogeneously equal to the
 original term. Combined these definitions, it is much
@@ -257,7 +258,7 @@ cong≅ f (refl _) = refl _
 
 \subsection{Substitutions}
 
-With context morphism, we could define substitutions for types variables and terms. Indeed the
+With context morphism, we can define substitutions for types variables and terms. Indeed the
 composition of contexts can be understood as substitution for context morphisms as well.
 
 \begin{code}
@@ -270,9 +271,8 @@ _⊚_    : {Γ Δ Θ : Con} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
 
 \subsection{Weakening Rules}
 
-We can freely add types to the contexts of given any type
-judgments, term judgments or context morphisms. We call these rules
-weakening rules.
+We can freely add types to the contexts of any given type
+judgments, term judgments or context morphisms. These are weakening rules.
 
 \begin{code}   
 _+T_  : {Γ : Con}(A : Ty Γ)           → (B : Ty Γ) → Ty (Γ , B)   
@@ -297,13 +297,15 @@ _+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ
 }
 
 To define the variables and terms we have to use the weakening rules.
-A Term can be either a variable or a coherence constant (|coh|). We use typed deBruijn indizes
-to define variables as either the immediate variable at the right most
-of the context, or some variable in the context which can be found by
-cancelling the right most variable along with each $vS$. The coherence constants are one of the major part of this syntax, which are primitive terms of the primitive types in
-contractible contexts which will be introduced later. Since contexts, types, variables and
-terms are all mutually defined, most of the properties of them have to be
-proved simultaneously as well.
+A Term can be either a variable or a coherence constant (|coh|). We
+use typed deBruijn indices to define variables as either the rightmost
+variable of the context, or some variable in the context which can be
+found by cancelling the rightmost variable along with each $\mathsf{vS}$. The
+coherence constants are one of the major part of this syntax, which
+are primitive terms of the primitive types in contractible contexts
+which will be introduced later. Since contexts, types, variables and
+terms are all mutually defined, most of their properties have to
+be proved simultaneously.
 
 
 \begin{code}
@@ -345,7 +347,7 @@ data isContr where
       → isContr (Γ , A , (var (vS x) =h var v0))     
 \end{code}
 
-Context morphisms are defined inductively similar to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of this morphism.
+Context morphisms are defined inductively similarly to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of the morphism.
 
 \begin{code}
 data _⇒_ where
@@ -452,7 +454,7 @@ wk-tm+ B t = t ⟦ [+S]T ⟫
 \end{code}
 }
 
-We could cancel the last term in the substitution for weakened objects
+We can cancel the last term in the substitution for weakened objects
 since weakening doesn't introduce new variables in types and terms.
 
 \begin{code}

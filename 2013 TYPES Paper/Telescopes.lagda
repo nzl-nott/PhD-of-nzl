@@ -101,10 +101,10 @@ $\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$, is equal to $x_{2n}
 =_\mathsf{h} x_{2n}$ in $S_n$. So in order to extend $\overline{i_n}$ to
 $i_n : S_n \Rightarrow S_{n+1}$ we must define a term in
 $\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$.  We can
-readily do that by $\mathsf{JJ}$:
+readily do that by $\mathsf{coh}$:
 \[
 i_n~ = ~ \overline{i_n}\, ,
-\,\mathsf{JJ}~(\mathsf{IdCm\,S_n})~(x_{2n}\,=_\mathsf{h}\,x_{2n})~(\mathsf{is\text{-}contr}~S_n)
+\,\mathsf{coh}~(\mathsf{IdCm\,S_n})~(x_{2n}\,=_\mathsf{h}\,x_{2n})~(\mathsf{is\text{-}contr}~S_n)
 \]
 \noindent It's easy to check that $i_n$ satisfies \eqref{eq:refl-glob}. 
 
@@ -116,8 +116,8 @@ $\sigma_n[i_0]_\mathsf{T}\cdots[i_{n-2}]_\mathsf{T}[i_{n-1}]_\mathsf{T}
 \equiv \sigma_n[i_0^n]_\mathsf{T}$ is
 a type, $\lambda_n$, in $S_0$.
 We call $\lambda_n$ the \emph{n\text{-}iterated loop type} on 
-$0$. The term $S_0 \vdash (\mathsf{var}~x_{2n}) [i_0^n]_\mathsf{tm} : \lambda_n$ is
-the iterated identity term on $0$. 
+$x_0$. The term $S_0 \vdash (\mathsf{var}~x_{2n}) [i_0^n]_\mathsf{tm} : \lambda_n$ is
+the iterated identity term on $x_0$. 
 
 \newbox\anglebox
 \setbox\anglebox=\hbox{\xy \POS(75,0)\ar@{-} (0,0) \ar@{-} (75,75)\endxy}

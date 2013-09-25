@@ -1,7 +1,5 @@
 \AgdaHide{
-
 \begin{code}
-
 {-# OPTIONS --type-in-type --no-positivity-check --no-termination-check #-}
 
 module Suspension where
@@ -77,12 +75,12 @@ id-cm++ Δ Θ γ = repeat-p1 Δ ++cm (γ ⊚ cor _)
 %
 For an arbitrary type $A$ in $\Gamma$ of level $n$ one can
 define a context with $2n$
-variables, called the (variable) \emph{stalk} of $A$. Moreover one can
+variables, called the \emph{stalk} of $A$. Moreover one can
 define a morphism from $\Gamma$ to the stalk of $A$ such that its
 substitution into the maximal type in the stalk of $A$ gives back
 $A$. The stalk of $A$ depends only on the level of $A$, the terms in
 $A$ define the substitution. Here is an example of stalks of small
-levels: $\epsilon$ (the empty context) for $n=0$; $(x_0 : *, x_1 : *)$ for
+levels: $\varepsilon$ (the empty context) for $n=0$; $(x_0 : *, x_1 : *)$ for
 $n=1$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
 x_0\,=_\mathsf{h}\,x_1)$ for $n=2$, etc. 
 % \[
@@ -164,10 +162,8 @@ one-step suspension:
         → (ΣT A) [ Σs δ ]T ≡ ΣT (A [ δ ]T)
 
 \end{code}
-
 \AgdaHide{
 \begin{code}
-
 ΣT[+T] * B = refl
 ΣT[+T] (_=h_ {A} a b) B = hom≡ (Σtm[+tm] a B) (Σtm[+tm] b B)
 
@@ -253,17 +249,12 @@ cohOpΣtm t p =  congΣtm (cohOp p)
                                                                  (hom≡ (cohOpV (sym (ΣT[+T] A A)) -¹)
                                                                   (cohOpV (sym (ΣT[+T] A A)) -¹))
                                                                  (ext (ΣC-Contr Γ r) {ΣT A} (Σv x))
-
-
-\end{code}
-}
-
+\end{code}}
 
 General suspension to the level of a type $A$ is defined by iteration of
 one-level suspension. For symmetry and ease of reading the following
-suspension function take as a parameter a type $A$ in $\Gamma$, while they
+suspension functions take as a parameter a type $A$ in $\Gamma$, while they
 depend only on its level. 
-
 
 \begin{code}
 ΣC-it : {Γ : Con}(A : Ty Γ) → Con → Con
@@ -273,7 +264,6 @@ depend only on its level.
 
 Σtm-it : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → 
            Tm B → Tm (ΣT-it A B)
-
 \end{code}
 
 \AgdaHide{
@@ -298,7 +288,6 @@ suspend-cm (_=h_ {A} a b) γ = Σs (suspend-cm A γ)
 
 \AgdaHide{
 \begin{code}
-
 minimum-cm : ∀ {Γ : Con}(A : Ty Γ) → Γ ⇒ ΣC-it A ε
 
 ΣC-p1 :{Γ : Con}(A : Ty Γ) → ΣC (Γ , A) ≡ ΣC Γ , ΣT A
@@ -395,12 +384,10 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 Σtm-it-p2 {Γ} {Δ} (_=h_ {A} a b) {B} {C} x = Σtm[Σs]tm (Σtm-it A (var (vS x))) (ΣC-it-cm-spl A C) ∾
                                                congΣtm (Σtm-it-p2 {Γ} {Δ} A {B} x) ∾
                                                Σtm[+tm] (Σtm-it A (var x)) (ΣT-it A C)
-
-
 \end{code}
 }
 
-\noindent Finally it is clear that iterated suspension preserves contractibility. 
+\noindent Finally, it is clear that iterated suspension preserves contractibility. 
 
 \begin{code}
 ΣC-it-Contr : ∀ {Γ Δ}(A : Ty Γ) → isContr Δ → isContr (ΣC-it A Δ)
@@ -413,7 +400,7 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 }
 
 By suspending the minimal contractible context,
-\AgdaInductiveConstructor{*}, we obtain a so-called span. They are
+*, we obtain a so-called span. They are
 also stalks with a top variable added. For example $(x_0: *)$ (the one-variable
 context) for $n=0$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1)$ for
 $n=1$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
@@ -447,7 +434,7 @@ the stalk of $A$ becuse it already exists in $\Gamma$.
 
 Geometrically speaking, the context resulting from replacing $*$ in $\Delta$ by
 $A$ is a new context which corresponds to the pasting of
-$\Delta$ to $\Gamma$ in the place of $A$.
+$\Delta$ to $\Gamma$ to $A$.
 
 
 As always, we define replacement for contexts, types and terms:
@@ -459,7 +446,7 @@ rpl-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B
       → Tm (rpl-T A B)
 \end{code}
 
-Replacement for contexts, $\AgdaFunction{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
+Replacement for contexts, $\mathsf{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
 a context which begins as $\Gamma$ and follows by each type of $\Delta$ with $*$ replaced with (pasted onto)  $A$. 
 To this end we must define the substitution $\mathsf{filter}$ which
 pulls back each type from suspended $\Delta$ to the new context. 

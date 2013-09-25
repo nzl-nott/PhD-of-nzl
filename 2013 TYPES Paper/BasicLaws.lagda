@@ -27,7 +27,7 @@ We can finally proceed to the definition of the groupoid structure of the syntax
 We start by an essential lemma which formalises the discussion at the
 beginning of this Section: to construct a term in a type $A$ in an
 arbitrary context, we first restrict attention to a suitable
-contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull the term built by $\mathsf{JJ}$ in $\Delta$
+contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull the term built by $\mathsf{coh}$ in $\Delta$
 back.  This relies on the fact that a lifted contractible context is
 also contractible, and therefore any type lifted from a contractible
 context is also inhabited.
@@ -35,7 +35,7 @@ context is also inhabited.
 \begin{code}
 Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → isContr Δ
            → Tm {rpl-C A Δ} (rpl-T A B)
-Coh-rpl {Δ = Δ} A B isc = JJ (ΣC-it-ε-Contr A isc) (filter Δ A) (ΣT-it A B)
+Coh-rpl {Δ = Δ} A B isc = coh (ΣC-it-ε-Contr A isc) (filter Δ A) (ΣT-it A B)
 \end{code}
 
 Next we define the reflexivity, symmetry and transitivity terms of any type . Let's start from the basic case as for the base type *. It is trivially inhabited because the context is the basic case of a contractible context.
@@ -239,7 +239,7 @@ Tm-J A P prefl a b p = (prefl [ (IdCm _) , (a ⟦ IC-T _ ⟫) ]tm) ⟦ trans (co
 
 Tm-trans'' : (Γ : Con)(A : Ty Γ) 
          → Tm {trans-Con' Γ A} (trans-Ty' Γ A)
-Tm-trans'' Γ A = JJ (ext (ext c* v0) (vS v0)) {!!} trans-Ty ⟦ {!!} ⟫
+Tm-trans'' Γ A = coh (ext (ext c* v0) (vS v0)) {!!} trans-Ty ⟦ {!!} ⟫
 
 
 ind : {Γ : Con}(A : Ty Γ) → (D : (x y : Tm A)(p : Tm (x =h y)) → Con)

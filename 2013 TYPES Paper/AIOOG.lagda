@@ -29,7 +29,7 @@
 \newcommand{\wog}{weak $\omega$-groupoids}
 \newcommand{\hott}{Homotopy Type Theory}
 \newcommand{\ott}{Observational Type Theory}
-\newcommand{\tig}{$\mathlarger{\tau} _{\infty-groupoid}$}
+\newcommand{\tig}{$\mathcal{T}_{\infty-groupoid}$}
 \begin{document}
 \pagenumbering{gobble}
 %\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
@@ -74,12 +74,12 @@ infixl 7 _⊚_
 
 \begin{abstract}
 
-  Weak $\omega$ groupoids are the higher dimensional generalisation of
+  Weak $\omega$-groupoids are the higher dimensional generalisation of
   setoids and are an essential ingredient of the constructive
   semantics of Homotopy Type Theory \cite{hott}.  Following up on our previous formalisation \cite{txa:csl}
   and Brunerie's notes \cite{gb:wog}, we present a new formalisation of the syntax
   of weak $\omega$-groupoids in Agda using heterogenous equality. We show how 
-  to recover basic constructions on $\omega$ groupoids using suspension and replacement. In particular we show that any type forms 
+  to recover basic constructions on $\omega$-groupoids using suspension and replacement. In particular we show that any type forms 
   a groupoid and that we can derive higher dimensional composition. We present a possible semantics using globular sets and discuss
   the issues which arise when using globular types instead.
 
@@ -132,8 +132,7 @@ $\omega$ groupoid. There are no definitional equalities which
 correspond to the fact that we consider weak $\omega$-groupoids. That
 is no laws are strict (i.e. definitional) but all are witnessed by
 terms. Compared to \cite{txa:csl} the definition is very much
-simplified by the observation that all laws of a weak $\omega$
-groupoid follow from the existence of coherence constants for
+simplified by the observation that all laws of a weak $\omega$-groupoid follow from the existence of coherence constants for
 any contractible context.
 
 In our formalisation we exploit the more liberal way to do mutual
@@ -262,10 +261,10 @@ With context morphism, we could define substitutions for types variables and ter
 composition of contexts can be understood as substitution for context morphisms as well.
 
 \begin{code}
-_[_]T  : {Γ Δ : Con}(A : Ty Δ) → Γ ⇒ Δ → Ty Γ
+_[_]T  : {Γ Δ : Con}(A : Ty Δ) → Γ ⇒ Δ → Ty Γ        
 _[_]V  : {Γ Δ : Con}{A : Ty Δ} → Var A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
-_[_]tm : {Γ Δ : Con}{A : Ty Δ} → Tm A  → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
-_⊚_    : {Γ Δ Θ : Con} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
+_[_]tm : {Γ Δ : Con}{A : Ty Δ} → Tm A  → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)    
+_⊚_    : {Γ Δ Θ : Con} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ   
 \end{code}
 
 
@@ -275,10 +274,10 @@ We can freely add types to the contexts of given any type
 judgments, term judgments or context morphisms. We call these rules
 weakening rules.
 
-\begin{code}
-_+T_  : {Γ : Con}(A : Ty Γ)           → (B : Ty Γ) → Ty (Γ , B)
-_+tm_ : {Γ : Con}{A : Ty Γ}(a : Tm A) → (B : Ty Γ) → Tm (A +T B)
-_+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ
+\begin{code}   
+_+T_  : {Γ : Con}(A : Ty Γ)           → (B : Ty Γ) → Ty (Γ , B)   
+_+tm_ : {Γ : Con}{A : Ty Γ}(a : Tm A) → (B : Ty Γ) → Tm (A +T B)   
+_+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ   
 \end{code}
 
 %We could first define the weakening rule and substitution for types.
@@ -298,7 +297,7 @@ _+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ
 }
 
 To define the variables and terms we have to use the weakening rules.
-A Term can be either a variable or a coherence constant (|JJ|). We use typed deBruijn indizes
+A Term can be either a variable or a coherence constant (|coh|). We use typed deBruijn indizes
 to define variables as either the immediate variable at the right most
 of the context, or some variable in the context which can be found by
 cancelling the right most variable along with each $vS$. The coherence constants are one of the major part of this syntax, which are primitive terms of the primitive types in
@@ -314,7 +313,7 @@ data Var where
 
 data Tm where
   var : {Γ : Con}{A : Ty Γ} → Var A → Tm A
-  JJ  : {Γ Δ : Con} → isContr Δ → (δ : Γ ⇒ Δ) → (A : Ty Δ) 
+  coh : {Γ Δ : Con} → isContr Δ → (δ : Γ ⇒ Δ) → (A : Ty Δ) 
       → Tm (A [ δ ]T)
 \end{code}
 
@@ -327,8 +326,8 @@ cohOpV {x = x} refl = refl (var x)
 cohOpVs : {Γ : Con}{A B C : Ty Γ}{x : Var A}(p : A ≡ B) → var (vS {B = C} (subst Var p x)) ≅ var (vS x)
 cohOpVs {x = x} refl = refl (var (vS x))
 
-JJ-eq : {Γ Δ : Con}{isc : isContr Δ}{γ δ : Γ ⇒ Δ}{A : Ty Δ} → γ ≡ δ → JJ isc γ A ≅ JJ isc δ A 
-JJ-eq refl = refl _
+coh-eq : {Γ Δ : Con}{isc : isContr Δ}{γ δ : Γ ⇒ Δ}{A : Ty Δ} → γ ≡ δ → coh isc γ A ≅ coh isc δ A 
+coh-eq refl = refl _
 
 \end{code}
 }
@@ -343,7 +342,7 @@ data isContr where
   c*  : isContr (ε , *)
   ext : {Γ : Con} 
       → isContr Γ → {A : Ty Γ}(x : Var A) 
-      → isContr (Γ , A , (var (vS x) =h var v0))
+      → isContr (Γ , A , (var (vS x) =h var v0))     
 \end{code}
 
 Context morphisms are defined inductively similar to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of this morphism.
@@ -472,7 +471,7 @@ since weakening doesn't introduce new variables in types and terms.
 \begin{code}
 
 (var x)     +tm B = var (vS x)
-(JJ cΔ δ A) +tm B = JJ cΔ (δ +S B) A ⟦ sym [+S]T ⟫ 
+(coh cΔ δ A) +tm B = coh cΔ (δ +S B) A ⟦ sym [+S]T ⟫ 
 
 cong+tm : {Γ : Con}{A B C : Ty Γ}{a : Tm A}{b : Tm B} → 
           a ≅ b
@@ -573,7 +572,7 @@ substitution in the context morphism part of the coherence constants.
 \begin{code}
 
 var x     [ δ ]tm = x [ δ ]V
-JJ cΔ γ A [ δ ]tm = JJ cΔ (γ ⊚ δ) A ⟦ sym [⊚]T ⟫
+coh cΔ γ A [ δ ]tm = coh cΔ (γ ⊚ δ) A ⟦ sym [⊚]T ⟫
 
 \end{code}
 
@@ -623,7 +622,7 @@ congtm2 refl = refl _
 
 
 [⊚]tm (var x) = [⊚]v x
-[⊚]tm (JJ c γ A) = cohOp (sym [⊚]T) ∾ (JJ-eq (sym (⊚assoc γ)) ∾ cohOp (sym [⊚]T) -¹) ∾ congtm (cohOp (sym [⊚]T) -¹)
+[⊚]tm (coh c γ A) = cohOp (sym [⊚]T) ∾ (coh-eq (sym (⊚assoc γ)) ∾ cohOp (sym [⊚]T) -¹) ∾ congtm (cohOp (sym [⊚]T) -¹)
 
 
 ⊚wk : ∀{Γ Δ Δ₁}{B : Ty Δ}(γ : Δ ⇒ Δ₁){δ : Γ ⇒ Δ}{c : Tm (B [ δ ]T)} → (γ +S B) ⊚ (δ , c) ≡ γ ⊚ δ
@@ -631,7 +630,7 @@ congtm2 refl = refl _
 ⊚wk (_,_ γ {A} a) = cm-eq (⊚wk γ) (cohOp [⊚]T ∾ (congtm (cohOp [+S]T) ∾ +tm[,]tm a) ∾ cohOp [⊚]T -¹)
 
 +tm[,]tm (var x) = cohOp +T[,]T
-+tm[,]tm (JJ x γ A) = congtm (cohOp (sym [+S]T)) ∾ cohOp (sym [⊚]T) ∾ JJ-eq (⊚wk γ) ∾ cohOp (sym [⊚]T) -¹
++tm[,]tm (coh x γ A) = congtm (cohOp (sym [+S]T)) ∾ cohOp (sym [⊚]T) ∾ coh-eq (⊚wk γ) ∾ cohOp (sym [⊚]T) -¹
 
 
 
@@ -644,7 +643,7 @@ congtm2 refl = refl _
 
 
 [+S]tm (var x) = [+S]V x
-[+S]tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq [+S]S ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
+[+S]tm (coh x δ A) = cohOp (sym [⊚]T) ∾ coh-eq [+S]S ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym [⊚]T)
 
 
 -- some widely-used contexts

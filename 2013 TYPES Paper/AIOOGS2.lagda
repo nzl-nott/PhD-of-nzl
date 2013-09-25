@@ -62,7 +62,7 @@ type, $A$.
 
 An important general mechanism we rely on throught the development
 follows directly from the type of the only nontrivial constructor of $\Tm$,
-$\AgdaInductiveConstructor{JJ}$, which tells us that to construct a
+$\AgdaInductiveConstructor{coh}$, which tells us that to construct a
 new term of type $\Gamma \vdash A$, we need a contractible context,
 $\Delta$, a type $\Delta\vdash T$ and a context morphism $\delta :
 \Gamma \Rightarrow \Delta$ such that
@@ -95,7 +95,7 @@ It allows us to define at once:
 
 \begin{code}
 Coh-Contr : {Γ : Con}{A : Ty Γ} → isContr Γ → Tm A
-Coh-Contr isC = JJ isC IdCm _ ⟦ sym IC-T ⟫
+Coh-Contr isC = coh isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
 
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
@@ -123,7 +123,7 @@ IC-cm • = refl
 IC-cm (δ , a) = cm-eq (IC-cm δ) (cohOp [⊚]T ∾ IC-tm a) 
 
 IC-tm (var x) = IC-v x
-IC-tm (JJ x δ A) = cohOp (sym [⊚]T) ∾ JJ-eq (IC-cm δ)
+IC-tm (coh x δ A) = cohOp (sym [⊚]T) ∾ coh-eq (IC-cm δ)
 
 pr1 : ∀ {Γ A} → (Γ , A) ⇒ Γ
 pr2 : ∀ {Γ A} → Tm {Γ , A} (A [ pr1 ]T)

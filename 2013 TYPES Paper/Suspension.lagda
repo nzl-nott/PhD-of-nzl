@@ -176,7 +176,7 @@ one-step suspension:
 
 
 Σtm (var x) = var (Σv x)
-Σtm (JJ x δ A) = JJ (ΣC-Contr _ x) (Σs δ) (ΣT A) ⟦ sym (ΣT[Σs]T A δ) ⟫
+Σtm (coh x δ A) = coh (ΣC-Contr _ x) (Σs δ) (ΣT A) ⟦ sym (ΣT[Σs]T A δ) ⟫
 
 
 Σtm-p1 : {Γ : Con}(A : Ty Γ) → Σtm {Γ , A} (var v0) ≅ var v0 
@@ -210,10 +210,10 @@ cohOpΣtm t p =  congΣtm (cohOp p)
 Σtm[Σs]tm : ∀ {Γ Δ : Con}{A : Ty Δ}(a : Tm A)(δ : Γ ⇒ Δ) → 
               (Σtm a) [ Σs δ ]tm ≅ Σtm (a [ δ ]tm)
 Σtm[Σs]tm (var x) δ = Σv[Σs]v x δ
-Σtm[Σs]tm {Γ} {Δ} (JJ {Δ = Δ₁} x δ A) δ₁ = congtm (cohOp (sym (ΣT[Σs]T A δ))) 
+Σtm[Σs]tm {Γ} {Δ} (coh {Δ = Δ₁} x δ A) δ₁ = congtm (cohOp (sym (ΣT[Σs]T A δ))) 
                       ∾ cohOp (sym [⊚]T) 
-                      ∾ JJ-eq (sym (Σs⊚ δ δ₁)) 
-                      ∾ (cohOpΣtm (JJ x (δ ⊚ δ₁) A) (sym [⊚]T) 
+                      ∾ coh-eq (sym (Σs⊚ δ δ₁)) 
+                      ∾ (cohOpΣtm (coh x (δ ⊚ δ₁) A) (sym [⊚]T) 
                       ∾ cohOp (sym (ΣT[Σs]T A (δ ⊚ δ₁)))) -¹
 
 Σs•-left-id : ∀{Γ Δ : Con}(γ : Γ ⇒ Δ) → Σs {Γ} • ≡ Σs {Δ} • ⊚ Σs γ
@@ -245,7 +245,7 @@ cohOpΣtm t p =  congΣtm (cohOp p)
 ΣT[Σs]T (_=h_ {A} a b) δ = hom≡ (Σtm[Σs]tm a δ) (Σtm[Σs]tm b δ)
 
 Σtm[+tm] {A = A} (var x) B = cohOpV (sym (ΣT[+T] A B))
-Σtm[+tm] {Γ} (JJ {Δ = Δ} x δ A) B = cohOpΣtm (JJ x (δ +S B) A) (sym [+S]T) ∾ cohOp (sym (ΣT[Σs]T A (δ +S B))) ∾ JJ-eq (ΣsΣT δ B) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym (ΣT[Σs]T A δ))
+Σtm[+tm] {Γ} (coh {Δ = Δ} x δ A) B = cohOpΣtm (coh x (δ +S B) A) (sym [+S]T) ∾ cohOp (sym (ΣT[Σs]T A (δ +S B))) ∾ coh-eq (ΣsΣT δ B) ∾ cohOp (sym [+S]T) -¹ ∾ cong+tm2 (sym (ΣT[Σs]T A δ))
 
 
 ΣC-Contr .(ε , *) c* = ext c* v0

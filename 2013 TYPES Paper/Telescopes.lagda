@@ -18,16 +18,16 @@ open import GroupoidLaws
 
 \subsection{Higher Structure}
 %
-In this section we show how also higher groupoid structure can be
-introduced in the syntactical framework. Because the full details of
-the formal development would be rather overbearing and are not in
-principle interesting, we use the more abstract language of category
-theory as much as possible. To this end note that contexts and context
-morphisms form a category up to definitional
-quality. Because equality of contexts is decideable we may assume \textsf{UIP}
-on context morphisms and we are therefore working in a honest
-1-category where equality of arrows is definitional equality of
-context morphisms. This category will be denoted $\mathsf{Con}$.
+In this section we propose how also higher groupoid structure can be
+introduced in the syntactical framework. We use the more abstract
+language of category theory to communicate the gist of the
+construction leaving the tedious formalisation for future work. To this
+end note that contexts and context morphisms form a category up to
+definitional quality. Because equality of contexts is decideable we
+may assume \textsf{UIP} on context morphisms and we are therefore
+working in a honest 1-category where equality of arrows is
+definitional equality of context morphisms. This category will be
+denoted $\mathsf{Con}$.
 
 \subsubsection{Spans}
 \label{sec:spans}

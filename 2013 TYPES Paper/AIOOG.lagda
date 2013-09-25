@@ -33,7 +33,7 @@
 \begin{document}
 \pagenumbering{gobble}
 %\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
-\title{$\omega$-Groupoids and beyond}
+\title{Some constructions on $\omega$-groupoids}
 
 
 
@@ -74,16 +74,23 @@ infixl 7 _⊚_
 
 \begin{abstract}
 
-In \hott{}, a variant of \mltt{}, we reject proof-irrelevance so that the common interpretation of types as setoids has to be generalised. With the univalence axiom, we treat equivalence as equality and interpret types as \og{}. Inspired by Altenkirch's work \cite{txa:csl} and Brunerie's notes \cite{gb:wog}, we study and implement a syntactic definition of Grothendieck \wog{} in Agda which is a popular variant of \mltt{} and a famous theorem prover. It is the first step to model type theory with \wog{} so that we could eliminate the univalence axiom.
+  Weak $\omega$ groupoids are the higher dimensional generalisation of
+  setoids and are an essential ingredient of the constructive
+  semantics of Homotopy Type Theory \cite{hott}.  Following up on our previous formalisation \cite{txa:csl}
+  and Brunerie's notes \cite{gb:wog}, we present a new formalisation of the syntax
+  of weak $\omega$-groupoids in Agda using heterogenous equality. We show how 
+  to recover basic constructions on $\omega$ groupoids using suspension and replacement. In particular we show that any type forms 
+  a groupoid and that we can derive higher dimensional composition. We present a possible semantics using globular sets and discuss
+  the issues which arise when using globular types instead.
 
-\txa{Rewrite abstract at the end}
+% In \hott{}, a variant of \mltt{}, we reject proof-irrelevance so that the common interpretation of types as setoids has to be generalised. With the univalence axiom, we treat equivalence as equality and interpret types as \og{}. Inspired by Altenkirch's work \cite{txa:csl} and Brunerie's notes \cite{gb:wog}, we study and implement a syntactic definition of Grothendieck \wog{} in Agda which is a popular variant of \mltt{} and a famous theorem prover. It is the first step to model type theory with \wog{} so that we could eliminate the univalence axiom.
 
 \end{abstract}
 
 
 \section{Introduction}
 
-\txa{Rewrite text.}
+%\txa{Rewrite text.}
 
 % Background
 
@@ -101,8 +108,7 @@ based on setoid model and also refines it \cite{alti:ott-conf} to \ott{} to just
 However as mentioned before, setoids require UIP which is incompatible with \hott{}. To solve the problem we should generalise the notion of setoids, namely to enrich the structure of the identity proofs. 
 
 
-
-The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous Manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplication of \wog{} in \cite{ara:wog}. Categorically
+The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplication of \wog{} in \cite{ara:wog}. Categorically
 speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
@@ -119,12 +125,34 @@ of Grothendieck \wog{}, then interpret it with a globular set and a dependent fu
 
 \section{Syntax}\label{sec:syntax}
 
-\txa{More explanation what is going on}
+We develop the type theory of $\omega$-groupoids formally, following
+\cite{gb:wog}. This is a Type Theory with only one type former which
+we can view as equality types and interpret as the homsets of the
+$\omega$ groupoid. There are no definitional equalities which
+correspond to the fact that we consider weak $\omega$-groupoids. That
+is no laws are strict (i.e. definitional) but all are witnessed by
+terms. Compared to \cite{txa:csl} the definition is very much
+simplified by the observation that all laws of a weak $\omega$
+groupoid follow from the existence of coherence constants for
+any contractible context.
 
-Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
+In our formalisation we exploit the more liberal way to do mutual
+definitions in Agda, which was implemented recently following up a
+suggestion by the first author. It allows us to first introduce a type
+former but give its definition later.
+
+Since we are avoiding definitional equalities we have to define a
+syntactic substitution operation which we need for the general
+statement of the coherence constants. However, defining this constant
+requires us to prove a number of substitution laws at the same
+time. We address this issue by using a heterogenous equality which
+exploits uniqueness of identity proofs (UIP). Note that UIP holds because all components defined here
+are sets in the sense of Homotopy Type Theory.
+
+% Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
 
 
-\paragraph{Basic Objects}
+\subsection{Basic Objects}
 
 We first declare the syntax of our type theory which is
 called \tig{} namely the internal language of \wog. The following declarations in order are contexts as sets,
@@ -141,7 +169,7 @@ data _⇒_           : Con → Con → Set
 data isContr       : Con → Set
 \end{code}
 
-Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
+% Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
 
 It is possible to complete the definition of contexts and types first. Contexts are inductively defined as either an empty context or a context with a type of it. Types are defined as either $*$ which we call it 0-cell, or a morphism between two terms of
 some type A. If the type A is n-cell then we call the morphism $n+1$-cell. 
@@ -157,9 +185,9 @@ data Ty Γ where
   _=h_ : {A : Ty Γ}(a b : Tm A) → Ty Γ
 \end{code}
 
-\paragraph{Heterogeneous Equality for Terms}
+\subsection{Heterogeneous Equality for Terms}
 
-One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms.
+One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential wehn defining substitution.
 When we used the common identity types which is homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. However we found that the syntactic equality of types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equalities of types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The equality is inhabited only when they are definitionally equal.
 
 \begin{code}
@@ -228,7 +256,7 @@ cong≅ f (refl _) = refl _
 }
 
 
-\paragraph{Substitutions}
+\subsection{Substitutions}
 
 With context morphism, we could define substitutions for types variables and terms. Indeed the
 composition of contexts can be understood as substitution for context morphisms as well.
@@ -241,9 +269,9 @@ _⊚_    : {Γ Δ Θ : Con} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ
 \end{code}
 
 
-\paragraph{Weakening Rules}
+\subsection{Weakening Rules}
 
-we could freely add types to the contexts of given any type
+We can freely add types to the contexts of given any type
 judgments, term judgments or context morphisms. We call these rules
 weakening rules.
 
@@ -270,10 +298,10 @@ _+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ
 }
 
 To define the variables and terms we have to use the weakening rules.
-A Term can be either a variable or a J-term. We use the unnamed way
+A Term can be either a variable or a coherence constant (|JJ|). We use typed deBruijn indizes
 to define variables as either the immediate variable at the right most
 of the context, or some variable in the context which can be found by
-cancelling the right most variable along with each $vS$. The J-terms are one of the major part of this syntax, which are primitive terms of the primitive types in
+cancelling the right most variable along with each $vS$. The coherence constants are one of the major part of this syntax, which are primitive terms of the primitive types in
 contractible contexts which will be introduced later. Since contexts, types, variables and
 terms are all mutually defined, most of the properties of them have to be
 proved simultaneously as well.
@@ -347,7 +375,7 @@ cm-eq refl (refl _) = refl
 }
 
 
-\paragraph{Lemmas}
+\subsection{Lemmas}
 
 The following four lemmas state that to
 substitute a type, a variable, a term, or a context morphism with two
@@ -539,8 +567,8 @@ wk+S+S eq = trans [+S]S (cong (λ x → x +S _) eq)
 \end{code}
 }
 
-Most of the substitutions are defined as usual, except the one for J-terms. We do
-substitution in the context morphism part of the J-terms.
+Most of the substitutions are defined as usual, except the one for coherence constants. We do
+substitution in the context morphism part of the coherence constants.
 
 \begin{code}
 
@@ -666,7 +694,7 @@ vβ = var v0
 
 \section{Semantics}
 
-\paragraph{Globular Sets}
+\subsection{Globular Sets}
 
 \input{GlobularSets}
 

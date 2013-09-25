@@ -92,6 +92,10 @@ record Semantic (G : Glob) : Set₁ where
     semSB-cm : ∀ {Γ Δ Θ : Con}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
              → ⟦ θ ⊚ δ ⟧cm γ ≡ ⟦ θ ⟧cm (⟦ δ ⟧cm γ)
 
+--    πSB      : ∀ {Γ Δ Θ : Con}{A : Ty Δ}(x : Var A)(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)
+--             → π x γ ≡ π x 
+
+--{Γ : Con}{A : Ty Γ}(x : Var A)(γ : ⟦ Γ ⟧C) →
 \end{code}
 
 

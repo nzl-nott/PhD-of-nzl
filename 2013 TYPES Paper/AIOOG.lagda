@@ -666,7 +666,7 @@ vβ = var v0
 
 \section{Semantics}
 
-\paragraph{Globular Sets}
+\subsection{Globular Sets}
 
 \input{GlobularSets}
 

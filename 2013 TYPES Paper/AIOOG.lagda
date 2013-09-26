@@ -137,6 +137,10 @@ There are several approaches to formalise {\wog} in Type Theory. For instance, A
 This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. The approach is to specify when a globular set is a {\wog} by first defining a type theory called {\tig} to describe the internal language
 of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 
+\section*{Acknowledgements}
+
+We would like to thank Guillaume Brunerie's for this interesting idea and discussions.
+
 \section{Syntax}\label{sec:syntax}
 
 We develop the type theory of $\omega$-groupoids formally, following

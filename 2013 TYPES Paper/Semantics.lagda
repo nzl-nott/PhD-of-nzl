@@ -65,14 +65,15 @@ The semantic substitution properties are essential,
 
     semSb-tm : ∀{Γ Δ}{A : Ty Δ}(a : Tm A)
                  (δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
-             → subst ∣_∣ (semSb-T A δ γ) (⟦ a [ δ ]tm ⟧tm γ) ≡ ⟦ a ⟧tm (⟦ δ ⟧cm γ)
+             → subst ∣_∣ (semSb-T A δ γ) (⟦ a [ δ ]tm ⟧tm γ)
+                ≡ ⟦ a ⟧tm (⟦ δ ⟧cm γ)
 
     semSb-cm : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)
                (δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
              → ⟦ θ ⊚ δ ⟧cm γ ≡ ⟦ θ ⟧cm (⟦ δ ⟧cm γ)
 \end{code}
 
-Since the computation laws for  the interpretations of terms and context morphisms are well typed up to these properties.
+Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
 
 \begin{code}
 
@@ -85,17 +86,37 @@ Since the computation laws for  the interpretations of terms and context morphis
               → ⟦ δ , a ⟧cm γ ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧cm γ) ,
                              subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
 \end{code}
-The semantic weakening properties is deriavable since they are just special cases. 
+The semantic weakening properties is deriavable since weakening is just a special case of a substitution of this form $(\Gamma , A) \Rightarrow \Gamma$.
 
+\AgdaHide{
 \begin{code}
 
+{-
   cong⟦⟧T : ∀ {Γ A B}(p : A ≡ B)(γ : ⟦ Γ ⟧C) → ⟦ A ⟧T γ ≡ ⟦ B ⟧T γ
   cong⟦⟧T refl γ = refl
 
   semWk-T : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
           →  ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ A ⟧T γ
+
+  
+  semWk-cm : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}(δ : Γ ⇒ Δ)
+             → ⟦ δ +S B ⟧cm (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧cm γ
+
+  sem-Id : ∀ (Γ : Con){γ : ⟦ Γ ⟧C} → ⟦ IdCm ⟧cm γ ≡ γ
+  sem-Id ε = {!!}
+  sem-Id (Γ , A) = {!subst ()!}
+
   semWk-T {Γ} {A} {B} γ v = trans (cong (λ x → ⟦ x ⟧T (coerce ⟦_⟧C-β2 (γ , v))) (sym pr1-wk-T))
-                              (trans (semSb-T {Γ , B} {Γ} A pr1 (coerce ⟦_⟧C-β2 (γ , v))) {!!})
+                              (trans (semSb-T {Γ , B} {Γ} A pr1 (coerce ⟦_⟧C-β2 (γ , v))) (cong (λ x → ⟦ A ⟧T x) (trans (semWk-cm IdCm) (sem-Id _))))
+
+  semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
+             → subst ∣_∣ (semWk-T γ v) (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
+                ≡ (⟦ a ⟧tm γ)
+  semWk-tm = {!!}
+
+
+  semWk-cm = {!!}
+-}
 
 {-
     semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
@@ -106,11 +127,6 @@ The semantic weakening properties is deriavable since they are just special case
              → ⟦ δ ⟧cm γ ≡ ⟦ δ +S B ⟧cm
                         (subst (λ x → x) (sym sC-β2) (γ , v))
 -}
-
-\end{code}
-so that the following computation laws of projection function $\AgdaFunction{$\pi$}$ and coherence function $\AgdaFunction{⟦coh⟧}$ is well typed.
-
-\begin{code}
 
 {-
     π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
@@ -129,20 +145,15 @@ so that the following computation laws of projection function $\AgdaFunction{$\p
            → subst ∣_∣ (semSb-T γ v) (⟦coh⟧ ic A γ) ≡ 
              ⟦coh⟧ ic' (A +T B) (subst (λ x → x) (sym sC-β2) (γ , v))
 
--}
-\end{code}
-At last, the semantic substitution properties for terms, context morphisms.
-
-To interpret the coherence constants we need a function $\AgdaFunction{⟦coh⟧}$ \footnote{it is called J in Brunerie's note but to make it less ambiguous we renamed it}. It returns an object for every type in any contractible context, namely what is called a valid coherence in Brunerie's paper. 
-\begin{code}
-{-
     ⟦coh⟧ : ∀{Θ} → isContr Θ → (A : Ty Θ) → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
 -}
 \end{code}
---    semSb-coh :
-\end{code}
+}
 
-If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle |Idω| is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
+To interpret the coherence constants we need a function $\AgdaFunction{⟦coh⟧}$ \footnote{it is called J in Brunerie's note but to make it less ambiguous we renamed it}. It returns an object for every type in any contractible context, namely what is called a valid coherence in Brunerie's paper. However it relies on the semantic substitution properties to define which in turn also defines the interpretation. Therefore it can not be part of the record definition.
+
+
+If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
 
 \AgdaHide{
 

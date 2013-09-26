@@ -181,9 +181,18 @@ Here we declare them as properties because they are essential for the computatio
 -}
 \end{code}
 }
+ 
+The only part of the semantics where we have any freedom is the interpretation of the coherence constants:
 
-To interpret the coherence constants we need a function $\AgdaFunction{⟦coh⟧}$ \footnote{it is called J in Brunerie's note but to make it less ambiguous we renamed it}. It returns an object for every type in any contractible context, namely what is called a valid coherence in Brunerie's paper. However it relies on the semantic substitution properties to define which in turn also defines the interpretation. Therefore it can not be part of the record definition.
-
+\begin{code}
+    ⟦coh⟧ : ∀{Θ} → isContr Θ → (A : Ty Θ) → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
+\end{code}
+However, we also need to require that the coherence constants are well
+behaved wrt to substitution which in turn relies on the interpretation
+of all terms. To address this we state the required properties in a
+redundant form because the correctness for any other part of the
+syntax follows from the defining equations we have already
+stated. However, there seems to be no way to avoid this.
 
 If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
 

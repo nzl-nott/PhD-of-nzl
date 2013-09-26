@@ -90,8 +90,6 @@ infixl 7 _⊚_
 
 \section{Introduction}
 
-%\txa{Rewrite text.}
-
 % Background
 
 %why do we need to use omega groupoid
@@ -123,7 +121,7 @@ structure of the identity proofs.
 
 
 The generalised notion is called {\wog} and was proposed by
-Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog}\oxr{I'm confused. Is it {\og} or {\wog}?} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
+Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
 isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an

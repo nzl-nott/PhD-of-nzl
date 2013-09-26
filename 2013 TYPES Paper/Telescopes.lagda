@@ -172,8 +172,8 @@ $l_n$ and $r_n$ provide projections onto the left and right span of
 $Y_n$ respectively. The mediating arrows $\langle s, s\rangle_n$ and
 $\langle t , t \rangle_n$ provide
 projections out of $Y_{n+1}$ onto the join of the sources and targets of the left
-and right parts respectively.\oxr{We must say a bit more: how is this
-  mophism defined? By recursion. }
+and right parts respectively.
+%\oxr{We must say a bit more: how is this mophism defined? By recursion. }
 
 In order to define composition we define for each $n$ a third morphism
 $c_n: Y_n \Rightarrow S_n$ with the property that both the $s$-squares

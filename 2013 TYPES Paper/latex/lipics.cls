@@ -137,7 +137,7 @@
       ; pp. \thepage--\pageref{LastPage}%
       \\
     \fi
-    \setbox\@tempboxa\hbox{\includegraphics[height=14\p@,trim=0 15 0 0]{lipics-logo-bw}}%
+    \setbox\@tempboxa\hbox{\includegraphics[height=14\p@,trim=0 15 0 0]{lipics-logo-bw.pdf}}%
     \hspace*{\wd\@tempboxa}\enskip
     \href{http://www.dagstuhl.de/lipics/}%
          {Leibniz International Proceedings in Informatics}\\

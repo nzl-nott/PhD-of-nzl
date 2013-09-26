@@ -100,11 +100,6 @@ corresponding inverse morphism $ g : B \to A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
 2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$. 
 
-% \oxr{This paragraph is maybe too terse to be intelligible. Does
-% functional extensionality result in non-canonicity, or is it rather
-% the addition of an axiom? Jumps from extensionality to univalence
-% back.}
-
 Voevodsky proposed the univalence axiom which basically says that
 isomorphic types are equal. This can be viewed as a strong
 extensionality axiom and it does imply functional extensionality (a
@@ -114,7 +109,7 @@ term of type Nat is reducible to a numeral. In the special case of
 extensionality and assuming a strong version of UIP we were able to
 eliminate this issue \cite{alti:lics99,alti:ott-conf} using
 setoids. However, it is not clear how to generalize this in the
-absence of UIP --- clearly this is necessary if we want to capture
+absence of UIP
 univalence which is incompatible with UIP.  To solve the problem we
 should generalise the notion of setoids, namely to enrich the
 structure of the identity proofs.
@@ -708,8 +703,6 @@ In this paper, we present an implementation of \wog{} following  Brunerie's work
 There are still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
 We would like to formalise a proof of that Id$\omega$ is an \wog{}, but the base set in a globular set is an h-set which is incompatible with Id$\omega$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with J are equivalence. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
-
-
 
 
 

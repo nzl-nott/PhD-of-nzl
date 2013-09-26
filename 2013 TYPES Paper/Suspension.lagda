@@ -511,37 +511,16 @@ rpl-tm-vS : {Γ : Con}(Δ : Con)(A : Ty Γ){B C : Ty Δ}{γ : Γ ⇒ rpl-C A Δ}
              {b : Tm (rpl-T A B [ γ ]T)}{x : Var C} → rpl-tm {Δ = Δ , B} A (var (vS x)) [ γ , b ]tm ≅ rpl-tm A (var x) [ γ ]tm
 rpl-tm-vS Δ A {x = x} = congtm ([⊚]tm (Σtm-it A (var (vS x))) ∾ (congtm (Σtm-it-p2 A x))  ∾ +tm[,]tm (Σtm-it A (var x))  ∾ ([+S]tm (Σtm-it A (var x)))) ∾ +tm[,]tm (Σtm-it A (var x) [ filter _ A ]tm)
 
-{-
-filter-p1 : {Γ Δ Θ : Con}{A : Ty Γ}{B : Ty Δ}(γ : Θ ⇒ Δ) → rpl-T A B [ filter A γ ]T ≡ rpl-T A (B [ γ ]T)
-
-filter {Θ = Θ} A • = rpl-pr1 Θ A
-filter B (γ , a) = filter B γ , (rpl-tm B a) ⟦ filter-p1 γ ⟫
-
-
-filter-p1 {Γ} {Θ = Θ} • = {!!}
-filter-p1 (γ , a) = {!!}
--}
 -- basic example
 
 base-1 : {Γ : Con}{A : Ty Γ} → rpl-C A (ε , *) ≡ (Γ , A)
 base-1 = cong (λ x → _ , x) (ΣT-it-p1 _)
 
-{-
-base-2 : {Γ : Con}{A : Ty Γ} → rpl (ε , * , *) A ≡ (Γ , A , A +T A)
-base-2 = Con-eq base-1 {!!}
--}
 
 
 map-1 : {Γ : Con}{A : Ty Γ} → (Γ , A) ⇒ rpl-C A (ε , *)
 map-1 = 1-1cm-same (ΣT-it-p1 _)
 
-{-
-T-1 : {Γ : Con}{A : Ty Γ} → rpl-T (ε , *) A * [ map-1 ]T ≡ A +T A
-T-1 {Γ} {A} = trans (congT (rpl-T-p1 (ε , *) A)) (trans {!!} (p1-wk-T {Γ} {A} {A})) -- trans (congT (rpl-T-p2 (ε , *) A)) {!!}
-
-map-2 : {Γ : Con}{A : Ty Γ} → (Γ , A , A +T A) ⇒ rpl (ε , * , *) A
-map-2 = (map-1 +S _) , (var v0) ⟦ wk+S+T T-1 ⟫
--}
 -- some useful lemmas
 
 rpl*-A : {Γ : Con}{A : Ty Γ} → rpl-T {Δ = ε} A * [ IdCm ]T ≡ A

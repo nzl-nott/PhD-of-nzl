@@ -117,69 +117,6 @@ Here we declare them as properties because they are essential for the computatio
 
 \end{code}
 
-\AgdaHide{
-\begin{code}
-
-{-
-  cong⟦⟧T : ∀ {Γ A B}(p : A ≡ B)(γ : ⟦ Γ ⟧C) → ⟦ A ⟧T γ ≡ ⟦ B ⟧T γ
-  cong⟦⟧T refl γ = refl
-
-  semWk-T : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
-          →  ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ A ⟧T γ
-  
-  semWk-cm : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}(δ : Γ ⇒ Δ)
-             → ⟦ δ +S B ⟧cm (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧cm γ
-
-  sem-Id : ∀ (Γ : Con){γ : ⟦ Γ ⟧C} → ⟦ IdCm ⟧cm γ ≡ γ
-  sem-Id ε = ⊤-uni ⟦_⟧C-β1
-    sem-Id (Γ , A) = trans ⟦_⟧cm-β2 (trans {!cong (coerce ⟦_⟧cm-β2) ? !} {!!})
-
-  semWk-T {Γ} {A} {B} γ v = trans (cong (λ x → ⟦ x ⟧T (coerce ⟦_⟧C-β2 (γ , v))) (sym pr1-wk-T))
-                              (trans (semSb-T {Γ , B} {Γ} A pr1 (coerce ⟦_⟧C-β2 (γ , v))) (cong (λ x → ⟦ A ⟧T x) (trans (semWk-cm IdCm) (sem-Id _))))
--}
-{-
-  semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
-             → subst ∣_∣ (semWk-T γ v) (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
-                ≡ (⟦ a ⟧tm γ)
-  semWk-tm = {!!}
-
-
-  semWk-cm = {!!}
-
--}
-{-
-    semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
-             → subst ∣_∣ (semWk-T γ v) (⟦ a ⟧tm γ) ≡ ⟦ a +tm B ⟧tm 
-                           (subst (λ x → x) (sym sC-β2) (γ , v))
-
-    semWk-cm : ∀ {Γ Δ B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(δ : Γ ⇒ Δ)
-             → ⟦ δ ⟧cm γ ≡ ⟦ δ +S B ⟧cm
-                        (subst (λ x → x) (sym sC-β2) (γ , v))
--}
-
-{-
-  π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
-        → subst ∣_∣ (semWk-T γ v) (π v0 (coerce ⟦_⟧C-β2 (γ , v)))
-         ≡ v
-  π-β1 = {!!}
-
-    π-β2  : ∀{Γ A B}(x : Var A)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣) 
-          → π (vS {Γ} {A} {B} x) (subst (λ y → y) (sym sC-β2) (γ , v)) 
-           ≡ subst ∣_∣ (semWk-T γ v) (π x γ)
-
-    stm-β2  : ∀{Γ Δ x δ}{A : Ty Δ}{γ : ⟦ Γ ⟧C}
-            → subst ∣_∣ (semSb-T A δ γ) (⟦ coh x δ A ⟧tm γ) 
-              ≡ ⟦coh⟧ x A (⟦ δ ⟧cm γ)
-    semSb-coh : ∀{Γ : Con}(A B : Ty Γ)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
-               (ic : isContr Γ)(ic' : isContr (Γ , B))
-           → subst ∣_∣ (semSb-T γ v) (⟦coh⟧ ic A γ) ≡ 
-             ⟦coh⟧ ic' (A +T B) (subst (λ x → x) (sym sC-β2) (γ , v))
-
-    ⟦coh⟧ : ∀{Θ} → isContr Θ → (A : Ty Θ) → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
--}
-\end{code}
-}
- 
 The only part of the semantics where we have any freedom is the interpretation of the coherence constants:
 
 \begin{code}
@@ -193,19 +130,3 @@ syntax follows from the defining equations we have already
 stated. However, there seems to be no way to avoid this.
 
 If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
-
-\AgdaHide{
-
-\begin{code}
-
-{-
-Id-tm : {Γ : Con}{A : Ty Γ}(t : Tm A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ Tm-refl _ _ t ⟧tm γ ∣
-Id-tm t γ = {!γ!}
-
-R : (θ : Con)(isC : isContr θ) → ⟦ ε , * ⟧C → ⟦ θ ⟧C
-R .(ε , *) c* t = t
-R .(Γ , A , (var (vS x) =h var v0)) (ext {Γ} isC {A} x) (tt , g) = (R Γ isC (tt , g) , ⟦ var x ⟧tm (R Γ isC (tt , g))) , {!!} -- ⟦ Tm-refl _ _ (var x) ⟧tm {!!} -- {!!} , {!!}
--}
-
-\end{code}
-}

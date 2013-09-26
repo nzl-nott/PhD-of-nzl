@@ -76,14 +76,6 @@ module UniverseGS (U : Set)(El : U → Set) where
   open uGlob
 
 
-{-
-  Π : (A : uGlob)(B : A → uGlob) → uGlob
-  Π A B = 
-    record 
-    { ∣_∣u = {!El ∣ A ∣u !}
-    ; uhom = {!!} 
-    }
--}
 -- Globular Sets indexed by Types
 
 Π : (A : Set)(B : A → Glob) → Glob

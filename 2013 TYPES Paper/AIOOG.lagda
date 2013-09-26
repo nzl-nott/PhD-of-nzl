@@ -139,7 +139,12 @@ of Grothendieck {\wog}, then interpret it with a globular set and a dependent fu
 
 \section*{Acknowledgements}
 
-We would like to thank Guillaume Brunerie's for this interesting idea and discussions.
+The first and second author would like to that the organizers and
+other participants of the special year on homotopy type theory at the
+Institute for Advanced Study where they had many interesting
+discussionon topics related to the work presented in this
+paper. Especially we all would like to acknowledge Guillaume
+Brunerie's proposal which made this work possible. 
 
 \section{Syntax}\label{sec:syntax}
 

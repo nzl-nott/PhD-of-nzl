@@ -78,7 +78,7 @@ infixl 7 _⊚_
   setoids and are an essential ingredient of the constructive
   semantics of Homotopy Type Theory \cite{hott}.  Following up on our previous formalisation \cite{txa:csl}
   and Brunerie's notes \cite{gb:wog}, we present a new formalisation of the syntax
-  of weak $\omega$-groupoids in Agda using heterogenous equality. We show how 
+  of weak $\omega$-groupoids in Agda using heterogeneous equality. We show how 
   to recover basic constructions on $\omega$-groupoids using suspension and replacement. In particular we show that any type forms 
   a groupoid and that we can derive higher dimensional composition. We present a possible semantics using globular sets and discuss
   the issues which arise when using globular types instead.
@@ -108,7 +108,7 @@ based on setoid model and also refines it \cite{alti:ott-conf} to \ott{} to just
 However as mentioned before, setoids require UIP which is incompatible with \hott{}. To solve the problem we should generalise the notion of setoids, namely to enrich the structure of the identity proofs. 
 
 
-The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplication of \wog{} in \cite{ara:wog}. Categorically
+The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplification of \wog{} in \cite{ara:wog}. Categorically
 speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
@@ -119,7 +119,7 @@ infinite version of n-groupoids. To model Type Theory without UIP we
 also require the equalities to be non-strict, in other words, they are
 not definitionally equalities. Finally we should use \wog{} to interpret types and eliminate the univalence axiom.
 
-There are several approaches to formalise \wog{} in Type Theory. For instance, Altenkirch \cite{txa:csl}, and Bruneries' notes \cite{gb:wog}.
+There are several approaches to formalise \wog{} in Type Theory. For instance, Altenkirch \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
 This paper mainly explains an implementation of \wog{} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional \mltt{}. The approach is to specify when a globular set is a weak $\omega$-groupoid by first defining a type theory called \tig{} to describe the internal language
 of Grothendieck \wog{}, then interpret it with a globular set and a dependent function. All coherence laws of the \wog{} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 
@@ -144,7 +144,7 @@ Since we are avoiding definitional equalities we have to define a
 syntactic substitution operation which we need for the general
 statement of the coherence constants. However, defining this constant
 requires us to prove a number of substitution laws at the same
-time. We address this issue by using a heterogenous equality which
+time. We address this issue by using a heterogeneous equality which
 exploits uniqueness of identity proofs (UIP). Note that UIP holds because all components defined here
 are sets in the sense of Homotopy Type Theory.
 
@@ -186,7 +186,7 @@ data Ty Γ where
 
 \subsection{Heterogeneous Equality for Terms}
 
-One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential wehn defining substitution.
+One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential when defining substitution.
 When we used the common identity types which is homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. However we found that the syntactic equality of types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equalities of types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The equality is inhabited only when they are definitionally equal.
 
 \begin{code}
@@ -708,7 +708,7 @@ vβ = var v0
 
 In this paper, we present an implementation of \wog{} following  Brunerie's work. Briefly speaking, we define the syntax of the type theory \tig{}, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we use heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We construct the identity morphisms and verify some groupoid laws in the syntactic framework. The suspensions for all sorts of objects are also defined for other later constructions.
 
-There are still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathlarger{\tau}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $Coh$ if we can prove that the $\mathlarger{\tau}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
+There are still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $Coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
 We would like to formalise a proof of that Id$\omega$ is an \wog{}, but the base set in a globular set is an h-set which is incompatible with Id$\omega$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with J are equivalence. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
 

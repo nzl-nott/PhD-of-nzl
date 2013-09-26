@@ -21,3 +21,5 @@
 2013 TYPES Paper/.DS_Store
 
 *.el
+
+*.new

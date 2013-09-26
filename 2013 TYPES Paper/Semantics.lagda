@@ -66,13 +66,11 @@ The semantic substitution properties are essential,
     semSb-T  : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
              → ⟦ A [ δ ]T ⟧T γ ≡ ⟦ A ⟧T (⟦ δ ⟧cm γ)
 
-    semSb-tm : ∀{Γ Δ}{A : Ty Δ}(a : Tm A)
-                 (δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
+    semSb-tm : ∀{Γ Δ}{A : Ty Δ}(a : Tm A)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
              → subst ∣_∣ (semSb-T A δ γ) (⟦ a [ δ ]tm ⟧tm γ)
                 ≡ ⟦ a ⟧tm (⟦ δ ⟧cm γ)
 
-    semSb-cm : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)
-               (δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
+    semSb-cm : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
              → ⟦ θ ⊚ δ ⟧cm γ ≡ ⟦ θ ⟧cm (⟦ δ ⟧cm γ)
 \end{code}
 
@@ -81,7 +79,7 @@ Since the computation laws for the interpretations of terms and context morphism
 \begin{code}
 
     ⟦_⟧tm-β1  : ∀{Γ A}{x : Var A}{γ : ⟦ Γ ⟧C}
-            → ⟦ var x ⟧tm γ ≡ π x γ
+              → ⟦ var x ⟧tm γ ≡ π x γ
 
     ⟦_⟧cm-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} → ⟦ • ⟧cm γ ≡ coerce ⟦_⟧C-β1 tt
 
@@ -111,11 +109,11 @@ Here we declare them as properties because they are essential for the computatio
 \begin{code}
 
     π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
-           → subst ∣_∣ (semWk-T γ v) (π v0 (coerce ⟦_⟧C-β2 (γ , v))) ≡ v
+          → subst ∣_∣ (semWk-T γ v) (π v0 (coerce ⟦_⟧C-β2 (γ , v))) ≡ v
 
     π-β2  : ∀{Γ A B}(x : Var A)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣) 
-           → subst ∣_∣ (semWk-T γ v) (π (vS {Γ} {A} {B} x) (coerce ⟦_⟧C-β2 (γ , v)))
-           ≡ π x γ
+          → subst ∣_∣ (semWk-T γ v) (π (vS {Γ} {A} {B} x) (coerce ⟦_⟧C-β2 (γ , v)))
+          ≡ π x γ
 
 \end{code}
 

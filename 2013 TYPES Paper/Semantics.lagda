@@ -22,6 +22,9 @@ open import GroupoidLaws
 coerce : {A B : Set} → B ≡ A → A → B
 coerce refl a = a
 
+⊤-uni : ∀ {A : Set}{a b : A} → A ≡ ⊤ → a ≡ b
+⊤-uni refl = refl
+
 \end{code}
 }
 
@@ -39,7 +42,7 @@ record Semantic (G : Glob) : Set₁ where
     ⟦_⟧cm  : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
 \end{code}
 
-$\AgdaFunction{$\pi$}$ gives us a simpler way to project the semantic meaning of certain variable out of a context.
+$\AgdaFunction{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
 
 \begin{code}
     π     : ∀{Γ A}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
@@ -86,7 +89,35 @@ Since the computation laws for the interpretations of terms and context morphism
               → ⟦ δ , a ⟧cm γ ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧cm γ) ,
                              subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
 \end{code}
-The semantic weakening properties is deriavable since weakening is just a special case of a substitution of this form $(\Gamma , A) \Rightarrow \Gamma$.
+The semantic weakening properties should actually be deriavable since weakening is equivalent to projection substitution.
+
+\begin{code}
+    semWk-T  : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
+             → ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ A ⟧T γ
+  
+    semWk-cm  : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}(δ : Γ ⇒ Δ)
+              → ⟦ δ +S B ⟧cm (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧cm γ
+
+
+    semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
+             → subst ∣_∣ (semWk-T γ v) (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
+                ≡ (⟦ a ⟧tm γ)
+
+\end{code}
+
+Here we declare them as properties because they are essential for the computation laws of function $\pi$.
+
+
+\begin{code}
+
+    π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
+           → subst ∣_∣ (semWk-T γ v) (π v0 (coerce ⟦_⟧C-β2 (γ , v))) ≡ v
+
+    π-β2  : ∀{Γ A B}(x : Var A)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣) 
+           → subst ∣_∣ (semWk-T γ v) (π (vS {Γ} {A} {B} x) (coerce ⟦_⟧C-β2 (γ , v)))
+           ≡ π x γ
+
+\end{code}
 
 \AgdaHide{
 \begin{code}
@@ -97,18 +128,18 @@ The semantic weakening properties is deriavable since weakening is just a specia
 
   semWk-T : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
           →  ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ A ⟧T γ
-
   
   semWk-cm : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}(δ : Γ ⇒ Δ)
              → ⟦ δ +S B ⟧cm (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧cm γ
 
   sem-Id : ∀ (Γ : Con){γ : ⟦ Γ ⟧C} → ⟦ IdCm ⟧cm γ ≡ γ
-  sem-Id ε = {!!}
-  sem-Id (Γ , A) = {!subst ()!}
+  sem-Id ε = ⊤-uni ⟦_⟧C-β1
+    sem-Id (Γ , A) = trans ⟦_⟧cm-β2 (trans {!cong (coerce ⟦_⟧cm-β2) ? !} {!!})
 
   semWk-T {Γ} {A} {B} γ v = trans (cong (λ x → ⟦ x ⟧T (coerce ⟦_⟧C-β2 (γ , v))) (sym pr1-wk-T))
                               (trans (semSb-T {Γ , B} {Γ} A pr1 (coerce ⟦_⟧C-β2 (γ , v))) (cong (λ x → ⟦ A ⟧T x) (trans (semWk-cm IdCm) (sem-Id _))))
-
+-}
+{-
   semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
              → subst ∣_∣ (semWk-T γ v) (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
                 ≡ (⟦ a ⟧tm γ)
@@ -116,8 +147,8 @@ The semantic weakening properties is deriavable since weakening is just a specia
 
 
   semWk-cm = {!!}
--}
 
+-}
 {-
     semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)(a : Tm A)
              → subst ∣_∣ (semWk-T γ v) (⟦ a ⟧tm γ) ≡ ⟦ a +tm B ⟧tm 
@@ -129,9 +160,10 @@ The semantic weakening properties is deriavable since weakening is just a specia
 -}
 
 {-
-    π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
-          → π v0 (subst (λ x → x) (sym sC-β2) (γ , v)) 
-           ≡ subst ∣_∣ (semWk-T γ v) v
+  π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
+        → subst ∣_∣ (semWk-T γ v) (π v0 (coerce ⟦_⟧C-β2 (γ , v)))
+         ≡ v
+  π-β1 = {!!}
 
     π-β2  : ∀{Γ A B}(x : Var A)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣) 
           → π (vS {Γ} {A} {B} x) (subst (λ y → y) (sym sC-β2) (γ , v)) 

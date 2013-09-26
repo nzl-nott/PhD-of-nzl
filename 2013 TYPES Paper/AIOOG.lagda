@@ -102,15 +102,28 @@ corresponding inverse morphism $ g : B \to A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
 2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$. 
 
+% \oxr{This paragraph is maybe too terse to be intelligible. Does
+% functional extensionality result in non-canonicity, or is it rather
+% the addition of an axiom? Jumps from extensionality to univalence
+% back.}
 
-\oxr{This paragraph is maybe too terse to be intelligible. Does functional extensionality result in non-canonicity, or is it rather the addition of an axiom? Jumps from extensionality to univalence back.}
-It has been proved by Vladimir Voevodsky that the univalence axiom implies functional extensionality (a coq proof of this can be found in \cite{uafe}) which results in the problem of non-canonical terms in Type Theory. Altenkirch has proposed a solution in \cite{alti:lics99} to solve the problem caused by functional extensionality
-based on setoid model and also refines it \cite{alti:ott-conf} to \ott{} to justify functional extensionality.
-However as mentioned before, setoids require UIP which is incompatible with \hott{}. To solve the problem we should generalise the notion of setoids, namely to enrich the structure of the identity proofs. 
+Voevodsky proposed the univalence axiom which basically says that
+isomorphic types are equal. This can be viewed as a strong
+extensionality axiom and it does imply functional extensionality (a
+coq proof of this can be found in \cite{uafe}). However, adding
+univalence as an axiom destroys canonicity, i.e. that every closed
+term of type Nat is reducible to a numeral. In the special case of
+extensionality and assuming a strong version of UIP we were able to
+eliminate this issue \cite{alti:lics99,alti:ott-conf} using
+setoids. However, it is not clear how to generalize this in the
+absence of UIP --- clearly this is necessary if we want to capture
+univalence which is incompatible with UIP.  To solve the problem we
+should generalise the notion of setoids, namely to enrich the
+structure of the identity proofs.
 
 
-The generalised notion is called Grothendieck {\og}\oxr{Shouldn't it be "the generalised notion is calld {\wog}"?}. Grothendieck introduced the notion of {\og} in 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog}\oxr{I'm confused. Is it {\og} or {\wog}?} in \cite{ara:wog}. Categorically
-speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
+The generalised notion is called {\wog} and was proposed by
+Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog}\oxr{I'm confused. Is it {\og} or {\wog}?} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
 isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
@@ -658,8 +671,6 @@ vβ = var v0
 
 \section{Some Important Derivable Constructions}
 
-\txa{Needs to be better explained}
-
 \input{AIOOGS2}
 
 \input{Suspension}
@@ -667,8 +678,6 @@ vβ = var v0
 \input{BasicLaws}
 
 \input{GroupoidLaws}
-
-\txa{Prove the laws of groupoid. Maybe even some higher order?}
 
 \input{Telescopes}
 

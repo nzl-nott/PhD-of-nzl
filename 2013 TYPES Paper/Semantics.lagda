@@ -25,7 +25,7 @@ coerce refl a = a
 \end{code}
 }
 
-given a globular set G, we can interpret the syntactic objects.
+Given a globular set G, we can interpret the syntactic objects.
 
 The record definition also require some semantic weakening and semantic substitution laws. The semantic weakening rules tell us how to deal with the weakening inside interpretation.
 

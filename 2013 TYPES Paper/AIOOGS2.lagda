@@ -11,8 +11,8 @@ open import Data.Nat
 
 \end{code}
 }
-\newcommand{\Tm}{\AgdaDatatype{Tm}}
-\newcommand{\Ty}{\AgdaDatatype{Ty}}
+\newcommand{\Tm}{\mathsf{Tm}}
+\newcommand{\Ty}{\mathsf{Ty}}
 
 
 
@@ -37,7 +37,7 @@ $a\circ^n_m b$ which is an $n$-cell. Composition is (weakly)
 associative. Moreover for any $(n\text{-}m)$-cell $\AgdaBound{x}$ there
 exists an $n$-cell $\mathsf{id}^n_m\,\AgdaBound{x}$ which
 behaves like a (weak) identity with respect to $\circ^n_m$.
-For the time being we discuss only construction of the cells and omit
+For the time being we discuss only the construction of cells and omit
 the question of coherence. 
 
 For instance, in the simple case of bicategories, each $2$-cell $a$ has a
@@ -62,7 +62,7 @@ type, $A$.
 
 An important general mechanism we rely on throught the development
 follows directly from the type of the only nontrivial constructor of $\Tm$,
-$\AgdaInductiveConstructor{coh}$, which tells us that to construct a
+$\mathsf{coh}$, which tells us that to construct a
 new term of type $\Gamma \vdash A$, we need a contractible context,
 $\Delta$, a type $\Delta\vdash T$ and a context morphism $\delta :
 \Gamma \Rightarrow \Delta$ such that
@@ -77,13 +77,13 @@ way work freely in $\Delta$ and then pull back all terms to $A$ using
 $\delta$. 
 To show this formally, we must first define identity context morphisms
 which complete the definition of a \emph{category} of contexts and
-context morphisms.
+context morphisms:
 
 \begin{code}
 IdCm : ∀ {Γ} → Γ ⇒ Γ
 \end{code}
 
-with the following property:
+It satisfies the following property:
 
 \begin{code}
 IC-T  : ∀{Γ : Con}{A : Ty Γ} → A [ IdCm ]T ≡ A
@@ -99,10 +99,10 @@ Coh-Contr isC = coh isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
 
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
-want to define, we construct a minimal contractible context
-built out of variables (variable context) together with a context morphism
-that populates the context with values, and a lemma that allows us to fit
-the substitution into the orginal type. 
+want to define, we construct a minimal contractible context built out
+of variables together with a context morphism that populates the
+context with terms and a lemma that states a definitional equality
+between the substitution and the orginal type.
 
 \AgdaHide{
 \begin{code}

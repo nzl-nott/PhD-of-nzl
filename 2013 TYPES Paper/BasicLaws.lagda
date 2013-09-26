@@ -20,9 +20,7 @@ open import Suspension
 }
 
 \subsection{First-level Groupoid Structure}
-
-
-We can finally proceed to the definition of the groupoid structure of the syntax. We start with the base case: 1-cells. Replacement defined above allows us to lift this structure to an arbitrary level $n$ (we leave some most of the routine details out). This shows that the syntax is a 1-groupoid on each level. In the next section we show how also the higher-groupoid structure can be defined. 
+We can proceed to the definition of the groupoid structure of the syntax. We start with the base case: 1-cells. Replacement defined above allows us to lift this structure to an arbitrary level $n$ (we leave most of the routine details out). This shows that the syntax is a 1-groupoid on each level. In the next section we show how also the higher-groupoid structure can be defined. 
 
 We start by an essential lemma which formalises the discussion at the
 beginning of this Section: to construct a term in a type $A$ in an

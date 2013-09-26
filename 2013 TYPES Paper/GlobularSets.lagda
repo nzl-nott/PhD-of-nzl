@@ -21,7 +21,7 @@ record Glob : Set₁ where
   constructor _∣∣_
   field
     obj  : Set
-    hom : obj →  obj → ∞ Glob
+    hom  : obj → obj → ∞ Glob
 open Glob public renaming (obj to ∣_∣) 
 \end{code}
 
@@ -32,8 +32,8 @@ If all the object types are indeed sets, i.e. uniqueness of identity types holds
 As an example, we could contruct the identity globular type called $Idω$.
 
 \begin{code}
-Idω : (A : Set) → Glob
-Idω A = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
+Idω    : (A : Set) → Glob
+Idω A  = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
 \end{code}
 
 Note that this is usually not a globular set.

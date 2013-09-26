@@ -96,7 +96,7 @@ infixl 7 _⊚_
 
 %why do we need to use omega groupoid
 
-In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alt:99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. For example, a weak equivalence
+In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alti:lics99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. For example, a weak equivalence
 between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
 corresponding inverse morphism $ g : B \to A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
@@ -104,7 +104,7 @@ proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
 
 
 \oxr{This paragraph is maybe too terse to be intelligible. Does functional extensionality result in non-canonicity, or is it rather the addition of an axiom? Jumps from extensionality to univalence back.}
-It has been proved by Vladimir Voevodsky that the univalence axiom implies functional extensionality (a coq proof of this can be found in \cite{uafe}) which results in the problem of non-canonical terms in Type Theory. Altenkirch has proposed a solution in \cite{alt:99} to solve the problem caused by functional extensionality
+It has been proved by Vladimir Voevodsky that the univalence axiom implies functional extensionality (a coq proof of this can be found in \cite{uafe}) which results in the problem of non-canonical terms in Type Theory. Altenkirch has proposed a solution in \cite{alti:lics99} to solve the problem caused by functional extensionality
 based on setoid model and also refines it \cite{alti:ott-conf} to \ott{} to justify functional extensionality.
 However as mentioned before, setoids require UIP which is incompatible with \hott{}. To solve the problem we should generalise the notion of setoids, namely to enrich the structure of the identity proofs. 
 
@@ -295,8 +295,8 @@ _+S_   : {Γ : Con}{Δ : Con}   (δ : Γ ⇒ Δ)  → (B : Ty Γ) → (Γ , B) �
 }
 
 To define the variables and terms we have to use the weakening rules.
-A Term can be either a variable or a coherence constant (|coh|). We
-use typed deBruijn indices to define variables as either the rightmost
+A Term can be either a variable or a coherence constant ($\mathsf{coh}$). We
+use typed de Bruijn indices to define variables as either the rightmost
 variable of the context, or some variable in the context which can be
 found by cancelling the rightmost variable along with each $\mathsf{vS}$. The
 coherence constants are one of the major part of this syntax, which

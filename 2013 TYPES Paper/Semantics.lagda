@@ -19,7 +19,7 @@ open import GroupoidLaws
 \end{code}
 }
 
-given a globular set G, we can interpret the syntactic objects.
+Given a globular set G, we can interpret the syntactic objects.
 
 The record definition also require some semantic weakening and semantic substitution laws. The semantic weakening rules tell us how to deal with the weakening inside interpretation.
 
@@ -32,7 +32,7 @@ record Semantic (G : Glob) : Set₁ where
     ⟦_⟧tm  : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
     ⟦_⟧cm  : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
 \end{code}
-To interpret the coherence constants we need a function $\AgdaFunction{⟦coh⟧}$ \footnote{it is called J in Brunerie's note but to make it less ambiguous we renamed it}. It returns an object for every type in any contractible context, namely what is called a valid coherence in Brunerie's paper. 
+To interpret the coherence constants we need a function $\AgdaFunction{⟦coh⟧}$ \footnote{it is called J in Brunerie's note but to make it less ambiguous we renamed it.}. It returns an object for every type in any contractible context, namely what is called a valid coherence in Brunerie's paper. 
 \begin{code}
     ⟦coh⟧ : ∀{Θ} → isContr Θ → (A : Ty Θ) → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
 \end{code}

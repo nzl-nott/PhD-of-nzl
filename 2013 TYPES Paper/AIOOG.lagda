@@ -172,17 +172,17 @@ data isContr       : Con → Set
 % Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
 
 It is possible to complete the definition of contexts and types first. Contexts are inductively defined as either an empty context or a context with a type of it. Types are defined as either $*$ which we call it 0-cell, or a morphism between two terms of
-some type A. If the type A is n-cell then we call the morphism $n+1$-cell. 
+some type A. If the type A is n-cell then we call the morphism $(n+1)$-cell. 
 
 \begin{code}
 data Con where
-  ε   : Con
-  _,_ : (Γ : Con)(A : Ty Γ) → Con
+  ε     : Con
+  _,_   : (Γ : Con)(A : Ty Γ) → Con
 
 
 data Ty Γ where
-  *    : Ty Γ
-  _=h_ : {A : Ty Γ}(a b : Tm A) → Ty Γ
+  *     : Ty Γ
+  _=h_  : {A : Ty Γ}(a b : Tm A) → Ty Γ
 \end{code}
 
 \subsection{Heterogeneous Equality for Terms}
@@ -191,8 +191,7 @@ One of the big challenge we encountered at first is the difficulty to formalise 
 When we used the common identity types which are homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. However we found that the syntactic equality of types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equalities of types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The equality is inhabited only when they are definitionally equal.
 
 \begin{code}
-data _≅_ {Γ : Con}{A : Ty Γ} 
-         : {B : Ty Γ} → Tm A → Tm B → Set where
+data _≅_ {Γ : Con}{A : Ty Γ} : {B : Ty Γ} → Tm A → Tm B → Set where
   refl : (b : Tm A) → b ≅ b
 
 \end{code}
@@ -200,8 +199,8 @@ data _≅_ {Γ : Con}{A : Ty Γ}
 \AgdaHide{
 \begin{code}
 
-_-¹ : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B} → a ≅ b → b ≅ a
-(refl _) -¹ = refl _
+_-¹          : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A}{b : Tm B} → a ≅ b → b ≅ a
+(refl _) -¹  = refl _
 
 infixr 4 _∾_ 
 
@@ -224,12 +223,12 @@ original term. Combined these definitions, it is much
 more convenient to formalise and to reason about term equations.
 
 \begin{code}
-_⟦_⟫ : {Γ : Con}{A B : Ty Γ}(a : Tm B) → A ≡ B → Tm A
-a ⟦ refl ⟫ = a
+_⟦_⟫        : {Γ : Con}{A B : Ty Γ}(a : Tm B) → A ≡ B → Tm A
+a ⟦ refl ⟫  = a
 
-cohOp : {Γ : Con}{A B : Ty Γ}{a : Tm B}(p : A ≡ B) 
-      → a ⟦ p ⟫ ≅ a
-cohOp refl = refl _
+cohOp       : {Γ : Con}{A B : Ty Γ}{a : Tm B}(p : A ≡ B) 
+            → a ⟦ p ⟫ ≅ a
+cohOp refl  = refl _
 \end{code}
 
 % could delete the explanation of this lemma
@@ -262,10 +261,10 @@ With context morphism, we can define substitutions for types variables and terms
 composition of contexts can be understood as substitution for context morphisms as well.
 
 \begin{code}
-_[_]T  : {Γ Δ : Con}(A : Ty Δ) → Γ ⇒ Δ → Ty Γ        
-_[_]V  : {Γ Δ : Con}{A : Ty Δ} → Var A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
-_[_]tm : {Γ Δ : Con}{A : Ty Δ} → Tm A  → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)    
-_⊚_    : {Γ Δ Θ : Con} →  Δ ⇒ Θ → Γ ⇒ Δ → Γ ⇒ Θ   
+_[_]T   : {Γ Δ : Con}            → Ty Δ    → (δ : Γ ⇒ Δ)   → Ty Γ        
+_[_]V   : {Γ Δ : Con}{A : Ty Δ}  → Var A   → (δ : Γ ⇒ Δ)   → Tm (A [ δ ]T)
+_[_]tm  : {Γ Δ : Con}{A : Ty Δ}  → Tm A    → (δ : Γ ⇒ Δ)   → Tm (A [ δ ]T)    
+_⊚_     : {Γ Δ Θ : Con}          → Δ ⇒ Θ → (δ : Γ ⇒ Δ)   → Γ ⇒ Θ   
 \end{code}
 
 
@@ -275,16 +274,15 @@ We can freely add types to the contexts of any given type
 judgments, term judgments or context morphisms. These are weakening rules.
 
 \begin{code}   
-_+T_  : {Γ : Con}(A : Ty Γ)           → (B : Ty Γ) → Ty (Γ , B)   
-_+tm_ : {Γ : Con}{A : Ty Γ}(a : Tm A) → (B : Ty Γ) → Tm (A +T B)   
-_+S_  : {Γ : Con}{Δ : Con}(δ : Γ ⇒ Δ) → (B : Ty Γ) → (Γ , B) ⇒ Δ   
+_+T_   : {Γ : Con}            (A : Ty Γ)   → (B : Ty Γ) → Ty (Γ , B)   
+_+tm_  : {Γ : Con}{A : Ty Γ}  (a : Tm A)   → (B : Ty Γ) → Tm (A +T B)   
+_+S_   : {Γ : Con}{Δ : Con}   (δ : Γ ⇒ Δ)  → (B : Ty Γ) → (Γ , B) ⇒ Δ   
 \end{code}
 
 %We could first define the weakening rule and substitution for types.
 
 \AgdaHide{
 \begin{code}
-
 
 *        +T B = *
 (a =h b) +T B = a +tm B =h b +tm B
@@ -315,8 +313,7 @@ data Var where
 
 data Tm where
   var : {Γ : Con}{A : Ty Γ} → Var A → Tm A
-  coh : {Γ Δ : Con} → isContr Δ → (δ : Γ ⇒ Δ) → (A : Ty Δ) 
-      → Tm (A [ δ ]T)
+  coh : {Γ Δ : Con} → isContr Δ → (δ : Γ ⇒ Δ) → (A : Ty Δ) → Tm (A [ δ ]T)
 \end{code}
 
 \AgdaHide{
@@ -341,19 +338,18 @@ variable of an existing type and an n-cell, namely a morphism, between the new v
 
 \begin{code}
 data isContr where
-  c*  : isContr (ε , *)
-  ext : {Γ : Con} 
-      → isContr Γ → {A : Ty Γ}(x : Var A) 
-      → isContr (Γ , A , (var (vS x) =h var v0))     
+  c*   : isContr (ε , *)
+  ext  : {Γ : Con} → isContr Γ → {A : Ty Γ}(x : Var A) 
+       → isContr (Γ , A , (var (vS x) =h var v0))     
 \end{code}
 
 Context morphisms are defined inductively similarly to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of the morphism.
 
 \begin{code}
 data _⇒_ where
-  •   : {Γ : Con} → Γ ⇒ ε
-  _,_ : {Γ Δ : Con}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T)) 
-      → Γ ⇒ (Δ , A)
+  •    : {Γ : Con} → Γ ⇒ ε
+  _,_  : {Γ Δ : Con}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T)) 
+       → Γ ⇒ (Δ , A)
 \end{code}
 
 \AgdaHide{
@@ -384,22 +380,18 @@ context morphisms consecutively, is equivalent to substitute with the
 composition of substitution.
 
 \begin{code}
-[⊚]T : {Γ Δ Θ : Con}
-       {θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}{A : Ty Θ}
-       → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T
 
-[⊚]v : {Γ Δ Θ : Con}
-       {A : Ty Θ}(x  : Var A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
-          → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
+[⊚]T    : {Γ Δ Θ : Con}{A : Ty Θ}{θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}  
+        → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T  
 
-[⊚]tm : {Γ Δ Θ : Con}{A : Ty Θ}(a : Tm A)
-        {θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
-        →  a [ θ ⊚ δ ]tm ≅ (a [ θ ]tm) [ δ ]tm
+[⊚]v    : {Γ Δ Θ : Con}{A : Ty Θ}(x : Var A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+        → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
 
-⊚assoc : {Γ Δ Θ Δ₁ : Con}
-        (γ : Θ ⇒ Δ₁){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
-        → (γ ⊚ θ) ⊚ δ ≡ γ ⊚ (θ ⊚ δ)
+[⊚]tm   : {Γ Δ Θ : Con}{A : Ty Θ}(a : Tm A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+        → a [ θ ⊚ δ ]tm ≅ (a [ θ ]tm) [ δ ]tm
 
+⊚assoc  : {Γ Δ Θ Ω : Con}(γ : Θ ⇒ Ω){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}  
+        → (γ ⊚ θ) ⊚ δ ≡ γ ⊚ (θ ⊚ δ)  
 
 \end{code}
 
@@ -416,29 +408,22 @@ composition of substitution.
 Weakening inside substitution is equivalent to weakening outside.
 
 \begin{code}
-[+S]T : {Γ Δ : Con}
-        {A : Ty Δ}{δ : Γ ⇒ Δ}
-        {B : Ty Γ} 
+[+S]T   : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}{B : Ty Γ} 
         → A [ δ +S B ]T ≡ (A [ δ ]T) +T B 
 
-[+S]tm : {Γ Δ : Con}{A : Ty Δ}
-         (a : Tm A){δ : Γ ⇒ Δ}
-         {B : Ty Γ}
-         → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
+[+S]tm  : {Γ Δ : Con}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}{B : Ty Γ}
+        → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
 
-[+S]S : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{B : Ty Γ} 
-      → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
-
+[+S]S   : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{B : Ty Γ}
+        → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
 \end{code}
 
 They are useful to derive some auxiliary functions. The following is one of them which is used a lot in proofs.
 
 \begin{code}
-wk-tm+ : {Γ Δ : Con}
-         {A : Ty Δ}{δ : Γ ⇒ Δ}
-         (B : Ty Γ) 
-         → Tm (A [ δ ]T +T B) → Tm (A [ δ +S B ]T)
-wk-tm+ B t = t ⟦ [+S]T ⟫
+wk-tm+      : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}(B : Ty Γ) 
+            → Tm (A [ δ ]T +T B) → Tm (A [ δ +S B ]T)
+wk-tm+ B t  = t ⟦ [+S]T ⟫
 \end{code}
 
 \AgdaHide{
@@ -458,15 +443,11 @@ We can cancel the last term in the substitution for weakened objects
 since weakening doesn't introduce new variables in types and terms.
 
 \begin{code}
-+T[,]T : {Γ Δ : Con}
-         {A : Ty Δ}{δ : Γ ⇒ Δ}
-         {B : Ty Δ}{b : Tm (B [ δ ]T)} 
-         → (A +T B) [ δ , b ]T ≡ A [ δ ]T
++T[,]T    : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}{B : Ty Δ}{b : Tm (B [ δ ]T)} 
+          → (A +T B) [ δ , b ]T ≡ A [ δ ]T
 
-+tm[,]tm : {Γ Δ : Con}{A : Ty Δ}
-         (a : Tm A){δ : Γ ⇒ Δ}{B : Ty Δ}
-         {c : Tm (B [ δ ]T)}
-         → (a +tm B) [ δ , c ]tm ≅ a [ δ ]tm 
++tm[,]tm  : {Γ Δ : Con}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}{B : Ty Δ}{c : Tm (B [ δ ]T)}
+          → (a +tm B) [ δ , c ]tm ≅ a [ δ ]tm 
 \end{code}
 
 \AgdaHide{
@@ -572,10 +553,8 @@ Most of the substitutions are defined as usual, except the one for coherence con
 substitution in the context morphism part of the coherence constants.
 
 \begin{code}
-
-var x     [ δ ]tm = x [ δ ]V
-coh cΔ γ A [ δ ]tm = coh cΔ (γ ⊚ δ) A ⟦ sym [⊚]T ⟫
-
+var x       [ δ ]tm = x [ δ ]V
+coh cΔ γ A  [ δ ]tm = coh cΔ (γ ⊚ δ) A ⟦ sym [⊚]T ⟫
 \end{code}
 
 

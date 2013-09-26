@@ -31,24 +31,23 @@ also contractible, and therefore any type lifted from a contractible
 context is also inhabited.
 
 \begin{code}
-Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → isContr Δ
-           → Tm {rpl-C A Δ} (rpl-T A B)
+Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → isContr Δ → Tm {rpl-C A Δ} (rpl-T A B)
 Coh-rpl {Δ = Δ} A B isc = coh (ΣC-it-ε-Contr A isc) (filter Δ A) (ΣT-it A B)
 \end{code}
 
 Next we define the reflexivity, symmetry and transitivity terms of any type . Let's start from the basic case as for the base type *. It is trivially inhabited because the context is the basic case of a contractible context.
 
 \begin{code}
-refl* :  Tm {x:*} (var v0 =h var v0)
+refl* : Tm {x:*} (var v0 =h var v0)
 refl* = Coh-Contr c*
 \end{code}
 
 \noindent To obtain the reflexivity term for any given type, we just  use replacement.
 
 \begin{code}
-refl-Tm :  {Γ : Con}(A : Ty Γ) 
-        → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
-refl-Tm A = rpl-tm A refl*
+refl-Tm    : {Γ : Con}(A : Ty Γ) 
+           → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
+refl-Tm A  = rpl-tm A refl*
 \end{code}
 
 \AgdaHide{
@@ -87,9 +86,8 @@ sym*-Ty = vY =h vX
 sym*-Tm : Tm {x:*,y:*,α:x=y} sym*-Ty
 sym*-Tm = Coh-Contr (ext c* v0)
 
-sym-Tm : {Γ : Con}(A : Ty Γ)
-        → Tm (rpl-T A sym*-Ty)
-sym-Tm A = rpl-tm A sym*-Tm
+sym-Tm    : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
+sym-Tm A  = rpl-tm A sym*-Tm
 \end{code}
 
 \AgdaHide{
@@ -142,8 +140,8 @@ trans*-Ty = (vX +tm _ +tm _) =h vZ
 trans*-Tm : Tm trans*-Ty
 trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
 
-trans-Tm : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
-trans-Tm A = rpl-tm A trans*-Tm
+trans-Tm    : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
+trans-Tm A  = rpl-tm A trans*-Tm
 \end{code}
 
 \AgdaHide{

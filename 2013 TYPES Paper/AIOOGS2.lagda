@@ -24,9 +24,9 @@ this end, let us call a term $a : \Tm~\AgdaBound{A}$ an $n$-cell if
 $\AgdaFunction{level}~\AgdaBound{A}~ \AgdaSymbol{\equiv}~ \AgdaBound{n}$, where 
 
 \begin{code}
-level : ∀ {Γ} → Ty Γ → ℕ
-level * = 0
-level (_=h_ {A} _ _) = suc (level A) 
+level                 : ∀ {Γ} → Ty Γ → ℕ
+level *               = 0
+level (_=h_ {A} _ _)  = suc (level A) 
 \end{code}
 %
 In any $\omega$-category, any $n$-cell $a$ has a  domain (source), $s^n_m\,a$, and
@@ -94,8 +94,8 @@ to terms, variables and context morphisms with analogous properties.
 It allows us to define at once:
 
 \begin{code}
-Coh-Contr : {Γ : Con}{A : Ty Γ} → isContr Γ → Tm A
-Coh-Contr isC = coh isC IdCm _ ⟦ sym IC-T ⟫
+Coh-Contr      : {Γ : Con}{A : Ty Γ} → isContr Γ → Tm A
+Coh-Contr isC  = coh isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
 
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we

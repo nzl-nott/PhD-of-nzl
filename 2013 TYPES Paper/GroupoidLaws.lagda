@@ -89,7 +89,7 @@ Tm-G-assoc* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) (vS v0))
 \noindent Their general versions are defined using replacement. For instance, for associativity, we define:
 
 \begin{code}
-Tm-G-assoc : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
-Tm-G-assoc A =  rpl-tm A Tm-G-assoc* 
+Tm-G-assoc    : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
+Tm-G-assoc A  = rpl-tm A Tm-G-assoc* 
 \end{code}
 

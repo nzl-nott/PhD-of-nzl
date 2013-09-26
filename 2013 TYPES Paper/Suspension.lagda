@@ -115,17 +115,17 @@ by one level.
 ΣC : Con → Con
 ΣT : {Γ : Con} → Ty Γ → Ty (ΣC Γ)
 
-ΣC ε = ε , * , *
-ΣC (Γ , A) = ΣC Γ , ΣT A
+ΣC ε        = ε , * , *
+ΣC (Γ , A)  = ΣC Γ , ΣT A
 \end{code}
 
 \noindent The rest of the definitions is straightforward by structural
 recursion. In particular we suspend variables, terms and context morphisms:
 
 \begin{code}
-Σv : {Γ : Con}{A : Ty Γ} → Var A → Var (ΣT A)
-Σtm : {Γ : Con}{A : Ty Γ} → Tm A → Tm (ΣT A)
-Σs : {Γ Δ : Con} → Γ ⇒ Δ → ΣC Γ ⇒ ΣC Δ
+Σv   : {Γ : Con}{A : Ty Γ} → Var A → Var (ΣT A)
+Σtm  : {Γ : Con}{A : Ty Γ} → Tm A → Tm (ΣT A)
+Σs   : {Γ Δ : Con} → Γ ⇒ Δ → ΣC Γ ⇒ ΣC Δ
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -158,8 +158,8 @@ one-step suspension:
 Σtm[+tm] : {Γ : Con}{A : Ty Γ}(a : Tm A)(B : Ty Γ) 
          → Σtm (a +tm B) ≅ Σtm a +tm ΣT B
 
-ΣT[Σs]T : {Γ Δ : Con}(A : Ty Δ)(δ : Γ ⇒ Δ) 
-        → (ΣT A) [ Σs δ ]T ≡ ΣT (A [ δ ]T)
+ΣT[Σs]T  : {Γ Δ : Con}(A : Ty Δ)(δ : Γ ⇒ Δ) 
+         → (ΣT A) [ Σs δ ]T ≡ ΣT (A [ δ ]T)
 
 \end{code}
 \AgdaHide{
@@ -259,11 +259,9 @@ depend only on its level.
 \begin{code}
 ΣC-it : {Γ : Con}(A : Ty Γ) → Con → Con
 
-ΣT-it : {Γ Δ : Con}(A : Ty Γ) → 
-           Ty Δ → Ty (ΣC-it A Δ)
+ΣT-it : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (ΣC-it A Δ)
 
-Σtm-it : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → 
-           Tm B → Tm (ΣT-it A B)
+Σtm-it : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B → Tm (ΣT-it A B)
 \end{code}
 
 \AgdaHide{
@@ -440,10 +438,9 @@ $\Delta$ to $\Gamma$ to $A$.
 As always, we define replacement for contexts, types and terms:
 
 \begin{code}
-rpl-C : {Γ : Con}(A : Ty Γ) → Con → Con
-rpl-T : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (rpl-C A Δ)
-rpl-tm : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B
-      → Tm (rpl-T A B)
+rpl-C   : {Γ : Con}(A : Ty Γ) → Con → Con
+rpl-T   : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (rpl-C A Δ)
+rpl-tm  : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B → Tm (rpl-T A B)
 \end{code}
 
 Replacement for contexts, $\mathsf{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
@@ -454,8 +451,8 @@ pulls back each type from suspended $\Delta$ to the new context.
 \begin{code}
 filter : {Γ : Con}(Δ : Con)(A : Ty Γ) → rpl-C A Δ ⇒ ΣC-it A Δ
 
-rpl-C {Γ} A ε = Γ
-rpl-C A (Δ , B) = rpl-C A Δ , rpl-T A B
+rpl-C {Γ} A ε    = Γ
+rpl-C A (Δ , B)  = rpl-C A Δ , rpl-T A B
 
 rpl-T A B = ΣT-it A B [ filter _ A ]T
 \end{code}

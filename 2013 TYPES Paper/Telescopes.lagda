@@ -23,7 +23,7 @@ introduced in the syntactical framework. We use the more abstract
 language of category theory to communicate the gist of the
 construction leaving the tedious formalisation for future work. To this
 end note that contexts and context morphisms form a category up to
-definitional quality. Because equality of contexts is decideable we
+definitional quality. Because equality of contexts is decidable we
 may assume \textsf{UIP} on context morphisms and we are therefore
 working in a honest 1-category where equality of arrows is
 definitional equality of context morphisms. This category will be
@@ -52,7 +52,7 @@ S_0 \three/<-`>`<-/^{s_0}|{i_0}_{t_0} S_1 \three/<-`>`<-/^{s_1}|{i_1}_{t_1} S_2 
 \three/<-`>`<-/^{s_n}|{i_n}_{t_n} S_{n+1} \cdots
 \]
 is a \emph{reflexive globular object} in $\mathsf{Con}$. I.e. we define
-morphisms $s_n$, $t_n$, $i_n$ beween spans that it satisfy the
+morphisms $s_n$, $t_n$, $i_n$ between spans that it satisfy the
 following usual \emph{globular identities}:
 \begin{equation}\label{eq:glob}
 \begin{array}{rl}
@@ -173,7 +173,7 @@ $Y_n$ respectively. The mediating arrows $\langle s, s\rangle_n$ and
 $\langle t , t \rangle_n$ provide
 projections out of $Y_{n+1}$ onto the join of the sources and targets of the left
 and right parts respectively.
-%\oxr{We must say a bit more: how is this mophism defined? By recursion. }
+%\oxr{We must say a bit more: how is this morphism defined? By recursion. }
 
 In order to define composition we define for each $n$ a third morphism
 $c_n: Y_n \Rightarrow S_n$ with the property that both the $s$-squares

@@ -107,7 +107,7 @@ isomorphic types are equal. This can be viewed as a strong
 extensionality axiom and it does imply functional extensionality (a
 coq proof of this can be found in \cite{uafe}). However, adding
 univalence as an axiom destroys canonicity, i.e. that every closed
-term of type Nat is reducible to a numeral. In the special case of
+term of type $\mathbb{N}$ is reducible to a numeral. In the special case of
 extensionality and assuming a strong version of UIP we were able to
 eliminate this issue \cite{alti:lics99,alti:ott-conf} using
 setoids. However, it is not clear how to generalize this in the
@@ -137,7 +137,7 @@ of Grothendieck {\wog}, then interpret it with a globular set and a dependent fu
 The first and second author would like to that the organizers and
 other participants of the special year on homotopy type theory at the
 Institute for Advanced Study where they had many interesting
-discussionon topics related to the work presented in this
+discussion topics related to the work presented in this
 paper. Especially we all would like to acknowledge Guillaume
 Brunerie's proposal which made this work possible. 
 

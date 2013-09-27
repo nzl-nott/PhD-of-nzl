@@ -60,7 +60,7 @@ any cell to an arbitrary type $A$. It is called 'replacement' because
 we are syntactically replacing the base type $*$ with an arbitrary
 type, $A$.
 
-An important general mechanism we rely on throught the development
+An important general mechanism we rely on throughout the development
 follows directly from the type of the only nontrivial constructor of $\Tm$,
 $\mathsf{coh}$, which tells us that to construct a
 new term of type $\Gamma \vdash A$, we need a contractible context,
@@ -72,7 +72,7 @@ $\Delta$, a type $\Delta\vdash T$ and a context morphism $\delta :
 \AgdaFunction{]T}~\AgdaDatatype{≡}~\AgdaBound{A}
 \]
 %
-Because in a contractible context all types are inhabitted we may in a
+Because in a contractible context all types are inhabited we may in a
 way work freely in $\Delta$ and then pull back all terms to $A$ using
 $\delta$. 
 To show this formally, we must first define identity context morphisms
@@ -102,7 +102,7 @@ We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
 want to define, we construct a minimal contractible context built out
 of variables together with a context morphism that populates the
 context with terms and a lemma that states a definitional equality
-between the substitution and the orginal type.
+between the substitution and the original type.
 
 \AgdaHide{
 \begin{code}

@@ -14,8 +14,6 @@
 
 *.tex
 
-*.pdf
-
 2013 TYPES Paper/latex/.DS_Store
 
 2013 TYPES Paper/.DS_Store
@@ -23,3 +21,15 @@
 *.el
 
 *.new
+
+*.agdax
+
+*.ptbx
+
+2013 TYPES Paper/latex/BasicSyntax.pdf
+
+2013 TYPES Paper/latex/ConstructionOmegaGroupoids.pdf
+
+2013 TYPES Paper/latex/lipics-manual.pdf
+
+2013 TYPES Paper/latex/lipics-sample-article.pdf

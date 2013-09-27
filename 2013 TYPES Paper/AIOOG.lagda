@@ -1,4 +1,4 @@
-\documentclass[a4paper,UKenglish,draft]{lipics}
+\documentclass[a4paper,UKenglish]{lipics}
 
 \PassOptionsToPackage{utf8x}{inputenc}
 
@@ -23,7 +23,6 @@
 
 \usepackage{mypack}
 
-
 \newcommand{\wig}{weak $\infty$-groupoids}
 \newcommand{\og}{$\omega$-groupoids}
 \newcommand{\wog}{weak $\omega$-groupoids}
@@ -35,7 +34,9 @@
 %\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
 \title{Some constructions on $\omega$-groupoids}
 
+\subjclass{F.4.1 Lambda calculus and related systems, F.4.1 Mechanical theorem proving}
 
+\keywords{Type Theory, Homotopy Type Theory, Category Theory, Higher dimensional structures}
 
 \author[1]{Thorsten Altenkirch}
 \author[1]{Nuo Li}
@@ -88,6 +89,7 @@ infixl 7 _⊚_
 \end{abstract}
 
 
+
 \section{Introduction}
 
 % Background
@@ -116,7 +118,7 @@ structure of the identity proofs.
 
 
 The generalised notion is called {\wog} and was proposed by
-Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition wihch can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
+Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
 isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
@@ -126,7 +128,7 @@ infinite version of n-groupoids. To model Type Theory without UIP we
 also require the equalities to be non-strict, in other words, they are
 not definitionally equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
-There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Bruneries' notes \cite{gb:wog}.
+There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
 This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. The approach is to specify when a globular set is a {\wog} by first defining a type theory called {\tig} to describe the internal language
 of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 

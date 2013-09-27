@@ -45,14 +45,14 @@ record Semantic (G : Glob) : Set₁ where
 $\AgdaFunction{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
 
 \begin{code}
-    π     : ∀{Γ A}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
+    π      : ∀{Γ A}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
 \end{code}
 
 Following are the computation laws for the interpretations of contexts and types.
 
 \begin{code}
-    ⟦_⟧C-β1 : ⟦ ε ⟧C ≡ ⊤
-    ⟦_⟧C-β2 : ∀ {Γ A} → ⟦ Γ , A ⟧C ≡ Σ ⟦ Γ ⟧C (λ γ  → ∣ ⟦ A ⟧T γ ∣)
+    ⟦_⟧C-β1  : ⟦ ε ⟧C ≡ ⊤
+    ⟦_⟧C-β2  : ∀ {Γ A} → ⟦ Γ , A ⟧C ≡ Σ ⟦ Γ ⟧C (λ γ  → ∣ ⟦ A ⟧T γ ∣)
     
     ⟦_⟧T-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} → ⟦ * ⟧T γ ≡ G
     ⟦_⟧T-β2  : ∀{Γ A u v}{γ : ⟦ Γ ⟧C}

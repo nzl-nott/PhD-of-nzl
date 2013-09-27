@@ -137,7 +137,7 @@
       ; pp. \thepage--\pageref{LastPage}%
       \\
     \fi
-    \setbox\@tempboxa\hbox{\includegraphics[height=14\p@,trim=0 15 0 0]{lipics-logo-bw.pdf}}%
+    \setbox\@tempboxa\hbox{\includegraphics[height=14\p@,trim=0 15 0 0]{lipics-logo-bw}}%
     \hspace*{\wd\@tempboxa}\enskip
     \href{http://www.dagstuhl.de/lipics/}%
          {Leibniz International Proceedings in Informatics}\\
@@ -433,7 +433,7 @@
     \parindent\z@\hangindent1em
     \leavevmode
     \hb@xt@1em{\@makefnmark\hss}#1}
-\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
 \IfFileExists{lmodern.sty}{\RequirePackage{lmodern}}{}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{textcomp}
@@ -613,18 +613,15 @@
       \AB@affillist
     \endlist
     \else  \AB@authors\fi\fi}
-\newcommand*\Copyright[2][]{%
+\newcommand*\Copyright[1]{%
   \def\@Copyright{%
-    \def\@tempa{#1}\ifx\@tempa\@empty
-      \ifx#2\@empty \else \textcopyright\ #2\\\fi
-    \else
-      \setbox\@tempboxa\hbox{\includegraphics[height=14\p@,clip]{cc-by-#1}}%
-      \hspace*{\wd\@tempboxa}\enskip\ifx#2\@empty \else \textcopyright\ #2;\\\fi
-      \href{http://creativecommons.org/licenses/by-#1/3.0/}%
+      \setbox\@tempboxa\hbox{\includegraphics[height=14\p@,clip]{cc-by}}%
+      \hspace*{\wd\@tempboxa}\enskip\ifx#1\@empty \else \textcopyright\ #1;\\\fi
+      \href{http://creativecommons.org/licenses/by/3.0/}%
            {\smash{\unhbox\@tempboxa}}\enskip
-            licensed under Creative Commons License \MakeUppercase{#1}\\
-    \fi}}
-\Copyright[]{\@empty}
+            licensed under Creative Commons License CC-BY\\
+    }}
+\Copyright{\@empty}
 \def\keywords#1{\def\@keywords{#1}}
 \let\@keywords\@empty
 \def\keywordsHeading{%

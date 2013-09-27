@@ -1,0 +1,18 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Syntax}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Basic Objects}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Heterogeneous Equality for Terms}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Substitutions}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Weakening Rules}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Lemmas}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Some Important Derivable Constructions}{}% 8
+\BOOKMARK [2][-]{subsection.3.1}{Suspension and Replacement}{section.3}% 9
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Suspension}{subsection.3.1}% 10
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Replacement}{subsection.3.1}% 11
+\BOOKMARK [2][-]{subsection.3.2}{First-level Groupoid Structure}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.3}{Higher Structure}{section.3}% 13
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Identities}{subsection.3.3}% 14
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Composition}{subsection.3.3}% 15
+\BOOKMARK [1][-]{section.4}{Semantics}{}% 16
+\BOOKMARK [2][-]{subsection.4.1}{Globular Types}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 18

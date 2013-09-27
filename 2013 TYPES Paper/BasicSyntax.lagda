@@ -56,7 +56,7 @@
 {-# OPTIONS --type-in-type --no-positivity-check --no-termination-check #-}
 
 
-module AIOOG where 
+module BasicSyntax where 
 
 
 open import Relation.Binary.PropositionalEquality
@@ -675,7 +675,7 @@ vβ = var v0
 
 \section{Some Important Derivable Constructions}
 
-\input{AIOOGS2}
+\input{BasicSyntax2}
 
 \input{Suspension}
 

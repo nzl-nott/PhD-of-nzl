@@ -1,10 +1,10 @@
 
 \AgdaHide{
 \begin{code}
-module AIOOGS2 where
+module BasicSyntax2 where
 
 
-open import AIOOG
+open import BasicSyntax
 open import Relation.Binary.PropositionalEquality 
 open import Data.Product renaming (_,_ to _,,_)
 open import Data.Nat

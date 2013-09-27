@@ -4,8 +4,8 @@
 
 module Suspension where
 
-open import AIOOG
-open import AIOOGS2
+open import BasicSyntax
+open import BasicSyntax2
 open import Relation.Binary.PropositionalEquality 
 open import Data.Product renaming (_,_ to _,,_)
 open import Data.Empty

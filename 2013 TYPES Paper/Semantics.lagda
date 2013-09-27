@@ -10,8 +10,8 @@ open import GlobularSets
 
 module Semantics where
 
-open import AIOOG
-open import AIOOGS2
+open import BasicSyntax
+open import BasicSyntax2
 open import Data.Unit
 open import Data.Product
 open import Coinduction

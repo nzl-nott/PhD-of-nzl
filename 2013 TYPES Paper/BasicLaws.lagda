@@ -12,8 +12,8 @@ open import Data.Product renaming (_,_ to _,,_)
 open import Data.Nat
 
 
-open import AIOOG renaming (_∾_ to htrans)
-open import AIOOGS2
+open import BasicSyntax renaming (_∾_ to htrans)
+open import BasicSyntax2
 open import Suspension
 
 \end{code}

@@ -1,0 +1,23 @@
+\contentsline {chapter}{Abstract}{ii}{dummy.1}
+\vspace {1em}
+\contentsline {chapter}{Acknowledgements}{iii}{dummy.2}
+\vspace {1em}
+\contentsline {chapter}{Contents}{iv}{dummy.3}
+\contentsline {chapter}{List of Figures}{vii}{dummy.5}
+\contentsline {chapter}{List of Tables}{ix}{dummy.7}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.9}
+\contentsline {chapter}{\numberline {2}Background: Quotient Types}{3}{chapter.10}
+\contentsline {section}{\numberline {2.1}Introduction}{3}{section.11}
+\contentsline {paragraph}{Quotient sets}{3}{section*.12}
+\contentsline {paragraph}{Quotient types}{3}{section*.15}
+\contentsline {section}{\numberline {2.2}Categorical intuition}{4}{section.16}
+\contentsline {subsection}{\numberline {2.2.1}Adjuction between {\textbf {Sets}} and \textbf {Setoids}}{4}{subsection.18}
+\contentsline {section}{\numberline {2.3}Definable Quotients}{5}{section.20}
+\contentsline {subsection}{\numberline {2.3.1}Natural numbers as the basis}{5}{subsection.21}
+\contentsline {subsection}{\numberline {2.3.2}Integers}{5}{subsection.22}
+\contentsline {subsection}{\numberline {2.3.3}Rational numbers}{5}{subsection.23}
+\contentsline {subsection}{\numberline {2.3.4}Real numbers and Complex numbers}{5}{subsection.24}
+\contentsline {subsection}{\numberline {2.3.5}Multisets(bags)}{5}{subsection.25}
+\vspace {2em}
+\vspace {2em}
+\contentsline {chapter}{Bibliography}{7}{dummy.26}

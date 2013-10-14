@@ -1,20 +1,9 @@
 \documentclass[a4paper,12pt]{article}
-\def\textmu{}
-%include agda.fmt
 
 \usepackage[utf8x]{inputenc}
 \usepackage{ucs}
 \usepackage{cite}
 \usepackage{MnSymbol}
-
-\DeclareUnicodeCharacter{"03BB}{\ensuremath{\lambda}}
-\DeclareUnicodeCharacter{"03A3}{\ensuremath{\Sigma}}
-\DeclareUnicodeCharacter{"03B2}{\ensuremath{\beta}}
-\DeclareUnicodeCharacter{"03C8}{\ensuremath{\psi}}
-\DeclareUnicodeCharacter{"231C}{\ensuremath{\ulcorner}}
-\DeclareUnicodeCharacter{"231D}{\ensuremath{\urcorner}}
-\DeclareUnicodeCharacter{"25B6}{\ensuremath{\filledmedtriangleright}}
-
 
 \begin{document}
 
@@ -26,103 +15,72 @@ module Quotient where
 
 open import Data.Product
 open import Function
+import Level
+import Relation.Binary as RB
 
-open import Relation.Binary.Core
-open import Relation.Binary.PropositionalEquality
-  hiding (isEquivalence ; [_])
+Setoid = RB.Setoid Level.zero Level.zero
+
+open import Relation.Binary.PropositionalEquality as PE
+  hiding ([_])
 
 open import ThomasProperties
 
-\end{code}
 
-\emph{Definition of setoids}
-
-\begin{code}
-
-record Setoid : Set₁ where
-  infix 4 _≈_
+record IsProp (A : Set) : Set where
   field
-    Carrier       : Set
-    _≈_           : Carrier → Carrier → Set
-    isEquivalence : IsEquivalence _≈_
-  open IsEquivalence isEquivalence public
+    isProp : ∀ (a b : A) → a ≡ b
+open IsProp
 
-open Setoid renaming 
-  (refl to reflexive; sym to symmetric; trans to transitive)
+record IsSet (Q : Set) : Set where
+  field
+    isSet : ∀{p q : Q} → IsProp (p ≡ q)
+open IsSet
+
+record IsPredicate {A : Set}(P : A → Set) : Set where
+  field
+    isPred : ∀ x → IsProp (P x) 
+open IsPredicate
+
+subst-Irr : {A : Set}(P : A → Set) → IsPredicate P 
+          → {a b : A}{x : P a}{p q : a ≡ b} → subst P p x ≡ subst P q x
+subst-Irr P isP {a} {b} = isProp (isPred isP b) _ _
+
+
+subst-Irr2 : {A : Set}(B : A → Set)
+          → {a b : A}{x : B a}(p q : a ≡ b) → IsSet A → subst B p x ≡ subst B q x
+subst-Irr2 B p q isS = cong (λ y → subst B y _) (isProp (isSet isS) p q) 
+
+subst-Irr3 :  {A B : Set}
+          → {a b : A}{x : B}(p : a ≡ b) → subst (λ _ → B) p x ≡ x
+subst-Irr3 refl = refl
+
+--setoid to set morphism
+
+record _sd→s_ (S : Setoid) (B : Set) : Set where
+  open RB.Setoid S renaming (Carrier to A; refl to ≈refl; sym to ≈sym; trans to ≈trans)
+  field
+    fun : A → B
+    fun-correct :  ∀ {a b : A} → a ≈ b → fun a ≡ fun b
+open _sd→s_ using () renaming (fun to apply; fun-correct to sound)
 
 \end{code}
 
 \emph{Prequotients}
 
+(Cone) Given a setoid, we can turn it into a pre-quotient which doesn't have too much practical meaning but served as a preparation for different kinds of quotient definitions.
+
 \begin{code}
 
-record PreQu (S : Setoid) : Set₁ where
-  constructor
-    Q:_[]:_sound:_
-  private
-    A   = Carrier S
-    _∼_ = _≈_ S
+
+record pre-Quotient (S : Setoid) : Set₁ where
   field
-    Q     : Set
-    [_]   : A → Q
-    sound : ∀ {a b : A} → a ∼ b → [ a ] ≡ [ b ]
-              
-open PreQu renaming
-  (Q to Q' ; [_] to nf ; sound to sound')
+    Q      : Set
+    Set-Q  : IsSet Q
+    nf     : S sd→s Q
+  open RB.Setoid S public renaming (Carrier to A; refl to ≈refl; sym to ≈sym; trans to ≈trans)
+  open IsSet Set-Q public renaming (isSet to QisSet)
+  open _sd→s_ nf public renaming (fun to [_] ; fun-correct to nf-sound)
 
-\end{code}
-
-\emph{Quotients as prequotients with a dependent eliminator.}
-
-\begin{code}
-
-record Qu {S : Setoid} (PQ : PreQu S) : Set₁ where
-  constructor
-    qelim:_qelim-β:_
-  private 
-    A     = Carrier S
-    _∼_   = _≈_ S
-    Q     = Q' PQ
-    [_]   = nf PQ
-    sound : ∀{a b : A} → (a ∼ b) → [ a ] ≡ [ b ]
-    sound = sound' PQ
-  field
-    qelim   : {B : Q → Set}
-            → (f : (a : A) → B [ a ])
-            → ((a b : A) → (p : a ∼ b) 
-                → subst B (sound p) (f a) ≡ f b)
-            → (q : Q) → B q
-    qelim-β : ∀ {B a f} q → qelim {B} f q [ a ]  ≡ f a
-open Qu
-
-\end{code}
-
-\emph{Proof irrelevance of qelim}
-\begin{code}
-
-qelimIrr : {S : Setoid}{PQ : PreQu S}(x : Qu PQ) 
-         → ∀ {B a f q q'} 
-         → qelim x {B} f q (nf PQ a) 
-           ≡ qelim x {B} f q' (nf PQ a)
-qelimIrr x {B} {a} {f} {q} {q'} = (qelim-β x {B} {a} {f} q) 
-                                ▶ ⟨ qelim-β x {B} {a} {f} q' ⟩
-
-\end{code}
-
-\emph{Exact quotients}
-\begin{code}
-
-record QuE {S : Setoid}{PQ : PreQu S}(QU : Qu PQ) : Set₁ where
-  constructor
-    exact:_
-  private 
-    A     = Carrier S
-    _∼_　　= _≈_ S
-    [_]　　= nf PQ
-  field
-    exact : ∀ {a b : A} → [ a ] ≡ [ b ] → a ∼ b
-open QuE
-       
 \end{code}
 
 \emph{Quotients as prequotients with a non-dependent eliminator (lift).}
@@ -131,45 +89,87 @@ open QuE
 
 \begin{code}
 
-record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
-  constructor
-    lift:_lift-β:_qind:_
-  private 
-    A      = Carrier S
-    _∼_    = _≈_ S
-    Q      = Q' PQ
-    [_]    = nf PQ
+record QuotientHoffmann {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
+  open pre-Quotient PQ
   field
     lift   : {B : Set}
-           → (f : A → B)
-           → ((a b : A) → (a ∼ b) → f a  ≡  f b)
+           → (f : S sd→s B)
            → Q → B
-    lift-β : ∀ {B a f q} → lift {B} f q [ a ]  ≡ f a
-    qind 　: (P : Q → Set)  
-           → (∀ x → (p p' : P x) → p ≡ p')
-           → (∀ a → P [ a ]) 
-           → (∀ x → P x)
+    lift-β : ∀ {B a f} → lift {B} f [ a ] ≡ apply f a -- any f : S → B is factorizable as [_] and lift f : Q → B
 
-open QuH renaming (lift to lift' ; lift-β to lift-β')
+    qind 　: (P : Q → Set)  
+           → (IsPredicate P)
+           → (∀ a → P [ a ]) 
+           → (∀ x → P x) -- ∀ x → ∃ a , x ≡ [ a ], no redandency in Q
 
 \end{code}
+
+\emph{Quotients as prequotients with a dependent eliminator.}
+colimit
+
+
+\begin{code}
+
+
+record dep-fun {S : Setoid}
+               (PQ : pre-Quotient S)(B : pre-Quotient.Q PQ → Set) : Set where
+  open pre-Quotient PQ
+  field
+    fun : (a : A) → B [ a ]
+    fun-correct : {a b : A} → (p : a ≈ b) → subst B (nf-sound p) (fun a) ≡ fun b
+open dep-fun using () renaming (fun to dapply; fun-correct to dsound)
+
+
+dep2ind : ∀  {S : Setoid}{PQ : pre-Quotient S}{B : pre-Quotient.Q PQ → Set} 
+        → dep-fun PQ B 
+        → S sd→s Σ (pre-Quotient.Q PQ) B
+dep2ind {S} {PQ} f = record { fun = λ x → [ x ] , dapply f x; fun-correct = λ p → Σeq-split (nf-sound p) (dep-fun.fun-correct f p) }
+  where
+    open pre-Quotient PQ
+
+ind2dep : ∀ {S : Setoid}{PQ : pre-Quotient S}{B : Set}
+        → S sd→s B
+        → dep-fun PQ (λ _ → B)
+ind2dep {PQ = PQ} f = record { fun = fun ; fun-correct = λ p → trans (subst-Irr3 (_sd→s_.fun-correct (pre-Quotient.nf PQ) p)) (fun-correct p) }
+  where
+    open _sd→s_ f
+
+record Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
+  open pre-Quotient PQ
+  field
+    qelim   : {B : Q → Set}
+            → dep-fun PQ B
+            → (q : Q) → B q
+    qelim-β : ∀ {B a f} → qelim {B} f [ a ] ≡ dapply f a
+
+\end{code}
+
+\emph{Exact quotients}
+\begin{code}
+
+
+
+-- the older definition which depend on Qu is also wrong
+
+
+record QuE {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
+  open pre-Quotient PQ
+  field
+    Qu    : Quotient PQ
+    exact : ∀ {a b : A} → [ a ] ≡ [ b ] → a ≈ b
+
+\end{code}
+
 
 \emph{Definable quotients}
 \begin{code}
  
-record QuD {S : Setoid}(PQ : PreQu S) : Set₁ where
-  constructor
-    emb:_complete:_stable:_
-  private 
-    A     = Carrier S
-    _∼_   = _≈_ S
-    Q     = Q' PQ
-    [_]   = nf PQ
+record DefinableQuotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
+  open pre-Quotient PQ
   field
     emb      : Q → A
-    complete : ∀ a → emb [ a ] ∼ a
+    complete : ∀ a → emb [ a ] ≈ a
     stable   : ∀ q → [ emb q ] ≡ q
-open QuD
 
 \end{code}
 
@@ -177,156 +177,128 @@ open QuD
 
 Below, we show the following, where the arrow → means "gives rise to" :
 
-|QuH → Qu| (Proposition 3 in the paper)
+|QuotientHoffmann → Qu| (Proposition 3 in the paper)
 
-|Qu → QuH| (Reverse of Proposition 3)
+|Quotient → QuotientHoffmann| (Reverse of Proposition 3)
 
-|QuD → QuE| (A definable quotient is always exact)
+|DefinableQuotient → QuE| (A definable quotient is always exact)
 
-|QuD → Qu|
+|DefinableQuotient → Qu|
 
-|QuD → QuH| (Also a consequence of |QuD → Qu| and |Qu → QuH|)
+|DefinableQuotient → QuotientHoffmann| (Also a consequence of |DefinableQuotient → Qu| and |Quotient → QuotientHoffmann|)
 
 \begin{code}
 
-QuH→Qu : {S : Setoid} → {PQ : PreQu S}
-       → (QuH PQ) → (Qu PQ)
-QuH→Qu {S} {Q: Q []: [_] sound: sound}
-       (lift: lift lift-β: β qind: qind) = 
+QuotientHoffmann→Quotient : {S : Setoid} → {PQ : pre-Quotient S}
+       → (QuotientHoffmann PQ) → (Quotient PQ)
+QuotientHoffmann→Quotient {S} {PQ} QUH = 
   record 
-    { qelim   = λ {B} → qelim₁ {B}
-    ; qelim-β = λ {B} {a} {f} → qelim-β₁ {B} a f
+    { qelim   = qelim₁
+    ; qelim-β = λ {B} {a} {f} → trans (subst-Irr2 B (lift-d-β f [ a ])
+                                         (cong-proj₁ (ld f [ a ]) (apply (dep2ind f) a) lift-β)
+                                         Set-Q) (cong-proj₂ _ _ (lift-β {a = a} {dep2ind f}))
     }
   where
-    A      = Carrier S
-    _∼_    = _≈_ S
+    open pre-Quotient PQ
+    open QuotientHoffmann QUH
 
-    -- the dependent function f is made independent
-    indep : {B : Q → Set}  → ((a : A) → B [ a ]) → A → Σ Q B
-    indep f a = [ a ] , f a
-
-    indep-β : {B : Q → Set} 
-            → (f : (a : A) → B [ a ]) 
-            → (∀ a b → (p : a ∼ b) → subst B (sound p) (f a) ≡ f b) 
-            → ∀ a a' → (a ∼ a') → indep {B} f a ≡ indep f a'          
-    indep-β {B} f q a a' p = (cong_,_ [ a ] [ a' ] (sound p) (f a))
-                           ▶ ((λ b → [ a' ] , b) ⋆ (q a a' p))
     
-    lift₀ : {B : Q → Set}
-         → (f : (a : A) → (B [ a ]))
-         → ((a a' : A) → (p : a ∼ a')
-         → subst B (sound p)  (f a) ≡ f a')
-         → Q → Σ Q B 
-    lift₀ f q = lift (indep f) (indep-β f q)
-                     
-    qind₁ : {B : Q → Set}
-         → (f : (a : A) → B [ a ]) 
-         → (q : ∀ a b → (p : a ∼ b) → subst B (sound p) (f a) ≡ f b) 
-         → ∀ (c : Q) → proj₁ (lift₀ f q c) ≡ c
-    qind₁ {B} f q = qind P heredity base 
-      where
-        f' : Q → Σ Q B
-        f' = lift₀ f q
-        P : Q → Set
-        P c = proj₁ {_} {_} {Q} {B} (lift₀ f q c) ≡ c
-        heredity : ∀ x → (p p' : P x) → p ≡ p' 
-        heredity x p p' = ≡-prfIrr (proj₁ (lift₀ f q x)) x p p'  
-        base : ∀ a → P [ a ]
-        base a = proj₁ ⋆ β
+    ld   : {B : Q → Set}(f : dep-fun PQ B)(c : Q) → Σ Q B
+    ld f = lift (dep2ind f)
 
-    qelim₁  : { B : Q → Set }
-           → (f : (a : A) → (B [ a ]))
-           → (∀ a b → (p : a ∼ b) → subst B (sound p) (f a) ≡ f b)
+    ldcom : {B : Q → Set}(f : dep-fun PQ B)(c : Q) → Set
+    ldcom f c = proj₁ (ld f c) ≡ c
+
+    lift-d-β : {B : Q → Set}
+             → (f : dep-fun PQ B)
+             → (c : Q) 
+             → ldcom f c
+    lift-d-β f c = qind (ldcom f) (record {isPred = λ x → QisSet}) (λ a → cong-proj₁ _ _ (lift-β {a = a} {dep2ind f})) c
+    
+    qelim₁  : {B : Q → Set}
+           → dep-fun PQ B
            → (c : Q) → B c 
-    qelim₁ {B} f q c = subst B (qind₁ f q c)
-                      (proj₂ {_} {_} {Q} {B} (lift₀ f q c))
+    qelim₁ {B} f c = subst B (lift-d-β f c)
+                   (proj₂ (lift (dep2ind f) c))
 
-    qelim-β₁ : ∀ {B} a f q → qelim₁ {B} f q [ a ] ≡ f a
-    qelim-β₁ {B} a f q =
-      (substIrr B (qind₁ f q [ a ]) 
-        (cong-proj₁ {Q} {B} (lift₀ f q [ a ]) (indep f a) β) 
-        (proj₂ {_} {_} {Q} {B} (lift₀ f q [ a ]))) ▶
-      (cong-proj₂ {Q} {B} (lift₀ f q [ a ]) (indep f a) β)
 \end{code}
 
 
 \begin{code}
-Qu→QuH : {S : Setoid} → {PQ : PreQu S} 
-       → (Qu PQ) → (QuH PQ)
-Qu→QuH {S} {Q: Q []: [_] sound: sound} (qelim: qelim qelim-β: β) =
+
+Quotient→QuotientHoffmann : {S : Setoid} → {PQ : pre-Quotient S} 
+       → (Quotient PQ) → (QuotientHoffmann PQ)
+Quotient→QuotientHoffmann {S} {PQ} QU =
   record 
-  { lift   = λ {B} f s → qelim {λ _ → B} f (λ a b p 
-           → (subFix (sound p) B (f a)) ▶ (s a b p))
-  ; lift-β = λ {B} {a'} {f} {s} → β {λ _ → B} {a'} {f} (λ a b p 
-           → (subFix (sound p) B (f a)) ▶ (s a b p))
-  ; qind = λ P irr f
-         → qelim {P} f (λ a b p → irr [ b ] (subst P (sound p) (f a)) (f b))
+  { lift   = qelim ∘ ind2dep
+  ; lift-β = qelim-β
+  ; qind = λ P isP f → qelim {P} (record { fun = f; fun-correct = λ p → isProp (isPred isP _) _ _})
   }
   where
-    subFix : ∀ {A : Set}{c d : A}(x : c ≡ d)(B : Set)(p : B)
-           → subst (λ _ → B) x p ≡ p
-    subFix refl _ _ = refl
+    open pre-Quotient PQ
+    open Quotient QU
 
 \end{code}
 
 
 \begin{code}
 
-QuD→QuE : {S : Setoid}{PQ : PreQu S}{QU : Qu PQ} 
-        → (QuD PQ) → (QuE QU)
-QuD→QuE {S} {Q: Q []: [_] sound: _}
-        (emb: emb complete: complete stable: _) =
-  record { exact =  λ {a} {b} [a]≡[b] 
-         → ⟨ complete a ⟩₀ 
-           ▶₀ subst (λ x → x ∼ b) (emb ⋆ ⟨ [a]≡[b] ⟩) (complete b)
-         }
+DefinableQuotient→Quotient : {S : Setoid}{PQ : pre-Quotient S}
+       → (DefinableQuotient PQ) → (Quotient PQ)
+DefinableQuotient→Quotient {S} {PQ} QUD = 
+  record { qelim = λ {B} f q → subst B (stable q) (dapply f (emb q))
+         ; qelim-β = λ {B} {a} {f} → trans (subst-Irr2 B (stable [ a ]) (nf-sound (complete a)) Set-Q) (dep-fun.fun-correct f (complete a))
+  }
     where
-      A     = Carrier S
-      _∼_   = _≈_ S
-      ⟨_⟩₀   : Symmetric _∼_
-      ⟨_⟩₀   = symmetric S
-      _▶₀_  : Transitive _∼_
-      _▶₀_  = transitive S 
+    open pre-Quotient PQ
+    open DefinableQuotient QUD
+
+\end{code}
+
+\begin{code}
+
+-- the older proof with QU as assumption is actually wrong!
+
+DefinableQuotient→QuE : {A : Setoid}{PQ : pre-Quotient A} -- {QU : Quotient PQ} 
+        → (DefinableQuotient PQ) → QuE PQ
+DefinableQuotient→QuE {A} {PQ} QUD =
+  record { Qu = DefinableQuotient→Quotient QUD
+         ; exact = λ {a} {b} p → ≈trans (≈sym (complete a)) (≈trans (id-eq (cong emb p)) (complete b))
+         }
+  where
+    open pre-Quotient PQ
+    open DefinableQuotient QUD
+
+    id-eq : ∀{a b} → a ≡ b → a ≈ b
+    id-eq refl = ≈refl 
 
 \end{code}
 
 
-\begin{code}
-
-QuD→Qu : {S : Setoid} → {PQ : PreQu S}
-       → (QuD PQ) → (Qu PQ)
-QuD→Qu {S} {Q: Q []: [_] sound: sound}
-       (emb: ⌜_⌝ complete: complete stable: stable) = 
-  record 
-  { qelim   = λ {B} f _ a → subst B (stable a) (f ⌜ a ⌝)
-  ; qelim-β = λ {B} {a} {f} s 
-              → substIrr B (stable [ a ]) (sound (complete a)) (f ⌜ [ a ] ⌝) 
-              ▶ s _ _ (complete a)
-  }
-
-\end{code}
-
 
 \begin{code}
 
-QuD→QuH : {S : Setoid} → {PQ : PreQu S}
-        → (QuD PQ) → (QuH PQ)
-QuD→QuH {S} {Q: Q []: [_] sound: sound}
-        (emb: ⌜_⌝ complete: complete stable: stable) =
+DefinableQuotient→QuotientHoffmann : {S : Setoid} → {PQ : pre-Quotient S}
+        → (DefinableQuotient PQ) → (QuotientHoffmann PQ)
+DefinableQuotient→QuotientHoffmann {S} {PQ} QUD =
   record 
-  { lift   = λ f _ q → f ⌜ q ⌝
-  ; lift-β = λ {B} {a} {f} {s} → s ⌜ [ a ] ⌝ a (complete a)
-  ; qind   = λ P _ f → λ x → subst P (stable x) (f ⌜ x ⌝) 
+  { lift   = λ f → apply f ∘ emb
+  ; lift-β = λ {B} {a} {f} →  sound f {emb [ a ]} {a} (complete a)
+  ; qind   =  λ P _ f → λ x → subst P (stable x) (f (emb x))
   }
+  where
+    open pre-Quotient PQ
+    open DefinableQuotient QUD
 
 \end{code}
 
 Or
+
 \begin{code}
 
-QuD→QuH' : {S : Setoid} → {PQ : PreQu S}
-         → (QuD PQ) → (QuH PQ)
-QuD→QuH' {S} = Qu→QuH ∘ QuD→Qu
+DefinableQuotient→QuotientHoffmann' : {S : Setoid}{PQ : pre-Quotient S}
+         → (DefinableQuotient PQ) → (QuotientHoffmann PQ)
+DefinableQuotient→QuotientHoffmann' = Quotient→QuotientHoffmann ∘ DefinableQuotient→Quotient
 
 \end{code}
 

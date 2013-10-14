@@ -544,7 +544,7 @@ definition could be written as
 
 \begin{code}
 
-data Id (A : Set) : A → A → Set where
+makdata Id (A : Set) : A → A → Set where
   refl : (a : A) → Id A a a
 
 \end{code}

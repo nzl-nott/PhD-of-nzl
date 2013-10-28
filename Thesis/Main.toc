@@ -6,18 +6,41 @@
 \contentsline {chapter}{List of Figures}{vii}{dummy.5}
 \contentsline {chapter}{List of Tables}{ix}{dummy.7}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.9}
-\contentsline {chapter}{\numberline {2}Background: Quotient Types}{3}{chapter.10}
-\contentsline {section}{\numberline {2.1}Introduction}{3}{section.11}
-\contentsline {paragraph}{Quotient sets}{3}{section*.12}
-\contentsline {paragraph}{Quotient types}{3}{section*.15}
-\contentsline {section}{\numberline {2.2}Categorical intuition}{4}{section.16}
-\contentsline {subsection}{\numberline {2.2.1}Adjuction between {\textbf {Sets}} and \textbf {Setoids}}{4}{subsection.18}
-\contentsline {section}{\numberline {2.3}Definable Quotients}{5}{section.20}
-\contentsline {subsection}{\numberline {2.3.1}Natural numbers as the basis}{5}{subsection.21}
-\contentsline {subsection}{\numberline {2.3.2}Integers}{5}{subsection.22}
-\contentsline {subsection}{\numberline {2.3.3}Rational numbers}{5}{subsection.23}
-\contentsline {subsection}{\numberline {2.3.4}Real numbers and Complex numbers}{5}{subsection.24}
-\contentsline {subsection}{\numberline {2.3.5}Multisets(bags)}{5}{subsection.25}
+\contentsline {section}{\numberline {1.1}Organisation}{1}{section.10}
+\contentsline {chapter}{\numberline {2}Background}{3}{chapter.11}
+\contentsline {section}{\numberline {2.1}Type Theory}{3}{section.12}
+\contentsline {subsection}{\numberline {2.1.1}Russell's Type Theories}{3}{subsection.13}
+\contentsline {paragraph}{Simlilarities}{4}{section*.15}
+\contentsline {paragraph}{Differences}{4}{section*.19}
+\contentsline {subsection}{\numberline {2.1.2}Per Martin-L\"{o}f's Type Theories}{4}{subsection.20}
+\contentsline {section}{\numberline {2.2}A dependently typed language: Agda}{6}{section.21}
+\contentsline {subsection}{\numberline {2.2.1}basic syntax}{9}{subsection.22}
+\contentsline {subsection}{\numberline {2.2.2}Some conventions in this paper}{9}{subsection.23}
+\contentsline {chapter}{\numberline {3}Quotient Types}{11}{chapter.24}
+\contentsline {section}{\numberline {3.1}Quotients in mathematics}{11}{section.25}
+\contentsline {paragraph}{Quotient sets}{11}{section*.26}
+\contentsline {paragraph}{Quotient types}{11}{section*.29}
+\contentsline {section}{\numberline {3.2}Categorical intuition}{12}{section.30}
+\contentsline {subsection}{\numberline {3.2.1}Adjuction between {\textbf {Sets}} and \textbf {Setoids}}{13}{subsection.32}
+\contentsline {section}{\numberline {3.3}Example of Quotients}{13}{section.34}
+\contentsline {chapter}{\numberline {4}Definable Quotients}{15}{chapter.35}
+\contentsline {subsection}{\numberline {4.0.1}Integers}{15}{subsection.36}
+\contentsline {paragraph}{Operations}{15}{section*.37}
+\contentsline {paragraph}{Properties}{15}{section*.38}
+\contentsline {paragraph}{Comparison}{15}{section*.39}
+\contentsline {subsection}{\numberline {4.0.2}Rational numbers}{16}{subsection.40}
+\contentsline {subsection}{\numberline {4.0.3}Real numbers and more}{16}{subsection.41}
+\contentsline {subsection}{\numberline {4.0.4}Multisets(bags)}{16}{subsection.42}
+\contentsline {chapter}{\numberline {5}Setoid Model}{17}{chapter.44}
+\contentsline {section}{\numberline {5.1}Literature review}{17}{section.45}
+\contentsline {section}{\numberline {5.2}What we could do in this model}{17}{section.46}
+\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{17}{section.47}
+\contentsline {chapter}{\numberline {6}Homotopy Type Theory\xspace and $\omega $-groupoids\xspace Model}{19}{chapter.48}
+\contentsline {section}{\numberline {6.1}What is Homotopy Type Theory\xspace ?}{19}{section.49}
+\contentsline {section}{\numberline {6.2}Quotient types in Homotopy Type Theory\xspace }{19}{section.50}
+\contentsline {section}{\numberline {6.3}Syntax of weak $\omega $-groupoids\xspace }{19}{section.51}
+\contentsline {section}{\numberline {6.4}Semantics}{19}{section.52}
+\contentsline {chapter}{\numberline {7}Summary and future works}{21}{chapter.53}
 \vspace {2em}
 \vspace {2em}
-\contentsline {chapter}{Bibliography}{7}{dummy.26}
+\contentsline {chapter}{Bibliography}{23}{dummy.54}

@@ -16,6 +16,9 @@ open import Data.Product
 open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _∼_ ; _,_)
   renaming (_+_ to _ℤ₀+_ ; _-_ to _ℤ₀-_ ; _*_ to _ℤ₀*_ ;
   _≤_ to _ℤ₀≤_; _<_ to _ℤ₀<_)
+open import Data.Integer.Setoid.Properties as ℤ₀
+  using (zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence; refl') 
+  renaming (_≟_ to _ℤ₀≟_ ; _≤?_ to _ℤ₀≤?_)
 open import Relation.Binary.Core
 
 infixl 7 _*_
@@ -49,6 +52,8 @@ a) normalise the setoid integer to normal form e.g. (3 , 2) → + 1
 
 \end{code}
 
+To prove it is a normalisation, we need to find an inverse function of it.
+
 b) denormalise the normal integer to one representative setoid integer e.g. + 1 → (3 , 2) ∼ [(1 , 0)]₌
 (type using \c with left ⌜ and right ⌝)
 
@@ -57,6 +62,18 @@ b) denormalise the normal integer to one representative setoid integer e.g. + 1 
 ⌜_⌝        : ℤ → ℤ₀
 ⌜ + n ⌝    = n , 0
 ⌜ -suc n ⌝ = 0 , ℕ.suc n
+
+\end{code}
+
+
+c) verification
+
+\begin{code}
+
+compl : ∀ n → ⌜ [ n ] ⌝ ∼ n
+compl (x , 0)           = refl
+compl (0 , nsuc y)      = refl
+compl (nsuc x , nsuc y) = compl (x , y) >∼<  ⟨ ℕ.sm+n≡m+sn x y ⟩
 
 \end{code}
 

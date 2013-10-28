@@ -9,12 +9,29 @@ open import Data.Nat
 open import Data.Nat.Properties
 open import Data.Product
 open import Relation.Binary
-open import Relation.Binary.Core
+open import Relation.Binary.PropositionalEquality
 open import Symbols
 
-open IsCommutativeSemiring isCommutativeSemiring public hiding (refl) renaming (zero to mzero)
+open IsCommutativeSemiring isCommutativeSemiring hiding (refl) renaming (zero to mzero)
 module ℕO = DecTotalOrder decTotalOrder
+
+
+ex :  ∀ a b c → a + (b + c) ≡ b + (a + c)
+ex a b c = ⟨ +-assoc a b c ⟩ >≡< cong (λ x → x + c) (+-comm a b) >≡< +-assoc b a c
+
+swap23 : ∀ m n p q → (m + n) + (p + q) ≡ (m + p) + (n + q)
+swap23 m n p q = +-assoc m n (p + q) >≡<
+  cong (_+_ m) (ex n p q) >≡<
+  ⟨ +-assoc m p (n + q) ⟩
+
+
+_+=_ : ∀ {m n p q} → m ≡ n → p ≡ q → m + p ≡ n + q
+_+=_ {m} {.m} {p} {.p} refl refl = refl
+
+
+cancel-+-right : 
  
+{-
 infixr 42  _*⋆_
 infixr 42  _⋆*_
 infixl 41  _*=_
@@ -23,16 +40,10 @@ infixr 41  _⋆+_
 infixl 40 _>≤<_
 infixl 40 _+=_
 
+
 n+0≡n     : ∀ {n} → n + 0 ≡ n
 n+0≡n {n} = proj₂ +-identity n
-{-
-n+0≡n' : ∀ {n} n' m → n' ≡ n → m ≡ 0 → n' + m ≡ n
-n+0≡n' {n} .n .0 refl refl = n+0≡n
 
-n+0+0≡n : ∀ {n} → n + 0 + 0 ≡ n
-n+0+0≡n {zero} = refl
-n+0+0≡n {suc n} = suc ⋆ n+0+0≡n
--}
 n*0≡0 = proj₂ mzero
 
 n*0+0=0 : ∀ {n} → n * 0 + 0 ≡ 0
@@ -53,17 +64,12 @@ _⋆*_ {b} {.b} refl _ = refl
 _>≤<_ : Transitive _≤_
 _>≤<_ = ℕO.trans
 
-_+=_ : ∀ {m n p q} → m ≡ n → p ≡ q → m + p ≡ n + q
-_+=_ {m} {.m} {p} {.p} refl refl = refl
 
 _+⋆_ : ∀ {p q} m → p ≡ q → m + p ≡ m + q
 _+⋆_ _ refl = refl
 
 _⋆+_ : ∀ {p q} → p ≡ q → (m : ℕ) → p + m ≡ q + m
 _⋆+_ refl _ = refl
-
-ex :  ∀ a b c → a + (b + c) ≡ b + (a + c)
-ex a b c = ⟨ +-assoc a b c ⟩ >≡< +-comm a b ⋆+ c >≡< +-assoc b a c
 
 exchange₁ : ∀ m n p q → (m + n) + (p + q) ≡ (m + q) + (p + n)
 exchange₁ m n p q = +-assoc m n (p + q) >≡< m +⋆ ( ⟨ +-assoc n p q ⟩ >≡<
@@ -228,9 +234,12 @@ integrity′ {suc a} {suc b} c (s≤s m≤n) =
 ℤ₀i-lem : ∀ a b c → a + b + c * (a + b) ≡ a + c * a + (b + c * b)
 ℤ₀i-lem a b c = (a + b) +⋆ distˡ c a b >≡< exchange₃ a b (c * a) (c * b)
 
+
 ℤ₀i-lem₁ : ∀ a b c → a + c * a + 0 + (b + c * b + 0) ≡ a + b + c * (a + b)
 ℤ₀i-lem₁ a b c = n+0≡n {a + c * a} += n+0≡n >≡< ⟨ ℤ₀i-lem a b c ⟩
 
 ℤ₀i-lem₂ : ∀ a b c → a + b + c * (a + b) ≡ b + c * b + (a + c * a)
 ℤ₀i-lem₂ a b c = ℤ₀i-lem a b c >≡< +-comm (a + c * a) (b + c * b)
+
+-}
 \end{code}

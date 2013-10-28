@@ -26,28 +26,28 @@ open import Relation.Binary.PropositionalEquality as PE
 open import ThomasProperties
 
 
-record IsProp (A : Set) : Set where
+record ′_isProp′ (A : Set) : Set where
   field
     isProp : ∀ (a b : A) → a ≡ b
-open IsProp
+open ′_isProp′
 
-record IsSet (Q : Set) : Set where
+record ′_isSet′ (Q : Set) : Set where
   field
-    isSet : ∀{p q : Q} → IsProp (p ≡ q)
-open IsSet
+    isSet : ∀{p q : Q} → ′ p ≡ q isProp′
+open  ′_isSet′
 
-record IsPredicate {A : Set}(P : A → Set) : Set where
+record  ′_isPredicate′ {A : Set}(P : A → Set) : Set where
   field
-    isPred : ∀ x → IsProp (P x) 
-open IsPredicate
+    isPred : ∀ x → ′ (P x) isProp′
+open ′_isPredicate′
 
-subst-Irr : {A : Set}(P : A → Set) → IsPredicate P 
+subst-Irr : {A : Set}(P : A → Set) → ′ P isPredicate′
           → {a b : A}{x : P a}{p q : a ≡ b} → subst P p x ≡ subst P q x
 subst-Irr P isP {a} {b} = isProp (isPred isP b) _ _
 
 
 subst-Irr2 : {A : Set}(B : A → Set)
-          → {a b : A}{x : B a}(p q : a ≡ b) → IsSet A → subst B p x ≡ subst B q x
+          → {a b : A}{x : B a}(p q : a ≡ b) → ′ A isSet′ → subst B p x ≡ subst B q x
 subst-Irr2 B p q isS = cong (λ y → subst B y _) (isProp (isSet isS) p q) 
 
 subst-Irr3 :  {A B : Set}
@@ -75,10 +75,10 @@ open _sd→s_ using () renaming (fun to apply; fun-correct to sound)
 record pre-Quotient (S : Setoid) : Set₁ where
   field
     Q      : Set
-    Set-Q  : IsSet Q
+    Set-Q  : ′ Q isSet′
     nf     : S sd→s Q
   open RB.Setoid S public renaming (Carrier to A; refl to ≈refl; sym to ≈sym; trans to ≈trans)
-  open IsSet Set-Q public renaming (isSet to QisSet)
+  open ′_isSet′ Set-Q public renaming (isSet to QisSet)
   open _sd→s_ nf public renaming (fun to [_] ; fun-correct to nf-sound)
 
 \end{code}
@@ -98,7 +98,7 @@ record QuotientHoffmann {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
     lift-β : ∀ {B a f} → lift {B} f [ a ] ≡ apply f a -- any f : S → B is factorizable as [_] and lift f : Q → B
 
     qind 　: (P : Q → Set)  
-           → (IsPredicate P)
+           → ′ P isPredicate′
            → (∀ a → P [ a ]) 
            → (∀ x → P x) -- ∀ x → ∃ a , x ≡ [ a ], no redandency in Q
 

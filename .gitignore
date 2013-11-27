@@ -7,7 +7,6 @@
 *.blg
 # *.tex
 *.dvi
-*.cls
 *.bbl
 *.ddf
 .DS_Store
@@ -16,7 +15,6 @@
 
 2013 TYPES Paper/.DS_Store
 
-*.el
 
 *.new
 

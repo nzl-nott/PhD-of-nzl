@@ -1,0 +1,172 @@
+\chapter{Quotient Types}
+\label{QuotientTypes} % For referencing the chapter elsewhere, use \ref{QuotientTypes} 
+
+\todo{Before 1st-Dec-2013}
+
+Quotient is a very common notion is mathematics. Usually the first
+quotient we learn is the result of division. $8 \div 4$ (or $8 / 4$)
+gives the result 2 which is called quotient.
+
+At first most mathematicians are only interested in numbers. As long
+as they start working on other mathematical objects, some more
+abstract structures, many notions are extended. As a simple case, the
+product of numbers is extended to the product of vectors and the
+product of sets. 
+
+Similarly, quotient is also extended to other objects, for example the
+quotient in set theory.
+
+%----------------------------------------------------------------------------------------
+
+\section{Quotients in mathematics}
+
+\subsection{Quotient sets}
+In set theory, we have a similar operation which turns some set
+into another set but the divisor is not the same kind of object as the
+dividend. We use equivalence relation to divide a set,
+
+\begin{definition}
+
+\textbf{Equivalence relation} An equivalence relation is a binary
+relation which is refleixive, symmetric and transitive.
+
+\end{definition}
+
+Intuitively, given any equivalence relation a set is partitioned into
+some cells, so that the elements equivalent to each other are in the
+same cell. The cells are called equivalence classes.
+
+\begin{definition}
+
+\textbf{Equivalence class} 
+
+\begin{equation}
+[ a ] = \{x : A \;| \; a \sim x \}
+\end{equation}
+
+\end{definition}
+
+The set of these equivalent classes is called
+the quotient set.
+
+\begin{definition}
+
+\textbf{Quotient set} Given a set A equipped with an equivalence relation $\sim$, a quotient
+set is denoted as $\qset{A}$ which contains the set of equivalence
+classes.
+
+\begin{equation}
+\qset{A} = \{ [ a ] \;|\; a : A \}
+\end{equation}
+
+\end{definition}
+
+Not only in set theory, the quotient of some algebraic structures is
+a common notions in other branches of mathematics. The notion of
+equivalence relation is extended to spaces, groups, categories and so
+does the quotient derived using the same construction. 
+
+Generally
+speaking, it describes the collection of equivalent classes of some equivalent relation on sets, spaces or other abstract structures. In type theory, following similar procedure, quotient type is also a conceivable notion.
+
+
+\paragraph{Quotient types}
+
+%The basic notion in Martin-L¨of’s type theory is the notion of type. A type
+%is explained by saying what an object of the type is and what it means for
+%two objects of the type to be identical. This means that we can make the
+%judgement -- http://www.cse.chalmers.se/research/group/logic/TypesSS05/Extra/nordstrom.pdf
+
+In type theory, quotient type can be formalised as following:
+
+
+\begin{equation*}
+\infer[Q-\bf{Form}]{\qset{A}}{A & \sim\, : A \rightarrow A \rightarrow \bf{Prop}}
+\end{equation*}
+
+\begin{equation*}
+\infer[Q-\bf{Intro}]{[ a ] : \qset{A}}{a : A}
+\end{equation*}
+
+\begin{equation*}
+\infer[Q-\bf{elim}]{\hat{f} : (q : Q) \rightarrow B \, q}{
+\begin{array}{l}
+B : \qset{A} \rightarrow  \bf{Set}\\
+f : (a : A) \rightarrow B\, [ a ]\\
+(a, b : A)  \rightarrow (p : a \sim b)  \rightarrow f a  \, \stackrel{p}{=} \, f b\\
+\end{array}}
+\end{equation*}
+ 
+In general, quotient types are unavailable in \itt.
+Quotients are everywhere, for example, rational numbers, real numbers, multi-sets.
+The introduction of quotient types is very helpful. Some of them can be defined 
+more effectively, such as the
+set of integers.
+Some of them can only be defined with quotient types, such as real
+numbers (the reason will be covered in \todo).
+
+\section{Categorical intuition}
+
+Categorically speaking, a quotient is a coequalizer.
+
+\begin{definition}
+
+Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ , a coequalizer is an object Q with a morphism $q : \morph{Y}{Q}$ such that $q \circ f = q \circ g$. It has to be universal as well. Any pair (Q' , q') $q' \circ f = q' \circ g$ has a unique factorisation u such that $q' = u \circ q$
+\end{definition}
+
+\begin{displaymath}
+    \xymatrix{X \ar@<0.5ex>[rr]^f \ar@<-0.5ex>[rr]_g && Y \ar[rr]^q
+      \ar[ddrr]_{q'} && Q
+      \ar@{.>}[dd]^u \\ \\
+& &&& Q' }
+\end{displaymath}
+
+
+\begin{displaymath}
+    \xymatrix{A \times A \ar@<0.5ex>[rr]^{\pi_1} \ar@<-0.5ex>[rr]_{\pi_2} && A \ar[rr]^{[\cdot]}
+      \ar[ddrr]_{q'} && Q
+      \ar@{.>}[dd]^u \\ \\
+& &&& Q' }
+\end{displaymath}
+
+
+
+\subsection{Adjuction between {\textbf{Sets}} and \textbf{Setoids}}
+
+From a higher point of view, Quotient is a Functor which is left-adjoint to $\nabla$ which is the trivial embedding functor from \textbf{Sets} to \textbf{Setoids}.
+
+\begin{definition}
+
+$\nabla A = (A , \equiv)$, $Q (B , \sim) = \qset{B}$
+
+\end{definition}
+
+We have following isomorphism for  the adjunction of the Quotient
+Functor and $\nabla$ functor.
+
+\begin{equation*}
+\begin{aligned}
+\qset{B} & \rightarrow A\\
+\midrule
+\midrule
+(B , \sim) & \rightarrow \nabla A\\
+\end{aligned}
+\end{equation*}
+
+
+\section{Example of Quotients}
+
+
+Because different sets may contain the same elements, we
+have the subset relation such that we can construct equivalence
+classes then quotient set. 
+In type theory we have to give constructors for any type before we can construct elements, which is different to the situation in set theory that
+elements exist before we construct quotient sets. Therefore this approach to construct quotients in set
+theory has some problems in type theory. In fact, Voevodsky constructs
+quotients using this approach in Homotopy Type Theory using Coq
+\cite{voe:hset} but here we
+mainly discuss how to reinterpret quotient sets in the current settings of\itt(e.g. Agda).
+
+
+
+quotient groups, quotient space, partiality monad.

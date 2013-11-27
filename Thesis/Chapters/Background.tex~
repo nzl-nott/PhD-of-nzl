@@ -1,0 +1,251 @@
+\chapter{Background}
+\label{tt}
+
+\todo{Before 15th-Nov-2013}
+
+
+%For a detailed
+%introduction, refer to \cite{nor:00}.
+
+
+%\begin{table*}\centering
+%\ra{1.3}
+%\begin{tabular}{@{}crcr@{}}\toprule
+%& Set Theory & Type Theory & \\
+%\midrule
+%& $a \in A$ & $a : A$ &\\
+%& $A \cap B$ & $A \times B$ &\\
+%& $A \cup B$ & $A + B$ &\\
+%\bottomrule
+%\end{tabular}
+%\caption{Correspondance}
+%\end{table*}
+
+\paragraph{Differences}
+
+Set theory requires  logic as basis. But type theory doesn't.
+
+\todo{one page explanation of why type theory is useful}
+
+
+
+
+
+
+
+
+\section{Type Theory}
+
+% origin of type theory
+In the 1900s, Bertrand Russell found the famous paradox in naive set
+theory. It tells people that if we can does not distinguish between small sets like natural numbers and real numbers with "larger" sets like the set of all sets, then it will lead to contradiction. To avoid this paradox, he
+proposed the theories of types \cite{rus:1903} as an alternative to
+naïve set theory. The objects are assigned to types in a hierarchical structure such that "larger" sets and small sets reside in different levels. The set of all
+sets are no longer on the same level as its elements such that the
+paradox disappears.
+
+Type theory also servers as a foundation for mathematics. However there are some major differences. Logic comes before set theory but not type theory. Within type theory, we have different ways to simulate the logic. The propositions are types and the proofs are their terms.
+
+Since then, mathematicians and computer scientists have developed a number of variants of type
+theories.
+
+% lambda calculus
+\subsection{Lambda Calculus}
+
+Alonzo Church introduced lambda calculus in 1930s. He first introduced
+an untyped lambda calculus which was proved to be inconsistent due to
+the Kleene-Rosser paradox. Then the typed one which is also called
+Church's Theory of types  or simply typed lambda calculus is
+introduced as a foundation of mathematics. It is widely applied to
+various fields espescially computer science.
+
+There are also refinements of lambda calculus. Start from the simply lambda calculus, there is a $\lambda$-cube illustrating the different refinements of lambda calculus. A famous functional
+programming language Haskell belongs to one of the variants of lambda
+calculus called System F, although it has evovled into System FC recently. 
+However it does not equipped with dependent types which means that types may depend on terms of some other types.
+The type theory we discuss next does.
+
+\subsection{Per Martin-L\"{o}f's Type Theories}
+
+In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory which admits dependent types.
+
+\begin{definition}
+\textit{Dependent type}. Dependent types are types that depends on values of other types \cite{dtw}. 
+\end{definition}
+
+The most important feature of dependent type theories is that we can reason about type theory itself inside type theory.
+Usually we need to state some theorems of programming languages on the meta-level, but dependent type theories as programmming languages enable us to state and prove these theorems inside themselves.
+It is achieved by the Curry-Howard
+isomorphism:
+
+\emph{``propositions can be interpreted as types and their
+  proofs are inhabitants of that types''} 
+
+which means that a theorem or a spefication of a program can be
+formalised as a type, and the proof of it is given by a term of
+that type. The Curry-Howard
+isomorphism is exntened to predicate logic since predicates and quantifiers can be formalised with dependent types.
+A predicate on $X$ can be written as a dependent type $P x$ where $x : X$. 
+
+
+%definitional equality -- intensional equality
+
+With dependent types there is a typed way to interpret equality of terms or types -- propositional equality.
+
+\definition{}
+
+ The introduction of propositional equality leads to two variants of intuitionistic type theory, intensional one and extensional one. They differ in interpretation of \emph{equality} of objects. 
+ In \itt, there are two ways to interpret equalty in type theory, one is called definitional (computational)  equality 
+and the other is propositional equality.
+
+We usually use the intensional one because it has better computational behaviors. 
+Objects are definitional equal if they normalise to the same form. Usually types like $a \equiv b$ stands for a definitional
+equality between $a$ and $b$. It is some primitive jundgements which are part of the
+meta-theory rather than construction like types or terms . Definitional
+equality can be judged and decided by type-checker. 
+The definitional equality is decidable in
+\itt.  Therefore type checking that depends on definitional equality is
+decidable as well~\cite{alt:99}. 
+
+ In \itt, propositional equality which is also called  \emph{intensional equality} \cite{nor:90} is different to definitional equality. Types like $\mathsf{a = b}$ which stands for a
+propostion that $\mathsf{a}$ equals $\mathsf{b}$ are propositional equalities. They are some types which we need to prove
+or disprove by construction. Each of them has an unique element $\mathsf{refl}$ which only exists if $\mathsf{a}$ and $\mathsf{b}$ are
+definitionally equal. The inhabitant of such equality does not imply the definitional equality of them, however we could subsitute one of them by the other in any expression.
+
+
+However in \ett, the two kinds of equalities are not distinguished, so if we have $\mathsf{p : Eq
+(A,a,b)}$ (which is called extensional equality \cite{nor:90}), $\mathsf{a}$ and $\mathsf{b}$ are
+definitionally equal. 
+It means that terms which have different normal forms may be definitionally equal. In other words, definitional equality is
+undecidable and type checking becomes undecidable as well. 
+
+It seems that they are one or another. However
+Altenkirch and McBride have introduced a variant of \ett called
+\emph{Observational Type Theory}  \cite{alt:06} in which definitional equality is
+decidable and propositional equality is extensional.
+
+Type theory can also serve as a programming language in
+which the evaluation of a well-typed program always terminates
+\cite{nor:90}. 
+There are various implementations based on different type theories, such as
+NuPRL, LEGO, Coq, Epigram and Agda. Agda is the main language and type theory we will use in this thesis.
+
+
+
+\section{A dependently typed language: Agda}
+
+\todo{copied from undergraduate final year report, most of them have
+  to be rewritten}
+
+Agda is one of the most recent implementations of intensional version
+of \mltt{}. 
+It is a dependently typed programming language, we can write program specifications as
+types. 
+As we have seen, \mltt{} is based on the Curry-Howard
+isomorphism: types are identified with propositions and programs (or
+terms) are identified with proofs. 
+Therefore it is not only a programming language but also a
+theorem prover which allows user to verify Agda programs in
+itself. 
+Compared to other implementations, it has a package of useful
+features such as pattern matching, unicode input, and implicit
+arguments \cite{bov:09}, but it does not have tactics and consequently
+its proofs are less readable than implementations that do. Since this project is based on \mltt, it is a good choice to implement our definitions
+and verify our theorems and properties in Agda.  For a detailed
+introduction of Agda, refer to \cite{norell:09}.
+
+To move from set theory to type theory, the similarities and differences should be made clear. Although type theory has some similarities to set theory, their foundations are different. Types play a similar role to sets and they are
+also called sets in many situations. However we can only create
+elements after we declare their types, while in set theory elements exist there before
+we have sets. For example,
+we have the type $\N$ for natural numbers corresponding to the set of
+natural numbers in set theory. In set theory, $\mathsf{2}$ is a shared element
+of the set of natural numbers and the set of integers. While in type
+theory, $\N$ provides us two constructors
+$\mathsf{zero \,\colon\N}$ and $\mathsf{suc : \N\to\N}$, and $\mathsf{2}$ can be constructed
+as $\mathsf{suc\,(suc\,\,zero)}$ which is of type $\N$ and does not have any other
+types like $\Z$. Because different sets may contain the same elements, we
+have the subset relation such that we can construct equivalence
+classes and quotient set. 
+In type theory we have to give constructors for any type before we can construct elements, which is different to the situation in set theory that
+elements exist before we construct quotient sets. Therefore this approach to construct quotients in set
+theory has some problems in type theory. In fact, Voevodsky constructs
+quotients using this approach in Homotopy Type Theory using Coq
+\cite{voe:hset} but here we
+mainly discuss how to reinterpret quotient sets in the current settings of\itt(e.g. Agda).
+
+
+
+
+
+Agda is a dependently typed functional programming language which is designed based on Martin-Löf's Type Theory \cite{agdawiki:main}. We can find three key elements in the definition of Agda, the "functional programming language", "dependently typed" and "Per Martin-Löf Type Theory".
+
+\begin{itemize}
+\item \textit{Functional programming language}. As the name indicates that, functional programming languages emphasizes the application of functions rather than changing data in the imperative style like C++ and Java. The base of functional programming is lambda calculus. The key motivation to develop functional programmming language is to eliminating the side effects which means we can ensure the result will be the same no matter how many times we input the same data. There are several generations of functional programming languages, for example Lisp, Erlang, Haskell etc. Most of the applications of them are currently in the academic fields, however as the functional programming developed, more applications will be explored.
+
+\item \textit{Dependent type}. Dependent types are types that depends on values of other types \cite{dtw}. It is one of the most important features that makes Agda a proof assistant. In Haskell and other Hindley-Milner style languages, types and values are clearly distinct \cite{tutorial}, In Agda, we can define types depending on values which means the border between types and values is vague. To illustrate what this means, the most common example is \textbf{Vector A n}.
+
+
+ It is a data type which represents a vector containing elements of type \textbf{A} and depends on a natural number \textbf{n} which is the length of the list. With the type checker of Agda, we can set more constraints in the type so that type-unmatched problems will always be detected by complier. Therefore we could define the function more precisely as there more partitions of types. For instance, to use the dependently typed vector, it could avoid defining a function which will cause exceptions like out of bounds in Java.
+
+\item \textit{Per Martin-Löf Type Theory}. It has different names like Intuitionistic type theory or Constructive type theory and is developed by Per Martin-Löf in 1980s. It associated functional programs with proofs of mathematical propositions written as dependent types. That means we can now represent propositions we want to prove as types in Agda by dependent types and Curry-Howard isomorphism \cite{aboa}. Then we only need to construct a program of the corresponding type to prove that propostion. For example:
+
+As Nordström et al. \cite{nps} pointed out that we could express both specifications and programs at the same time when using the type theory to construct proofs using programs. The general approach to do theorem proving in Agda is as follows: First we give the name of the proposition and encode it as the type. Then we can gradually refine the goal to formalise a type-correct program namely the proof. There are no tactics like in Coq. However it is more flexible to construct a proof. The process of building proofs is very similar to the process of constructing proofs in regular mathematics. The logic behind it is that if we could construct an instance of the type (proposition), we prove it. It is actually the Curry-Howard isomorphism.
+
+\end{itemize}
+
+Agda is an extention of this type theory \cite{itt} with some nice features which could benefit the theorem proving,
+
+\begin{itemize}
+\item \textit{Pattern matching}. The mechanism for dependently typed pattern matching is very powerful \cite{alti:pisigma-new}. We could prove propositions case by case. In fact it is similar to the approach to prove propositions case by case in regular mathematics. We can also use view to pattern match a condition specially in Agda. For example,
+
+Here the "parity" after with is a view function that allows us to pattern match on the result of it.
+
+\item \textit{Recursive definition}.The availability of recursive definition enables programmers to prove propositions in the same manner of mathematical induction.  Generally the natural numbers are defined inductively in fucntional programming languages. Then the program of natural numbers can be written using recursive style. There are a lot of types defined using recursive styles in Agda.
+
+\item \textit{Construction of functions}. The construction of functions makes the proving more flexible. We could prove lemmas as we do in maths and reuse them as functions.
+
+\item \textit{Lazy evaulation}. Lazy evaluation could eliminate unecessary operation because it is lazy to delay a computation until we need its result. It is often used to handle infinite data structures. \cite{wiki:Lazy_evaluation}
+
+\end{itemize}
+
+As Agda is primarily used to undertake theorem proofs tasks, the designer enhanced it to be more professional proof assistant. There are several beneficial features facilitating theorem proving,
+
+\begin{itemize}
+\item \textit{Type Checker}. Type checker is an essential part of Agda. It is the type checker that detect unmatched-type problem which means the proof is incorrect. It also shows the goals and the environment information related to a proof. Moreover a definition of function must cover all possible cases and must terminate as Agda are not allowed to crash \cite{tutorial}. The coverage checker makes sure that the patterns cover all possible cases \cite{aboa}. And the termination checker will warn possiblily non-terminated error. The missing cases error will be reported by type checker. The suspected non-terminated definition can not be used by other ones. The type checker then ensures that the proof is complete and not been proved by itself. Also we are forced to write the type signature due to the presence of type checker.
+ 
+\item \textit{Emacs interface}. It has a Emacs-based interface for interactively writing and verifying proofs. It allows programmers leaving part of the proof unfinished so that the type-checker will provide useful information of what is missing \cite{aboa}. Therefore programmers could gradually refine their incomplete proofs of correct types.
+
+
+\item \textit{Unicode support}. It supports Unicode identifiers and keywords like: $\forall$, $\exists$ etc. It also supports mixfix operators like: $+$ , $-$ etc. The benefits are obvious. Firstly we could define symbols which look the same and behave the same in mathematics. These are the expressions of commutativity for natural numbers, the first line is mathematical proposition and the second line is code in Agda:
+
+Secondly we could use symbols to replace some common-used properties to simply the proofs a lot. The following code was simplied using several symbols,
+
+
+Finally, we could use some other languages characters to define functions such as Chinese characters.
+
+\item \textit{Code navigation}. We can simply navigate to the definition of functions from our current code. It is a wonderful features for programmers as it alleviate a great deal of work to look up the library.
+
+\item \textit{Implicit arguments}. We could omit the arguments which could be inferred by the type-checker. In this way, we do not need to present obvious targets of some properties. For example,
+
+
+The implicit argument in curly bracket is unnecessay to give explicitly when applying this property.
+
+
+\item \textit{Module system}. The mechanism of parametrised modules makes it possible to define generic operations and prove a whole set of generic properties.
+
+\item \textit{Coinduction}. We could define coinductive types like streams in Agda which are typically infinite data structures. It is a proof technique that could prove the equality satisfied all possible implementation of the specification defined in the codata. It is often used in conjunction with lazy evaluation. \cite{wiki:Coinduction}
+	
+\end{itemize} 
+
+With these helpful features, Agda has the potentional be a more powerful proof assisstant. Therefore, in order to provide the availability of all the numbers, this project should be beneficial. With the numbers defined and basic properties proven, mathematicians could prove some famous theorems like Fermat’s little theorem then.
+
+
+\subsection{basic syntax}
+
+\todo{to help the reader understand the Agda code in text}
+
+\subsection{Some conventions in this paper}
+
+\todo{What conventions we will follow in this thesis and some commonly
+used symbols and functions}

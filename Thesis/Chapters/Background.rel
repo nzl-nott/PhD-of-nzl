@@ -1,0 +1,42 @@
+;; RefTeX parse info file
+;; File: /Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex
+;; User: nuoli (Nuo Li)
+
+(set reftex-docstruct-symbol '(
+
+
+(xr nil "\\\\\\\\\\\\")
+
+(index-tags)
+
+(is-multi nil)
+
+(bibview-cache)
+
+(master-dir . "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/")
+
+(label-numbers)
+
+(bof "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex")
+
+(toc "toc" "  1 Background" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 1 "1" "\\chapter{Background}" 1)
+
+("tt" "s" "\\todo{Before 15th-Nov-2013} %For a detailed %introduction, refer to \\cite{nor:00}. %\\begin{table*}\\c" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil)
+
+(toc "toc" "          1.0.0.0.1 Differences" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 5 "1.0.0.0.1" "\\paragraph{Differences}" 394)
+
+(toc "toc" "    1.1 Type Theory" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 2 "1.1" "\\section{Type Theory}" 547)
+
+(toc "toc" "      1.1.1 Lambda Calculus" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 3 "1.1.1" "\\subsection{Lambda Calculus}" 1606)
+
+(toc "toc" "      1.1.2 Per Martin-L\\\"{o}f's Type Theories" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 3 "1.1.2" "\\subsection{Per Martin-L\\\"{o}f's Type Theories}" 2508)
+
+(toc "toc" "    1.2 A dependently typed language: Agda" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 2 "1.2" "\\section{A dependently typed language: Agda}" 6337)
+
+(toc "toc" "      1.2.1 basic syntax" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 3 "1.2.1" "\\subsection{basic syntax}" 17101)
+
+(toc "toc" "      1.2.2 Some conventions in this paper" "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex" nil 3 "1.2.2" "\\subsection{Some conventions in this paper}" 17188)
+
+(eof "/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Background.tex")
+))
+

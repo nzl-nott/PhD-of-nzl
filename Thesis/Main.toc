@@ -9,38 +9,38 @@
 \contentsline {section}{\numberline {1.1}Organisation}{1}{section.10}
 \contentsline {chapter}{\numberline {2}Background}{3}{chapter.11}
 \contentsline {section}{\numberline {2.1}Type Theory}{3}{section.12}
-\contentsline {subsection}{\numberline {2.1.1}Russell's Type Theories}{3}{subsection.13}
-\contentsline {paragraph}{Simlilarities}{4}{section*.15}
-\contentsline {paragraph}{Differences}{4}{section*.19}
-\contentsline {subsection}{\numberline {2.1.2}Per Martin-L\"{o}f's Type Theories}{4}{subsection.20}
-\contentsline {section}{\numberline {2.2}A dependently typed language: Agda}{6}{section.21}
-\contentsline {subsection}{\numberline {2.2.1}basic syntax}{9}{subsection.22}
-\contentsline {subsection}{\numberline {2.2.2}Some conventions in this paper}{9}{subsection.23}
-\contentsline {chapter}{\numberline {3}Quotient Types}{11}{chapter.24}
-\contentsline {section}{\numberline {3.1}Quotients in mathematics}{11}{section.25}
-\contentsline {paragraph}{Quotient sets}{11}{section*.26}
-\contentsline {paragraph}{Quotient types}{11}{section*.29}
-\contentsline {section}{\numberline {3.2}Categorical intuition}{12}{section.30}
-\contentsline {subsection}{\numberline {3.2.1}Adjuction between {\textbf {Sets}} and \textbf {Setoids}}{13}{subsection.32}
-\contentsline {section}{\numberline {3.3}Example of Quotients}{13}{section.34}
-\contentsline {chapter}{\numberline {4}Definable Quotients}{15}{chapter.35}
-\contentsline {subsection}{\numberline {4.0.1}Integers}{15}{subsection.36}
-\contentsline {paragraph}{Operations}{15}{section*.37}
-\contentsline {paragraph}{Properties}{15}{section*.38}
-\contentsline {paragraph}{Comparison}{15}{section*.39}
-\contentsline {subsection}{\numberline {4.0.2}Rational numbers}{16}{subsection.40}
-\contentsline {subsection}{\numberline {4.0.3}Real numbers and more}{16}{subsection.41}
-\contentsline {subsection}{\numberline {4.0.4}Multisets(bags)}{16}{subsection.42}
-\contentsline {chapter}{\numberline {5}Setoid Model}{17}{chapter.44}
-\contentsline {section}{\numberline {5.1}Literature review}{17}{section.45}
-\contentsline {section}{\numberline {5.2}What we could do in this model}{17}{section.46}
-\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{17}{section.47}
-\contentsline {chapter}{\numberline {6}Homotopy Type Theory\xspace and $\omega $-groupoids\xspace Model}{19}{chapter.48}
-\contentsline {section}{\numberline {6.1}What is Homotopy Type Theory\xspace ?}{19}{section.49}
-\contentsline {section}{\numberline {6.2}Quotient types in Homotopy Type Theory\xspace }{19}{section.50}
-\contentsline {section}{\numberline {6.3}Syntax of weak $\omega $-groupoids\xspace }{19}{section.51}
-\contentsline {section}{\numberline {6.4}Semantics}{19}{section.52}
-\contentsline {chapter}{\numberline {7}Summary and future works}{21}{chapter.53}
+\contentsline {subsection}{\numberline {2.1.1}Lambda Calculus}{4}{subsection.13}
+\contentsline {subsection}{\numberline {2.1.2}Per Martin-L\"{o}f's Type Theories}{4}{subsection.14}
+\contentsline {section}{\numberline {2.2}Agda}{6}{section.18}
+\contentsline {subsection}{\numberline {2.2.1}basic syntax}{10}{subsection.19}
+\contentsline {subsection}{\numberline {2.2.2}Some conventions}{10}{subsection.20}
+\contentsline {subsection}{\numberline {2.2.3}Identity Type}{10}{subsection.21}
+\contentsline {subsection}{\numberline {2.2.4}Extensionality}{11}{subsection.22}
+\contentsline {chapter}{\numberline {3}Quotient Types}{13}{chapter.23}
+\contentsline {section}{\numberline {3.1}Quotients in mathematics}{13}{section.24}
+\contentsline {subsection}{\numberline {3.1.1}Quotient sets}{13}{subsection.25}
+\contentsline {paragraph}{Quotient types}{14}{section*.31}
+\contentsline {section}{\numberline {3.2}Categorical intuition}{15}{section.32}
+\contentsline {subsection}{\numberline {3.2.1}Adjuction between {\textbf {Sets}} and \textbf {Setoids}}{15}{subsection.34}
+\contentsline {section}{\numberline {3.3}Example of Quotients}{15}{section.36}
+\contentsline {chapter}{\numberline {4}Definable Quotients}{17}{chapter.37}
+\contentsline {subsection}{\numberline {4.0.1}Integers}{17}{subsection.38}
+\contentsline {paragraph}{Operations}{17}{section*.39}
+\contentsline {paragraph}{Properties}{17}{section*.40}
+\contentsline {paragraph}{Comparison}{17}{section*.41}
+\contentsline {subsection}{\numberline {4.0.2}Rational numbers}{18}{subsection.42}
+\contentsline {subsection}{\numberline {4.0.3}Real numbers and more}{18}{subsection.43}
+\contentsline {subsection}{\numberline {4.0.4}Multisets(bags)}{18}{subsection.44}
+\contentsline {chapter}{\numberline {5}Setoid Model}{19}{chapter.46}
+\contentsline {section}{\numberline {5.1}Literature review}{19}{section.47}
+\contentsline {section}{\numberline {5.2}What we could do in this model}{19}{section.48}
+\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{19}{section.49}
+\contentsline {chapter}{\numberline {6}Homotopy Type Theory\xspace and $\omega $-groupoids\xspace Model}{21}{chapter.50}
+\contentsline {section}{\numberline {6.1}What is Homotopy Type Theory\xspace ?}{21}{section.51}
+\contentsline {section}{\numberline {6.2}Quotient types in Homotopy Type Theory\xspace }{21}{section.52}
+\contentsline {section}{\numberline {6.3}Syntax of weak $\omega $-groupoids\xspace }{21}{section.53}
+\contentsline {section}{\numberline {6.4}Semantics}{21}{section.54}
+\contentsline {chapter}{\numberline {7}Summary and future works}{23}{chapter.55}
 \vspace {2em}
 \vspace {2em}
-\contentsline {chapter}{Bibliography}{23}{dummy.54}
+\contentsline {chapter}{Bibliography}{25}{dummy.56}

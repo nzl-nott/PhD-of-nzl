@@ -29,7 +29,7 @@ _+=_ : ∀ {m n p q} → m ≡ n → p ≡ q → m + p ≡ n + q
 _+=_ {m} {.m} {p} {.p} refl refl = refl
 
 
-cancel-+-right : 
+-- cancel-+-right : 
  
 {-
 infixr 42  _*⋆_

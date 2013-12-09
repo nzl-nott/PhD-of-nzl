@@ -1,6 +1,10 @@
 (TeX-add-style-hook "my"
  (lambda ()
     (LaTeX-add-bibitems
+     "hurkens1995simplification"
+     "martin1984intuitionistic"
+     "barendregt1991introduction"
+     "gdl:1931"
      "hofmann1995interpretation"
      "clairambault2005categories"
      "hott"

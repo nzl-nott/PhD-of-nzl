@@ -25,6 +25,81 @@ few instances of quotients.
 
 \subsection{Integers}
 
+Here I will explain these structures by using the example of integers
+in Agda. All integers are the result of subtraction between two
+natural numbers. Therefore we can use a pair of natural numbers in a subtraction
+expression to represent the resulting integer.
+For example, $1 - 4 = - 3$ says that the pair of natural numbers $(1,4)$
+represents the integer $- 3$. Assuming we have the necessary definitions
+of natural numbers, the base type of this quotient is:
+
+$$\Z_0=\N \times \N$$
+
+Mathematically we know that for any two pairs of natural numbers $(n_1, n_2)$ and $(n_3, n_4)$, 
+$$ n_1 - n_2 = n_3 - n_4\iff n_1 + n_4 = n_3 + n_2$$
+
+Because the results of subtraction are the same, we can infer that the
+two pairs represent the same integer, so the equivalence relation
+$\sim$ for $\Z_0$ could be defined as
+
+% \begin{code}
+
+% _∼_ : Rel ℤ₀
+% (n1 , n2) ∼ (n3 , n4) = (n1 + n4) ≡ (n3 + n2)
+
+% \end{code}
+
+Here |≡| is propositional equality. Of course we must prove $\sim$ is an
+equivalence relation then we can define the setoid $(\Z_0,\sim)$ in
+Agda as\footnote{the proof $\sim isEquivalence$ is omitted here}
+
+% \begin{code}
+
+% ℤ-Setoid : Setoid
+% ℤ-Setoid = record
+%   { Carrier           = ℤ₀
+%   ; _≈_                = _∼_
+%   ; isEquivalence = _∼_isEquivalence
+%   }
+
+% \end{code}
+
+In set theory, we can immediately derive the quotient set from this
+setoid which is the set of integers $\Z$, but in current setting of \itt,
+we need to define $\Z$ as follows
+
+% \begin{code}
+
+% data ℤ : Set where
+%   +_    : (n : ℕ) → ℤ
+%   -suc_ : (n : ℕ) → ℤ
+
+% \end{code}
+
+This is called normal form or canonical form of integers.
+
+The next step is to prove that it is the quotient type of the setoid $(\Z_0,\sim)$.
+To relate the setoid and the potential quotient type, we need to
+provide a mapping function from the base type $\Z_0$ to the target
+type $\Z$ which should be the normalisation function
+
+% \begin{code}
+
+% [_]                     : ℤ₀ → ℤ
+% [ m , 0 ]             = + m
+% [ 0 , suc n ]        = -suc n
+% [ suc m , suc n ] = [ m , n ]
+
+% \end{code}
+
+The first property to prove is the \emph{sound} property,
+
+% \begin{code}
+
+% sound                      : ∀ {x y} → x ∼ y → [ x ] ≡ [ y ]
+
+% \end{code}
+
 
 \paragraph{Operations}
 

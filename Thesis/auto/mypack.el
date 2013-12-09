@@ -1,6 +1,8 @@
 (TeX-add-style-hook "mypack"
  (lambda ()
     (TeX-add-symbols
+     '("dlift" 1)
+     '("class" 1)
      '("ra" 1)
      '("todo" 1)
      '("morph" 2)
@@ -19,5 +21,10 @@
      "og"
      "wog"
      "tig"
+     "dotph"
+     "dotop"
+     "abs"
+     "norm"
+     "set"
      "slash")))
 

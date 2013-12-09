@@ -3,6 +3,11 @@
 
 \todo{Before 1st-Dec-2013}
 
+%----------------------------------------------------------------------------------------
+
+\section{Quotients in Mathematics}
+% "M"athematics must be capital
+
 Quotient is a very common notion is mathematics. Usually the first
 quotient we learn is the result of division. $8 \div 4$ (or $8 / 4$)
 gives the result 2 which is called quotient.
@@ -16,10 +21,6 @@ product of sets.
 Similarly, quotient is also extended to other objects, for example the
 quotient in set theory.
 
-%----------------------------------------------------------------------------------------
-
-\section{Quotients in mathematics}
-
 \subsection{Quotient sets}
 In set theory, we have a similar operation which turns some set
 into another set but the divisor is not the same kind of object as the
@@ -27,7 +28,7 @@ dividend. We use equivalence relation to divide a set,
 
 \begin{definition}
 
-\textbf{Equivalence relation} An equivalence relation is a binary
+Equivalence relation. An equivalence relation is a binary
 relation which is refleixive, symmetric and transitive.
 
 \end{definition}
@@ -38,7 +39,7 @@ same cell. The cells are called equivalence classes.
 
 \begin{definition}
 
-\textbf{Equivalence class} 
+Equivalence class.
 
 \begin{equation}
 [ a ] = \{x : A \;| \; a \sim x \}
@@ -46,12 +47,12 @@ same cell. The cells are called equivalence classes.
 
 \end{definition}
 
-The set of these equivalent classes is called
+The set of these equivalence classes is called
 the quotient set.
 
 \begin{definition}
 
-\textbf{Quotient set} Given a set A equipped with an equivalence relation $\sim$, a quotient
+Quotient set. Given a set A equipped with an equivalence relation $\sim$, a quotient
 set is denoted as $\qset{A}$ which contains the set of equivalence
 classes.
 
@@ -69,15 +70,83 @@ does the quotient derived using the same construction.
 Generally
 speaking, it describes the collection of equivalent classes of some equivalent relation on sets, spaces or other abstract structures. In type theory, following similar procedure, quotient type is also a conceivable notion.
 
+\paragraph{Quotient types in \ett}
 
-\paragraph{Quotient types}
+In extensional type theory like NuPrl, it is possible to redefine
+equality type of some types. However there is also some problems about it:
+
+
+\paragraph{Quotient types in \itt}
 
 %The basic notion in Martin-L¨of’s type theory is the notion of type. A type
 %is explained by saying what an object of the type is and what it means for
 %two objects of the type to be identical. This means that we can make the
 %judgement -- http://www.cse.chalmers.se/research/group/logic/TypesSS05/Extra/nordstrom.pdf
 
-In type theory, quotient type can be formalised as following:
+Quotient types are not available in original \itt{}. Alternatively
+we have \emph{setoids} to simulate quotients.
+
+\begin{definition}
+\emph{Setoid}. A setoid $(A,\sim)\,\colon\Set_1$ is a set \footnote{Setoid could be universe polymorphic.} 
+$A\,\colon\Set$ equipped with an equivalence relation ${\,\sim\,}\colon A \to A \to \Prop$.
+\end{definition}
+
+It contains $\AgdaField{Carrier}$ for an underlying set,
+$\AgdaField{\_≈\_}$ for a binary relation on $\AgdaField{Carrier}$ and
+a proof that it is an equivalence relation.
+
+% and for any $P \colon\,\Prop$, it has
+% at most one element, namely we can get proof irrelevance for
+% propositions which has type $\Prop$. 
+In Agda, we define a setoid as
+
+\begin{code}
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Setoid} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Carrier} \<[22]%
+\>[22]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{\_≈\_} \<[23]%
+\>[23]\AgdaSymbol{:} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{isEquivalence} \AgdaSymbol{:} \AgdaRecord{IsEquivalence} \AgdaBound{\_≈\_}\<%
+\\
+%
+\end{code}
+
+
+We can use setoids to represent quotients, just like the quotient $4$
+can be represented as the pair $(8,2)$. However several problems arise
+from this approach. 
+
+First of all, originally many operations and types are defined based on
+sets, which means that we have to redefine all these types and
+operations for setoids because they are different sorts. It is easy to
+see if we consider a question: how to represent a quotient if its base
+type $A$ is already represented by a setoid. 
+
+Secondly, from a programming perspective, setoids are unsafe because we have access to the underlying
+ sets \cite{aan}. The operations on setoids may not respect the
+ equivalence relation and make no sense.
+
+Therefore, ideally it is better that the object represent a quotient should also be
+of type $\Set$, just as if we divide $8$ by $2$ we prefer $4$ than
+$(8,2)$ which makes more sense and can be manipulated uniformly. It is
+also the case in the other mathematical theories, the
+base object and the quotient object are of the same sort. So how
+quotient type should look like in \itt?
+
+Given a setoid $(A,\sim)$, a type $Q : \Set$ can represent the quotient
+type of this setoid, if it has several laws:
+
+%In type theory, quotient type can be formalised as following:
 
 
 \begin{equation*}
@@ -97,20 +166,18 @@ f : (a : A) \rightarrow B\, [ a ]\\
 \end{array}}
 \end{equation*}
  
-In general, quotient types are unavailable in \itt.
-Quotients are everywhere, for example, rational numbers, real numbers, multi-sets.
-The introduction of quotient types is very helpful. Some of them can be defined 
-more effectively, such as the
-set of integers.
-Some of them can only be defined with quotient types, such as real
-numbers (the reason will be covered in \todo).
+%In general, quotient types are unavailable in \itt.
+%Quotients are everywhere, for example, rational numbers, real numbers, multi-sets.
 
 \section{Categorical intuition}
+
+
+\subsection{split quotient/coequalizer}
 
 Categorically speaking, a quotient is a coequalizer.
 
 \begin{definition}
-
+Coequalizer.
 Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ , a coequalizer is an object Q with a morphism $q : \morph{Y}{Q}$ such that $q \circ f = q \circ g$. It has to be universal as well. Any pair (Q' , q') $q' \circ f = q' \circ g$ has a unique factorisation u such that $q' = u \circ q$
 \end{definition}
 
@@ -131,7 +198,11 @@ Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ ,
 
 
 
-\subsection{Adjuction between {\textbf{Sets}} and \textbf{Setoids}}
+a split quotient is just a split coequalizer, with an embedding
+function which finds a representative in each equivalence class.
+
+
+\subsection{Adjunction between {\textbf{Sets}} and \textbf{Setoids}}
 
 From a higher point of view, Quotient is a Functor which is left-adjoint to $\nabla$ which is the trivial embedding functor from \textbf{Sets} to \textbf{Setoids}.
 
@@ -154,18 +225,220 @@ Functor and $\nabla$ functor.
 \end{equation*}
 
 
+\section{impredicative encoding of quotient types}
+
+In set theory, we have the subset relation such that we can construct equivalence
+classes and then quotient set. 
+However in \itt, the subset types are also unvailable and equivalence
+classes cannot be implemented.
+
+The introduction of the univalence axiom for propositions, which is also
+called propositional extensionality changes this situation.
+
+\begin{definition}
+\emph{propositional extensionality}.
+
+$\forall P, Q : \Prop, (P \iff Q) \iff P = Q.$
+
+\end{definition}
+
+Voevodsky
+firsrtly constructs quotients using the following impredicative approach in Homotopy Type Theory using Coq
+\cite{voe:hset}.
+
+%The truncation is defined impredicatively.
+
+%\begin{definition}
+
+%$|| A || = (P : \Prop)(A \rightarrow P) \rightarrow P$
+
+%\end{definition}
+
+suppose we have $A : Set$, $\sim : A \rightarrow A \rightarrow Set$.
+
+A quotient type $\qset{A}$ is defined as a predicate and a proof that
+it gives rise to an equivalence class and it is non-empty.
+
+$\qset{A} = \Sigma P : A \rightarrow \Prop, EqClass (P) \times (\exists x : A, P (x))$
+
+where the equivalence class proof is encoded as
+
+%$EqClass (P) = (P(a) \times a \sim b \rightarrow P (b)) \times (P(a) \times P(b) \rightarrow a \sim b)$
+$EqClass (P) = \forall a, b : A, P(a) \rightarrow (P(b) \iff a \sim b)$
+
+The proof part on the right is the $(-1)-truncation$ such that
+different proofs will not gives different terms for the same
+equivalence class.
+
+
+\todo{question of where shall we apply pe}
+with the proposional extensionality we can prove that
+\begin{theorem}
+Given $(P , prf) : \qset{A}$, all proofs of $\exists x : A, P (x)$ are equal
+\end{theorem}
+
+\begin{proof}
+Given any two proofs of $\exists x : A, P (x)$ written as $(x , px)$ and $(y
+, py)$, apply the $EqClass(P)$ to $(x, y, px, py)$ we know that $x
+\sim y$. Hence the truncation of 
+\end{proof}
+
+%Given a element $a : A$, the equivalence class is
+
+%$ [ x ] = \Sigma y : A, \exists P : X \rightarrow \Prop.
+
+
+%$$[ x ] = \exists P : X \rightarrow \Prop, \forall a : X, a \sim x \iff P \, a$$
+
+
+%proposition
+
+%propositional extensionality (univalence)
+
+%impredicative encoding 
+
+%trunction in HoTT
+
+%impredicative encoding 
+
+
+Moreover we have another suprising theorem:
+
+\begin{theorem}
+if we have propositional univalence, we can prove that all
+quotients are effective.
+\end{theorem}
+
+\begin{proof}
+Suppose we have a set $A$ with equivalence relation $\sim$.
+
+Given $a : A$, and a predicate $P : A \rightarrow Prop$ defined as 
+$$P x = a \sim x$$
+
+With the lifting operator for quotient types,
+we have a lifted version of $P$ such that
+
+$$\hat{P} [ x ] =  P x$$
+
+Suppose we have a premise $[ a ] = [ b ]$, it is true that
+
+$$[ a ] = [ b ]$$
+
+and then
+
+$$P a = \hat{P} [ a ] = \hat{P} [ b ] = P b$$
+
+which is just
+
+$$a \sim a = a \sim b$$
+
+with propositional univalence, we know that they are logically equivalent
+
+$$a \sim a \iff a \sim b$$
+
+since $a \sim a$ is the reflexivity which is true trivially,
+
+$$ a \sim b$$ is also true.
+
+Therefore we have a proof that $[ a ] = [ b ] -> a \sim b$ which means
+that the quotient is effective.
+\end{proof}
+
+
+\subsection{Functional extensionality and quotient types}
+
+As we have mentioned before, in \itt{} propositional equality $Id(A,a,b)$ is inhabited
+if and only if $a$ and $b$ are definitionally equal terms. The Agda
+definition could be written as
+
+% \begin{code}
+
+% data Id (A : Set) : A → A → Set where
+%   refl : (a : A) → Id A a a
+
+% \end{code}
+
+However the equality of functions are not only judged  by
+definitions. Functions are
+usually viewed extensionally as black boxes. If two functions pointwise
+generate the same outputs for the same inputs, they are equivalent
+even though their definitions may differ. This is called
+functional extensionality which is not inhabited \cite{alti:lics99} in original
+\itt{} and can be expressed as following,
+
+given two types $A$ and $B$, and two functions $f,\,g\,\colon A \to B$,
+
+\[Ext = \forall\, x\colon A, f x = g x \to f = g\]
+
+The problem seems easy to solve by just adding a constant $ext : Ext$
+to \itt{} as following codes in Agda
+
+% \begin{code}
+
+% postulate
+%   ext : {A : Set}{B : A → Set}{f g : (x : A) → B x}
+%         → ((x : A) → Id (B x) (f x) (g x)) 
+%         → Id ((x : A) → B x) f g
+
+% \end{code}
+
+However, postulating something could lead to inconsistence. If we
+postulate $Ext$, then theory is no longer adequate, which means it is possible to define irreducible terms. 
+It can be easily verified in Agda through formalising a non-canonical
+term for a natural number by an eliminator of intensional equality. 
+
+Using the eliminator |J| \footnote{It is originally
+  used by Martin-L\"{o}f \cite{nor:90} and a good explanation could be
+found in \cite{ngk:11}}  of the |Id A a b| :
+
+% \begin{code}
+
+% J : (A : Set)(P : (a b : A) → Id A a b → Set)
+%     → ((a : A) → P a a (refl a))
+%     → (a b : A)(p : Id A a b) → P a b p
+% J A P m .b b (refl .b) = m b
+
+% \end{code}
+we can construct an irreducible term of natural number as
+% \begin{code}
+
+% irr : ℕ
+% irr = J (ℕ → ℕ) (λ f g P → ℕ) (λ f → 0) (λ x → x) (λ x → x) (Ext refl)
+
+% \end{code}
+
+With this term, we can construct irreducible terms of any type $A$ by a
+mapping $f : \N \rightarrow A$. This will destroy some good features of \itt
+since it could leads to nonterminating programs.
+
+Altenkirch investigates this issue and gives a solution in
+\cite{alti:lics99}. He proposes an extension of \itt by a universe of
+propositions $\Prop$ in which all proofs of same propositions are
+definitionally equal, namely the theory is proof irrelevant. At the same time,
+a setoid model where types are interpreted by a type and an equivalence relation acts as the metatheory and $\eta$-rules for
+$\Pi$-types and $\Sigma$-types hold in the metatheory. The extended type
+theory generated from the metatheory is decidable and adequate, $Ext$ is
+inhabited and it permits large elimination (defining a dependent type by recursion). Within this type theory,
+introduction of quotient types is straightforward. 
+The set of functions are naturally quotient types, the hidden information is the
+definition of the functions and the equivalence relation is the
+functional extensionality.
+% extension
+
+There are more problems concerning quotient types and most
+of them are related to equality. One of the main problems is how to lift the functions for
+base types to the ones for quotient types. Only functions respecting the
+equivalence relation can be lifted. Even in \ett, the implementation
+of quotient types does not stop at replacing equality of the types. We
+will discuss these in next section.
+
+
 \section{Example of Quotients}
 
+The introduction of quotient types is very helpful. Many types can be
+defined using quotient types, some of them can only be defined with quotient types, such as real
+numbers (the reason will be covered in \todo).
 
-Because different sets may contain the same elements, we
-have the subset relation such that we can construct equivalence
-classes then quotient set. 
-In type theory we have to give constructors for any type before we can construct elements, which is different to the situation in set theory that
-elements exist before we construct quotient sets. Therefore this approach to construct quotients in set
-theory has some problems in type theory. In fact, Voevodsky constructs
-quotients using this approach in Homotopy Type Theory using Coq
-\cite{voe:hset} but here we
-mainly discuss how to reinterpret quotient sets in the current settings of\itt(e.g. Agda).
 
 
 

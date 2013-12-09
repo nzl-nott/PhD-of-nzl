@@ -2,5 +2,8 @@
  (lambda ()
     (LaTeX-add-labels
      "tt"
-     "dpty")))
+     "dpty"
+     "reflection"
+     "fun-ext"
+     "functional extensionality is available in ett")))
 

@@ -3,7 +3,6 @@
 
 \todo{Before 15th-Nov-2013}
 
-
 \section{Type Theory}
 
 
@@ -32,15 +31,14 @@ an untyped lambda calculus which was proved to be inconsistent due to
 the Kleene-Rosser paradox. Then the typed one which is also called
 Church's Theory of types or simply typed lambda calculus is
 introduced as a foundation of mathematics. An important change is that functions become primitive objects which means functions are types defined inductively using the $\rightarrow$ type former. It is widely applied to
-various fields especially computer science. Some languages are extentions of lambda calculus, for example Haskell. Haskell belongs to one of the variants of lambda calculus called System F, although it has evovled into System FC recently. There are also other refinements of lambda calculus which is illustrated by the $\lambda$-cube \cite{lambda-cube}.
+various fields especially computer science. Some languages are extentions of lambda calculus, for example Haskell. Haskell belongs to one of the variants of lambda calculus called System F, although it has evovled into System FC recently. There are also other refinements of lambda calculus which is illustrated by the $\lambda$-cube \cite{barendregt1991introduction}.
 
 
 \subsection{Per Martin-L\"{o}f's Type Theories}
 
-In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. His 1971's formulation which is impredicative was proved to be inconsistent with the Girard's paradox. The impredicativty means that for a universe $\mathsf{U}$, there is an axiom $\mathsf{U} \in \mathsf{U}$\cite{Girard's}. The later version is predicative and is more widely used.
+In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. His 1971's formulation which is impredicative was proved to be inconsistent with the Girard's paradox \cite{hurkens1995simplification}. The impredicativty means that for a universe $\mathsf{U}$, there is an axiom $\mathsf{U} \in \mathsf{U}$. The later version is predicative and is more widely used.
 
-Since it is based on the principle of mathematical
-constructivism, it is also a foundation of mathematics \cite{bishop?}. Different to set theory whose axioms are based on first-order logic or intuitionistic logic, \mltt provides a means of implementing intuitionistic logic. This is achieved by the Curry-Howard
+Like set theory, it can also serve as also a foundation of constructive mathematics \cite{martin1984intuitionistic}. Different to set theory whose axioms are based on first-order logic or intuitionistic logic, \mltt provides a means of implementing intuitionistic logic. This is achieved by the Curry-Howard
 isomorphism:
 
 \emph{``propositions can be interpreted as types and their
@@ -64,7 +62,7 @@ The notion of equality is one of the most profound topic in type theory.
 we have two kinds of equality, one is definitional equality, the other is propositional equality.
 
 \begin{definition}
-\textit{definitional equality} definitional equality is a judgement-level equality, which holds when two objects have the same normal forms\cite{nor}.
+\textit{definitional equality} definitional equality is a judgement-level equality, which holds when two objects have the same normal forms\cite{nor:90}.
 \end{definition}
 
 % Objects are definitional equal if they normalise to the same form. 
@@ -83,7 +81,7 @@ With dependent types, it is possible to write a type to encode the equality of o
 Intuitively if two objects are definitionally equal, they must be propositionally equal.
 
 \begin{equation*}
-\infer[trivial]{a = b}{a \equiv b}
+\infer[Id-intro]{a = b}{a \equiv b}
 \end{equation*}
 
 But how about the other way around? Are two propositional equal objects definitional equal?
@@ -91,23 +89,41 @@ But how about the other way around? Are two propositional equal objects definiti
 
 In \itt, the answer is no. Propositional equality (also called intensional equality  \cite{nor:90}) is different to definitional equality. 
 The definitional equality is always decidable hence type checking that depends on definitional equality is
-decidable as well~\cite{alt:99}. Therefore \itt has better computational behaviors.
+decidable as well~\cite{alti:lics99}. Therefore \itt has better computational behaviors.
 Types like $\mathsf{a = b}$ which stands for a
 propostion that $\mathsf{a}$ equals $\mathsf{b}$ are propositional equalities. They are some types which we need to prove
 or disprove by construction. Each of them has an unique element $\mathsf{refl}$ which only exists if $\mathsf{a}$ and $\mathsf{b}$ are
 definitionally equal in all cases. However it is not enough for other extensional equalities, for example the equality of functions.
 
 
+In \ett, the propositional equality is extensional and is undistinguished with definitional equality, in other words, two propositional equal objects are judgementally equal. This is called reflecition rule.
 
-
-
-In \ett, the propositional equality is extensional is undistinguished with definitional equality, in other words, two propositional equal objects are judgementally equal. This is called reflecition rule.
-
-\begin{equation*}
+\begin{equation}
+\label{reflection}
 \infer[Reflection]{a \equiv b}{a = b}
-\end{equation*}
+\end{equation}
 
-Objects of different normal forms, for example point-wise equal functions or different proofs of the same proposition, may be definitionally equal. It means that the definitional equality is not decidable and type checking becomes undecidable as well. Th
+Objects of different normal forms, for example point-wise equal functions or different proofs of the same proposition, may be definitionally equal. This is called functional extensionality.
+
+\begin{equation}
+\label{fun-ext}
+\infer[functional-extensionality]{f = g}{f g : A \rightarrow B, \forall a : A, f \, a = g \, a}
+\end{equation}
+
+It is provable in \ett.
+
+\begin{lemma}
+\label{functional extensionality is available in ett}
+We can prove \ref{fun-ext} in \ett where we have \ref{reflection}.
+\end{lemma}
+ 
+\begin{proof}
+Suppose $\Gamma \vdash f \,a = g \,a$, with reflection rule we have $\Gamma \vdash f \,a \equiv g \,a$.
+Then using $\xi$-rule, we know that $\Gamma \vdash \lambda a . f \,a \equiv \lambda a . g \,a$.
+From $\eta$-equivalence, we know that $\Gamma \vdash f \equiv g$. We can conclude that $\Gamma \vdash f = g$.
+\end{proof}
+
+In \itt, this is not provable. If we add it as an axiom, we will lose the canonicity since we can construct a natural number with this extensionality and substitution for propositional equality. It means that the definitional equality is not decidable and type checking becomes undecidable as well. The type checker will not always terminate.
 
 
 Usually we have to make a choice of them, either the better adpation of extensional equality or better computational behaviors. Agda chooses the intensional one while NuPRL chooses the extensional one. However
@@ -138,7 +154,7 @@ There are more features of Agda as follows:
 \item \textit{Dependent type}. 
 As mentioned in \ref{dpty}, dependent types are types that depends on values of other types \cite{dtw}. They enable us to write more expresive types as program speficication or propositions in order to reduce bugs. In Haskell and other Hindley-Milner style languages, types and values are clearly distinct \cite{tutorial}, In Agda, we can define types depending on values which means the border between types and values is vague. To illustrate what this means, the most common example is $\mathsf{Vector A n}$ where we can length-explicit lists called vectors. It is a data type which represents a vector containing elements of type \textbf{A} and depends on a natural number \textbf{n} which is the length of the list. We can specify types with more constraints such that the we can express what programs we can better and leave the checking work to the type chekcer. For instance, to use the length-explicit vector, we will not encounter exceptions like out of bounds in Java, since it is impossible to define such functions before compiling.
 
-\item \textit{Functional programming language}. As the name indicates that, functional programming languages emphasizes the application of functions rather than changing data in the imperative style like C++ and Java. The base of functional programming is lambda calculus. The key motivation to develop functional programmming language is to eliminating the side effects which means we can ensure the result will be the same no matter how many times we input the same data. There are several generations of functional programming languages, for example Lisp, Erlang, Haskell etc. Most of the applications of them are currently in the academic fields, however as the functional programming developed, more applications will be explored.
+\item \textit{Functional programming language}. As the name indicates that, functional programming languages emphasizes the application of functions rather than changing data in the imperative style like C{}\verb!++! and Java. The base of functional programming is lambda calculus. The key motivation to develop functional programmming language is to eliminating the side effects which means we can ensure the result will be the same no matter how many times we input the same data. There are several generations of functional programming languages, for example Lisp, Erlang, Haskell etc. Most of the applications of them are currently in the academic fields, however as the functional programming developed, more applications will be explored.
 
 % \item \textit{Per Martin-Löf Type Theory}. It has different names like Intuitionistic type theory or Constructive type theory and is developed by Per Martin-Löf in 1980s. It associated functional programs with proofs of mathematical propositions written as dependent types. That means we can now represent propositions we want to prove as types in Agda by dependent types and Curry-Howard isomorphism \cite{aboa}. Then we only need to construct a program of the corresponding type to prove that propostion. For example:
 
@@ -195,7 +211,7 @@ Described as a proof assistant, complicated theorems are commonly proved gradual
 
 This decreases the difficulty of interpreting proofs in mathematics into Agda.
 
-\item \textit{Lazy evaulation}. Lazy evaluation could eliminate unecessary operation because Agda is lazy to delay a computation until we need its result. It is often used to handle infinite data structures. \cite{wiki:Lazy_evaluation}
+\item \textit{Lazy evaluation}. Lazy evaluation could eliminate unecessary operation because Agda is lazy to delay a computation until we need its result. It is often used to handle infinite data structures. \cite{wiki:Lazy_evaluation}
 
 \end{itemize}
 
@@ -256,23 +272,19 @@ With these helpful features, Agda is a very powerful proof assisstant. It does n
 \subsection{basic syntax}
 \todo{to help the reader understand the Agda code in text}
 
-To understand the code in this thesis, I will introduce some basic types and syntax of Agda. Most of the basic types are from Agda standard library 0.7.
+To understand the code in this thesis, I will introduce some basic types and syntax of Agda.
 
-First of all, like other languages, we use $\AgdaSymbol{=}$ for function definition rather than propositional equality type former.
-We use single column $\AgdaSymbol{:}$ for typing judgement, for example $\AgdaFunction{a} \AgdaSymbol{:} \AgdaDatatype{A}$ means that $\AgdaFunction{a}$ is of type $\AgdaDatatype{A}$.
+First of all, like other languages, we use "$\AgdaSymbol{=}$" for function definition rather than propositional equality type former which is  "$\AgdaDatatype{≡}$". This is inconsistent with our conventional choices of symbols in articles, but it follows the conventions in Haskell and other programming languages that "$\AgdaSymbol{=}$" is used for definition.
 
-
-\subsection{Some conventions}
-
-\todo{What conventions we will follow in this thesis and some commonly
-used symbols and functions}
+Different to Haskell, we use single column $\AgdaSymbol{:}$ for typing judgement, for example $\AgdaFunction{a} \AgdaSymbol{:} \AgdaDatatype{A}$ means that $\AgdaFunction{a}$ is of type $\AgdaDatatype{A}$. 
 
 We have universe levels parameters in a lot of definitions which makes code looks unnecessarily cumbersome. We will follow the \textbf{typical ambiguity} in this thesis which says that we write $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ for $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}$ and $\AgdaPrimitiveType{Set} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ which stands for $\AgdaPrimitiveType{Set}\AgdaBound{i} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaBound{(i+1)}$.
 
+The underscore marks the spaces for the explicit arguments in non-prefix operators.
+
 \subsection{Identity Type}
 
-Identity type is the type to encode the propositional equality in \itt, like Agda.
-We use the Paulin-Mohring's identity type which is parameterized with the left side of the identity. This also includes the identity type for arbitrary universe level.
+Identity type is the type introduced by Martin-L\"{o}f to encode the propositional equality for definitionally equal terms \cite{nor:90}. For any two terms of $\mathsf{a\,b : A}$, we have the type $\mathsf{Id (A , a , b)}$ which is inhabitted when $\mathsf{a}$ and $\mathsf{b}$ are definitionally equal. Here we use an alternative equivalent version named after Paulin-Mohring which is parameterized with the left side of the identity. %This also includes the identity type for arbitrary universe level.
 
 \begin{code}%
 \\
@@ -284,9 +296,9 @@ We use the Paulin-Mohring's identity type which is parameterized with the left s
 %
 \end{code}
 
-There is no eliminators automatically derived for the types defined, but we have pattern matching which is stronger than eliminators, sometimes maybe too strong. 
-As long as we pattern match on a variable of this type with the unique inhabitant refl, the variables on both sides will be turned into the same variable. 
-We could use the feature to define the eliminator J for the identity type.
+In Agda eliminators are not automatically derived for the types defined. Instead we have pattern matching generally which is sometimes stronger than eliminators.
+As long as we pattern match on a variable of an identity type with the unique inhabitant $\AgdaInductiveConstructor{refl}$, all occurences of both variables become the same.
+It is stronger and it provides the eliminator J.
 
 \begin{code}
 %
@@ -306,15 +318,128 @@ We could use the feature to define the eliminator J for the identity type.
 
 \subsection{Extensionality}
 
-In \itt, usually no extensional equality is included. For example, the functional extensionality which is usually accepted in regular mathematics
+In regular mathematics, equality does not only exists between intensionally equal terms. Pointwise equal functions are usually identified and it is called functional extensionality as we mentioned \ref{fun-ext}. Therefore the identity type in \itt is not powerful enough, we need extensionality in \itt.
 
-\begin{equation*}
-\infer[fun-ext]{f = g}{f g : A \rightarrow B, \forall a : A, f a = g a}
-\end{equation*}
+As Martin Hofmann summarises in \cite{hof:phd}, there are several related extensional concepts, \emph{Functional extensionality}, \emph{Uniqueness of identity}, \emph{Proof-irrelevance}, \emph{Subset types}, \emph{Propositional extensionality}, \emph{Quotient types}. These notions are not available in currect setting of \itt{}, but they are worth interpreting to help both Mathematics and programs constructions. However, it only makes sense if the type-checking decidability and terms canonicity are not sacrificed.
 
-is not availabe in \itt. If we add it as an axiom, we will lose the canonicity since we can construct a natural number with this extensionality and substitution for propositional equality. Then the type checker will not always terminate.
+Quotient types is one of the most interesting extensional concepts in type theory. It generally enables us to redefine equality on a type with a given equivalence relation so that we have more tools to formalise mathematical objects, like the real numbers.
 
-As Martin Hofmann summarises in \cite{mh:phd}, there are several related extensional concepts, \emph{Functional extensionality}, \emph{Uniqueness of identity}, \emph{Proof-irrelevance}, \emph{Subset types}, \emph{Propositional extensionality}, \emph{Quotient types}. These concepts are impossible to interpret without extending the currect setting of \itt{}.
 
-Quotient types is one of the most interesting extensional concepts in type theory. It will be explained in detail in the next Chapter.
+\section{Homotopy Type Theory}
 
+
+
+
+
+\section{Some conventions}
+
+\todo{What conventions we will follow in this thesis and some commonly
+used symbols and function}
+
+The universe of small types is encoded as $\Set_{0}$ or $\Set$ rather than $\Type$, even though it is not a set in set-theoretical sense.
+
+
+
+
+\section{literature review}
+
+
+In \cite{cab}, Mendler et al. have firstly considered building new types from a
+given type using a quotient operator $//$. Their work is based on an
+implementation of \ett, NuPRL. In NuPRL, every type
+comes with its own equality relation, so the quotient operator can be
+seen as a way of redefining equality in a type. But it is not all
+about building new types. They also discuss problems that arise from
+defining functions on the new type which can be illustrated using a simple example. 
+
+Assume the base type is $A$ and the new equivalence relation is $E$, the new
+type can be formed as $A//E$. 
+
+When we want to define a function $f \,\colon\, A//E \to Bool$,  $f\,a \not= f\,b$ may
+exists for $a, b \,\colon A$ such that $E\,a\,b$. This will lead to
+inconsistency since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, hence
+the left hand side $f\,a$ can be converted to $f\,b$, namely we get $f\,b \not= f\,b$
+which is contradicted with the equality reflection rule. 
+
+Therefore a function is said to be well-defined \cite{cab} on the new type only
+if it respects the equivalence relation $E$, namely
+
+$$\forall \, a\,b\,\colon A, E\,a\,b \to f\,a = f\,b$$
+
+We call this \emph{soundness} property in \cite{aan}.
+
+ After the introduction of quotient types, Mendler further investigates
+ this topic from a categorical perspective in ~\cite{men:90}. He uses
+ the correspondence between quotient types in \mltt{} and coequalizers
+ in a category of types to define a notion called \emph{squash types},
+ which is further discussed by Nogin \cite{nog:02}.
+
+To add quotient types to \mltt{}, Hofmann proposes  three models for
+quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
+quotient types. In this model all types are attached with partial
+equivalence relations, namely all types are setoids rather than
+sets. Types without a specific equivalence relation can be seen as
+setoids with the basic intensional equality. This is similar to
+\ett{} in some sense. The second one is groupoid model which solves some problems
+but it is not definable in \itt{}. He also proposes a third model to
+combine the advantages of the first two models, but it also has some
+disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt  extended with quotient types and a universe \cite{hof:95:con}.
+
+Nogin \cite{nog:02} considers a modular approach to axiomatizing the
+same quotient types in NuPRL as well. Despite the ease of constructing new types
+from base types, he also discusses some
+problems about quotient types. For example, since the equality is
+extensional, we cannot recover the
+witness of the equality.  He suggests including more axioms to
+conceptualise quotients. He decomposes the formalisation of quotient type
+into several smaller primitives such that they can be handled much
+simpler.
+
+Homeier \cite{hom} axiomatises quotient types in Higher Order Logic
+(HOL), which is also a theorem prover. He creates a tool package to
+construct quotient types as a conservative extension of HOL such that
+users are able to define new types in HOL. Next he defines the
+normalisation functions and proves several properties of
+these. Finally he discussed the issues when quotienting on the
+aggregate types such as lists and pairs.
+
+
+Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Constructions
+with \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. 
+However not all quotient types have normal forms. Normalised types are
+proper subsets of quotient types, because we can easily recover a quotient
+type from a normalised type as below
+%$$ \[ (A, Q, \class\dotph \colon A \to Q) \rightarrow(A, \lambda \,a \,b \to \class a = \class b)\]$$
+
+
+Barthe and Geuvers \cite{bar:96} also propose a new notion called
+\emph{congruence types}, which is also a special class of quotient
+types, in which the base type are inductively defined and with a set
+of reduction rules called the term-rewriting system. The idea behind
+it is the $\beta$-equivalence is replaced by a set of
+$\beta$-conversion rules. Congruence types can be treated as an
+alternative to the pattern matching introduced in \cite{coq:92}. The main
+purpose of introducing congruence types is to solve problems in
+term rewriting systems rather than to implement quotient types.
+
+
+Barthe and Capretta \cite{bar:03} compare different ways to setoids in type theory.
+The setoid is classified as partial setoid or total setoid depending
+on whether the equality relation is reflexive or not. They also
+consider obtain quotients with different kinds of setoids, especially
+the ones from partial setoids are difficult to define because the lack
+of reflexivity.
+
+Abbott, Altenkirch et al. \cite{abb:04} provides the basis for
+programming with quotient datatypes polymorphically based on their
+works on containers which are datatypes whose instances are
+collections of objects, such as arrays, trees and so on. Generalising
+the notion of container, they define quotient containers as the
+containers quotiented by a collection of isomorphisms on the positions
+within the containers.
+
+Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
+of axioms of Homotopy Type Theory. It is based on the groupoid model
+for \itt{} where isomorphisms are equalities. He firstly implement
+equivalence class and use it to implement quotients which is an
+analogy to the construction of quotient sets in set theory. 

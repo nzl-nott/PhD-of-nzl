@@ -1,7 +1,7 @@
 (TeX-add-style-hook "Main"
  (lambda ()
     (LaTeX-add-bibliographies
-     "my.bib")
+     "my")
     (LaTeX-add-labels
      "Bibliography")
     (TeX-add-symbols

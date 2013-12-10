@@ -5,6 +5,37 @@
 \todo{Before 30th-Dec-2013}
 
 
+We first work on Altenkirch's Setoid model. We build a category
+with families of setoids to accommodate the types theory described in
+\cite{alti:lics99}  so that it is possible to define quotient types
+following Martin Hofmann's Paper\cite{hof:95:sm}.  In this report we
+only present the
+necessary part for the Setoid model.
+
+
+
+Quotient types are one of the extensional concepts in Type Theory \cite{hof:phd}. To introduce an extensional propositional equality in \itt{}, 
+Altenkirch \cite{alti:lics99} proposes an intensional setoid model with a proof-irrelevant universe of
+propositions \textbf{Prop} . It is called a setoid model since types are interpreted as setoids which contain a set and an equivalence relation for each of them.
+The solution to introduce the extensional equality is an object type theory defined inside the setoid model which serves as the metatheory. He also proved that the extended type theory generated from the metatheory is decidable and adequate, functional extensionality is
+inhabited and it permits large elimination (defining a dependent type by recursion). Within this type theory,
+introduction of quotient types is straightforward.
+
+This model is different to a setoid model as an E-category, for instance
+the one introduced by Hofmann \cite{hofmann1995interpretation} . An E-category is a category equipped with
+an equivalence relation for homsets. To distinguish them, we call this
+category \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
+gives rise to types and they are cartesian closed, namely it is a a locally
+cartesian closed category (LCCC). Not all morphisms in our category of setoids give
+rise to types and it is not an LCCC. Every LCCC can serve as a model for categories with
+families but not every category with families has to be an
+LCCC. 
+
+However this Setoid model is still a model for Type
+Theory just like the groupoid model which is a generalisation of it.
+To develop this model of type theory in Agda, we have implemented the categories with families of setoids.
+
+
 \section{Literature review}
 
 

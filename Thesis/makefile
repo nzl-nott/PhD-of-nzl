@@ -27,7 +27,8 @@ clean	:
 	$(TEXFILE:.tex=.aux) \
 	$(TEXFILE:.tex=.log) \
 	$(TEXFILE:.tex=.out) \
-	$(BIBFILE:.bib=.bbl)
+	$(TEXFILE:.tex=.pdf) \
+	$(TEXFILE:.tex=.bbl)
 
 
 one : $(TEXFILE)

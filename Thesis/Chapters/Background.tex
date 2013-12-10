@@ -276,7 +276,7 @@ To understand the code in this thesis, I will introduce some basic types and syn
 
 First of all, like other languages, we use "$\AgdaSymbol{=}$" for function definition rather than propositional equality type former which is  "$\AgdaDatatype{≡}$". This is inconsistent with our conventional choices of symbols in articles, but it follows the conventions in Haskell and other programming languages that "$\AgdaSymbol{=}$" is used for definition.
 
-Different to Haskell, we use single column $\AgdaSymbol{:}$ for typing judgement, for example $\AgdaFunction{a} \AgdaSymbol{:} \AgdaDatatype{A}$ means that $\AgdaFunction{a}$ is of type $\AgdaDatatype{A}$. 
+Different to Haskell, we use single colon $\AgdaSymbol{:}$ for typing judgement, for example $\AgdaFunction{a} \AgdaSymbol{:} \AgdaDatatype{A}$ means that $\AgdaFunction{a}$ is of type $\AgdaDatatype{A}$. 
 
 We have universe levels parameters in a lot of definitions which makes code looks unnecessarily cumbersome. We will follow the \textbf{typical ambiguity} in this thesis which says that we write $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ for $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}$ and $\AgdaPrimitiveType{Set} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ which stands for $\AgdaPrimitiveType{Set}\AgdaBound{i} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaBound{(i+1)}$.
 
@@ -326,6 +326,38 @@ Quotient types is one of the most interesting extensional concepts in type theor
 
 
 \section{Homotopy Type Theory}
+
+\hott is a variant of intensional \mltt{} which is a new branch developed between theoretical computer science
+and mathematics. Vladimir Voevodsky found a surprising connection between homotopy theory and type theory \cite{voe:06}. He proposed the univalence axiom, which identifies isomorphic structures, as a univalent foundation for mathematics. 
+
+\begin{definition}
+\emph{univalence axiom}. for any two types $X$ and $Y$, 
+$$X = Y \simeq X \simeq Y$$ holds.
+\end{definition}
+
+In \hott, we interpret the notions in type theory with homotopy-theoretical terms. A type is regarded as a \emph{space} and a term of this type is a \emph{point} of this space. Functions between types are \emph{continous maps} and identity types are usually considered as \emph{paths}. Identity types of identity types are \emph{homotopies}. Although these notions are originally defined with topological bases, we only employ them as homotopical notions on a higher level. 
+It does not only help us model type theory with a focus on the equality, but also provides mathematicians type theoretical tools to study homotopy theory.
+
+
+ which is the universe, and identity types are just the paths. 
+
+I will not explain this topic in detail here, \todo{I will!!}
+
+
+A well-written text book on Homotopy Type Theory which is written by many brilliant mathematicians and computer
+scientists is available now \cite{hott}. 
+
+
+
+
+
+
+
+
+It is possible to
+define the quotient types in Homotopy Type Theory but to implement the
+Homotopy Type Theory in \itt{}, it is still a difficult problem. We
+work on defining semi-simplicial types and \wog{} to solve it. 
 
 
 

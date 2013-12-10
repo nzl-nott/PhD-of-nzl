@@ -15,12 +15,12 @@ pdf : $(TEXFILE:.tex=.pdf)
 	pdflatex $<  2>&1 > /dev/null
 
 %.bbl : %.aux
-	bibtex $<  2>&1 > /dev/null
+	bibtex $<
 
 %.pdf : %.bbl
-	pdflatex $(<:.bbl=.tex) 2>&1 > /dev/null
-	pdflatex $(<:.bbl=.tex) 2>&1 > /dev/null
-	egrep -i "(Reference|Citation).*undefined" $(<:%.bbl=%.log) 
+	pdflatex $(<:.bbl=.tex)
+	pdflatex $(<:.bbl=.tex)
+#egrep -i "(Reference|Citation).*undefined" $(<:%.bbl=%.log) 
 
 clean	:
 	  @rm -f \
@@ -28,6 +28,9 @@ clean	:
 	$(TEXFILE:.tex=.log) \
 	$(TEXFILE:.tex=.out) \
 	$(TEXFILE:.tex=.pdf) \
+	$(TEXFILE:.tex=.blg) \
+	$(TEXFILE:.tex=.ptb) \
+	$(TEXFILE:.tex=.toc) \
 	$(TEXFILE:.tex=.bbl)
 
 

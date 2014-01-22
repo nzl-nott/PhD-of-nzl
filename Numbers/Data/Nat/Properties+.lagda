@@ -12,12 +12,17 @@ open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 open import Symbols
 
-open IsCommutativeSemiring isCommutativeSemiring hiding (refl) renaming (zero to mzero)
+open IsCommutativeSemiring isCommutativeSemiring public hiding (refl ; sym ; trans) renaming (zero to mzero)
 module ℕO = DecTotalOrder decTotalOrder
-
 
 ex :  ∀ a b c → a + (b + c) ≡ b + (a + c)
 ex a b c = ⟨ +-assoc a b c ⟩ >≡< cong (λ x → x + c) (+-comm a b) >≡< +-assoc b a c
+
+
+ex2 : ∀ a b c → a + b + c ≡ b + a + c
+ex2 a b c = cong (λ x → x + c) (+-comm a b)
+
+
 
 swap23 : ∀ m n p q → (m + n) + (p + q) ≡ (m + p) + (n + q)
 swap23 m n p q = +-assoc m n (p + q) >≡<
@@ -25,13 +30,45 @@ swap23 m n p q = +-assoc m n (p + q) >≡<
   ⟨ +-assoc m p (n + q) ⟩
 
 
+swap13 : ∀ m n p q → (m + n) + (p + q) ≡ (p + n) + (m + q)
+swap13 m n p q = ex2 m n (p + q) >≡<
+  swap23 n m p q >≡< ex2 n p (m + q)
+
+_+⋆_ : ∀ {p q} m → p ≡ q → m + p ≡ m + q
+_+⋆_ _ refl = refl
+
+swap24 : ∀ m n p q → (m + n) + (p + q) ≡ (m + q) + (p + n)
+swap24 m n p q = +-assoc m _ _ >≡< m +⋆ ( ⟨ +-assoc n _ _ ⟩ >≡<
+  (+-comm (n + p) _ >≡<
+  q +⋆ +-comm n _)) >≡<
+  ⟨ +-assoc m _ _ ⟩
+
 _+=_ : ∀ {m n p q} → m ≡ n → p ≡ q → m + p ≡ n + q
-_+=_ {m} {.m} {p} {.p} refl refl = refl
+_+=_ = cong₂ _+_
 
 
--- cancel-+-right : 
- 
-{-
+sm+n≡m+sn           : ∀ m {n} → suc m + n ≡ m + suc n
+sm+n≡m+sn zero    = refl
+sm+n≡m+sn (suc m) = suc ⋆ (sm+n≡m+sn m)
+
++l-cancel : ∀ x {m n} → x + m ≡ x + n → m ≡ n
++l-cancel = cancel-+-left
+
++l-cancel' : ∀ {m n x y} → x ≡ y → x + m ≡ y + n → m ≡ n
++l-cancel' {m} {n} {x} {.x} refl eqt = cancel-+-left x eqt
+
++r-cancel : ∀ {m n} x → m + x ≡ n + x → m ≡ n
++r-cancel {m} {n} x eqt =  cancel-+-left x $ +-comm x m >≡< eqt >≡< +-comm n x
+
+n+0≡n     : ∀ {n} → n + 0 ≡ n
+n+0≡n {n} = proj₂ +-identity n
+
+n*0≡0 = proj₂ mzero
+
+n*1≡n = proj₂ *-identity
+
+
+
 infixr 42  _*⋆_
 infixr 42  _⋆*_
 infixl 41  _*=_
@@ -41,16 +78,10 @@ infixl 40 _>≤<_
 infixl 40 _+=_
 
 
-n+0≡n     : ∀ {n} → n + 0 ≡ n
-n+0≡n {n} = proj₂ +-identity n
-
-n*0≡0 = proj₂ mzero
 
 n*0+0=0 : ∀ {n} → n * 0 + 0 ≡ 0
 n*0+0=0 {zero} = refl
 n*0+0=0 {suc n} = n*0+0=0 {n}
-
-n*1≡n = proj₂ *-identity
 
 _*=_ : ∀ {a b c d} → a ≡ b → c ≡ d → a * c ≡ b * d
 _*=_ = *-cong
@@ -64,9 +95,6 @@ _⋆*_ {b} {.b} refl _ = refl
 _>≤<_ : Transitive _≤_
 _>≤<_ = ℕO.trans
 
-
-_+⋆_ : ∀ {p q} m → p ≡ q → m + p ≡ m + q
-_+⋆_ _ refl = refl
 
 _⋆+_ : ∀ {p q} → p ≡ q → (m : ℕ) → p + m ≡ q + m
 _⋆+_ refl _ = refl
@@ -82,11 +110,6 @@ exchange₂ m n p q = ⟨ +-assoc (m + n) p q ⟩ >≡< ((+-assoc m n p) >≡<
   m +⋆ +-comm n p >≡< (+-comm m (p + n))) ⋆+ q >≡<
   +-assoc (p + n) m q
 
-exchange₃ : ∀ m n p q → (m + n) + (p + q) ≡ (m + p) + (n + q)
-exchange₃ m n p q = +-assoc m n (p + q) >≡<
-  m +⋆ (ex n p q) >≡<
-  ⟨ +-assoc m p (n + q) ⟩
-
 exchange₄ : ∀ m n p q → (m + n) + (p + q) ≡ (m + p) + (q + n)
 exchange₄ m n p q = +-assoc m n (p + q) >≡<
   m +⋆ (+-comm n (p + q) >≡< 
@@ -95,10 +118,6 @@ exchange₄ m n p q = +-assoc m n (p + q) >≡<
 
 suc-elim      : ∀ {m n} → suc m ≡ suc n → m ≡ n
 suc-elim refl = refl
-
-sm+n≡m+sn           : ∀ m n → suc m + n ≡ m + suc n
-sm+n≡m+sn zero n    = refl
-sm+n≡m+sn (suc m) n = suc ⋆ (sm+n≡m+sn m n)
 
 distˡ = proj₁ distrib
 
@@ -121,10 +140,10 @@ dis2ʳ  a b c d e f = distʳ c a b += distʳ f d e
   ⟨ dis2ˡ a (c * e) (d * f) b (c * f) (d * e) ⟩
 
 dist-lemˡ : ∀ a b c d e f → a * (c + e) + b * (d + f) ≡ (a * c + b * d) + (a * e + b * f) 
-dist-lemˡ a b c d e f = dis2ˡ a c e b d f >≡< exchange₃ (a * c) (a * e) (b * d) (b * f)  
+dist-lemˡ a b c d e f = dis2ˡ a c e b d f >≡< swap23 (a * c) (a * e) (b * d) (b * f)  
 
 dist-lemʳ : ∀ a b c d e f → (c + e) * a + (d + f) * b ≡ (c * a + d * b) + (e * a + f * b) 
-dist-lemʳ a b c d e f = dis2ʳ c e a d f b >≡< exchange₃ (c * a) (e * a) (d * b) (f * b)  
+dist-lemʳ a b c d e f = dis2ʳ c e a d f b >≡< swap23 (c * a) (e * a) (d * b) (f * b)  
 
 distˡʳ : ∀ a b c → a * (b + c) ≡ b * a + c * a
 distˡʳ a b c = *-comm a (b + c) >≡< distʳ a b c
@@ -132,7 +151,7 @@ distˡʳ a b c = *-comm a (b + c) >≡< distʳ a b c
 *-cong-lem₁ : ∀ a b c d e f g h → 
   a + b + (c + d) + (e + f + (g + h)) ≡ a + d + (f + g) + (b + c + (e + h))
 *-cong-lem₁ a b c d e f g h = exchange₁ a b c d += exchange₂ e f g h >≡< 
-  (exchange₃ (a + d) (c + b) (g + f) (e + h) >≡< 
+  (swap23 (a + d) (c + b) (g + f) (e + h) >≡< 
   ((a + d) +⋆ +-comm g f += +-comm c b ⋆+ (e + h)))
 
 *-cong-lem₂ : ∀ a b c d e f g h → 
@@ -141,15 +160,6 @@ distˡʳ a b c = *-comm a (b + c) >≡< distʳ a b c
   exchange₂ (a + d) (c + b) (e + h) (g + f) 
   >≡< (e + h + (c + b)) +⋆ +-comm (a + d) (g + f)
 
-
-+l-cancel : ∀ x {m n} → x + m ≡ x + n → m ≡ n
-+l-cancel = cancel-+-left
-
-+l-cancel' : ∀ {m n x y} → x ≡ y → x + m ≡ y + n → m ≡ n
-+l-cancel' {m} {n} {x} {.x} refl eqt = cancel-+-left x eqt
-
-+r-cancel : ∀ {m n} x → m + x ≡ n + x → m ≡ n
-+r-cancel {m} {n} x eqt =  cancel-+-left x $ +-comm x m >≡< eqt >≡< +-comm n x
 
 _+suc_≢0_ : ∀ m n → m + suc n ≢ 0
 0 +suc n ≢0 ()
@@ -173,8 +183,8 @@ suc*move  a b = +-comm a (b + a * b) >≡< +-assoc b (a * b) a >≡< b +⋆ (+-c
 *-ex a b c = ⟨ *-assoc a b c ⟩ >≡< *-comm a b ⋆* c >≡< *-assoc b a c
 
 
-*-exchange₃ : ∀ m n p q → (m * n) * (p * q) ≡ (m * p) * (n * q)
-*-exchange₃ m n p q = *-assoc m n (p * q) >≡<
+*-swap23 : ∀ m n p q → (m * n) * (p * q) ≡ (m * p) * (n * q)
+*-swap23 m n p q = *-assoc m n (p * q) >≡<
   m *⋆ (*-ex n p q) >≡<
   ⟨  *-assoc m p (n * q) ⟩
 
@@ -232,7 +242,7 @@ integrity′ {suc a} {suc b} c (s≤s m≤n) =
   r-≤resp (⟨ suc*move c a ⟩) m≤n
 
 ℤ₀i-lem : ∀ a b c → a + b + c * (a + b) ≡ a + c * a + (b + c * b)
-ℤ₀i-lem a b c = (a + b) +⋆ distˡ c a b >≡< exchange₃ a b (c * a) (c * b)
+ℤ₀i-lem a b c = (a + b) +⋆ distˡ c a b >≡< swap23 a b (c * a) (c * b)
 
 
 ℤ₀i-lem₁ : ∀ a b c → a + c * a + 0 + (b + c * b + 0) ≡ a + b + c * (a + b)
@@ -241,5 +251,5 @@ integrity′ {suc a} {suc b} c (s≤s m≤n) =
 ℤ₀i-lem₂ : ∀ a b c → a + b + c * (a + b) ≡ b + c * b + (a + c * a)
 ℤ₀i-lem₂ a b c = ℤ₀i-lem a b c >≡< +-comm (a + c * a) (b + c * b)
 
--}
+
 \end{code}

@@ -1,6 +1,9 @@
 (TeX-add-style-hook "mypack"
  (lambda ()
     (TeX-add-symbols
+     '("idtype" ["argument"] 2)
+     '("id" ["argument"] 2)
+     '("idtypevar" 1)
      '("dlift" 1)
      '("class" 1)
      '("ra" 1)
@@ -26,5 +29,9 @@
      "abs"
      "norm"
      "set"
+     "idsym"
+     "Sn"
+     "base"
+     "lloop"
      "slash")))
 

@@ -43,8 +43,8 @@ integrity {m+ , m- } {n+ , n- } (suc a+ , zero) _ a*≡ =
 
 integrity (suc a+ , suc a-) prf a*≡ = 
   integrity (a+ , a-) (λ x → prf (suc ⋆ x))
-  (i-lem ⟨ ℕ.sm+n≡m+sn a+ a- ⟩ >∼< a*≡ >∼< 
-  i-lem (ℕ.sm+n≡m+sn a+ a-))
+  (i-lem ⟨ ℕ.sm+n≡m+sn a+ ⟩ >∼< a*≡ >∼< 
+  i-lem (ℕ.sm+n≡m+sn a+))
 
 \end{code}
 
@@ -55,8 +55,8 @@ left cancellation of +
 +l-cancel : ∀ {m n} x → x + m ∼ x + n → m ∼ n
 +l-cancel {m+ , m- } {n+ , n- } (x+ , x-) eqt = 
   ℕ.+l-cancel (x+ ℕ+ x-) $
-  ℕ.exchange₃ x+ x- m+ n- >≡< eqt >≡<
-  ℕ.exchange₃ x+ n+ x- m-
+  ℕ.swap23 x+ x- m+ n- >≡< eqt >≡<
+  ℕ.swap23 x+ n+ x- m-
 
 \end{code}
 

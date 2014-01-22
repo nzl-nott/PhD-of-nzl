@@ -6,12 +6,13 @@ open import Data.Rational' as Rt₀ hiding (-_ ; _÷_ ; ∣_∣)
 open import Data.Integer as ℤ using (∣_∣) renaming (-_ to ℤ-_)
 open import Data.Integer' as ℤ' hiding (-_ ; suc ; [_] ; ∣_∣; _◃_ ; pred ; ⌜_⌝) renaming (p to ∣_∣')
 import Data.Integer.Properties' as ℤ'
+import Data.Integer.Setoid as ℤ₀
 open import Data.Nat as ℕ renaming (_+_ to _ℕ+_ ; _*_ to _ℕ*_)
 open import Data.Nat.GCD
 open import Data.Nat.Divisibility using (_∣_ ; 1∣_ ; divides)
 import Data.Nat.Coprimality as C
 open import Data.Unit
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_])
 open import Relation.Nullary.Decidable
 
 GCD′→ℚ : ∀ x y di → y ≢ 0 → C.GCD′ x y di → ℚ
@@ -93,6 +94,8 @@ GCD′→ℚ .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) = reco
 ⌜_⌝ : ℚ → ℚ₀
 ⌜ x ⌝ = (ℤcon (ℚ.numerator x)) /suc (ℚ.denominator-1 x)
 
+{-
 
 sound : ∀ {a b : ℚ₀} → a ∼ b → [ a ] ≡ [ b ]
 sound {n /suc d} {n' /suc d'} eq = {!!}
+-}

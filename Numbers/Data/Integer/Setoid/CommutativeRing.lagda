@@ -10,13 +10,18 @@ open import Algebra
 open import Algebra.Structures
 open import Data.Integer.Setoid 
 open import Data.Integer.Setoid.BasicProp  
-open import Data.Nat using () renaming (_+_ to _ℕ+_ ;  _*_ to _ℕ*_)
-open import Data.Nat.Properties+ as ℕ using (_<+>_; _*⋆_)
+open import Data.Nat using (zero) renaming (_+_ to _ℕ+_ ;  _*_ to _ℕ*_)
+open import Data.Nat.Properties+ as ℕ using (_+=_ ; _*⋆_)
 open import Data.Product
 open import Relation.Binary.Core 
 import Algebra.FunctionProperties as P; open P _∼_
 open import Symbols
 
+open import Relation.Binary.PropositionalEquality
+
+infixl 40 _<+>_
+
+_<+>_ = cong₂ _ℕ+_
 
 \end{code}
 
@@ -135,7 +140,7 @@ a) left identity
 \begin{code}
 
 1*z~z : LeftIdentity (1 , 0) _*_
-1*z~z (x+ , x-) =  ? -- ℕ.n+0+0≡n {x+} <+> ⟨  ℕ.n+0+0≡n ⟩
+1*z~z (x+ , x-) = ℕ.n+0≡n >≡< ℕ.n+0≡n {x+} <+> ⟨ ℕ.n+0≡n >≡< ℕ.n+0≡n ⟩
 
 \end{code}
 
@@ -145,9 +150,7 @@ a * 1 ~ a
 \begin{code}
 
 z*1~z : RightIdentity (1 , 0) _*_
-z*1~z (x+ , x-) =
-  ( ℕ.n*1≡n x+ <+>  ℕ.n*0≡0 x- >≡<  ℕ.n+0≡n {x+}) <+>
-  ⟨  ℕ.n*0≡0 x+ <+>  ℕ.n*1≡n x- ⟩ 
+z*1~z (a , b) = (ℕ.n*1≡n a <+> ℕ.n*0≡0 b) >≡< ℕ.n+0≡n {a} <+> ⟨ ℕ.n*0≡0 a <+> ℕ.n*1≡n b ⟩ 
 
 *-identity : Identity (1 , 0) _*_
 *-identity = 1*z~z , z*1~z
@@ -161,8 +164,7 @@ a * b ~ b * a
 \begin{code}
 
 *-comm :  Commutative _*_
-*-comm (x+ , x-) (y+ , y-) = 
-  ℕ.*-comm x+ y+ <+> ℕ.*-comm x- y- <+>
+*-comm (x+ , x-) (y+ , y-) = ℕ.*-comm x+ y+ <+> ℕ.*-comm x- y- <+>
   (ℕ.+-comm (y+ ℕ* x-) (y- ℕ* x+) >≡< 
   (ℕ.*-comm y- x+ <+> ℕ.*-comm y+ x-))
 
@@ -175,8 +177,7 @@ a * b ~ b * a
 \begin{code}
 
 *-assoc : Associative _*_
-*-assoc (a , b) (c , d) (e , f) = 
-  ℕ.*ass-lem a b c d e f <+>
+*-assoc (a , b) (c , d) (e , f) = ℕ.*ass-lem a b c d e f <+>
   ⟨  ℕ.*ass-lem a b c d f e ⟩
 
 \end{code}
@@ -190,8 +191,7 @@ a * (b + c) ~ a * b + a * c
 \begin{code}
 
 distˡ :  _*_ DistributesOverˡ _+_
-distˡ (a , b) (c , d) (e , f) = 
-  ℕ.dist-lemˡ a b c d e f <+>
+distˡ (a , b) (c , d) (e , f) = ℕ.dist-lemˡ a b c d e f <+>
   ⟨  ℕ.dist-lemˡ a b d c f e ⟩
 
 \end{code}
@@ -203,8 +203,7 @@ b) right distributivity
 \begin{code}
 
 distʳ : _*_ DistributesOverʳ _+_
-distʳ (a , b) (c , d) (e , f) =
-  ℕ.dist-lemʳ a b c d e f <+>
+distʳ (a , b) (c , d) (e , f) = ℕ.dist-lemʳ a b c d e f <+>
   ⟨  ℕ.dist-lemʳ b a c d e f ⟩
 
 distrib-*-+ : _*_ DistributesOver _+_
@@ -219,10 +218,10 @@ distrib-*-+ = distˡ , distʳ
 \begin{code}
 
 +-cong : ∀ {x y u v} → x ∼ y → u ∼ v → x + u ∼ y + v
-+-cong {a , b} {c , d} {e , f} {g , h} x∼y u∼v = 
-  ℕ.exchange₃ a e d h >≡<
++-cong {a , b} {c , d} {e , f} {g , h} x∼y u∼v =
+  ℕ.swap23 a e d h >≡<
   (x∼y <+> u∼v) >≡<
-  ℕ.exchange₃ c b g f
+  ℕ.swap23 c b g f
 
 \end{code}
 
@@ -245,8 +244,7 @@ distrib-*-+ = distˡ , distʳ
 \begin{code}
 
 *-cong : ∀ {x y u v} → x ∼ y → u ∼ v → x * u ∼ y * v
-*-cong {a , b} {c , d} {e , f} {g , h} eqt1 eqt2 = 
-   ℕ.+r-cancel (d ℕ* e ℕ+ c ℕ* f ℕ+ (c ℕ* e ℕ+ d ℕ* f))
+*-cong {a , b} {c , d} {e , f} {g , h} eqt1 eqt2 = ℕ.+r-cancel (d ℕ* e ℕ+ c ℕ* f ℕ+ (c ℕ* e ℕ+ d ℕ* f))
   (⟨  ℕ.distˡʳ e a d <+>  ℕ.distˡʳ f c b <+>
   (ℕ.distˡ c e h <+> ℕ.distˡ d g f) >≡< 
   ℕ.*-cong-lem₁ (a ℕ* e) (d ℕ* e) (c ℕ* f) (b ℕ* f) (c ℕ* e)

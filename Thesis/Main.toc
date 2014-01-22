@@ -17,37 +17,44 @@
 \contentsline {subsection}{\numberline {2.2.3}Extensionality}{11}{subsection.24}
 \contentsline {section}{\numberline {2.3}Homotopy Type Theory}{12}{section.25}
 \contentsline {section}{\numberline {2.4}Some conventions}{13}{section.27}
-\contentsline {section}{\numberline {2.5}literature review}{13}{section.28}
-\contentsline {chapter}{\numberline {3}Quotient Types}{17}{chapter.29}
-\contentsline {section}{\numberline {3.1}Quotients in Mathematics}{17}{section.30}
-\contentsline {subsection}{\numberline {3.1.1}Quotient sets}{17}{subsection.31}
-\contentsline {paragraph}{Quotient types in extensional type theory\xspace }{18}{section*.37}
-\contentsline {paragraph}{Quotient types in intensional type theory\xspace }{18}{section*.38}
-\contentsline {section}{\numberline {3.2}Categorical intuition}{20}{section.41}
-\contentsline {subsection}{\numberline {3.2.1}split quotient/coequalizer}{20}{subsection.42}
-\contentsline {subsection}{\numberline {3.2.2}Adjunction between {\textbf {Sets}} and \textbf {Setoids}}{20}{subsection.44}
-\contentsline {section}{\numberline {3.3}impredicative encoding of quotient types}{21}{section.46}
-\contentsline {subsection}{\numberline {3.3.1}Functional extensionality and quotient types}{23}{subsection.50}
-\contentsline {section}{\numberline {3.4}Example of Quotients}{24}{section.52}
+\contentsline {chapter}{\numberline {3}Quotient Types}{15}{chapter.28}
+\contentsline {section}{\numberline {3.1}Quotients in Mathematics}{15}{section.29}
+\contentsline {subsection}{\numberline {3.1.1}Quotient sets}{15}{subsection.30}
+\contentsline {paragraph}{Quotient types in extensional type theory\xspace }{16}{section*.36}
+\contentsline {paragraph}{Quotient types in intensional type theory\xspace }{16}{section*.37}
+\contentsline {section}{\numberline {3.2}Categorical intuition}{18}{section.40}
+\contentsline {subsection}{\numberline {3.2.1}split quotient/coequalizer}{18}{subsection.41}
+\contentsline {subsection}{\numberline {3.2.2}Adjunction between {\textbf {Sets}} and \textbf {Setoids}}{18}{subsection.43}
+\contentsline {section}{\numberline {3.3}impredicative encoding of quotient types}{19}{section.45}
+\contentsline {subsection}{\numberline {3.3.1}Functional extensionality and quotient types}{21}{subsection.49}
+\contentsline {section}{\numberline {3.4}Example of Quotients}{22}{section.51}
+\contentsline {section}{\numberline {3.5}literature review}{22}{section.52}
 \contentsline {chapter}{\numberline {4}Definable Quotients}{25}{chapter.53}
 \contentsline {subsection}{\numberline {4.0.1}Integers}{25}{subsection.54}
-\contentsline {paragraph}{Operations}{26}{section*.56}
-\contentsline {paragraph}{Properties}{26}{section*.57}
-\contentsline {paragraph}{Comparison}{26}{section*.58}
-\contentsline {subsection}{\numberline {4.0.2}Rational numbers}{26}{subsection.59}
-\contentsline {subsection}{\numberline {4.0.3}Real numbers and more}{27}{subsection.60}
-\contentsline {subsection}{\numberline {4.0.4}Multisets(bags)}{27}{subsection.61}
-\contentsline {chapter}{\numberline {5}the Setoid Model}{29}{chapter.63}
-\contentsline {section}{\numberline {5.1}Literature review}{30}{section.64}
-\contentsline {section}{\numberline {5.2}What we could do in this model}{30}{section.65}
-\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{30}{section.66}
-\contentsline {chapter}{\numberline {6}$\omega $-groupoids\xspace Model}{31}{chapter.67}
-\contentsline {section}{\numberline {6.1}Quotient types in Homotopy Type Theory\xspace }{31}{section.68}
-\contentsline {section}{\numberline {6.2}Syntax of weak $\omega $-groupoids\xspace }{31}{section.69}
-\contentsline {section}{\numberline {6.3}Semantics}{31}{section.70}
-\contentsline {section}{\numberline {6.4}Higher inductive types}{31}{section.71}
-\contentsline {chapter}{\numberline {7}Summary}{33}{chapter.72}
-\contentsline {subsection}{\numberline {7.0.1}Future work}{33}{subsection.73}
+\contentsline {paragraph}{Operations}{29}{section*.62}
+\contentsline {paragraph}{Properties}{30}{section*.63}
+\contentsline {paragraph}{Comparison}{30}{section*.64}
+\contentsline {subsection}{\numberline {4.0.2}Rational numbers}{31}{subsection.65}
+\contentsline {subsection}{\numberline {4.0.3}Real numbers}{35}{subsection.66}
+\contentsline {subsection}{\numberline {4.0.4}Multisets(bags)}{36}{subsection.67}
+\contentsline {chapter}{\numberline {5}the Setoid Model}{37}{chapter.69}
+\contentsline {section}{\numberline {5.1}Literature review}{38}{section.70}
+\contentsline {subsection}{\numberline {5.1.1}An implementation of categories with Families in Agda}{38}{subsection.71}
+\contentsline {subsection}{\numberline {5.1.2}hProp}{38}{subsection.72}
+\contentsline {subsection}{\numberline {5.1.3}Category}{40}{subsection.73}
+\contentsline {subsection}{\numberline {5.1.4}Category of setoids}{41}{subsection.74}
+\contentsline {subsection}{\numberline {5.1.5}categories with families of setoids}{44}{subsection.75}
+\contentsline {subsection}{\numberline {5.1.6}Examples of types}{51}{subsection.76}
+\contentsline {subsection}{\numberline {5.1.7}Observational equality}{54}{subsection.77}
+\contentsline {section}{\numberline {5.2}What we could do in this model}{54}{section.78}
+\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{54}{section.79}
+\contentsline {chapter}{\numberline {6}$\omega $-groupoids\xspace Model}{55}{chapter.80}
+\contentsline {section}{\numberline {6.1}Quotient types in Homotopy Type Theory\xspace }{55}{section.81}
+\contentsline {section}{\numberline {6.2}Syntax of weak $\omega $-groupoids\xspace }{55}{section.82}
+\contentsline {section}{\numberline {6.3}Semantics}{55}{section.83}
+\contentsline {section}{\numberline {6.4}Higher inductive types}{55}{section.84}
+\contentsline {chapter}{\numberline {7}Summary}{57}{chapter.85}
+\contentsline {subsection}{\numberline {7.0.1}Future work}{57}{subsection.86}
 \vspace {2em}
 \vspace {2em}
-\contentsline {chapter}{Bibliography}{35}{dummy.74}
+\contentsline {chapter}{Bibliography}{59}{dummy.87}

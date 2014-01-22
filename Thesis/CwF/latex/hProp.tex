@@ -1,0 +1,214 @@
+
+\AgdaHide{
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Level}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality}\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{hProp} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{:} \AgdaFunction{Extensionality} \AgdaPrimitive{zero} \AgdaPrimitive{zero}\AgdaSymbol{)} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Nullary}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Unit}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Empty}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+%
+\\
+\>\AgdaKeyword{infixr} \AgdaNumber{2} \_⇒\_\<%
+\\
+%
+\\
+\>\AgdaKeyword{infixr} \AgdaNumber{3} \_∧\_\<%
+\\
+%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+A proof-irrelvant universe only contains sets with at most one inhabitant. 
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{hProp} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{hp}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{prf} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Uni} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{prf}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaModule{hProp} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}prf \AgdaSymbol{to} <\_>\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+We can extract the proof of any propostion $A : hProp$ by using $<>$ and there is always a proof that all inhabitants of it are the same, in other words, if there is any proof of it, the proof is unique. This is not exactly the same as the $Prop$ universe in Altenkirch's approach which is judgemental. It is just a judgement whether a set behaves like a $Proposition$. The $hProp$ we define above is propositional since we can extract the proof of uniqueness.
+
+We would like to have some basic propositions $\top$ and $\bot$. To distinguish them with the ones for non-proof irrelevant propositions which are already available in Agda library, we add a prime to all similar symbols.
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{⊤'} \AgdaSymbol{:} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaFunction{⊤'} \AgdaSymbol{=} \AgdaInductiveConstructor{hp} \AgdaRecord{⊤} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{⊥'} \AgdaSymbol{:} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaFunction{⊥'} \AgdaSymbol{=} \AgdaInductiveConstructor{hp} \AgdaDatatype{⊥} \AgdaSymbol{(λ} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{⊥-elim} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+We also want the universal and existential quantifier for $hProp$, namely it is closed under $\Pi$-types and $\Sigma$-types.
+The universal quantifier of $hProp$ can be axiomitised but we decide to explicitly state that we 
+require the functional extensionality to use this module. The reason is that functional extensionality is actually equivalent to the closure under $\Pi$-types.
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{∀'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)(}\AgdaBound{P} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{hProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaFunction{∀'} \AgdaBound{A} \AgdaBound{P} \AgdaSymbol{=} \AgdaInductiveConstructor{hp} \AgdaSymbol{((}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{P} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)))}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{sig-eq} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \<[43]%
+\>[43]\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \<[23]%
+\>[23]\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{}\AgdaBound{c} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{a}\AgdaSymbol{\}\{}\AgdaBound{d} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \<[30]%
+\>[30]\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{x}\AgdaSymbol{)} \AgdaBound{p} \AgdaBound{c} \AgdaDatatype{≡} \AgdaBound{d}\AgdaSymbol{)} \<[37]%
+\>[37]\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaDatatype{\_≡\_} \AgdaSymbol{\{\_\}} \AgdaSymbol{\{}\AgdaRecord{Σ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{c}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{b} \AgdaInductiveConstructor{,} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{sig-eq} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+\begin{code}\>\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{Σ'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaSymbol{:} \AgdaRecord{hProp}\AgdaSymbol{)(}\AgdaBound{Q} \AgdaSymbol{:} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{→} \AgdaRecord{hProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaFunction{Σ'} \AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{=} \AgdaInductiveConstructor{hp} \AgdaSymbol{(}\AgdaRecord{Σ} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{Q} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{))} \<[38]%
+\>[38]\<%
+\\
+\>[9]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(λ} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{→} \<[25]%
+\>[25]\<%
+\\
+\>[9]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaFunction{sig-eq} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaBound{P}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{Q} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{q}\AgdaSymbol{))))}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+Implication and conjuction which are independent ones of them follow simply.
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{\_⇒\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{hProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaBound{P} \AgdaFunction{⇒} \AgdaBound{Q} \AgdaSymbol{=} \<[9]%
+\>[9]\AgdaFunction{∀'} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{Q}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{\_∧\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{hProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaBound{P} \AgdaFunction{∧} \AgdaBound{Q} \AgdaSymbol{=} \AgdaFunction{Σ'} \AgdaBound{P} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{Q}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{syntax} ∀' A \AgdaSymbol{(λ} x \AgdaSymbol{→} B\AgdaSymbol{)} \AgdaSymbol{=} ∀'[ x ∶ A ] B
+
+
+\AgdaKeyword{syntax} Σ' A \AgdaSymbol{(λ} x \AgdaSymbol{→} B\AgdaSymbol{)} \AgdaSymbol{=} Σ'[ x ∶ A ] B
+
+\<\end{code}
+}
+
+As long as we have implication and conjuction, more operators on proposition can be defined, for instances negation and logical equivalence.
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{¬} \AgdaSymbol{:} \AgdaRecord{hProp} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaFunction{¬} \AgdaBound{P} \AgdaSymbol{=} \AgdaBound{P} \AgdaFunction{⇒} \AgdaFunction{⊥'} \<[13]%
+\>[13]\<%
+\\
+%
+\\
+\>\AgdaFunction{\_↔\_} \<[6]%
+\>[6]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{hProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaBound{P} \AgdaFunction{↔} \AgdaBound{Q} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{P} \AgdaFunction{⇒} \AgdaBound{Q}\AgdaSymbol{)} \AgdaFunction{∧} \AgdaSymbol{(}\AgdaBound{Q} \AgdaFunction{⇒} \AgdaBound{P}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}

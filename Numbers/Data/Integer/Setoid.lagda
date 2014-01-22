@@ -7,16 +7,23 @@ Integer (setoid)
 \begin{code}
 module Data.Integer.Setoid where
 
+-- open import Data.Product using (∃! ; _,_)
 open import Data.Bool
+open import Function using (_$_ ; _∘_)
 open import Algebra.FunctionProperties.Core
 open import Function using (_∘_)
-open import Data.Nat as ℕ using (ℕ ; suc)
+open import Data.Nat as ℕ using (zero ; ℕ ; suc ; pred)
   renaming (_≟_ to _ℕ≟_ ; _+_ to _ℕ+_ ; _*_ to _ℕ*_ ;
             _≤_ to _ℕ≤_; _<_ to _ℕ<_)
+open import Data.Nat.Properties
+open import Data.Nat.Properties+
 open import Data.Sign hiding (_*_)
-open import Level using (zero)
-open import Relation.Binary.Core
 open import Relation.Nullary
+open import Relation.Binary
+
+open import Symbols
+
+open import Relation.Binary.PropositionalEquality as PE hiding ([_])
 
 \end{code}
 
@@ -46,14 +53,106 @@ b. An equivalence relation is part of a setoid of definition:
 
 infixl 2 _∼_
 
-_∼_ : Rel ℤ₀ zero
+_∼_ : Rel ℤ₀ _
 (x+ , x-) ∼ (y+ , y-) = (x+ ℕ+ y-) ≡ (y+ ℕ+ x-)
+\end{code}
 
+The '∼' is equivalence
+
+a) reflexivity: ∀ a → a ∼ a
+
+\begin{code}
+
+zrefl : Reflexive _∼_
+zrefl {x+ , x-} = refl
+
+\end{code}
+
+b) symmetry: ∀ a b → a ∼ b → b ∼ a
+
+\begin{code}
+
+zsym : Symmetric _∼_
+zsym {x+ , x-} {y+ , y-} = sym
+
+\end{code}
+
+c) transitivity:  ∀ a b c → a ∼ b /\ b ∼ c → a ∼ c
+(the symbol is easier for use)
+
+\begin{code}
+
+infixl 40 _>∼<_
+
+_>∼<_ : Transitive _∼_
+_>∼<_ {x+ , x-} {y+ , y-} {z+ , z-} x=y y=z = cancel-+-left (y+ ℕ+ y-) $ swap24 y+ y- x+ z- >≡< ((y=z += x=y) >≡< swap13 z+ y- y+ x-)
+
+
+\end{code}
+
+d) Combine these 3 propertiese we can prove that '∼' is equivalence
+
+\begin{code}
+
+_∼_isEquivalence : IsEquivalence _∼_
+_∼_isEquivalence = record
+  { refl  = zrefl
+  ; sym   = zsym
+  ; trans = _>∼<_
+  }
+
+\end{code}
+
+(ℤ₀, ∼) is a setoid
+
+\begin{code}
+
+ℤ-Setoid : Setoid _ _
+ℤ-Setoid = record
+  { Carrier       = ℤ₀
+  ; _≈_           = _∼_
+  ; isEquivalence = _∼_isEquivalence
+  }
+
+\end{code}
+
+normalisation with respect to the equivalence relation
+
+\begin{code}
 
 [_]                   : ℤ₀ → ℤ₀
 [ m , 0 ]             = m , 0
 [ 0 , suc n ]       = 0 , suc n
 [ suc m , suc n ] = [ m , n ]
+
+normal-1-step : ∀ a {b} → (suc a , suc b) ∼ (a , b)
+normal-1-step = sm+n≡m+sn
+
+normal-sound : ∀ a → [ a ] ∼ a
+normal-sound (_ , 0) = refl
+normal-sound (0 , suc n) = refl
+normal-sound (suc a , suc b) = normal-sound (a , b) >∼< ⟨ normal-1-step a ⟩ 
+
+nm-lem : ∀ n n' → suc (n ℕ+ 0) ≡ suc (n' ℕ+ 0) → n ≡ n'
+nm-lem n n' eq = +r-cancel 0 (cong pred eq)
+
+nu' : ∀ a → [ [ a ] ] ≡ [ a ]
+nu' (x , ℕ.zero) = refl
+nu' (ℕ.zero , suc x₁) = refl
+nu' (suc x , suc x₁) = nu' (x , x₁)
+
+
+normal-unique : ∀ a b → a ∼ b → [ a ] ≡ [ b ]
+normal-unique (zero , a') (zero , .a') refl = refl
+normal-unique (zero , a') (suc n , zero) ()
+normal-unique (zero , a') (suc n , suc n') eq = normal-unique (zero , a') (n , n') (cong pred eq)
+normal-unique (suc n , zero) (zero , b') ()
+normal-unique (suc n , zero) (suc n' , zero) eq with nm-lem n n' eq
+normal-unique (suc .n' , zero) (suc n' , zero) eq | refl = refl
+normal-unique (suc n , zero) (suc n' , suc n0) eq = normal-unique (suc n , zero) (n' , n0) (sm+n≡m+sn n >≡< cong pred eq)
+normal-unique (suc n , suc n') b eq = normal-unique (n , n') b (⟨ sm+n≡m+sn n ⟩ >∼< eq)
+
+
 \end{code}
 
 2. Ordering
@@ -62,16 +161,16 @@ _∼_ : Rel ℤ₀ zero
 
 infix 4 _≤_ _<_ _≥_ _>_
 
-_≤_ : Rel ℤ₀ zero
+_≤_ : Rel ℤ₀ _
 (x+ , x-) ≤ (y+ , y-) = (x+ ℕ+ y-) ℕ≤ (y+ ℕ+ x-)
 
-_<_ : Rel ℤ₀ zero
+_<_ : Rel ℤ₀ _
 (x+ , x-) < (y+ , y-) = (x+ ℕ+ y-) ℕ< y+ ℕ+ x-
 
-_≥_ : Rel ℤ₀ zero
+_≥_ : Rel ℤ₀ _
 m ≥ n = n ≤ m
 
-_>_ : Rel ℤ₀ zero
+_>_ : Rel ℤ₀ _
 m > n = n < m
 
 \end{code}

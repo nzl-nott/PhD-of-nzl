@@ -1,6 +1,7 @@
 (TeX-add-style-hook "my"
  (lambda ()
     (LaTeX-add-bibitems
+     "van2012reflection"
      "voe:06"
      "hurkens1995simplification"
      "martin1984intuitionistic"

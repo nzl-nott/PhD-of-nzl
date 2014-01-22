@@ -7,13 +7,14 @@ open import Quotient
 open import Data.Nat
 open import Relation.Binary.PropositionalEquality as PE hiding (cong ; [_])
 
-module Quotient.Lift
-         {S : Setoid}{PQ : PreQu S}(QUD : QuD PQ) where
+module Quotient.Lift {S : Setoid}{PQ : pre-Quotient S}(QUD : DefinableQuotient PQ) where
 
 
-open QuD QUD renaming (emb to ⌜_⌝)
+open import Relation.Binary
+
+open DefinableQuotient QUD renaming (emb to ⌜_⌝)
 open Setoid S renaming (Carrier to Q₀ ; _≈_ to _∼_)
-open PreQu PQ
+open pre-Quotient PQ
 
 private
   Op : ℕ → (A : Set) → Set
@@ -58,17 +59,17 @@ private
   compl {n} = complete n
 
   ⌞_⌟          : ∀ {i j} → ⌜ i ⌝ ∼ ⌜ j ⌝  → i ≡ j
-  ⌞_⌟ {i} {j} eq = PE.trans (PE.trans (PE.sym (stable i)) (sound eq)) (stable j)
+  ⌞_⌟ {i} {j} eq = PE.trans (PE.trans (PE.sym (stable i)) (nf-sound eq)) (stable j)
 
   sound' : ∀ {i j} → i ∼ ⌜ j ⌝  → [ i ] ≡ j
-  sound' {i} {j} eq = PE.trans (sound eq) (stable j)
+  sound' {i} {j} eq = PE.trans (nf-sound eq) (stable j)
 
 
 liftOp1-β : (f : Op1) → ∀ n → liftOp1 f [ n ] ≡ [ Op1.op f n ] 
-liftOp1-β (f , cong) n = sound (cong compl)
+liftOp1-β (f , cong) n = nf-sound (cong compl)
 
 liftOp2-β : (op : Op2) → ∀ m n → liftOp2 op [ m ] [ n ] ≡ [ Op2.op op m n ] 
-liftOp2-β (op , cong) m n = sound (cong compl compl)
+liftOp2-β (op , cong) m n = nf-sound (cong compl compl)
 
 lift21 : (op : Op2) → ∀ a b c → Op2.op op ⌜ a ⌝ ⌜ b ⌝ ∼ ⌜ c ⌝ → liftOp2 op a b ≡ c
 lift21 (op , cong) a b c = sound'

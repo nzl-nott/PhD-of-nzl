@@ -152,7 +152,7 @@ record Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
 -- the older definition which depend on Qu is also wrong
 
 
-record QuE {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
+record ExactQuotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
   open pre-Quotient PQ
   field
     Qu    : Quotient PQ
@@ -259,9 +259,9 @@ DefinableQuotient→Quotient {S} {PQ} QUD =
 
 -- the older proof with QU as assumption is actually wrong!
 
-DefinableQuotient→QuE : {A : Setoid}{PQ : pre-Quotient A} -- {QU : Quotient PQ} 
-        → (DefinableQuotient PQ) → QuE PQ
-DefinableQuotient→QuE {A} {PQ} QUD =
+DefinableQuotient→ExactQuotient : {A : Setoid}{PQ : pre-Quotient A} -- {QU : Quotient PQ} 
+        → (DefinableQuotient PQ) → ExactQuotient PQ
+DefinableQuotient→ExactQuotient {A} {PQ} QUD =
   record { Qu = DefinableQuotient→Quotient QUD
          ; exact = λ {a} {b} p → ≈trans (≈sym (complete a)) (≈trans (id-eq (cong emb p)) (complete b))
          }

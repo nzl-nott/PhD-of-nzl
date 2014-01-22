@@ -12,7 +12,7 @@ all : pdf
 pdf : $(TEXFILE:.tex=.pdf)
 
 %.aux : %.tex
-	pdflatex $<  2>&1 > /dev/null
+	pdflatex $< 
 
 %.bbl : %.aux
 	bibtex $<
@@ -20,8 +20,7 @@ pdf : $(TEXFILE:.tex=.pdf)
 %.pdf : %.bbl
 	pdflatex $(<:.bbl=.tex)
 	pdflatex $(<:.bbl=.tex)
-#egrep -i "(Reference|Citation).*undefined" $(<:%.bbl=%.log) 
-
+#egrep -i "(Reference|Citation).*undefined" $(<:%.bbl=%.log)  2>&1 > /dev/null
 clean	:
 	  @rm -f \
 	$(TEXFILE:.tex=.aux) \

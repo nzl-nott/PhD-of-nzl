@@ -23,6 +23,7 @@
 \DeclareUnicodeCharacter{8991}{$\lrcorner$}
 \DeclareUnicodeCharacter{946}{$\beta$}
 \DeclareUnicodeCharacter{8760}{$\dot{-}$}
+\DeclareUnicodeCharacter{8649}{$\rightrightarrows$}
 
 % Shorthand
 \newcommand{\itt}{intensional type theory\xspace}
@@ -64,3 +65,44 @@
 \providecommand{\class}[1]{[#1]}
 \providecommand{\set}  [1]{\left\{#1\right\}}
 \providecommand{\dlift}[1]{\widehat{#1}}
+
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Bool}{Bool}
+\DeclareMathOperator{\sound}{sound}
+\DeclareMathOperator{\qelimbeta}{qelim-\beta}
+\DeclareMathOperator{\qind}{qind}
+\DeclareMathOperator{\exact}{effective}
+\DeclareMathOperator{\subst}{subst}
+\DeclareMathOperator{\emb}{emb}
+\DeclareMathOperator{\complete}{complete}
+\DeclareMathOperator{\stable}{stable}
+\DeclareMathOperator{\List}{List}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\now}{now}
+\DeclareMathOperator{\later}{later}
+\DeclareMathOperator{\nowequal}{now_\sqsubseteq}
+\DeclareMathOperator{\laterequal}{later_\sqsubseteq}
+\DeclareMathOperator{\laterleft}{later_{left}}
+\DeclareMathOperator{\inl}{inl}
+\DeclareMathOperator{\inr}{inr}
+\DeclareMathOperator{\qelim}{qelim}
+\DeclareMathOperator{\lift}{lift}
+\DeclareMathOperator{\LC}{LC}
+\DeclareMathOperator{\liftbeta}{lift-\beta}
+\DeclareMathOperator{\Bijection}{Bijection}
+\DeclareMathOperator{\true}{true}
+\DeclareMathOperator{\false}{false}
+\DeclareMathOperator{\sort}{sort}
+\DeclareMathOperator{\length}{length}
+\DeclareMathOperator{\nub}{nub}
+
+%%% Identity types %%%
+\newcommand{\idsym}{{=}}
+\newcommand{\id}[3][]{\ensuremath{#2 =_{#1} #3}\xspace}
+\newcommand{\idtype}[3][]{\ensuremath{\mathsf{Id}_{#1}(#2,#3)}\xspace}
+\newcommand{\idtypevar}[1]{\ensuremath{\mathsf{Id}_{#1}}\xspace}
+
+%%% Circles and spheres
+\newcommand{\Sn}{\mathbb{S}}
+\newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
+\newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}

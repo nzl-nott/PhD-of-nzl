@@ -1,3 +1,26 @@
+\AgdaHide{
+\begin{code}
+
+module Report where
+
+open import Data.Nat
+open import Relation.Binary
+open import Data.Product
+
+open import Relation.Binary.PropositionalEquality
+
+open import Data.Nat.GCD
+open import Data.Nat.Divisibility using (_∣_ ; 1∣_ ; divides)
+import Data.Nat.Coprimality as C
+open import Data.Unit
+open import Relation.Binary.PropositionalEquality
+open import Relation.Nullary.Decidable
+
+ℤ₀ = ℕ × ℕ
+
+\end{code}
+}
+
 \documentclass{article}
 \def\textmu{}
 \author{Li Nuo}
@@ -404,13 +427,13 @@ at most one element, namely we can get proof irrelevance for
 propositions which has type $\Prop$. In Agda, we define a setoid as
 
 \begin{code}
-
+{-
 record Setoid : Set₁ where
   field
     Carrier           : Set
     _≈_                : Carrier → Carrier → Set
     isEquivalence : IsEquivalence _≈_
-
+-}
 \end{code}
 
 It contains |Carrier| for an underlying set, |_≈_| \footnote{|_| mark the spaces for the explicit arguments in non-prefix operators} for a binary
@@ -544,7 +567,7 @@ definition could be written as
 
 \begin{code}
 
-makdata Id (A : Set) : A → A → Set where
+data Id (A : Set) : A → A → Set where
   refl : (a : A) → Id A a a
 
 \end{code}
@@ -594,7 +617,7 @@ we can construct an irreducible term of natural number as
 \begin{code}
 
 irr : ℕ
-irr = J (ℕ → ℕ) (λ f g P → ℕ) (λ f → 0) (λ x → x) (λ x → x) (Ext refl)
+irr = J (ℕ → ℕ) (λ f g P → ℕ) (λ f → 0) (λ x → x) (λ x → x) (ext refl)
 
 \end{code}
 
@@ -837,7 +860,7 @@ two pairs represent the same integer, so the equivalence relation
 $\sim$ for $\Z_0$ could be defined as
 
 \begin{code}
-
+{-
 _∼_ : Rel ℤ₀
 (n1 , n2) ∼ (n3 , n4) = (n1 + n4) ≡ (n3 + n2)
 
@@ -910,19 +933,20 @@ record PreQu (S : Setoid) : Set₁ where
     Q       : Set
     [_]      : A → Q
     sound : ∀ {a b : A} → a ∼ b → [ a ] ≡ [ b ]
-
+-}
 \end{code}
 
 and the prequotient of integers is,
 
 \begin{code}
-
+{-
 ℤ-PreQu : PreQu ℤ-Setoid
 ℤ-PreQu = record
   { Q       = ℤ
   ; [_]     = [_]
   ; sound   = sound
   }
+-}
 
 \end{code}
 
@@ -933,7 +957,7 @@ To form quotients we have several different definitions as written in \cite{aan}
 \item \emph{Quotient with a dependent eliminator}
 
 \begin{code}
-
+{-
 record Qu {S : Setoid} (PQ : PreQu S) : Set₁ where
   private 
     A       = Carrier S
@@ -949,14 +973,14 @@ record Qu {S : Setoid} (PQ : PreQu S) : Set₁ where
             → subst B (sound p) (f a) ≡ f b)
             → (q : Q) → B q
     qelim-β : ∀ {B a f} q → qelim {B} f q [ a ]  ≡ f a
-
+-}
 \end{code}
 
 
 \item \emph{Exact (or efficient) quotient}
 
 \begin{code}
-
+{-
 record QuE {S : Setoid}{PQ : PreQu S}(QU : Qu PQ) : Set₁ where
   private 
     A       = Carrier S
@@ -964,13 +988,13 @@ record QuE {S : Setoid}{PQ : PreQu S}(QU : Qu PQ) : Set₁ where
     [_]     = nf PQ
   field
     exact : ∀ {a b : A} → [ a ] ≡ [ b ] → a ∼ b
-       
+-}
 \end{code}
 
 \item \emph{Quotient with a non-dependent eliminator and induction principle}
 
 \begin{code}
-
+{-
 record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
   private 
     A     = Carrier S
@@ -986,13 +1010,13 @@ record QuH {S : Setoid} (PQ : PreQu S) : Set₁ where
            → (∀ x → (p p' : P x) → p ≡ p')
            → (∀ a → P [ a ]) 
            → (∀ x → P x)
-
+-}
 \end{code}
 
 \item \emph{Definable quotient}
  
 \begin{code}
- 
+{-
 record QuD {S : Setoid}(PQ : PreQu S) : Set₁ where
   constructor
     emb:_complete:_stable:_
@@ -1032,7 +1056,7 @@ Firstly |⌜_⌝| is left inverse of |[_]|,
 \begin{code}
 
 compl                            : ∀ {n} → ⌜ [ n ] ⌝ ∼ n
-
+-}
 \end{code}
 
 This is called the \emph{complete} property. 
@@ -1040,9 +1064,9 @@ This is called the \emph{complete} property.
 Secondly |⌜_⌝| is right inverse of |[_]|,
 
 \begin{code}
-
+{-
 stable                : ∀ {n} → [ ⌜ n ⌝ ] ≡ n
-
+-}
 \end{code}
 
 This is called the \emph{stable} property.
@@ -1050,14 +1074,14 @@ This is called the \emph{stable} property.
 Now we can form the definable quotient structure with the prequotient we have,
 
 \begin{code}
-
+{-
 ℤ-QuD : QuD ℤ-PreQu
 ℤ-QuD = record
   { emb         = ⌜_⌝
   ; complete  = λ z → compl {z}
   ; stable        = λ z → stable {z}
   } 
-
+-}
 \end{code}
 
 Now we have the mapping between the base type $\Z_0$ and the target type $\Z$, and have proved that |[_]| is a normalisation function.
@@ -1065,13 +1089,13 @@ Now we have the mapping between the base type $\Z_0$ and the target type $\Z$, a
 We can obtain the dependent and non-dependent eliminators by translating the definable quotient into other definitions,
 
 \begin{code}
-
+{-
 ℤ-Qu  = QuD→Qu ℤ-QuD
 
 ℤ-QuE = QuD→QuE {_} {_} {ℤ-Qu} ℤ-QuD
 
 ℤ-QuH = QuD→QuH ℤ-QuD 
-
+-}
 \end{code}
 
 We can benefit from the interaction between setoids and quotient types
@@ -1094,10 +1118,10 @@ prove case by case and we have a bundle of
 theorems for natural numbers. For example,
 
 \begin{code}
-
+{-
 distʳ : _*_ DistributesOverʳ _+_
 distʳ (a , b) (c , d) (e , f) = ℕ.dist-lemʳ a b c d e f += ⟨  ℕ.dist-lemʳ b a c d e f ⟩
-
+-}
 \end{code}
 
 Moreover, as we have constructed the semiring of natural numbers, it
@@ -1107,11 +1131,11 @@ The rest we have to do is to lift the properties proved for setoid definition to
 We can easily lift n-ary operators defined for $\Z_0$ to the ones for $\Z$ by
 
 \begin{code}
-
+{-
 liftOp                  : ∀ n → Op n ℤ₀ → Op n ℤ
 liftOp 0 op         = [ op ]
 liftOp (suc n) op = λ x → liftOp n (op ⌜ x ⌝)
-
+-}
 \end{code}
 
 However, this lift function is unsafe because some operations on
@@ -1123,32 +1147,32 @@ used safe lifting functions
 
 \small
 {\begin{code}
-
+{-
 liftOp1s : (f : Op₁ ℤ₀) → (∀ {a b} → a ∼ b → f a ∼ f b) → Op₁ ℤ
 liftOp1s f cong = λ n → [ f ⌜ n ⌝ ]
 
 liftOp2s : (* : Op₂ ℤ₀) → (∀ {a b c d} → a ∼ b → c ∼ d → * a c ∼ * b d) → Op₂ ℤ
 liftOp2s _op_ cong = λ m n → [ ⌜ m ⌝ op ⌜ n ⌝ ]
-
+-}
 \end{code}}
 
 Then we can obtain the $\beta$-laws which are very useful,
 
 \begin{code}
-
+{-
 liftOp1-β : (f : Op 1 ℤ₀) → (cong : ∀ {a b} → a ∼ b → f a ∼ f b) → 
               ∀ n → liftOp1safe f cong [ n ] ≡ [ f n ]
 
 
 liftOp2-β : (op : Op 2 ℤ₀) → (cong : ∀ {a b c d} → a ∼ b → c ∼ d → op a c ∼ op b d) →
               ∀ m n → liftOp2safe op cong [ m ] [ n ] ≡ [ op m n ] 
-
+-}
 \end{code}
 
 Now we can lift the negation easily
 
 \begin{code}
-
+{-
 -_ : Op 1 ℤ
 -_ = liftOp1safe ℤ₀.-_ ℤ₀.⁻¹-cong
 
@@ -1196,7 +1220,7 @@ distʳ : _*_ DistributesOverʳ _+_
 distʳ a b c = sound  (ℤ₀.*-cong (compl {⌜ b ⌝ + ⌜ c ⌝}) zrefl >∼< 
               ℤ₀.distʳ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼<
               ℤ₀.+-cong compl' compl')
-
+-}
 \end{code}
 
 There is no need to use pattern matching, namely prove the
@@ -1205,6 +1229,8 @@ case analysis, and I found it is especially difficult and the proof is
 too long and it looks like (I omit to write the long proof for each clause):
 
 \begin{code}
+
+{-
 distʳ : _*_ DistributesOverʳ _+_
 distʳ (+ n) (+ n') (+ n0) = ...
 distʳ (+ n) (+ n') (-suc n0) = ...
@@ -1214,6 +1240,8 @@ distʳ (-suc n) (+ n') (+ n0) = ...
 distʳ (-suc n) (+ n') (-suc n0) = ...
 distʳ (-suc n) (-suc n') (+ n0) = ...
 distʳ (-suc n) (-suc n') (-suc n0) = ...
+-}
+
 \end{code}
 
 Even though it is provable in this way, it is not the best choice
@@ -1232,6 +1260,8 @@ the definition of quotient.
 We can also lift a structure of properties such as monoid,
 
 \begin{code}
+{-
+
 liftId : ∀ {op : Op 2 ℤ₀}(e : ℤ) → Identity _∼_ ⌜ e ⌝ op → Identity e (liftOp 2 op)
 
 liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) → Associative _∼_ op → 
@@ -1239,6 +1269,7 @@ liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) → Associative _∼_ op →
 
 liftMonoid : {op : Op 2 ℤ₀}{e : ℤ}(cong : Cong2 op) → IsMonoid _∼_ op ⌜ e ⌝ →
                     IsMonoid _≡_ (liftOp 2 op) e
+-}
 
 \end{code}
 
@@ -1281,7 +1312,7 @@ Therefore the equivalence relation can be defined as,
 \begin{code}
 
 _∼_                                : Rel ℚ₀
-n1 /suc d1 ∼ n2 /suc d2 =  n1 * suc d2 ≡ n2 * suc d1
+(n1 /suc d1) ∼ (n2 /suc d2) =  n1 * suc d2 ≡ n2 * suc d1
 
 \end{code}
 
@@ -1297,7 +1328,7 @@ record ℚ : Set where
   field
     numerator        : ℤ
     denominator-1 : ℕ
-    isCoprime        : True (C.coprime? ∣ numerator ∣ (suc denominator-1))
+    isCoprime        : ? -- True (C.coprime? ∣ numerator ∣ (suc denominator-1))
 
 \end{code}
 
@@ -1310,6 +1341,14 @@ divisor can help us reduce the fraction and give us the proof of coprime,
 [_] : ℚ₀ → ℚ
 
 \end{code}
+
+\AgdaHide{
+\begin{code}
+
+[_] = ?
+
+\end{code}
+}
 
 The embedding function is simple. We only need to forget the coprime proof in the normal form,
 
@@ -1432,8 +1471,7 @@ We also need one of the De Morgan's law in classical logic
 
 \begin{code}
 
-postulate DeMorgan : ∀ {A : Set}{P : A → Set} →
-¬ (∀ (x : A) → P x) → ∃ λ (x : A) → ¬ P x
+postulate DeMorgan : ∀ {A : Set}{P : A → Set} → ¬ (∀ (x : A) → P x) → ∃ λ (x : A) → ¬ P x
 
 \end{code}
 

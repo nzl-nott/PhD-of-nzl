@@ -40,8 +40,67 @@ To develop this model of type theory in Agda, we have implemented the categories
 
 
 
-\section{What we could do in this model}
 
+\subsection{An implementation of categories with Families in Agda}
+
+Following the work in \cite{alt:99}, we first define a
+proof-irrelevant universe of propositions. We name it as \textbf{hProp}
+since \textbf{Prop} is a  reserved word which can't be used and
+\textbf{hProp} is a notion from Homotopy Type Theory which we will introduce later.
+
+\subsection{hProp}
+\input{./CwF/latex/hProp.tex}
+
+\subsection{Category}
+
+To define category of setoids we should define category first.
+
+\input{./CwF/Cats/latex/Category.tex}
+
+$isCategory$ contains all the laws for this structure to be a category, for instance the
+associativity laws for composition.
+
+\subsection{Category of setoids}
+
+
+\input{./CwF/latex/CategoryOfSetoid.tex}
+
+
+\subsection{categories with families of setoids}
+
+
+A Category with families consists of a base category and a functor
+\cite{clairambault2005categories}. We firstly define the categories with
+families of sets in Agda  as a guidance for the one for setoids. We
+would present the setoid one here since it is relevant.
+
+\input{./CwF/latex/CwF-setoid.tex}
+
+\subsection{Examples of types}
+
+\input{./CwF/latex/CwF-ctd.tex}
+
+\input{./CwF/latex/CwF-quotient.tex}
+
+
+\subsection{Observational equality}
+
+%definitional distinct types
+
+Later in in \cite{alti:ott-conf}, Altenkirch and McBride further
+simplifies the setoid model by adopting McBride's heterogeneous
+approach to equality. They identifies values up to observation rather than
+  construction which is called observational equality. It is the
+  propositional equality induced by the Setoid model.  In general we have a heterogeneous equality which
+  compares terms of types which are different in construction. It only
+  make sense when we can prove the types are the same. It helps us
+  avoids the heavy use of $subst$ which makes formalisation and
+  reasoning involved. We could simplify the setoid model by adapting this
+  approach and the implementation could be easier.
+
+
+
+\section{What we could do in this model}
 
 \section{Quotient types in setoid model}
 

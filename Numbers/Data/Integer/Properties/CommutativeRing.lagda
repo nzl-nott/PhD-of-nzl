@@ -9,12 +9,12 @@ open import Algebra.Structures
 open import Function
 open import Data.Product
 open import Data.Integer'
-open import Data.Integer.Setoid using (ℤ₀ ; _,_ ; _∼_) renaming (_+_ to _ℤ₀+_ ; -_ to ℤ₀-_; _*_ to _ℤ₀*_)
+open import Data.Integer.Setoid using (ℤ₀ ; _,_ ; _∼_; zrefl ; zsym ; _>∼<_) renaming (_+_ to _ℤ₀+_ ; -_ to ℤ₀-_; _*_ to _ℤ₀*_)
 open import Data.Integer.Properties.BasicProp
-open import Data.Integer.Setoid.Properties as ℤ₀ using (zrefl ; zsym ; _>∼<_)
+import Data.Integer.Setoid.Properties as ℤ₀
 import Data.Nat.Properties+ as ℕ
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong; cong₂)
-import Algebra.FunctionProperties as P; open P _≡_
+import Algebra.FunctionProperties as P; open P {A = ℤ} _≡_
 open import Relation.Binary.Core
 open import Relation.Binary.PropositionalEquality.Core
 open import Symbols
@@ -56,7 +56,7 @@ liftComm {op} comm x y = sound $ comm ⌜ x ⌝ ⌜ y ⌝
 
 
 liftAssoc : ∀ {op : Op 2 ℤ₀}(cong : Cong2 op) → P.Associative _∼_ op → Associative (liftOp2safe op cong)
-liftAssoc {op} cong assoc a b c = sound $ cong (compl {op ⌜ a ⌝ ⌜ b ⌝}) zrefl >∼< assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< cong zrefl compl'
+liftAssoc {op} cong assoc a b c = sound $ cong (compl (op ⌜ a ⌝ ⌜ b ⌝)) zrefl >∼< assoc ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< cong zrefl compl'
 
 \end{code}
 
@@ -68,7 +68,7 @@ x + (- x) = 0
 \begin{code}
 
 +neg : ∀ x y → x + (- y) ≡ x - y
-+neg x y = sound $ ℤ₀.+-cong (zrefl {⌜ x ⌝}) compl >∼< ℤ₀.+neg ⌜ x ⌝ ⌜ y ⌝
++neg x y = sound $ ℤ₀.+-cong (zrefl {⌜ x ⌝}) (compl _) >∼< ℤ₀.+neg ⌜ x ⌝ ⌜ y ⌝
 
 +-rightInverse : RightInverse (+ 0) -_ _+_
 +-rightInverse z = +neg z z >≡< sound (ℤ₀.-inverse ⌜ z ⌝)
@@ -121,7 +121,7 @@ a * (b + c) = a * b + a * c
 \begin{code}
 
 distˡ :  _*_ DistributesOverˡ _+_
-distˡ a b c = sound $ ℤ₀.*-cong (zrefl {⌜ a ⌝}) compl >∼< 
+distˡ a b c = sound $ ℤ₀.*-cong (zrefl {⌜ a ⌝}) (compl _) >∼< 
                      ℤ₀.distˡ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong compl' compl'
 
 \end{code}
@@ -132,7 +132,7 @@ b) right distributivity
 \begin{code}
 
 distʳ : _*_ DistributesOverʳ _+_
-distʳ a b c = sound $ ℤ₀.*-cong (compl {⌜ b ⌝ ℤ₀+ ⌜ c ⌝}) zrefl >∼< ℤ₀.distʳ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong compl' compl'
+distʳ a b c = sound $ ℤ₀.*-cong (compl (⌜ b ⌝ ℤ₀+ ⌜ c ⌝)) zrefl >∼< ℤ₀.distʳ ⌜ a ⌝ ⌜ b ⌝ ⌜ c ⌝ >∼< ℤ₀.+-cong compl' compl'
 
 
 distrib-*-+ : _*_ DistributesOver _+_

@@ -1,0 +1,306 @@
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaSymbol{\{-\#} \AgdaKeyword{OPTIONS} --type-in-type \AgdaSymbol{\#-\}}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{Level}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality} \AgdaSymbol{as} \AgdaModule{PE} \AgdaKeyword{hiding} \AgdaSymbol{(}refl \AgdaSymbol{;} sym \AgdaSymbol{;} trans\AgdaSymbol{;} isEquivalence\AgdaSymbol{;} [\_]\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{CwF-quotient} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{:} \AgdaFunction{Extensionality} \AgdaPrimitive{Level.zero} \AgdaPrimitive{Level.zero}\AgdaSymbol{)} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Unit}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Function}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{-- importing other CWF files}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{CwF-setoid}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaModule{CwF-setoid} \AgdaBound{ext}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{CategoryOfSetoid}\<%
+\\
+\>\AgdaKeyword{module} \AgdaModule{cos'} \AgdaSymbol{=} \AgdaModule{CategoryOfSetoid} \AgdaBound{ext}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{cos'}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{hProp}\<%
+\\
+\>\AgdaKeyword{module} \AgdaModule{hp'} \AgdaSymbol{=} \AgdaModule{hProp} \AgdaBound{ext}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{hp'}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{CwF-ctd}\<%
+\\
+\>\AgdaKeyword{module} \AgdaModule{cc} \AgdaSymbol{=} \AgdaModule{CwF-ctd} \AgdaBound{ext}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{cc}\<%
+\\
+%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+
+The equality type is an essential part of a type theory. We could define it by using the equivalence relation from the setoid representation of type A. The equivalence relation is trivial since it is proof-irrelevant.
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{Rel} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaPrimitiveType{Set₁}\<%
+\\
+\>\AgdaFunction{Rel} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{=} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{⟦Id⟧} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{Rel} \AgdaBound{A}\<%
+\\
+\>\AgdaFunction{⟦Id⟧} \AgdaBound{A}\<%
+\\
+\>[0]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaSymbol{=} \AgdaKeyword{record} \<[12]%
+\>[12]\<%
+\\
+\>[3]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{((}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \<[34]%
+\>[34]\AgdaKeyword{record}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{x} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaSymbol{→} \AgdaFunction{⊤'}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{isEquiv} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[9]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{\{} \AgdaField{refl} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x₁}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[9]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x₂} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[9]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[9]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}} \AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{((}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaBound{x0} \AgdaSymbol{→} \<[40]%
+\>[40]\<%
+\\
+\>[7]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \<[34]%
+\>[34]\<%
+\\
+\>[7]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{\_} \AgdaFunction{]sym} \AgdaBound{a}\AgdaSymbol{)} \<[36]%
+\>[36]\<%
+\\
+\>[7]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \<[35]%
+\>[35]\<%
+\\
+\>[7]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst*} \AgdaSymbol{\_} \AgdaBound{x0}\AgdaSymbol{)} \AgdaBound{b}\AgdaSymbol{)} \<[37]%
+\>[37]\<%
+\\
+\>[7]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{x₁} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaBound{a} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{q} \AgdaBound{a} \AgdaSymbol{→} \AgdaInductiveConstructor{tt} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+The unique inhabitant $refl$ is defined as
+
+\begin{code}\>\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{cm-refl} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaRecord{⇉} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{cm-refl} \AgdaBound{A} \AgdaSymbol{=} \AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{fn} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x'} \AgdaSymbol{→} \AgdaBound{x'} \AgdaInductiveConstructor{,} \AgdaFunction{proj₂} \AgdaBound{x'} \<[47]%
+\>[47]\<%
+\\
+\>[7]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{;} \AgdaField{resp} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x'} \AgdaSymbol{→} \AgdaBound{x'} \AgdaInductiveConstructor{,} \AgdaFunction{proj₂} \AgdaBound{x'} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{⟦refl⟧⁰} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[30]%
+\>[30]\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaRecord{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{⟦Id⟧} \AgdaBound{A}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{[} \AgdaFunction{cm-refl} \AgdaBound{A} \AgdaFunction{]T}\AgdaSymbol{)} \<[26]%
+\>[26]\<%
+\\
+\>\AgdaFunction{⟦refl⟧⁰} \AgdaBound{A} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[10]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{x} \AgdaFunction{]refl} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\}}\<%
+\\
+\>[10]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[10]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{⟦refl⟧} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[29]%
+\>[29]\<%
+\\
+\>[-6]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaRecord{Tm} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{Π} \AgdaBound{A} \AgdaSymbol{(}\AgdaFunction{⟦Id⟧} \AgdaBound{A} \<[29]%
+\>[29]\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{[} \AgdaFunction{cm-refl} \AgdaBound{A} \AgdaFunction{]T}\AgdaSymbol{)} \AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{⟦refl⟧} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{=} \<[16]%
+\>[16]\AgdaFunction{lam} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{⟦refl⟧⁰} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+%
+\\
+%
+\\
+\>\<\end{code}
+
+We have an abstracted $refl$ term as well. Using $\Pi$-types we could define the eliminator for $Id$, but it is more involved.
+
+We have done the basics for category of families of setoids. There are more types can be interpreted in this model so that we could show that it is a valid model for Type Theory. We would like to interpret quotient types in this model by following Hofmann's method in \cite{hof:95:sm} or by ourselves.
+
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaComment{\{-
+
+-- substIn (B : Ty (Γ \& A))
+
+⟦subst⟧⁰ : \{Γ : Con\}(A : Ty Γ)(B : Ty (Γ \& A)) → 
+           Tm \{Γ \& A \& (A [ fst\& A ]T) 
+           \& (⟦Id⟧ A) \& B [ fst\& (A [ fst\& A ]T) ]T [ fst\& (⟦Id⟧ A) ]T\} 
+         (B [ record \{ fn = λ x → (proj₁ (proj₁ (proj₁ (proj₁ x)))) , (proj₂ (proj₁ (proj₁ x))) ; resp = λ x → proj₁ (proj₁ (proj₁ (proj₁ x))) , proj₂ (proj₁ (proj₁ x)) \} ]T)
+
+⟦subst⟧⁰ \{Γ\} A B = record
+       \{ tm = λ \{((((x , a) , b) , p) , PA) → [ B ]subst ([ Γ ]refl , [ [ A ]fm \_ ]trans ([ A ]refl* \_ \_) p) PA \}
+       ; respt = λ \{((((m , a) , b) , p) , PA) → 
+         [ [ B ]fm \_ ]trans 
+         ([ B ]trans* \_ \_ \_) 
+          ([ [ B ]fm \_ ]trans 
+         [ B ]subst-pi 
+         ([ [ B ]fm \_ ]trans 
+         ([ [ B ]fm \_ ]sym ([ B ]trans* \_ \_ \_))
+         ([ B ]subst* \_ PA) )) \}
+       \}
+
+
+-\}}\<%
+\\
+%
+\\
+\>\AgdaComment{-- The mechanism used in Martin Hofmann's Paper}\<%
+\\
+%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Prop-Uni} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{prf} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{uni} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{prf} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈h} \AgdaBound{y} \AgdaDatatype{≡} \AgdaFunction{⊤'}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Prop-Uni}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Is it correct to write  Tm A → Tm B for dependent types?}\<%
+\\
+%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{Id-is-prop} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Prop-Uni} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{\&} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaBound{A} \AgdaFunction{]T}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{Id-is-prop} \AgdaBound{A} \AgdaSymbol{=} \AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{prf} \AgdaSymbol{=} \AgdaFunction{⟦Id⟧} \AgdaBound{A} \AgdaSymbol{;} \AgdaField{uni} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaInductiveConstructor{PE.refl} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaComment{\{-
+record Quo \{Γ : Con\}(A : Ty Γ)(R : Prop-Uni (Γ \& A \& (A [ fst\& \{Γ\} \{A\} ]T))) : Set where
+  field
+    Q : Ty Γ
+    [\_] : Tm A → Tm Q
+    Q-elim : ∀ (B : Ty Γ)
+                 (M : Tm \{Γ \& A\} (B [ fst\& \{Γ\} \{A\} ]T))
+                 (N : Tm Q)
+                 (H : Tm \{Γ \& A \& A [ fst\& \{Γ\} \{A\} ]T \& prf R\} (prf (Id-is-prop B) [ fst\& \{Γ \& A \& A [ fst\& \{Γ\} \{A\} ]T\} \{prf R\} ]T)) -- (prf (Id-is-prop (B [ fst\& \{Γ\} \{A\} ]T)))
+               → Tm B
+
+-\}}\<%
+\\
+%
+\\
+%
+\\
+%
+\\
+\>\<\end{code}
+}

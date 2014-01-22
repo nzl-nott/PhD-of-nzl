@@ -335,31 +335,29 @@ and mathematics. Vladimir Voevodsky found a surprising connection between homoto
 $$X = Y \simeq X \simeq Y$$ holds.
 \end{definition}
 
-In \hott, we interpret the notions in type theory with homotopy-theoretical terms. A type is regarded as a \emph{space} and a term of this type is a \emph{point} of this space. Functions between types are \emph{continous maps} and identity types are usually considered as \emph{paths}. Identity types of identity types are \emph{homotopies}. Although these notions are originally defined with topological bases, we only employ them as homotopical notions on a higher level. 
-It does not only help us model type theory with a focus on the equality, but also provides mathematicians type theoretical tools to study homotopy theory.
+In \hott, there is an observation that notions in type theory can be interpreted by homotopy-theoretical terms. A type is regarded as a \emph{space} and a term of this type is a \emph{point} of this space. Functions between types are \emph{continous maps} and identity types are usually considered as \emph{paths}. Identity types of identity types are \emph{homotopies}. Although these notions are originally defined with topological bases, we only employ them as homotopical notions on a higher level. 
+
+As univalence axiom states, equality is equivalent to equivalence. Acutally it can be seen as an formal acceptance of the ''common sense'' in Mathematics that isomorphic structures can be identitfied. The higher structures of the equivalence also allows us to study the different ways of identification. Therefore it is more appropriate to interpret types as higher groupoids. People is trying to implement \hott in \itt and one possible way is to interpret \wog first in Agda. The author has done some work in this direction which can be found in Chapter~\ref{wog}.
+
+Higher inductive types are another important ingredient of \hott. It provides us an enriched way to define types, with the paths as constructors of the types as well. 
+A circle $\base:\Sn^1$ can be \emph{inductively} defined with two constructors,
+\begin{itemize}
+\item A point $\base:\Sn^1$, and
+\item A path $\lloop : {\id[\Sn^1]\base\base}$.
+\end{itemize}
+
+The eliminator for this type has to take into account the path as well.
+
+\hott does not only help us model type theory with a focus on the equality, but also provides mathematicians type theoretical tools to study homotopy theory.
 
 
- which is the universe, and identity types are just the paths. 
+
 
 I will not explain this topic in detail here, \todo{I will!!}
 
 
-A well-written text book on Homotopy Type Theory which is written by many brilliant mathematicians and computer
-scientists is available now \cite{hott}. 
-
-
-
-
-
-
-
-
-It is possible to
-define the quotient types in Homotopy Type Theory but to implement the
-Homotopy Type Theory in \itt{}, it is still a difficult problem. We
-work on defining semi-simplicial types and \wog{} to solve it. 
-
-
+For further reference, a well-written text book on Homotopy Type Theory which is written by many brilliant mathematicians and computer
+scientists is available \cite{hott}. 
 
 
 
@@ -372,106 +370,3 @@ The universe of small types is encoded as $\Set_{0}$ or $\Set$ rather than $\Typ
 
 
 
-
-\section{literature review}
-
-
-In \cite{cab}, Mendler et al. have firstly considered building new types from a
-given type using a quotient operator $//$. Their work is based on an
-implementation of \ett, NuPRL. In NuPRL, every type
-comes with its own equality relation, so the quotient operator can be
-seen as a way of redefining equality in a type. But it is not all
-about building new types. They also discuss problems that arise from
-defining functions on the new type which can be illustrated using a simple example. 
-
-Assume the base type is $A$ and the new equivalence relation is $E$, the new
-type can be formed as $A//E$. 
-
-When we want to define a function $f \,\colon\, A//E \to Bool$,  $f\,a \not= f\,b$ may
-exists for $a, b \,\colon A$ such that $E\,a\,b$. This will lead to
-inconsistency since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, hence
-the left hand side $f\,a$ can be converted to $f\,b$, namely we get $f\,b \not= f\,b$
-which is contradicted with the equality reflection rule. 
-
-Therefore a function is said to be well-defined \cite{cab} on the new type only
-if it respects the equivalence relation $E$, namely
-
-$$\forall \, a\,b\,\colon A, E\,a\,b \to f\,a = f\,b$$
-
-We call this \emph{soundness} property in \cite{aan}.
-
- After the introduction of quotient types, Mendler further investigates
- this topic from a categorical perspective in ~\cite{men:90}. He uses
- the correspondence between quotient types in \mltt{} and coequalizers
- in a category of types to define a notion called \emph{squash types},
- which is further discussed by Nogin \cite{nog:02}.
-
-To add quotient types to \mltt{}, Hofmann proposes  three models for
-quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
-quotient types. In this model all types are attached with partial
-equivalence relations, namely all types are setoids rather than
-sets. Types without a specific equivalence relation can be seen as
-setoids with the basic intensional equality. This is similar to
-\ett{} in some sense. The second one is groupoid model which solves some problems
-but it is not definable in \itt{}. He also proposes a third model to
-combine the advantages of the first two models, but it also has some
-disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt  extended with quotient types and a universe \cite{hof:95:con}.
-
-Nogin \cite{nog:02} considers a modular approach to axiomatizing the
-same quotient types in NuPRL as well. Despite the ease of constructing new types
-from base types, he also discusses some
-problems about quotient types. For example, since the equality is
-extensional, we cannot recover the
-witness of the equality.  He suggests including more axioms to
-conceptualise quotients. He decomposes the formalisation of quotient type
-into several smaller primitives such that they can be handled much
-simpler.
-
-Homeier \cite{hom} axiomatises quotient types in Higher Order Logic
-(HOL), which is also a theorem prover. He creates a tool package to
-construct quotient types as a conservative extension of HOL such that
-users are able to define new types in HOL. Next he defines the
-normalisation functions and proves several properties of
-these. Finally he discussed the issues when quotienting on the
-aggregate types such as lists and pairs.
-
-
-Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Constructions
-with \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. 
-However not all quotient types have normal forms. Normalised types are
-proper subsets of quotient types, because we can easily recover a quotient
-type from a normalised type as below
-%$$ \[ (A, Q, \class\dotph \colon A \to Q) \rightarrow(A, \lambda \,a \,b \to \class a = \class b)\]$$
-
-
-Barthe and Geuvers \cite{bar:96} also propose a new notion called
-\emph{congruence types}, which is also a special class of quotient
-types, in which the base type are inductively defined and with a set
-of reduction rules called the term-rewriting system. The idea behind
-it is the $\beta$-equivalence is replaced by a set of
-$\beta$-conversion rules. Congruence types can be treated as an
-alternative to the pattern matching introduced in \cite{coq:92}. The main
-purpose of introducing congruence types is to solve problems in
-term rewriting systems rather than to implement quotient types.
-
-
-Barthe and Capretta \cite{bar:03} compare different ways to setoids in type theory.
-The setoid is classified as partial setoid or total setoid depending
-on whether the equality relation is reflexive or not. They also
-consider obtain quotients with different kinds of setoids, especially
-the ones from partial setoids are difficult to define because the lack
-of reflexivity.
-
-Abbott, Altenkirch et al. \cite{abb:04} provides the basis for
-programming with quotient datatypes polymorphically based on their
-works on containers which are datatypes whose instances are
-collections of objects, such as arrays, trees and so on. Generalising
-the notion of container, they define quotient containers as the
-containers quotiented by a collection of isomorphisms on the positions
-within the containers.
-
-Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
-of axioms of Homotopy Type Theory. It is based on the groupoid model
-for \itt{} where isomorphisms are equalities. He firstly implement
-equivalence class and use it to implement quotients which is an
-analogy to the construction of quotient sets in set theory. 

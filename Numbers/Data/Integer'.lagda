@@ -9,17 +9,20 @@ module Data.Integer' where
 
 open import Data.Bool
 open import Algebra.FunctionProperties.Core
-open import Data.Nat as ℕ using (ℕ)
 open import Data.Sign as Sign using (Sign)
   renaming (_*_ to _S*_)
 open import Data.Product
-open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _∼_ ; _,_)
+open import Data.Nat using (ℕ; zero) renaming (suc to nsuc; pred to npre)
+open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _∼_ ; _,_; zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence)
   renaming (_+_ to _ℤ₀+_ ; _-_ to _ℤ₀-_ ; _*_ to _ℤ₀*_ ;
   _≤_ to _ℤ₀≤_; _<_ to _ℤ₀<_)
-open import Data.Integer.Setoid.Properties as ℤ₀
-  using (zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence; refl') 
+import Data.Integer.Setoid.Properties as ℤ₀
+  using (refl') 
   renaming (_≟_ to _ℤ₀≟_ ; _≤?_ to _ℤ₀≤?_)
 open import Relation.Binary.Core
+open import Symbols
+open import Data.Nat.Properties+ as ℕ using (_+suc_≢0_)
+
 
 infixl 7 _*_
 infixl 6 _+_ _-_
@@ -47,8 +50,8 @@ a) normalise the setoid integer to normal form e.g. (3 , 2) → + 1
 
 [_]                   : ℤ₀ → ℤ
 [ m , 0 ]             = + m
-[ 0 , ℕ.suc n ]       = -suc n
-[ ℕ.suc m , ℕ.suc n ] = [ m , n ]
+[ 0 , nsuc n ]       = -suc n
+[ nsuc m , nsuc n ] = [ m , n ]
 
 \end{code}
 
@@ -73,7 +76,7 @@ c) verification
 compl : ∀ n → ⌜ [ n ] ⌝ ∼ n
 compl (x , 0)           = refl
 compl (0 , nsuc y)      = refl
-compl (nsuc x , nsuc y) = compl (x , y) >∼<  ⟨ ℕ.sm+n≡m+sn x y ⟩
+compl (nsuc x , nsuc y) = compl (x , y) >∼<  ⟨ ℕ.sm+n≡m+sn x ⟩
 
 \end{code}
 
@@ -120,8 +123,8 @@ infix 5 _◃_
 
 _◃_              : Sign → ℕ → ℤ
 Sign.+ ◃ n       = + n
-Sign.- ◃ ℕ.zero  = + 0
-Sign.- ◃ ℕ.suc n = -suc n
+Sign.- ◃ zero  = + 0
+Sign.- ◃ nsuc n = -suc n
 
 \end{code}
 
@@ -179,11 +182,11 @@ the generalisation of the conversion from the operators for the ℤ₀ to the on
 
 Op : ℕ → (A : Set) → Set
 Op 0 A = A
-Op (ℕ.suc n) A = A → Op n A
+Op (nsuc n) A = A → Op n A
 
 liftOp : ∀ n → Op n ℤ₀ → Op n ℤ
 liftOp 0 op = [ op ]
-liftOp (ℕ.suc n) op = λ x → liftOp n (op ⌜ x ⌝)
+liftOp (nsuc n) op = λ x → liftOp n (op ⌜ x ⌝)
 
 \end{code}
 
@@ -231,9 +234,9 @@ d) successor
 \begin{code}
 
 suc : Op₁ ℤ
-suc (+ n)          = + ℕ.suc n
+suc (+ n)          = + nsuc n
 suc (-suc 0)       = + 0
-suc (-suc ℕ.suc n) = -suc n
+suc (-suc (nsuc n)) = -suc n
 
 \end{code}
 
@@ -242,9 +245,9 @@ e) predecessor
 \begin{code}
 
 pred : Op₁ ℤ
-pred (+ ℕ.zero)  = -suc ℕ.zero
-pred (+ ℕ.suc n) = + n
-pred (-suc n)    = -suc ℕ.suc n
+pred (+ zero)  = -suc zero
+pred (+ nsuc n) = + n
+pred (-suc n)    = -suc nsuc n
 
 \end{code}
 

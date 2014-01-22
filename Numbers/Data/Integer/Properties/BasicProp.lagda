@@ -10,11 +10,11 @@ open import Data.Nat using (ℕ) renaming (suc to nsuc; pred to npre)
 open import Data.Product
 open import Data.Sign as Sign using (Sign)
 open import Data.Integer'
-open import Data.Integer.Setoid using (ℤ₀; _,_ ; _∼_)
+open import Data.Integer.Setoid using (ℤ₀; _,_ ; _∼_; zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence)
   renaming (_+_ to _ℤ₀+_; _◃_ to _ℤ₀◃_; _*_ to _ℤ₀*_; -_ to ℤ₀-_
   ; _≤_ to _ℤ₀≤_; ¬0 to ℤ₀¬0)
 open import Data.Integer.Setoid.Properties as ℤ₀
-  using (zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence; refl') 
+  using (refl') 
   renaming (_≟_ to _ℤ₀≟_ ; _≤?_ to _ℤ₀≤?_)
 open import Data.Nat.Properties+ as ℕ using (_+suc_≢0_)
 
@@ -25,6 +25,7 @@ open import Relation.Binary.PropositionalEquality hiding ([_])
 open import Relation.Nullary.Core
 open import Symbols
 
+{-
 module ℤ₀O = DecTotalOrder ℤ₀.decTotalOrder
 
 infixl 40 _>≤<_
@@ -34,7 +35,7 @@ infixl 40 _>≤<_
 
 ℤ₀r-≤resp : ∀ {n x y} → x ∼ y → x ℤ₀≤ n → y ℤ₀≤ n
 ℤ₀r-≤resp = proj₂ ℤ₀O.≤-resp-≈
-
+-}
 \end{code}
 
 p is left inverse of i
@@ -82,14 +83,14 @@ b) completeness:
 if it is true, then we can give the proof
 
 \begin{code}
-
+{-
 compl                   : ∀ {n} → ⌜ [ n ] ⌝ ∼ n
 compl {x , 0}           = refl
 compl {0 , nsuc y}      = refl
 compl {nsuc x , nsuc y} = compl {x , y} >∼<  ⟨ ℕ.sm+n≡m+sn x y ⟩
-
+-}
 compl' : ∀ {n} → n ∼  ⌜ [ n ] ⌝
-compl' = zsym compl
+compl' = zsym (compl _)
 
 ⌞_⌟          : ∀ {i j} → ⌜ i ⌝ ∼ ⌜ j ⌝  → i ≡ j
 ⌞_⌟  {+ i} {+ j} eqt      = +_ ⋆ (ℕ.+r-cancel 0 eqt)
@@ -100,7 +101,7 @@ compl' = zsym compl
 ⌞_⌟  { -suc i } { -suc j } eqt = -suc_ ⋆ npre ⋆ ⟨ eqt ⟩
 
 sound' : ∀ {i j} → i ∼ ⌜ j ⌝  → [ i ] ≡ j
-sound' eq = ⌞ (compl >∼< eq) ⌟
+sound' eq = ⌞ (compl _ >∼< eq) ⌟
 
 \end{code}
 
@@ -112,7 +113,7 @@ Note: b) and c) proves that ∼ and nf∼ define the same equivalence relation o
 \begin{code}
 
 sound                 : ∀ {x y} → x ∼ y → [ x ] ≡ [ y ]
-sound { x } { y } x∼y = ⌞ compl >∼< x∼y >∼< compl' ⌟ 
+sound { x } { y } x∼y = ⌞ compl _ >∼< x∼y >∼< compl' ⌟ 
 
 \end{code}
 
@@ -129,28 +130,31 @@ c) The quotient definition for ℤ
   ; isEquivalence = _∼_isEquivalence
   }
 
-ℤ-PreQu : PreQu ℤ-Setoid
+ℤ-PreQu : pre-Quotient ℤ-Setoid
 ℤ-PreQu = record
   { Q       = ℤ
-  ; [_]     = [_]
-  ; sound   = sound
+  ; Set-Q   = record { isSet = record { isProp = h } }
+  ;  nf     = record { fun = [_]; fun-correct = sound }
   }
+  where
+    h : {p q : ℤ} → (a b : p ≡ q) → a ≡ b
+    h refl refl = refl
 
-ℤ-QuD : QuD ℤ-PreQu
+ℤ-QuD : DefinableQuotient ℤ-PreQu
 ℤ-QuD = record
   { emb       = ⌜_⌝
-  ; complete  = λ z → compl
+  ; complete  = λ z → compl _
   ; stable    = λ z → stable
   }
 
-ℤ-Qu = QuD→Qu ℤ-QuD
+ℤ-Qu = DefinableQuotient→Quotient ℤ-QuD
 
-ℤ-QuE = QuD→QuE {_} {_} {ℤ-Qu} ℤ-QuD
+ℤ-QuE = DefinableQuotient→ExactQuotient {_} {_} ℤ-QuD
 
-ℤ-QuH = QuD→QuH ℤ-QuD
+ℤ-QuH = DefinableQuotient→QuotientHoffmann ℤ-QuD
 
 exact : ∀ {a b} → [ a ] ≡ [ b ] → a ∼ b
-exact = QuE.exact ℤ-QuE
+exact = ExactQuotient.exact ℤ-QuE
 
 \end{code}
 
@@ -185,7 +189,7 @@ The integrity of ℤ
 \begin{code}
 
 +compl : ∀ m n → ⌜ m + n ⌝ ∼ ⌜ m ⌝ ℤ₀+ ⌜ n ⌝
-+compl m n = compl
++compl m n = compl _
 
 \end{code}
 
@@ -204,10 +208,10 @@ open  L ℤ-QuD
 -inv {+ 0} = refl
 -inv {+ nsuc n} = refl
 -inv { -suc n} = refl
-
+{-
 -out : ∀ a b → (- a) * b ≡ - (a * b) 
 -out a b = sound (ℤ₀.*-cong (compl {ℤ₀- ⌜ a ⌝ }) (zrefl {⌜ b ⌝}) >∼< ℤ₀.-out ⌜ a ⌝ ⌜ b ⌝) >≡< ⟨ -β (⌜ a ⌝ ℤ₀* ⌜ b ⌝) ⟩
-
+-}
 \end{code}
 
 _≡_, is0 and _≤_ are decidable_
@@ -237,7 +241,7 @@ a ≤? b = ⌜ a ⌝ ℤ₀≤? ⌜ b ⌝
 (ℤ, =, ≤) is a total order
 
 \begin{code}
-
+{-
 refl′ :  _≡_ ⇒ _≤_
 refl′ refl = ℤ₀O.reflexive zrefl 
 
@@ -321,5 +325,5 @@ integrity for ≤
 
 integrity′ : ∀ {a b} c → + nsuc c * a ≤ + nsuc c * b → a ≤ b
 integrity′ c = ℤ₀.integrity′ c ∘ +compl≤
-
+-}
 \end{code}

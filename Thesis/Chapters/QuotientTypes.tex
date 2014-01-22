@@ -433,6 +433,7 @@ of quotient types does not stop at replacing equality of the types. We
 will discuss these in next section.
 
 
+
 \section{Example of Quotients}
 
 The introduction of quotient types is very helpful. Many types can be
@@ -443,3 +444,108 @@ numbers (the reason will be covered in \todo).
 
 
 quotient groups, quotient space, partiality monad.
+
+
+\section{literature review}
+
+
+In \cite{cab}, Mendler et al. have firstly considered building new types from a
+given type using a quotient operator $//$. Their work is done in an
+implementation of \ett, NuPRL. 
+
+In NuPRL, every type comes with its own equality relation, so the quotient operator can be
+seen as a way of redefining equality in a type. But it is not all
+about building new types. They also discuss problems that arise from
+defining functions on the new type which can be illustrated using a simple example. 
+
+Assume the base type is $A$ and the new equivalence relation is $E$, the new
+type can be formed as $A//E$. 
+
+When we want to define a function $f \,\colon\, A//E \to Bool$,  $f\,a \not= f\,b$ may
+exists for $a, b \,\colon A$ such that $E\,a\,b$. This will lead to
+inconsistency since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, hence
+the left hand side $f\,a$ can be converted to $f\,b$, namely we get $f\,b \not= f\,b$
+which is contradicted with the equality reflection rule. 
+
+Therefore a function is said to be well-defined \cite{cab} on the new type only
+if it respects the equivalence relation $E$, namely
+
+$$\forall \, a\,b\,\colon A, E\,a\,b \to f\,a = f\,b$$
+
+We call this \emph{soundness} property in \cite{aan}.
+
+ After the introduction of quotient types, Mendler further investigates
+ this topic from a categorical perspective in ~\cite{men:90}. He uses
+ the correspondence between quotient types in \mltt{} and coequalizers
+ in a category of types to define a notion called \emph{squash types},
+ which is further discussed by Nogin \cite{nog:02}.
+
+To add quotient types to \mltt{}, Hofmann proposes  three models for
+quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
+quotient types. In this model all types are attached with partial
+equivalence relations, namely all types are setoids rather than
+sets. Types without a specific equivalence relation can be seen as
+setoids with the basic intensional equality. This is similar to
+\ett{} in some sense. The second one is groupoid model which solves some problems
+but it is not definable in \itt{}. He also proposes a third model to
+combine the advantages of the first two models, but it also has some
+disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt  extended with quotient types and a universe \cite{hof:95:con}.
+
+Nogin \cite{nog:02} considers a modular approach to axiomatizing the
+same quotient types in NuPRL as well. Despite the ease of constructing new types
+from base types, he also discusses some
+problems about quotient types. For example, since the equality is
+extensional, we cannot recover the
+witness of the equality.  He suggests including more axioms to
+conceptualise quotients. He decomposes the formalisation of quotient type
+into several smaller primitives such that they can be handled much
+simpler.
+
+Homeier \cite{hom} axiomatises quotient types in Higher Order Logic
+(HOL), which is also a theorem prover. He creates a tool package to
+construct quotient types as a conservative extension of HOL such that
+users are able to define new types in HOL. Next he defines the
+normalisation functions and proves several properties of
+these. Finally he discussed the issues when quotienting on the
+aggregate types such as lists and pairs.
+
+
+Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Constructions
+with \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. 
+However not all quotient types have normal forms. Normalised types are
+proper subsets of quotient types, because we can easily recover a quotient
+type from a normalised type as below
+%$$ \[ (A, Q, \class\dotph \colon A \to Q) \rightarrow(A, \lambda \,a \,b \to \class a = \class b)\]$$
+
+
+Barthe and Geuvers \cite{bar:96} also propose a new notion called
+\emph{congruence types}, which is also a special class of quotient
+types, in which the base type are inductively defined and with a set
+of reduction rules called the term-rewriting system. The idea behind
+it is the $\beta$-equivalence is replaced by a set of
+$\beta$-conversion rules. Congruence types can be treated as an
+alternative to the pattern matching introduced in \cite{coq:92}. The main
+purpose of introducing congruence types is to solve problems in
+term rewriting systems rather than to implement quotient types.
+
+
+Barthe and Capretta \cite{bar:03} compare different ways to setoids in type theory.
+The setoid is classified as partial setoid or total setoid depending
+on whether the equality relation is reflexive or not. They also
+consider obtain quotients with different kinds of setoids, especially
+the ones from partial setoids are difficult to define because the lack
+of reflexivity.
+
+Abbott, Altenkirch et al. \cite{abb:04} provides the basis for
+programming with quotient datatypes polymorphically based on their
+works on containers which are datatypes whose instances are
+collections of objects, such as arrays, trees and so on. Generalising
+the notion of container, they define quotient containers as the
+containers quotiented by a collection of isomorphisms on the positions
+within the containers.
+
+Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
+of axioms of Homotopy Type Theory. It is based on the groupoid model
+for \itt{} where isomorphisms are equalities. He firstly implement
+equivalence class and use it to implement quotients which is an
+analogy to the construction of quotient sets in set theory. 

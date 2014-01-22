@@ -17,7 +17,7 @@ open import Data.Integer' as ℤ using (ℤ ; +_ ; -suc_)
   _≤_ to _ℤ≤_; _<_ to _ℤ<_; _◃_ to _ℤ◃_)
 open import Data.Product public
 open import Data.Sign as Sign using (Sign) renaming (_*_ to _S*_)
-open import Level
+open import Level hiding (suc)
 open import Relation.Binary.Core
 
 \end{code}

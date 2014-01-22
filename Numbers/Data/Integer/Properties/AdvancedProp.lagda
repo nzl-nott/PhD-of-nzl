@@ -12,7 +12,7 @@ open import Data.Nat using ()
 open import Data.Integer'
 open import Data.Integer.Properties.BasicProp
 open import Data.Integer.Properties.CommutativeRing
-open import Data.Integer.Setoid.Properties as ℤ₀ using (_>∼<_)
+import Data.Integer.Setoid.Properties as ℤ₀
 open import Data.Nat.Properties+ as ℕ using (_+=_; _+⋆_)
 open import Relation.Binary.PropositionalEquality
 open import Symbols
@@ -122,8 +122,9 @@ useful functions for rational numbers
 *+-simp : ∀ a b → (+ a) * (+ b) ≡ + (a ℕ* b)
 *+-simp a b = sound' $ ℕ.n+0≡n {a ℕ* b} += ⟨ ℕ.n*0+0=0 {a} ⟩
 
+{-
 -*cong : ∀ m n → m * n ≡ (- m) * (- n)
 -*cong m n = ⟨ -out m (- n) >≡< -_ ⋆ (*-comm m (- n) >≡<
   -out n m) >≡< (-inv >≡< *-comm n m) ⟩
-
+-}
 \end{code}

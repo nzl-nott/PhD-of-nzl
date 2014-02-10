@@ -4,5 +4,11 @@
      "enum:Q"
      "enum:box"
      "enum:sound"
-     "enum:elim")))
+     "enum:elim"
+     "def:nor"
+     "eq:prop-property-short"
+     "defcon"
+     "eq:cauchy-aux"
+     "prop:main"
+     "dis:con")))
 

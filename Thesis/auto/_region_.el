@@ -1,22 +1,24 @@
 (TeX-add-style-hook "_region_"
  (lambda ()
     (LaTeX-add-bibliographies
-     "my.bib")
+     "my")
     (LaTeX-add-labels
      "Bibliography")
     (TeX-add-symbols
      "HRule")
     (TeX-run-style-hooks
-     "tbib"
-     "na"
+     "mypack"
+     "natbib"
      "square"
      "numbers"
      "comma"
      "sort&compress"
      "diagxy"
+     "proof"
+     "booktabs"
+     "xspace"
      "inputenc"
      "utf8x"
-     "ucs"
      "textgreek"
      "stmaryrd"
      "autofe"
@@ -27,7 +29,7 @@
      "relsize"
      "amsthm"
      "dsfont"
-     "mypack"
+     "agda"
      "xy"
      "matrix"
      "latex2e"
@@ -38,5 +40,11 @@
      "UKenglish"
      "twoside"
      "openright"
-     "Chapters/QuotientTypes")))
+     "Chapters/Introduction"
+     "Chapters/Background"
+     "Chapters/QuotientTypes"
+     "Chapters/DefinableQuotients"
+     "Chapters/SetoidModel"
+     "Chapters/OGModel"
+     "Chapters/Summary")))
 

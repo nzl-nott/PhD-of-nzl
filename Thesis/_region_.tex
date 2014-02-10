@@ -10,29 +10,40 @@
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
 \usepackage[matrix]{xy}
-\usepackage{mypack}
+%agda literal file
+\usepackage{agda}
 
-
-\usepackage{dsfont}
+\usepackage{dsfont} % math symbols
 \usepackage{amsthm}
 \usepackage{relsize}
 \usepackage{color}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{autofe}
+\usepackage{autofe} % font for code environment
 \usepackage{stmaryrd}
 \usepackage{textgreek}
-\usepackage{ucs}
+%\usepackage{ucs}
 \usepackage[utf8x]{inputenc}
-\usepackage{diagxy}
+\usepackage{xspace}
+\usepackage{booktabs}% horizontal lines
 
-\usepackage[square, numbers, comma, sort&compress]{na
-tbib} 
+\usepackage{proof} % For type derivation
+\setlength{\inferLineSkip}{4pt}
+
+\usepackage{diagxy} % commutative diagram 
+
+\usepackage{booktabs}% nice tables
+
+\usepackage[square, numbers, comma, sort&compress]{natbib} 
 % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
+
+\usepackage{mypack}
+
 
 \hypersetup{urlcolor=blue, colorlinks=true}
 % Colors hyperlinks in blue - change to black if annoying
+
 
 \title{\ttitle}
 % Defines the thesis title - don't touch this
@@ -119,7 +130,7 @@ tbib}
 
 \abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
 
-The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+The Thesis Abstract is written here (and usually kept to just this page). This thesis mainly covered the quotient types in type theory
 }
 
 
@@ -161,13 +172,35 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 
 \mainmatter % Begin numeric (1,2,3...) page numbering
 
+\fancyfoot{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{\rightmark}
+
 \pagestyle{fancy} % Return the page headers back to the "fancy" style
 
 % Include the chapters of the thesis as separate files from the Chapters folder
 % Uncomment the lines as you write the chapters
 
+
+\input{Chapters/Introduction}
+%%
+
+\input{Chapters/Background}
+
+%\input{Chapters/Extensionality}
+
 \input{Chapters/QuotientTypes}
 
+\input{Chapters/DefinableQuotients} 
+
+\input{Chapters/SetoidModel}
+
+\input{Chapters/OGModel}
+
+%\input{Chapters/Miscellaneous]
+
+\input{Chapters/Summary}
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
@@ -198,9 +231,10 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 
 \bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
 
-\bibliographystyle{plain}
-\bibliography{my.bib}
+%\bibliographystyle{plain}
+\bibliography{my}
 
 
 \end{document}
-\message{ !name(Main.tex) !offset(-206) }
+
+\message{ !name(Main.tex) !offset(-240) }

@@ -40,11 +40,13 @@
      "UKenglish"
      "twoside"
      "openright"
+     "macros"
      "Chapters/Introduction"
      "Chapters/Background"
      "Chapters/QuotientTypes"
      "Chapters/DefinableQuotients"
      "Chapters/SetoidModel"
+     "Chapters/HITs"
      "Chapters/OGModel"
      "Chapters/Summary")))
 

@@ -29,32 +29,36 @@
 \contentsline {subsection}{\numberline {3.3.1}Functional extensionality and quotient types}{21}{subsection.49}
 \contentsline {section}{\numberline {3.4}Example of Quotients}{22}{section.51}
 \contentsline {section}{\numberline {3.5}literature review}{22}{section.52}
-\contentsline {chapter}{\numberline {4}Definable Quotients}{25}{chapter.53}
+\contentsline {chapter}{\numberline {4}Definable Quotients and Others}{25}{chapter.53}
 \contentsline {subsection}{\numberline {4.0.1}Integers}{25}{subsection.54}
 \contentsline {paragraph}{Operations}{29}{section*.62}
 \contentsline {paragraph}{Properties}{30}{section*.63}
 \contentsline {paragraph}{Comparison}{30}{section*.64}
 \contentsline {subsection}{\numberline {4.0.2}Rational numbers}{31}{subsection.65}
 \contentsline {subsection}{\numberline {4.0.3}Real numbers}{35}{subsection.66}
-\contentsline {subsection}{\numberline {4.0.4}Multisets(bags)}{36}{subsection.67}
-\contentsline {chapter}{\numberline {5}the Setoid Model}{37}{chapter.69}
-\contentsline {section}{\numberline {5.1}Literature review}{38}{section.70}
-\contentsline {subsection}{\numberline {5.1.1}An implementation of categories with Families in Agda}{38}{subsection.71}
-\contentsline {subsection}{\numberline {5.1.2}hProp}{38}{subsection.72}
-\contentsline {subsection}{\numberline {5.1.3}Category}{40}{subsection.73}
-\contentsline {subsection}{\numberline {5.1.4}Category of setoids}{41}{subsection.74}
-\contentsline {subsection}{\numberline {5.1.5}categories with families of setoids}{44}{subsection.75}
-\contentsline {subsection}{\numberline {5.1.6}Examples of types}{51}{subsection.76}
-\contentsline {subsection}{\numberline {5.1.7}Observational equality}{54}{subsection.77}
-\contentsline {section}{\numberline {5.2}What we could do in this model}{54}{section.78}
-\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{54}{section.79}
-\contentsline {chapter}{\numberline {6}$\omega $-groupoids\xspace Model}{55}{chapter.80}
-\contentsline {section}{\numberline {6.1}Quotient types in Homotopy Type Theory\xspace }{55}{section.81}
-\contentsline {section}{\numberline {6.2}Syntax of weak $\omega $-groupoids\xspace }{55}{section.82}
-\contentsline {section}{\numberline {6.3}Semantics}{55}{section.83}
-\contentsline {section}{\numberline {6.4}Higher inductive types}{55}{section.84}
-\contentsline {chapter}{\numberline {7}Summary}{57}{chapter.85}
-\contentsline {subsection}{\numberline {7.0.1}Future work}{57}{subsection.86}
+\contentsline {subsection}{\numberline {4.0.4}Non-normalizability of Cauchy Sequences}{36}{subsection.68}
+\contentsline {paragraph}{Some preliminaries}{37}{section*.73}
+\contentsline {subsection}{\numberline {4.0.5}Cauchy completeness of the cauchy reals}{42}{subsection.110}
+\contentsline {subsection}{\numberline {4.0.6}Multisets}{42}{subsection.111}
+\contentsline {chapter}{\numberline {5}the Setoid Model}{43}{chapter.113}
+\contentsline {section}{\numberline {5.1}Literature review}{44}{section.114}
+\contentsline {subsection}{\numberline {5.1.1}An implementation of categories with Families in Agda}{44}{subsection.115}
+\contentsline {subsection}{\numberline {5.1.2}hProp}{44}{subsection.116}
+\contentsline {subsection}{\numberline {5.1.3}Category}{46}{subsection.117}
+\contentsline {subsection}{\numberline {5.1.4}Category of setoids}{47}{subsection.118}
+\contentsline {subsection}{\numberline {5.1.5}categories with families of setoids}{50}{subsection.119}
+\contentsline {subsection}{\numberline {5.1.6}Examples of types}{57}{subsection.120}
+\contentsline {subsection}{\numberline {5.1.7}Observational equality}{60}{subsection.121}
+\contentsline {section}{\numberline {5.2}What we could do in this model}{60}{section.122}
+\contentsline {section}{\numberline {5.3}Quotient types in setoid model}{60}{section.123}
+\contentsline {chapter}{\numberline {6}Homotopy Type Theory and higher inductive types}{61}{chapter.124}
+\contentsline {chapter}{\numberline {7}$\omega $-groupoids\xspace Model}{63}{chapter.125}
+\contentsline {section}{\numberline {7.1}Quotient types in Homotopy Type Theory\xspace }{63}{section.126}
+\contentsline {section}{\numberline {7.2}Syntax of weak $\omega $-groupoids\xspace }{63}{section.127}
+\contentsline {section}{\numberline {7.3}Semantics}{63}{section.128}
+\contentsline {section}{\numberline {7.4}Higher inductive types}{63}{section.129}
+\contentsline {chapter}{\numberline {8}Summary}{65}{chapter.130}
+\contentsline {subsection}{\numberline {8.0.1}Future work}{65}{subsection.131}
 \vspace {2em}
 \vspace {2em}
-\contentsline {chapter}{Bibliography}{59}{dummy.87}
+\contentsline {chapter}{Bibliography}{67}{dummy.132}

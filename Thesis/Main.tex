@@ -9,6 +9,7 @@
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
+
 \usepackage[matrix]{xy}
 %agda literal file
 \usepackage{agda}
@@ -38,8 +39,11 @@
 \usepackage[square, numbers, comma, sort&compress]{natbib} 
 % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
 
-\usepackage{mypack}
 
+%\usepackage{todonotes}
+
+\input{macros}
+\usepackage{mypack}
 
 \hypersetup{urlcolor=blue, colorlinks=true}
 % Colors hyperlinks in blue - change to black if annoying
@@ -192,6 +196,8 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \input{Chapters/DefinableQuotients} 
 
 \input{Chapters/SetoidModel}
+
+\input{Chapters/HITs}
 
 \input{Chapters/OGModel}
 

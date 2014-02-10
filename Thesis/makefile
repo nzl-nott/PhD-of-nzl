@@ -5,7 +5,7 @@ BIBFILE = my.bib
 
 #Generally all targets in your Makefile which do not produce an output file with the same name as the target name should be PHONY. This typically includes all, install, clean, distclean, and so on.
 
-.PHONY	: all show clean
+.PHONY	: all show clean redo
 
 all : pdf
 

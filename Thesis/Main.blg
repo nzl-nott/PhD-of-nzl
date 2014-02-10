@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2013)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: Main.aux
+The style file: unsrtnat.bst
+Database file #1: my.bib
+Warning--I didn't find a database entry for "alt:99"
+Warning--empty publisher in martin1984intuitionistic
+Warning--empty year in martin1984intuitionistic
+Warning--empty year in martin1984intuitionistic
+Warning--empty journal in aan
+Warning--empty year in voe:hset
+You've used 39 entries,
+            2481 wiz_defined-function locations,
+            769 strings with 10136 characters,
+and the built_in function-call counts, 13839 in all, are:
+= -- 1249
+> -- 495
+< -- 46
++ -- 225
+- -- 144
+* -- 813
+:= -- 2115
+add.period$ -- 137
+call.type$ -- 39
+change.case$ -- 72
+chr.to.int$ -- 36
+cite$ -- 44
+duplicate$ -- 819
+empty$ -- 1366
+format.name$ -- 190
+if$ -- 3082
+int.to.chr$ -- 4
+int.to.str$ -- 40
+missing$ -- 31
+newline$ -- 214
+num.names$ -- 117
+pop$ -- 391
+preamble$ -- 1
+purify$ -- 39
+quote$ -- 0
+skip$ -- 538
+stack$ -- 0
+substring$ -- 472
+swap$ -- 199
+text.length$ -- 15
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 255
+warning$ -- 5
+while$ -- 114
+width$ -- 0
+write$ -- 532
+(There were 6 warnings)

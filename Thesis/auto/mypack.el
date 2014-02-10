@@ -1,18 +1,17 @@
 (TeX-add-style-hook "mypack"
  (lambda ()
     (TeX-add-symbols
-     '("idtype" ["argument"] 2)
-     '("id" ["argument"] 2)
-     '("idtypevar" 1)
      '("dlift" 1)
      '("class" 1)
      '("ra" 1)
      '("todo" 1)
      '("morph" 2)
      '("qset" 1)
+     '("climeta" 1)
+     '("clim" 1)
+     '("tometa" 1)
      '("bigslant" 2)
-     "N"
-     "Q"
+     "PN"
      "R"
      "Z"
      "itt"
@@ -24,14 +23,11 @@
      "og"
      "wog"
      "tig"
+     "iscauchy"
      "dotph"
      "dotop"
      "abs"
      "norm"
      "set"
-     "idsym"
-     "Sn"
-     "base"
-     "lloop"
      "slash")))
 

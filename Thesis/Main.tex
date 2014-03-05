@@ -39,6 +39,28 @@
 \usepackage[square, numbers, comma, sort&compress]{natbib} 
 % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
 
+%\usepackage[toc,page]{appendix}
+
+\usepackage{xkvltxp}
+\usepackage[]{fixme}
+\fxsetup{
+    status=draft,
+    author=,
+    layout=inline,
+    theme=color
+}
+
+\definecolor{fxnote}{rgb}{0.8000,0.0000,0.0000}
+% define the background colour:
+\colorlet{fxnotebg}{yellow}
+
+% refedine the layout macro:
+\makeatletter
+\renewcommand*\FXLayoutInline[3]{%
+  \@fxdocolon {#3}{%
+    \@fxuseface {inline}%
+    \colorbox{fx#1bg}{\color {fx#1}\ignorespaces #3\@fxcolon #2}}}
+\makeatother
 
 %\usepackage{todonotes}
 
@@ -77,6 +99,8 @@
 \hypersetup{pdfauthor=\authornames}
 \hypersetup{pdfkeywords=\keywordnames}
 
+
+\listoffixmes
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -118,7 +142,6 @@
 \end{center}
 
 \end{titlepage}
-
 
 
 \clearpage % Start a new page
@@ -195,6 +218,8 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 
 \input{Chapters/DefinableQuotients} 
 
+\input{Chapters/Reals}
+
 \input{Chapters/SetoidModel}
 
 \input{Chapters/HITs}
@@ -216,7 +241,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-%\input{Appendices/AppendixA}
+\input{Appendices/AppendixA}
 %\input{Appendices/AppendixB}
 %\input{Appendices/AppendixC}
 

@@ -3,51 +3,53 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: Main.aux
 The style file: unsrtnat.bst
 Database file #1: my.bib
-Warning--I didn't find a database entry for "alt:99"
+Warning--I didn't find a database entry for "alti:99"
+Warning--I didn't find a database entry for "hott-online"
 Warning--empty publisher in martin1984intuitionistic
 Warning--empty year in martin1984intuitionistic
 Warning--empty year in martin1984intuitionistic
 Warning--empty journal in aan
 Warning--empty year in voe:hset
-You've used 39 entries,
+Warning--empty journal in gro:ps
+You've used 46 entries,
             2481 wiz_defined-function locations,
-            769 strings with 10136 characters,
-and the built_in function-call counts, 13839 in all, are:
-= -- 1249
-> -- 495
-< -- 46
-+ -- 225
-- -- 144
-* -- 813
-:= -- 2115
-add.period$ -- 137
-call.type$ -- 39
-change.case$ -- 72
-chr.to.int$ -- 36
-cite$ -- 44
-duplicate$ -- 819
-empty$ -- 1366
-format.name$ -- 190
-if$ -- 3082
+            799 strings with 11062 characters,
+and the built_in function-call counts, 16021 in all, are:
+= -- 1437
+> -- 574
+< -- 53
++ -- 261
+- -- 166
+* -- 929
+:= -- 2455
+add.period$ -- 160
+call.type$ -- 46
+change.case$ -- 86
+chr.to.int$ -- 43
+cite$ -- 52
+duplicate$ -- 957
+empty$ -- 1595
+format.name$ -- 223
+if$ -- 3563
 int.to.chr$ -- 4
-int.to.str$ -- 40
-missing$ -- 31
-newline$ -- 214
-num.names$ -- 117
-pop$ -- 391
+int.to.str$ -- 47
+missing$ -- 37
+newline$ -- 250
+num.names$ -- 138
+pop$ -- 465
 preamble$ -- 1
-purify$ -- 39
+purify$ -- 46
 quote$ -- 0
-skip$ -- 538
+skip$ -- 622
 stack$ -- 0
-substring$ -- 472
-swap$ -- 199
-text.length$ -- 15
+substring$ -- 513
+swap$ -- 222
+text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 255
-warning$ -- 5
-while$ -- 114
+type$ -- 304
+warning$ -- 6
+while$ -- 131
 width$ -- 0
-write$ -- 532
-(There were 6 warnings)
+write$ -- 619
+(There were 8 warnings)

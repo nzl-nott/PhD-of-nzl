@@ -8,6 +8,8 @@
      "HRule")
     (TeX-run-style-hooks
      "mypack"
+     "fixme"
+     "xkvltxp"
      "natbib"
      "square"
      "numbers"
@@ -45,8 +47,10 @@
      "Chapters/Background"
      "Chapters/QuotientTypes"
      "Chapters/DefinableQuotients"
+     "Chapters/Reals"
      "Chapters/SetoidModel"
      "Chapters/HITs"
      "Chapters/OGModel"
-     "Chapters/Summary")))
+     "Chapters/Summary"
+     "Appendices/AppendixA")))
 

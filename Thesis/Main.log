@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  10 FEB 2014 13:41
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  5 MAR 2014 09:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -956,43 +956,87 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibsep=\skip74
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count171
-) (./macros.tex) (./mypack.sty
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/xkeyval/xkvltxp.sty
+Package: xkvltxp 2004/12/13 v1.2 LaTeX2e kernel patch (HA)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/fixme/fixme.sty
+Package: fixme 2013/01/28 v4.2 Collaborative annotations for LaTeX2e
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks44
+\verbatim@line=\toks45
+\verbatim@in@stream=\read3
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2012/10/14 v2.6b package option processing (HA)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+\XKV@toks=\toks46
+\XKV@tempa@toks=\toks47
+\XKV@depth=\count172
+File: xkeyval.tex 2012/10/14 v2.6b key=value parser (HA)
+))
+\c@fixmecount=\count173
+\c@fxnotecount=\count174
+\c@fxwarningcount=\count175
+\c@fxerrorcount=\count176
+\c@fxfatalcount=\count177
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/fixme/themes/fxthemecolor.sty
+Package: fxthemecolor 
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/fixme/layouts/env/fxenvlayoutcolo
+r.sty
+Package: fxenvlayoutcolor 
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/fixme/layouts/target/fxtargetlayo
+utcolor.sty
+Package: fxtargetlayoutcolor 
+)) (./macros.tex) (./mypack.sty
 Package: mypack 
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 48.
- (./Main.aux)
+Package hyperref Info: Option `colorlinks' set `true' on input line 70.
+ (./Main.aux
+
+LaTeX Warning: Label `rational-gcd' multiply defined.
+
+
+LaTeX Warning: Label `rational-gcd' multiply defined.
+
+)
 \openout1 = `Main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 59.
-LaTeX Font Info:    Try loading font information for T3+cmr on input line 59.
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/tipa/t3cmr.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 81.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 81.
+LaTeX Font Info:    Try loading font information for T3+cmr on input line 81.
+ (/usr/local/texlive/2013/texmf-dist/tex/latex/tipa/t3cmr.fd
 File: t3cmr.fd 2001/12/31 TIPA font definitions
 )
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 59.
-LaTeX Font Info:    Try loading font information for LGR+cmr on input line 59.
+LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 81.
+LaTeX Font Info:    Try loading font information for LGR+cmr on input line 81.
 
 (/usr/local/texlive/2013/texmf-dist/tex/generic/babel-greek/lgrcmr.fd
 File: lgrcmr.fd 2008/06/17 v2.3 Greek Computer Modern
 )
-LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    ... okay on input line 81.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
@@ -1007,38 +1051,38 @@ Package caption Info: End \AtBeginDocument code.
 
 (/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count172
+\scratchcounter=\count178
 \scratchdimen=\dimen211
 \scratchbox=\box43
-\nofMPsegments=\count173
-\nofMParguments=\count174
-\everyMPshowfont=\toks44
-\MPscratchCnt=\count175
+\nofMPsegments=\count179
+\nofMParguments=\count180
+\everyMPshowfont=\toks48
+\MPscratchCnt=\count181
 \MPscratchDim=\dimen212
-\MPnumerator=\count176
-\makeMPintoPDFobject=\count177
-\everyMPtoPDFconversion=\toks45
+\MPnumerator=\count182
+\makeMPintoPDFobject=\count183
+\everyMPtoPDFconversion=\toks49
 )
-\c@lstlisting=\count178
+\c@lstlisting=\count184
 \AtBeginShipoutBox=\box44
-Package hyperref Info: Link coloring ON on input line 59.
+Package hyperref Info: Link coloring ON on input line 81.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 (/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count179
+\c@section@level=\count185
 )
-LaTeX Info: Redefining \ref on input line 59.
-LaTeX Info: Redefining \pageref on input line 59.
-LaTeX Info: Redefining \nameref on input line 59.
+LaTeX Info: Redefining \ref on input line 81.
+LaTeX Info: Redefining \pageref on input line 81.
+LaTeX Info: Redefining \nameref on input line 81.
 
 (./Main.out) (./Main.out)
 \@outlinefile=\write5
 \openout5 = `Main.out'.
 
-Package xypdf Info: Line width: 0.43799pt on input line 59.
+Package xypdf Info: Line width: 0.43799pt on input line 81.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
@@ -1136,24 +1180,41 @@ Package ucs Warning: ***************************
 (ucs)                ***************************
 (ucs)                Activating compatibility mode.
 (ucs)                ***************************
-(ucs)                 on input line 59.
+(ucs)                 on input line 81.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/utf8x.def
 File: utf8x.def 2004/10/17 UCS: Input encoding UTF-8
+) (./Main.lox
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 15.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-<Pictures/2000px-University_of_Nottingham.png, id=245, 2007.5pt x 812.03375pt>
+Overfull \hbox (31.99081pt too wide) in paragraph at lines 15--15
+ [][] [][][]\T1/cmr/m/n/10.95 Mar-tin Es-cardo's [][]$\T1/cmtt/m/n/10.95 http :
+ / / www . cs . bham . ac . uk / \protect \ unhbox \ voidb @ x \ penalty \ 
+ []
+
+[1
+
+
+
+{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
+\tf@lox=\write6
+\openout6 = `Main.lox'.
+
+
+[2]
+<Pictures/2000px-University_of_Nottingham.png, id=351, 2007.5pt x 812.03375pt>
 File: Pictures/2000px-University_of_Nottingham.png Graphic file (type png)
 
 <use Pictures/2000px-University_of_Nottingham.png>
 Package pdftex.def Info: Pictures/2000px-University_of_Nottingham.png used on i
-nput line 89.
+nput line 113.
 (pdftex.def)             Requested size: 200.76175pt x 81.20813pt.
  [1
 
-
-
-{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Pictu
-res/2000px-University_of_Nottingham.png>]
+ <./Pictures/2000px-University_of_Nottingham.png>]
 ------------------------------------------------------------------------------
  Abstract Page
 ------------------------------------------------------------------------------
@@ -1172,40 +1233,52 @@ res/2000px-University_of_Nottingham.png>]
 [4
 
 
-] (./Main.toc [5])
-\tf@toc=\write6
-\openout6 = `Main.toc'.
+] (./Main.toc [5] [6])
+\tf@toc=\write7
+\openout7 = `Main.toc'.
 
- [6]
+ [7] [8
+
+]
 ------------------------------------------------------------------------------
  List of Figures
 ------------------------------------------------------------------------------
 (./Main.lof)
-\tf@lof=\write7
-\openout7 = `Main.lof'.
+\tf@lof=\write8
+\openout8 = `Main.lof'.
 
- [7
+ [9
 
-
-] [8
+] [10
 
 ]
 ------------------------------------------------------------------------------
  List of Tables
 ------------------------------------------------------------------------------
 (./Main.lot)
-\tf@lot=\write8
-\openout8 = `Main.lot'.
+\tf@lot=\write9
+\openout9 = `Main.lot'.
 
- [9
+ [11
 
-] [10
+] [12
 
 ] (./Chapters/Introduction.tex
 Chapter 1.
 ------------------------------------------------------------------------------
  1 Introduction
 ------------------------------------------------------------------------------
+Package hyperref Info: bookmark level for unknown fixme defaults to 0 on input 
+line 4.
+FiXme Note: 'Write: what we are going to write' on input line 4.
+FiXme Note: 'mention the definable quotient is very useful' on input line 14.
+FiXme Note: 'compact, comprehensive Overview: \\Add overview of each part, as m
+uch as you can, and compact' on input line 27.
+
+Overfull \hbox (47.52936pt too wide) in paragraph at lines 27--28
+[][][][][][][] 
+ []
+
 [1
 
 
@@ -1214,30 +1287,29 @@ Chapter 2.
 ------------------------------------------------------------------------------
  2 Background
 ------------------------------------------------------------------------------
+FiXme Note: 'theory?' on input line 7.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
 )
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 17.
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 26.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 ) [3
 
-] [4] [5]
+]
+FiXme Note: '?cite?' on input line 35.
+FiXme Note: 'more explanation' on input line 51.
+ [4] [5]
 [6]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 152.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 158.
 
  (/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 152.
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 155.
-
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-) [7]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 158.
+ [7]
 \openout4 = `Main.ptb'.
 
 
@@ -1253,7 +1325,7 @@ File: uni-33.def 2013/05/13 UCS: Unicode data U+2100..U+21FF
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-34.def
 File: uni-34.def 2013/05/13 UCS: Unicode data U+2200..U+22FF
 )
-Underfull \hbox (badness 10000) in paragraph at lines 231--236
+Underfull \hbox (badness 10000) in paragraph at lines 237--242
  
  []
 
@@ -1261,159 +1333,138 @@ Underfull \hbox (badness 10000) in paragraph at lines 231--236
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 251--257
+Underfull \hbox (badness 10000) in paragraph at lines 257--263
  
  []
 
+FiXme Note: 'to help the reader understand the Agda code in text' on input line
+ 277.
 [10]
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 287--295
+Underfull \hbox (badness 10000) in paragraph at lines 293--301
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 301--315
+Underfull \hbox (badness 10000) in paragraph at lines 307--321
  
  []
 
-[11] [12]) (./Chapters/QuotientTypes.tex [13] [14
+[11] [12]
+FiXme Note: 'I will!!' on input line 360.
+FiXme Note: 'What conventions we will follow in this thesis and some commonly u
+sed symbols and function' on input line 371.
+
+Overfull \hbox (37.55579pt too wide) in paragraph at lines 371--372
+[][][][][][][] 
+ []
+
+[13]
+FiXme Note: 'one page explanation of why type theory is useful' on input line 4
+02.
+ [14]) (./Chapters/QuotientTypes.tex [15] [16
 
 ]
 Chapter 3.
 ------------------------------------------------------------------------------
  3 Quotient Types
 ------------------------------------------------------------------------------
-[15]
+FiXme Note: 'should say something of computer science first rather than mathema
+tics maybe, because it is a computer science PhD' on input line 6.
 
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 75.
+Overfull \hbox (151.34589pt too wide) in paragraph at lines 6--7
+[][][][][][][] 
+ []
 
+[17] [18]
 \openout4 = `Main.ptb'.
 
-(/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-32.def
+ (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-32.def
 File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
 )
-Overfull \hbox (5.09415pt too wide) detected at line 122
+Overfull \hbox (5.09415pt too wide) detected at line 132
   |  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 103--122
+Underfull \hbox (badness 10000) in paragraph at lines 113--132
  
  []
 
-[16] [17] <xymatrix 5x3 253> <xymatrix 5x3 253> [18] [19] [20] [21] [22]
-[23]) (./Chapters/DefinableQuotients.tex [24]
+[19] <xymatrix 5x3 253> <xymatrix 5x3 253> [20]
+FiXme Note: 'question of where shall we apply pe' on input line 284.
+ [21] [22] [23]
+FiXme Note: ')' on input line 451.
+ [24] [25])
+(./Chapters/DefinableQuotients.tex [26]
 Chapter 4.
 ------------------------------------------------------------------------------
- 4 Definable Quotients and Others
+ 4 Definable Quotients
 ------------------------------------------------------------------------------
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 22.
-
+FiXme Note: '1. Distributivity 2. Rational numbers 3. other definable quotients
+' on input line 4.
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 27--44
+Underfull \hbox (badness 10000) in paragraph at lines 30--43
  
  []
 
-[25
+[27
 
 ]
 \openout4 = `Main.ptb'.
 
 
-Overfull \hbox (10.74399pt too wide) detected at line 70
+Overfull \hbox (10.74399pt too wide) detected at line 65
   |  
  []
 
 
-Overfull \hbox (10.74399pt too wide) detected at line 70
+Overfull \hbox (10.74399pt too wide) detected at line 65
   |  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Overfull \hbox (7.02823pt too wide) detected at line 93
+Overfull \hbox (7.02823pt too wide) detected at line 84
   |  
  []
 
 
-Overfull \hbox (8.42047pt too wide) detected at line 93
+Overfull \hbox (8.42047pt too wide) detected at line 84
   |  
  []
 
-[26]
+[28]
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 132--152
+Underfull \hbox (badness 10000) in paragraph at lines 123--143
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 158--175
+Underfull \hbox (badness 10000) in paragraph at lines 149--162
  
  []
 
-[27] [28]
+[29] [30]
 
 Package hyperref Warning: Difference (3) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 266.
+(hyperref)                than one, level fixed on input line 252.
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 270--276
- 
- []
-
-[29]
-\openout4 = `Main.ptb'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 300--306
- 
- []
-
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 311.
-
-[30]
-\openout4 = `Main.ptb'.
-
-
-Overfull \hbox (10.7425pt too wide) detected at line 366
-  |  
- []
-
-
-Overfull \hbox (10.7425pt too wide) detected at line 366
-  |  
- []
-
-
-Overfull \hbox (10.7425pt too wide) detected at line 366
-  |  
- []
-
-
-Overfull \hbox (10.7425pt too wide) detected at line 366
-  |  
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 343--366
+Underfull \hbox (badness 10000) in paragraph at lines 256--262
  
  []
 
@@ -1421,21 +1472,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 343--366
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 404--411
+Underfull \hbox (badness 10000) in paragraph at lines 286--292
  
  []
+
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 297.
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 419--437
- 
- []
-
-\openout4 = `Main.ptb'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 445--479
+Underfull \hbox (badness 10000) in paragraph at lines 320--328
  
  []
 
@@ -1443,263 +1491,201 @@ Underfull \hbox (badness 10000) in paragraph at lines 445--479
 \openout4 = `Main.ptb'.
 
 
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
+Overfull \hbox (4.16698pt too wide) detected at line 399
+  |  
  []
 
 
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
+Underfull \hbox (badness 10000) in paragraph at lines 338--399
+ 
  []
 
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Overfull \hbox (31.37195pt too wide) in paragraph at lines 487--604
- [][][][][][] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 487--604
+\openout4 = `Main.ptb'.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-2.def
+File: uni-2.def 2013/05/13 UCS: Unicode data U+0200..U+02FF
+)
+Underfull \hbox (badness 10000) in paragraph at lines 403--439
  
  []
 
 [33]
+
+LaTeX Warning: Reference `obs-int-nat' on page 34 undefined on input line 448.
+
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 610--620
+Overfull \hbox (10.7425pt too wide) detected at line 502
+  |  
+ []
+
+
+Overfull \hbox (10.7425pt too wide) detected at line 502
+  |  
+ []
+
+
+Overfull \hbox (10.7425pt too wide) detected at line 502
+  |  
+ []
+
+
+Overfull \hbox (10.7425pt too wide) detected at line 502
+  |  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 479--502
+ 
+ []
+
+[34]
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 549--556
+ 
+ []
+
+[35]
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 564--582
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 625--631
+Underfull \hbox (badness 10000) in paragraph at lines 590--624
  
  []
 
-[34] [35] [36]
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 738.
-
-[37]
-
-LaTeX Warning: Reference `eq:usedbytxa' on page 38 undefined on input line 856.
+[36]
+\openout4 = `Main.ptb'.
 
 
-[38] [39] [40] [41]) (./Chapters/SetoidModel.tex [42]
+Underfull \hbox (badness 10000) in paragraph at lines 633--637
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 643--653
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 658--664
+ 
+ []
+
+) (./Chapters/Reals.tex [37] [38
+
+]
 Chapter 5.
 ------------------------------------------------------------------------------
- 5 the Setoid Model
+ 5 Real numbers and other undefinable quotients
 ------------------------------------------------------------------------------
-[43
+FiXme Note: 'Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mh
+e/agda/FailureOfTotalSeparatedness.html} should be considered and discussed her
+e, couterexample of Cauchy -> contractible(?)' on input line 6.
+
+Overfull \hbox (463.341pt too wide) in paragraph at lines 6--7
+[][][][][][][] 
+ []
+
+[39] [40]
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 103.
+
+[41]
+
+LaTeX Warning: Reference `eq:usedbytxa' on page 42 undefined on input line 221.
+
+
+[42] [43] [44]
+FiXme Note: 'P(T) -> Connected (T) -> Contractible(T), $\mathbb {R}/ \sim $ is 
+connected but not contractible?' on input line 393.
+ [45]
+FiXme Note: 'expand Cauchy completeness of Cauchy reals: it should rely on the 
+axiom of countable choice' on input line 400.
+
+Overfull \hbox (35.50739pt too wide) in paragraph at lines 400--401
+[][][][][][][] 
+ []
+
+[46]
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (3.59868pt too wide) detected at line 463
+  |  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 453--463
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-38.def
+File: uni-38.def 2013/05/13 UCS: Unicode data U+2600..U+26FF
+)
+Underfull \hbox (badness 10000) in paragraph at lines 467--473
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 481--493
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 498--513
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 518--530
+ 
+ []
+
+[47]) (./Chapters/SetoidModel.tex [48]
+Chapter 6.
+------------------------------------------------------------------------------
+ 6 The Setoid Model
+------------------------------------------------------------------------------
+[49
 
 ]
 
-Package natbib Warning: Citation `alt:99' on page 44 undefined on input line 46
-.
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 74.
+
+
+Package natbib Warning: Citation `alti:99' on page 50 undefined on input line 7
+6.
 
 (./CwF/latex/hProp.tex
 \openout4 = `Main.ptb'.
 
+ [50]
 \openout4 = `Main.ptb'.
 
- [44]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
@@ -1718,6 +1704,7 @@ Overfull \hbox (2.23874pt too wide) detected at line 160
   |  
  []
 
+[51]
 \openout4 = `Main.ptb'.
 
 
@@ -1745,7 +1732,6 @@ Overfull \hbox (2.89961pt too wide) detected at line 181
   |  
  []
 
-[45]
 \openout4 = `Main.ptb'.
 
 
@@ -1771,7 +1757,7 @@ Overfull \hbox (2.40051pt too wide) detected at line 214
 ) (./CwF/Cats/latex/Category.tex
 \openout4 = `Main.ptb'.
 
- [46]) (./CwF/latex/CategoryOfSetoid.tex
+ [52]) (./CwF/latex/CategoryOfSetoid.tex
 \openout4 = `Main.ptb'.
 
 
@@ -1791,35 +1777,7 @@ Overfull \hbox (8.62169pt too wide) detected at line 90
 
 \openout4 = `Main.ptb'.
 
-[47]
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
- [48]
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
-) [49] (./CwF/latex/CwF-setoid.tex
-\openout4 = `Main.ptb'.
-
- [50]
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
- [51]
-\openout4 = `Main.ptb'.
-
- [52]
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
- [53]
+[53]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
@@ -1827,29 +1785,56 @@ Overfull \hbox (8.62169pt too wide) detected at line 90
  [54]
 \openout4 = `Main.ptb'.
 
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-39.def
-File: uni-39.def 2013/05/13 UCS: Unicode data U+2700..U+27FF
-) [55]
 \openout4 = `Main.ptb'.
 
+ [55]) (./CwF/latex/CwF-setoid.tex
 \openout4 = `Main.ptb'.
 
+ [56]
 \openout4 = `Main.ptb'.
 
-
-[56]
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
-) (./CwF/latex/CwF-ctd.tex
 \openout4 = `Main.ptb'.
 
  [57]
 \openout4 = `Main.ptb'.
 
-) (./CwF/latex/CwF-quotient.tex
+ [58]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [59]
+\openout4 = `Main.ptb'.
+
+ [60]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-39.def
+File: uni-39.def 2013/05/13 UCS: Unicode data U+2700..U+27FF
+) [61]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+
+[62]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+) (./CwF/latex/CwF-ctd.tex [63]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [64]) (./CwF/latex/CwF-quotient.tex
 \openout4 = `Main.ptb'.
 
 
@@ -1882,20 +1867,23 @@ Overfull \hbox (9.0978pt too wide) detected at line 155
   |  
  []
 
-[58]
 \openout4 = `Main.ptb'.
 
- [59])) (./Chapters/HITs.tex [60]
-Chapter 6.
-------------------------------------------------------------------------------
- 6 Homotopy Type Theory and higher inductive types
-------------------------------------------------------------------------------
-) (./Chapters/OGModel.tex [61
-
-] [62
+[65])) [66] (./Chapters/HITs.tex [67] [68
 
 ]
 Chapter 7.
+------------------------------------------------------------------------------
+ 7 Homotopy Type Theory and higher inductive types
+------------------------------------------------------------------------------
+
+Package natbib Warning: Citation `hott-online' on page 69 undefined on input li
+ne 9.
+
+) (./Chapters/OGModel.tex [69] [70
+
+]
+Chapter 8.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1.
@@ -1909,38 +1897,275 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1.
 
 ------------------------------------------------------------------------------
- 7 $\omega $-groupoids\xspace Model
+ 8 the $\omega $-groupoids\xspace Model
 ------------------------------------------------------------------------------
+FiXme Note: 'Before 20th-Mar-2014' on input line 4.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 25.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\omega' on input line 25.
+(hyperref)                removing `math shift' on input line 21.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 25.
+(hyperref)                removing `\omega' on input line 21.
 
-) (./Chapters/Summary.tex [63] [64
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 21.
+
+[71]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 68.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\omega' on input line 68.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 68.
+
+) (./Chapters/Summary.tex [72] [73] [74
 
 ]
-Chapter 8.
+Chapter 9.
 ------------------------------------------------------------------------------
- 8 Summary
+ 9 Summary
 ------------------------------------------------------------------------------
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 4.
 
-) [65] [66
+) (./Appendices/AppendixA.tex [75] [76
 
 ]
+Appendix A.
+------------------------------------------------------------------------------
+ A Appendix A
+------------------------------------------------------------------------------
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (36.21518pt too wide) in paragraph at lines 3--120
+ [] [][] [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (31.37195pt too wide) in paragraph at lines 3--120
+ [][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3--120
+ 
+ []
+
+[77]) [78]
 ------------------------------------------------------------------------------
  Bibliography
 ------------------------------------------------------------------------------
-(./Main.bbl [67
+(./Main.bbl [79
+
 
 ]
 Underfull \hbox (badness 4416) in paragraph at lines 79--83
@@ -1948,30 +2173,40 @@ Underfull \hbox (badness 4416) in paragraph at lines 79--83
 ail-able at:
  []
 
-[68] [69])
+[80] [81])
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 241.
-[70]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 241.
+
+FiXme Summary: Number of notes: 18,
+(FiXme)        Number of warnings: 0,
+(FiXme)        Number of errors: 0,
+(FiXme)        Number of fatal errors: 0,
+(FiXme)        Total: 18.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 266.
+[82]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 266.
  (./Main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 241.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 241.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 266.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 266.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: BF6F76F86A794B2B9F49E40155CC0198;10856.
+(rerunfilecheck)             Checksum: CDE9E5F5BDD346202843035B77F03EBD;14386.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 241.
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 266.
  ) 
 Here is how much of TeX's memory you used:
- 22364 strings out of 493315
- 307131 string characters out of 6137904
- 410799 words of memory out of 5000000
- 25127 multiletter control sequences out of 15000+600000
- 50022 words of font info for 139 fonts, out of 8000000 for 9000
+ 23408 strings out of 493315
+ 322842 string characters out of 6137904
+ 427830 words of memory out of 5000000
+ 26080 multiletter control sequences out of 15000+600000
+ 51892 words of font info for 142 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  49i,19n,127p,1370b,693s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
@@ -2015,14 +2250,15 @@ uper/sfss0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-sup
 er/sfss1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super
 /sfti1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/s
 fti1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sft
-i2074.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt1
-095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/stmaryrd/stmary1
-0.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb
-></usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
-Output written on Main.pdf (80 pages, 854378 bytes).
+i2074.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt0
+900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt109
+5.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/stmaryrd/stmary10.
+pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb><
+/usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
+Output written on Main.pdf (96 pages, 921505 bytes).
 PDF statistics:
- 1105 PDF objects out of 1200 (max. 8388607)
- 966 compressed objects within 10 object streams
- 253 named destinations out of 1000 (max. 500000)
- 486 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1319 PDF objects out of 1440 (max. 8388607)
+ 1161 compressed objects within 12 object streams
+ 297 named destinations out of 1000 (max. 500000)
+ 606 words of extra memory for PDF output out of 10000 (max. 10000000)
 

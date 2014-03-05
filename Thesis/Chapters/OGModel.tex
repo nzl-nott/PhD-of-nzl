@@ -1,7 +1,7 @@
-\chapter{\og Model}
+\chapter{the \og Model}
 \label{wog}
 
-\todo{Before 15th-Jan-2013}
+\todo{Before 20th-Mar-2014}
 
 
 
@@ -17,6 +17,49 @@ Brunerie's approach. We did some contributions like adapting using
 heterogeneous equality and syntactic construction of reflexivity.
 
 
+
+\section{An implementation of \wog{}}
+
+It is very interesting to investigate the approach to define quotient
+types in Homotopy Type Theory which is a variant of \mltt{}. In
+Homotopy Type Theory, we reject
+the principle of uniqueness of identity proofs (UIP) but instead we accept the univalence axiom which
+says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. To make it more precise, a weak equivalence
+between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
+corresponding inverse morphism $ g : B \to A$, but instead of the
+proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
+2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$.
+Since the setoid interpretation of types in setoid
+model, as we mentioned before, relies on UIP, it  has to be
+generalised so that we could formalise it in \itt{}.
+
+
+The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous Manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplification of \wog{} in \cite{ara:wog}. Categorically
+speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
+category, a setoid is a category where every morphism is unique between
+two objects. A groupoid is more generalised, every morphism is
+isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
+n-groupoid is an n-category in which morphisms on all levels are
+equivalence. \og{} which are also called $\infty$-groupoids is an
+infinite version of n-groupoids. To model Type Theory without UIP we
+also require the equalities to be non-strict, in other words, they are
+not definitionally equalities. Finally we should use \wog{} to interpret types and eliminate the univalence axiom.
+
+There are several approaches to formalise \wog{} in Type Theory. For
+instance, Altenkirch and Rypacek's paper \cite{txa:csl}, and Brunerie's notes
+\cite{gb:wog}. We work on an implementation of \wog{} following Brunerie's approach in Agda. The approach is to specify when a globular set is a weak $\omega$-groupoid by first defining a type theory called \tig{} to describe the internal language
+of Grothendieck \wog{}, then interpret it with a globular set and a
+dependent function. All coherence laws of the \wog{} should be
+derivable from the syntax, we will present some basic ones, for
+example reflexivity. One of the main contribution of our work is to
+use the heterogeneous equality for terms to overcome some very
+difficult problems when we used the normal homogeneous one. When
+introducing our implementation, we omit some complicated but less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
+
+
+\subsection{Syntax}
+
+Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
 
 
 \section{Quotient types in \hott}

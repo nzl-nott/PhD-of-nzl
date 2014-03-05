@@ -1,5 +1,7 @@
 (TeX-add-style-hook "SetoidModel"
  (lambda ()
+    (LaTeX-add-labels
+     "sm")
     (TeX-run-style-hooks
      "./CwF/latex/hProp"
      "./CwF/Cats/latex/Category"

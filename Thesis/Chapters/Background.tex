@@ -1,33 +1,39 @@
 \chapter{Background}
-\label{tt}
+\label{bg}
+
+Regular mathematics is based on classical logic and ZFC set theory. Set theory is a language to describe definitions of most mathematical objects, in other words, it serves as a foundational system for mathematics.
+
+George Cantor and Richard Dedekind invented set theory in 1870s. However, in the 1900s, Bertrand Russell discovered a paradox in their system. In this naive set theory, there was no distinction between small sets like the set of natural numbers or the set of real numbers and "larger" sets like the set of all sets. This lead to the famous contradiction named after Russell. To avoid this paradox, he
+proposed the theories\todo{theory?} of types \cite{rus:1903} as an alternative to
+naïve set theory. Each mathematical object is assigned a type. This is done in a hierarchical structure such that "larger" sets and small sets reside in different levels. The set of all
+sets is no longer on the same level as its elements and the
+paradox disappears.
+
 
 \section{Type Theory}
 
 
-To introduce type theory, it is helpful to start from set theory first. Set theory is a language to describe most definitions of mathematical objects, in another word, it serves as a foundation system for mathematics. 
-In 1870s, George Cantor and Richard Dedekind firstly studied set theory. However, in the 1900s, Bertrand Russell discovered the famous paradox in naive set
-theory. It tells people that if we can does not distinguish between small sets like natural numbers and real numbers with "larger" sets like the set of all sets, then it will lead to contradiction. To avoid this paradox, he
-proposed the theories of types \cite{rus:1903} as an alternative to
-naïve set theory. The objects are assigned to types in a hierarchical structure such that "larger" sets and small sets reside in different levels. The set of all
-sets are no longer on the same level as its elements such that the
-paradox disappears. 
+%To introduce type theory, it is helpful to start from set theory first. Set theory is a language to describe most definitions of mathematical objects, in another word, it serves as a foundation system for mathematics. 
+% In 1870s, George Cantor and Richard Dedekind firstly studied set theory. However, in the 1900s, Bertrand Russell discovered the famous paradox in naive set
+% theory. It tells people that if we can does not distinguish between small sets like natural numbers and real numbers with "larger" sets like the set of all sets, then it will lead to contradiction. To avoid this paradox, he
+% proposed the theories of types \cite{rus:1903} as an alternative to
+% naïve set theory. The objects are assigned to types in a hierarchical structure such that "larger" sets and small sets reside in different levels. The set of all
+% sets are no longer on the same level as its elements such that the
+% paradox disappears. 
 
-The elementary notion in type theory is \emph{type} which plays a similar role to set in set theory, but they have some fundamental differences. Every object in type theory comes with its unique type, while an object in set theory can appear in multiple sets and we can talk about an object without knowing which sets it belongs to.
+The elementary notion of type theory is \emph{type} which plays a similar role to set in set theory, but differs fundamentally. Every object in type theory comes with its unique type, while an object in set theory can appear in multiple sets and we can talk about an object without knowing which sets it belongs to.
 To explain the difference, we use the the number $\mathsf{2}$ as an example. In set theory, 2 is not an element of only one specific set, it belongs to the set of natural numbers $\N$ and also the set of integers $\Z$. While in type
-theory, it is impossible to avoid the type of object $\mathsf{2}$. Usually the term $\AgdaInductiveConstructor{suc} \, \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \, \AgdaInductiveConstructor{zero}\AgdaSymbol{)}$ stands for $\mathsf{2}$ of type $\N$ and we have a different term of type $\Z$ constructed by constructors of $\Z$ which is a different object to the one of $\N$. 
+theory, it is impossible to avoid mentioning the type of object $\mathsf{2}$. Usually the term $\AgdaInductiveConstructor{suc} \, \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \, \AgdaInductiveConstructor{zero}\AgdaSymbol{)}$ stands for $\mathsf{2}$ of type $\N$ and we have a different term of type $\Z$ constructed by constructors of $\Z$ which is a different object to the one of $\N$. 
 
-
-\todo{one page explanation of why type theory is useful}
-
-Since Russell's type theory, there are a variety of type theories have been developed by famous mathematicians and computer scientists, for example Gödel and Tarski's which is used in Gödel' 1931 paper \cite{gdl:1931}. There are two families of famous type theories building the bridges between mathematics and computer science, \emph{lambda calculus} and \emph{\mltt}. 
+Since Russell's type theory, a variety of type theories have been developed by mathematicians and computer scientists, for example Gödel's System T \cite{gdl:1931}. There are two families of famous type theories building the bridges between mathematics and computer science, \emph{lambda calculus} and \emph{\mltt}.
 
 % lambda calculus
 \subsection{Lambda Calculus}
 
-Alonzo Church introduced lambda calculus in 1930s. He first introduced
-an untyped lambda calculus which was proved to be inconsistent due to
-the Kleene-Rosser paradox. Then the typed one which is also called
-Church's Theory of types or simply typed lambda calculus is
+Alonzo Church introduced lambda calculus in the 1930s. He first introduced
+an untyped lambda calculus which turned out to be inconsistent due to
+the Kleene-Rosser paradox\todo{?cite?}. Then he refined it with adding types. This theory is also called
+Church's theory of types or simply typed lambda calculus is
 introduced as a foundation of mathematics. An important change is that functions become primitive objects which means functions are types defined inductively using the $\rightarrow$ type former. It is widely applied to
 various fields especially computer science. Some languages are extentions of lambda calculus, for example Haskell. Haskell belongs to one of the variants of lambda calculus called System F, although it has evovled into System FC recently. There are also other refinements of lambda calculus which is illustrated by the $\lambda$-cube \cite{barendregt1991introduction}.
 
@@ -368,3 +374,40 @@ The universe of small types is encoded as $\Set_{0}$ or $\Set$ rather than $\Typ
 
 
 
+\section{a very short introduction to category theory}
+
+Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and trasformations.
+A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are callled categorical laws to obey. 
+
+The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
+
+Category theory abstracts a lot of similar concepts in different fields and provides a concise language for mathematics for mathematicians.
+
+
+\section{Extensional concepts in \itt}
+
+\subsection{Propositional extensionality}
+
+\subsection{Functional extensionality}
+
+
+\subsection{Hedberg Theorem}
+
+\subsection{Quotient types}
+
+
+
+
+\subsection{Why do we use type theory?}
+\todo{one page explanation of why type theory is useful}
+
+It is always debatable to choose set theory or type theory. First of all, it depends on whether do you think in a constructive way: does any proposition can be claimed true only if we have witness? It the answer is yes, then type theory is a better choice. From a computer scientist's point of view, it is more natural to think in a constructive way. Something without a type makes no sense to us because we are not sure what it stands for and how do we use it. The type definition describe the syntax so that some symbol makes sense and the semantic meaning may be revealed from the construction.
+
+There is another question, whether mathematics is a collection of patterns and laws which is observed, or it is a system created and built by people to explain the patterns and laws in the world. I think people prefer the second answer usually accept the type theory more easily, although most people (probably 99.9 percent) prefer the first one. When we learn what is natural numbers, we learn it as "numbers like 1, 2, 3 ,4 and perhaps 0", the commutative law, associate law are axioms because there is no way to prove it if we introduce it in this manner. We are convinced by some examples like "2 + 3 = 3 + 2" and we find it works for most of the cases then we accept it by observations. It is some methods physicians used a lot -- to conclude some laws from a number of facts. It is a proper method for physicians because what they research on is world can only be observed. However for mathematics, even though it is applied to the real world, it is a system completely created by people. People used their fingers to count, wrote symbols for results, even though it was very shallow it is obviously a aritificial system. People extend 
+
+
+Type theory is strongly connected with computation theory.
+Set
+
+
+Type theory has fewer axioms, simpler model than set theory which has mutual foudations: logic and axioms.

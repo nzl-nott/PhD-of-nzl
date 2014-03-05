@@ -1,22 +1,54 @@
-\chapter{the Setoid Model}
+\chapter{The Setoid Model}
+\label{sm}
 % always forgets the "the"
 
+\todo{the Setoid Model}
 
-\todo{Before 30th-Dec-2013}
-
-
-We first work on Altenkirch's Setoid model. We build a category
-with families of setoids to accommodate the types theory described in
-\cite{alti:lics99}  so that it is possible to define quotient types
-following Martin Hofmann's Paper\cite{hof:95:sm}.  In this report we
-only present the
-necessary part for the Setoid model.
+Quotient types are one of the extensional concepts in Type Theory \cite{hof:phd}. There are several existing intensional models for extensional
+concepts. The first one we are going to work with is Altenkirch's
+setoid model. To introduce an extensional propositional equality in \itt{}, 
+Altenkirch \cite{alti:lics99} proposes an intensional setoid model
+with a proof-irrelevant universe of propositions \textbf{Prop}.
 
 
+\begin{equation}[proof-irr]
+\begin{aligned}
+\Gamma \vdash P : \textbf{Prop} & & \Gamma \vdash p,q : P & \\
+\midrule
+& \Gamma \vdash p=q : P & \\
+\end{aligned}
+\end{equation}
 
-Quotient types are one of the extensional concepts in Type Theory \cite{hof:phd}. To introduce an extensional propositional equality in \itt{}, 
-Altenkirch \cite{alti:lics99} proposes an intensional setoid model with a proof-irrelevant universe of
-propositions \textbf{Prop} . It is called a setoid model since types are interpreted as setoids which contain a set and an equivalence relation for each of them.
+It only contains "propositional'' sets which has at most one
+inhabitant. Notice that it is not a definition of types, which means
+that we cannot conclude a type is of type \textbf{Prop} if we have a
+proof that all
+inhabitants are definitionally equal.
+
+The propositional universe is closed under "$\Pi$" and "$\Sigma$", namely dependent functions
+and dependent products.
+
+\begin{equation}[\Pi-Prop]
+\begin{aligned}
+\Gamma \vdash A : \textbf{Set} & & \Gamma,x : A \vdash P \in \textbf{Prop} & \\
+\midrule
+& \Gamma \vdash \Pi\, x : A.P & \\
+\end{aligned}
+\end{equation}
+
+
+
+\begin{equation}[\Sigma-Prop]
+\begin{aligned}
+\Gamma \vdash P : \textbf{Prop} & & \Gamma,x : P \vdash Q \in \textbf{Prop} & \\
+\midrule
+& \Gamma \vdash \Sigma\, x : P.Q & \\
+\end{aligned}
+\end{equation}
+
+
+
+ It is called a setoid model since types are interpreted as setoids.
 The solution to introduce the extensional equality is an object type theory defined inside the setoid model which serves as the metatheory. He also proved that the extended type theory generated from the metatheory is decidable and adequate, functional extensionality is
 inhabited and it permits large elimination (defining a dependent type by recursion). Within this type theory,
 introduction of quotient types is straightforward.
@@ -33,17 +65,17 @@ LCCC.
 
 However this Setoid model is still a model for Type
 Theory just like the groupoid model which is a generalisation of it.
-To develop this model of type theory in Agda, we have implemented the categories with families of setoids.
-
-
-\section{Literature review}
-
-
+To develop this model of type theory in Agda, we have implemented the
+categories with families of setoids. 
+We build a category with families of setoids to accommodate the types theory described in
+\cite{alti:lics99}  so that it is possible to define quotient types
+following Martin Hofmann's Paper \cite{hof:95:sm}.  Only necessary
+part for the Setoid model will be present here.
 
 
 \subsection{An implementation of categories with Families in Agda}
 
-Following the work in \cite{alt:99}, we first define a
+Following the work in \cite{alti:99}, we first define a
 proof-irrelevant universe of propositions. We name it as \textbf{hProp}
 since \textbf{Prop} is a  reserved word which can't be used and
 \textbf{hProp} is a notion from Homotopy Type Theory which we will introduce later.
@@ -76,6 +108,8 @@ would present the setoid one here since it is relevant.
 
 \input{./CwF/latex/CwF-setoid.tex}
 
+\section{What we can do in this model}
+
 \subsection{Examples of types}
 
 \input{./CwF/latex/CwF-ctd.tex}
@@ -83,7 +117,16 @@ would present the setoid one here since it is relevant.
 \input{./CwF/latex/CwF-quotient.tex}
 
 
-\subsection{Observational equality}
+
+
+
+\section{Quotient types in setoid model}
+
+
+
+
+
+\section{Observational equality}
 
 %definitional distinct types
 
@@ -97,11 +140,3 @@ approach to equality. They identifies values up to observation rather than
   avoids the heavy use of $subst$ which makes formalisation and
   reasoning involved. We could simplify the setoid model by adapting this
   approach and the implementation could be easier.
-
-
-
-\section{What we could do in this model}
-
-\section{Quotient types in setoid model}
-
-\todo{With Prop universe, how can we define quotient types?}

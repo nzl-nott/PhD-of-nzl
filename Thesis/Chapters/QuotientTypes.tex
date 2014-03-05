@@ -1,14 +1,24 @@
 \chapter{Quotient Types}
-\label{QuotientTypes} % For referencing the chapter elsewhere, use \ref{QuotientTypes} 
+\label{qt}
 
-\todo{Before 1st-Dec-2013}
+\fxnote{should say
+  something of computer science first rather than mathematics maybe,
+  because it is a computer science PhD}
+
+Quotient types is an important part in dependently-typed programming
+languages. It makes some type much easier to define and for some other
+types possibly to define. Also there are
+a set of quotient properties such that we can lift functions from the
+base types. I will start to introduce the quotients from mathematical
+quotients to quotients in programmming languages to give you an
+overview what quotient types are.
 
 %----------------------------------------------------------------------------------------
 
 \section{Quotients in Mathematics}
 % "M"athematics must be capital
 
-Quotient is a very common notion is mathematics. Usually the first
+Quotient is a basic notion in mathematics. Usually the first
 quotient we learn is the result of division. $8 \div 4$ (or $8 / 4$)
 gives the result 2 which is called quotient.
 
@@ -21,7 +31,7 @@ product of sets.
 Similarly, quotient is also extended to other objects, for example the
 quotient in set theory.
 
-\subsection{Quotient sets}
+\subsection{Example : quotient sets}
 In set theory, we have a similar operation which turns some set
 into another set but the divisor is not the same kind of object as the
 dividend. We use equivalence relation to divide a set,
@@ -70,13 +80,13 @@ does the quotient derived using the same construction.
 Generally
 speaking, it describes the collection of equivalent classes of some equivalent relation on sets, spaces or other abstract structures. In type theory, following similar procedure, quotient type is also a conceivable notion.
 
-\paragraph{Quotient types in \ett}
+\subsection{Quotient types in \ett}
 
 In extensional type theory like NuPrl, it is possible to redefine
 equality type of some types. However there is also some problems about it:
 
 
-\paragraph{Quotient types in \itt}
+\subsection{Quotient types in \itt}
 
 %The basic notion in Martin-L¨of’s type theory is the notion of type. A type
 %is explained by saying what an object of the type is and what it means for
@@ -225,7 +235,7 @@ Functor and $\nabla$ functor.
 \end{equation*}
 
 
-\section{impredicative encoding of quotient types}
+\section{Impredicative encoding of quotient types}
 
 In set theory, we have the subset relation such that we can construct equivalence
 classes and then quotient set. 
@@ -438,7 +448,7 @@ will discuss these in next section.
 
 The introduction of quotient types is very helpful. Many types can be
 defined using quotient types, some of them can only be defined with quotient types, such as real
-numbers (the reason will be covered in \todo).
+numbers (the reason will be covered in \todo{here}).
 
 
 

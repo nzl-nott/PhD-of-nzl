@@ -1,7 +1,7 @@
 (TeX-add-style-hook "Background"
  (lambda ()
     (LaTeX-add-labels
-     "tt"
+     "bg"
      "dpty"
      "reflection"
      "fun-ext"

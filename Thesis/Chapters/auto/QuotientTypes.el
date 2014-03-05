@@ -1,4 +1,5 @@
 (TeX-add-style-hook "QuotientTypes"
  (lambda ()
-    (LaTeX-add-labels)))
+    (LaTeX-add-labels
+     "qt")))
 

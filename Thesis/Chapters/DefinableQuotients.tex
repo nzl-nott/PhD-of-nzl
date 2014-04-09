@@ -529,6 +529,27 @@ functions and theorems.
 
 \section{Rational numbers}
 
+\todo{add this paragraph:}
+From a discussion on Agda mailing list, a better way to manipulate the
+rational numbers is required. The set definition of rational numbers
+contains a proof of the coprime property which means that whenther you
+want to define a function, you have to reduce the fraction until the
+enumerator and denominator are comprime. However from the experience
+of using fracitons in arithematics, we can leave them without reducing
+and it is still correct. Therefore, it is better for us to have the
+flexibility of using the un-reduced fractions or reduced ones in
+operations. With the help of definable quotient structures, it is
+feasible. We can define operations and prove theorems about rational
+numbers using the setoid definition and lift them to the set
+version. It makes the definition much easier and whenever we want the
+reduced fraction, we just need to apply the normalisation function
+within the structure. It also improves the efficiency of programs
+using rational numbers, even some people claims that it will be too
+large such that it is less efficient.
+
+
+
+
 The quotient of rational numbers is better known than the previous
 quotient of integers. We usually write two integers $m$ and $n$ ($n$ is not zero) in
 fractional form $\frac{m}{n}$ to represent a rational number. Alternatively we

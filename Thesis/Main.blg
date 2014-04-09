@@ -10,46 +10,47 @@ Warning--empty year in martin1984intuitionistic
 Warning--empty year in martin1984intuitionistic
 Warning--empty journal in aan
 Warning--empty year in voe:hset
+Warning--empty journal in uafe
 Warning--empty journal in gro:ps
-You've used 46 entries,
+You've used 49 entries,
             2481 wiz_defined-function locations,
-            799 strings with 11062 characters,
-and the built_in function-call counts, 16021 in all, are:
-= -- 1437
-> -- 574
-< -- 53
-+ -- 261
-- -- 166
-* -- 929
-:= -- 2455
-add.period$ -- 160
-call.type$ -- 46
-change.case$ -- 86
-chr.to.int$ -- 43
-cite$ -- 52
-duplicate$ -- 957
-empty$ -- 1595
-format.name$ -- 223
-if$ -- 3563
+            819 strings with 11558 characters,
+and the built_in function-call counts, 17227 in all, are:
+= -- 1550
+> -- 619
+< -- 58
++ -- 279
+- -- 178
+* -- 1014
+:= -- 2631
+add.period$ -- 170
+call.type$ -- 49
+change.case$ -- 92
+chr.to.int$ -- 46
+cite$ -- 56
+duplicate$ -- 1025
+empty$ -- 1711
+format.name$ -- 244
+if$ -- 3832
 int.to.chr$ -- 4
-int.to.str$ -- 47
-missing$ -- 37
-newline$ -- 250
-num.names$ -- 138
-pop$ -- 465
+int.to.str$ -- 50
+missing$ -- 40
+newline$ -- 265
+num.names$ -- 147
+pop$ -- 493
 preamble$ -- 1
-purify$ -- 46
+purify$ -- 49
 quote$ -- 0
-skip$ -- 622
+skip$ -- 666
 stack$ -- 0
-substring$ -- 513
-swap$ -- 222
-text.length$ -- 16
+substring$ -- 571
+swap$ -- 236
+text.length$ -- 18
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 304
-warning$ -- 6
-while$ -- 131
+type$ -- 325
+warning$ -- 7
+while$ -- 142
 width$ -- 0
-write$ -- 619
-(There were 8 warnings)
+write$ -- 659
+(There were 9 warnings)

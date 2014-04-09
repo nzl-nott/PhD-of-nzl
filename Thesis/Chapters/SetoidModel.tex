@@ -63,7 +63,35 @@ rise to types and it is not an LCCC. Every LCCC can serve as a model for categor
 families but not every category with families has to be an
 LCCC. 
 
-However this Setoid model is still a model for Type
+\todo{write why this model is not lccc explicitly. refer to Nicolais's
+result}
+
+
+
+\paragraph{The category of setoids is not a LCCC}
+
+The pullback functor.
+
+\begin{displaymath}
+    \xymatrix{X' \ar[r]^{p} \ar[d]_{f^{*}(a)} & Y' \ar[d]^a \\
+      X \ar[r]^f& Y }
+\end{displaymath}
+
+
+Observe that $X \rightarrow 1 \cong X$, therefore the pullback of y which is
+$X/1 \rightarrow X \times Y / Y$ can be seen as a pullback of X of type $X \rightarrow
+X/Y$.
+
+The left adjoint to the pullback functor $f*$ is just the post
+composition of $f$ written as $f \circ\_$ or $\Sigma_f$.
+
+\begin{displaymath}
+    \xymatrix{X' \ar@{=}[r] \ar[d]_{a} & X' \ar[d]^{\Sigma_f a} \\
+      X \ar[r]^f& Y }
+\end{displaymath}
+
+
+However this setoid model is still a model for Type
 Theory just like the groupoid model which is a generalisation of it.
 To develop this model of type theory in Agda, we have implemented the
 categories with families of setoids. 
@@ -73,17 +101,17 @@ following Martin Hofmann's Paper \cite{hof:95:sm}.  Only necessary
 part for the Setoid model will be present here.
 
 
-\subsection{An implementation of categories with Families in Agda}
+\section{An implementation of categories with Families in Agda}
 
 Following the work in \cite{alti:99}, we first define a
 proof-irrelevant universe of propositions. We name it as \textbf{hProp}
 since \textbf{Prop} is a  reserved word which can't be used and
 \textbf{hProp} is a notion from Homotopy Type Theory which we will introduce later.
 
-\subsection{hProp}
+\section{hProp}
 \input{./CwF/latex/hProp.tex}
 
-\subsection{Category}
+\section{Category}
 
 To define category of setoids we should define category first.
 
@@ -92,13 +120,13 @@ To define category of setoids we should define category first.
 $isCategory$ contains all the laws for this structure to be a category, for instance the
 associativity laws for composition.
 
-\subsection{Category of setoids}
+\section{Category of setoids}
 
 
 \input{./CwF/latex/CategoryOfSetoid.tex}
 
 
-\subsection{categories with families of setoids}
+\section{categories with families of setoids}
 
 
 A Category with families consists of a base category and a functor
@@ -110,7 +138,7 @@ would present the setoid one here since it is relevant.
 
 \section{What we can do in this model}
 
-\subsection{Examples of types}
+\section{Examples of types}
 
 \input{./CwF/latex/CwF-ctd.tex}
 

@@ -7,6 +7,7 @@
     (TeX-add-symbols
      "HRule")
     (TeX-run-style-hooks
+     "tikz"
      "mypack"
      "fixme"
      "xkvltxp"
@@ -33,7 +34,8 @@
      "dsfont"
      "agda"
      "xy"
-     "matrix"
+     "all"
+     "etex"
      "latex2e"
      "Thesis11"
      "Thesis"

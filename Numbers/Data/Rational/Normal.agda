@@ -95,7 +95,26 @@ GCD′→ℚ .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) = reco
 ⌜ x ⌝ = (ℤcon (ℚ.numerator x)) /suc (ℚ.denominator-1 x)
 
 {-
-
 sound : ∀ {a b : ℚ₀} → a ∼ b → [ a ] ≡ [ b ]
-sound {n /suc d} {n' /suc d'} eq = {!!}
+sound {n /suc d} {n' /suc d'} eq = {!n!}
+-}
+
+{-
+open import Data.Integer.Setoid as ℤ₀ using (ℤ₀ ; _∼_ ; _,_; zrefl ; zsym ; _>∼<_ ; _∼_isEquivalence)
+  renaming (_+_ to _ℤ₀+_ ; _-_ to _ℤ₀-_ ; _*_ to _ℤ₀*_ ;
+  _≤_ to _ℤ₀≤_; _<_ to _ℤ₀<_)
+
+data ℚ₀' : Set where
+  _/suc_ : (n : ℤ₀) → (d : ℕ) → ℚ₀'
+
+
+[_]' : ℚ₀' → ℚ
+[ (a , b) /suc d ]' = {!!}
+
+[ (+ 0) /suc d ] = ℤ.+_ 0 ÷ 1
+[ (+ (suc n)) /suc d ] with gcd (suc n) (suc d)
+[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
+
+[ (-suc n) /suc d ] with gcd (suc n) (suc d)
+... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
 -}

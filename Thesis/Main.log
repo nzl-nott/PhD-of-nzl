@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  5 MAR 2014 09:39
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  9 APR 2014 09:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -689,6 +689,10 @@ Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
 \c@LT@chunks=\count136
 \LT@p@ftn=\toks31
 ))
+(/usr/local/texlive/2013/texmf-dist/tex/latex/etex-pkg/etex.sty
+Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
+\et@xins=\count137
+)
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xy.sty
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xy.tex Bootstrap'ing:
 catcodes, docmode,
@@ -730,14 +734,14 @@ Loading kernel: messages; fonts; allocations: state,
  direction,
 \d@X=\dimen173
 \d@Y=\dimen174
-\K@=\count137
-\KK@=\count138
-\Direction=\count139
+\K@=\count138
+\KK@=\count139
+\Direction=\count140
 \K@dXdY=\dimen175
 \K@dYdX=\dimen176
 \xyread@=\read1
 \xywrite@=\write3
-\csp@=\count140
+\csp@=\count141
 \quotPTK@=\dimen177
 
 utility macros; pictures: \xy, positions,
@@ -750,18 +754,60 @@ kernel objects: directionals, circles, text; options; algorithms: directions,
 edges, connections;  Xy-pic loaded)
 Package: xy 2012/05/24 Xy-pic version 3.8.8
 
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xyall.tex
+ Xy-pic option: All features v.3.8
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xycurve.tex
+ Xy-pic option: Curve and Spline extension v.3.12 curve,
+\crv@cnt@=\count142
+\crvpts@=\toks36
+\splinebox@=\box38
+\splineval@=\dimen178
+\splinedepth@=\dimen179
+\splinetol@=\dimen180
+\splinelength@=\dimen181
+ circles,
+\L@=\dimen182
+ loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xyframe.tex
+ Xy-pic option: Frame and Bracket extension v.3.14 loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xycmtip.tex
+ Xy-pic option: Computer Modern tip extension v.3.7
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xytips.tex
+ Xy-pic option: More Tips extension v.3.9 loaded) loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xyline.tex
+ Xy-pic option: Line styles extension v.3.10
+\xylinethick@=\dimen183
+ loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xyrotate.tex
+ Xy-pic option: Rotate and Scale extension v.3.8 loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xycolor.tex
+ Xy-pic option: Colour extension v.3.11 loaded)
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xymatrix.tex
  Xy-pic option: Matrix feature v.3.14
-\Row=\count141
-\Col=\count142
-\queue@=\toks36
-\queue@@=\toks37
-\qcount@=\count143
-\qcount@@=\count144
-\matrixsize@=\count145
+\Row=\count143
+\Col=\count144
+\queue@=\toks37
+\queue@@=\toks38
+\qcount@=\count145
+\qcount@@=\count146
+\matrixsize@=\count147
  loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xyarrow.tex
+ Xy-pic option: Arrow and Path feature v.3.9 path, \ar, loaded)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xygraph.tex
+ Xy-pic option: Graph feature v.3.11 loaded) loaded)
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf.tex
- Xy-pic option: PDF driver v.1.7 loaded)) (./agda.sty
+ Xy-pic option: PDF driver v.1.7 Xy-pic pdf driver: `color' extension support
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf-co.tex loaded)
+Xy-pic pdf driver: `curve' extension support
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf-cu.tex loaded)
+Xy-pic pdf driver: `frame' extension support
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf-fr.tex loaded)
+Xy-pic pdf driver: `line' extension support
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf-li.tex loaded)
+Xy-pic pdf driver: `rotate' extension support
+(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf-ro.tex loaded)
+loaded)) (./agda.sty
 Package: agda 
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty
@@ -787,16 +833,16 @@ Package: polytable 2005/04/26 v0.8.2 `polytable' package (Andres Loeh)
 (/usr/local/texlive/2013/texmf-dist/tex/latex/lazylist/lazylist.sty)
 (/usr/local/texlive/2013/texmf-dist/tex/latex/tools/array.sty
 Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
-\col@sep=\dimen178
-\extrarowheight=\dimen179
-\NC@list=\toks38
+\col@sep=\dimen184
+\extrarowheight=\dimen185
+\NC@list=\toks39
 \extratabsurround=\skip71
 \backup@length=\skip72
 )
-\PT@colwidth=\dimen180
-\PT@cols=\count146
-\PT@table=\count147
-\PT@toks=\toks39
+\PT@colwidth=\dimen186
+\PT@cols=\count148
+\PT@table=\count149
+\PT@toks=\toks40
 \PT@in=\read2
 \PT@out=\write4
 )
@@ -806,10 +852,10 @@ Package: ucs 2013/05/11 v2.2 UCS: Unicode input support
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-global.def
 File: uni-global.def 2013/05/13 UCS: Unicode global data
 )
-\uc@secondtry=\count148
-\uc@combtoks=\toks40
-\uc@combtoksb=\toks41
-\uc@temptokena=\toks42
+\uc@secondtry=\count150
+\uc@combtoks=\toks41
+\uc@combtoksb=\toks42
+\uc@temptokena=\toks43
 )
 (/usr/local/texlive/2013/texmf-dist/tex/latex/tipa/tipa.sty
 Package: tipa 2002/08/08 TIPA version 1.1
@@ -833,7 +879,7 @@ Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
 ))
-\mathindent=\dimen181
+\mathindent=\dimen187
 )
 (/usr/local/texlive/2013/texmf-dist/tex/latex/doublestroke/dsfont.sty
 Package: dsfont 1995/08/01 v0.1 Double stroke roman fonts
@@ -868,71 +914,59 @@ Package textgreek Info: Loaded fontmap: {eur/*/*}{U/eur/*/*} {phv/*/*}{U/psy/*/
 *}. on input line 69.
 )
 (/usr/local/texlive/2013/texmf-dist/tex/latex/lkproof/proof.sty
-\inferLineSkip=\dimen182
-\inferLabelSkip=\dimen183
-\@LeftOffset=\dimen184
-\@RightOffset=\dimen185
-\@SavedLeftOffset=\dimen186
-\UpperWidth=\dimen187
-\LowerWidth=\dimen188
-\LowerHeight=\dimen189
-\UpperLeftOffset=\dimen190
-\UpperRightOffset=\dimen191
-\UpperCenter=\dimen192
-\LowerCenter=\dimen193
-\UpperAdjust=\dimen194
-\RuleAdjust=\dimen195
-\LowerAdjust=\dimen196
-\RuleWidth=\dimen197
-\HLabelAdjust=\dimen198
-\VLabelAdjust=\dimen199
-\WidthAdjust=\dimen200
-\@UpperPart=\box38
-\@LowerPart=\box39
-\@LabelPart=\box40
-\ResultBox=\box41
+\inferLineSkip=\dimen188
+\inferLabelSkip=\dimen189
+\@LeftOffset=\dimen190
+\@RightOffset=\dimen191
+\@SavedLeftOffset=\dimen192
+\UpperWidth=\dimen193
+\LowerWidth=\dimen194
+\LowerHeight=\dimen195
+\UpperLeftOffset=\dimen196
+\UpperRightOffset=\dimen197
+\UpperCenter=\dimen198
+\LowerCenter=\dimen199
+\UpperAdjust=\dimen200
+\RuleAdjust=\dimen201
+\LowerAdjust=\dimen202
+\RuleWidth=\dimen203
+\HLabelAdjust=\dimen204
+\VLabelAdjust=\dimen205
+\WidthAdjust=\dimen206
+\@UpperPart=\box39
+\@LowerPart=\box40
+\@LabelPart=\box41
+\ResultBox=\box42
 ) (./diagxy.sty
-\atcode=\count149
+\atcode=\count151
 
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xy.tex not reloaded)
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xyarrow.tex
- Xy-pic option: Arrow and Path feature v.3.9 path, \ar, loaded)
+ Xy-pic option: Arrow and Path feature v.3.9 not reloaded)
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xycurve.tex
- Xy-pic option: Curve and Spline extension v.3.12 curve,
-\crv@cnt@=\count150
-\crvpts@=\toks43
-\splinebox@=\box42
-\splineval@=\dimen201
-\splinedepth@=\dimen202
-\splinetol@=\dimen203
-\splinelength@=\dimen204
- circles,
-\L@=\dimen205
- loaded)
-Xy-pic pdf driver: `curve' extension support
-(/usr/local/texlive/2013/texmf-dist/tex/generic/xypic/xypdf-cu.tex loaded)
-\xydashw@@=\dimen206
-\high=\dimen207
-\ul=\dimen208
-\deltax=\count151
-\deltay=\count152
-\deltaX=\count153
-\deltaXprime=\count154
-\deltaY=\count155
-\deltaYprime=\count156
-\wdth=\dimen209
-\xend=\count157
-\yend=\count158
-\Xend=\count159
-\Yend=\count160
-\xpos=\count161
-\ypos=\count162
-\default=\count163
-\defaultmargin=\count164
-\topw=\count165
-\botw=\count166
-\Xpos=\count167
-\Ypos=\count168
+ Xy-pic option: Curve and Spline extension v.3.12 not reloaded)
+\xydashw@@=\dimen207
+\high=\dimen208
+\ul=\dimen209
+\deltax=\count152
+\deltay=\count153
+\deltaX=\count154
+\deltaXprime=\count155
+\deltaY=\count156
+\deltaYprime=\count157
+\wdth=\dimen210
+\xend=\count158
+\yend=\count159
+\Xend=\count160
+\Yend=\count161
+\xpos=\count162
+\ypos=\count163
+\default=\count164
+\defaultmargin=\count165
+\topw=\count166
+\botw=\count167
+\Xpos=\count168
+\Ypos=\count169
 LaTeX Font Info:    Try loading font information for U+msa on input line 99.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -946,16 +980,16 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Try loading font information for U+stmry on input line 99.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
-\axis=\dimen210
-\xfinish=\count169
-\yfinish=\count170
+\axis=\dimen211
+\xfinish=\count170
+\yfinish=\count171
 )
 (/usr/local/texlive/2013/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip73
 \bibsep=\skip74
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count171
+\c@NAT@ctr=\count172
 )
 (/usr/local/texlive/2013/texmf-dist/tex/latex/xkeyval/xkvltxp.sty
 Package: xkvltxp 2004/12/13 v1.2 LaTeX2e kernel patch (HA)
@@ -975,14 +1009,14 @@ Package: xkeyval 2012/10/14 v2.6b package option processing (HA)
 (/usr/local/texlive/2013/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 \XKV@toks=\toks46
 \XKV@tempa@toks=\toks47
-\XKV@depth=\count172
+\XKV@depth=\count173
 File: xkeyval.tex 2012/10/14 v2.6b key=value parser (HA)
 ))
-\c@fixmecount=\count173
-\c@fxnotecount=\count174
-\c@fxwarningcount=\count175
-\c@fxerrorcount=\count176
-\c@fxfatalcount=\count177
+\c@fixmecount=\count174
+\c@fxnotecount=\count175
+\c@fxwarningcount=\count176
+\c@fxerrorcount=\count177
+\c@fxfatalcount=\count178
 )
 (/usr/local/texlive/2013/texmf-dist/tex/latex/fixme/themes/fxthemecolor.sty
 Package: fxthemecolor 
@@ -997,7 +1031,264 @@ Package: fxtargetlayoutcolor
 )) (./macros.tex) (./mypack.sty
 Package: mypack 
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 70.
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.te
+x
+\pgfutil@everybye=\toks48
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box43
+(/usr/local/texlive/2013/texmf-dist/tex/latex/ms/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+Package: pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+))
+Package: pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks49
+\pgfkeys@temptoks=\toks50
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.c
+ode.tex
+\pgfkeys@tmptoks=\toks51
+))
+\pgf@x=\dimen212
+\pgf@y=\dimen213
+\pgf@xa=\dimen214
+\pgf@ya=\dimen215
+\pgf@xb=\dimen216
+\pgf@yb=\dimen217
+\pgf@xc=\dimen218
+\pgf@yc=\dimen219
+\w@pgf@writea=\write5
+\r@pgf@reada=\read4
+\c@pgf@counta=\count179
+\c@pgf@countb=\count180
+\c@pgf@countc=\count181
+\c@pgf@countd=\count182
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 900.
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.d
+ef
+File: pgfsys-pdftex.def 2009/05/22  (rcs-revision 1.26)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-p
+df.def
+File: pgfsys-common-pdf.def 2008/05/19  (rcs-revision 1.10)
+)))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.
+code.tex
+File: pgfsyssoftpath.code.tex 2008/07/18  (rcs-revision 1.7)
+\pgfsyssoftpath@smallbuffer@items=\count183
+\pgfsyssoftpath@bigbuffer@items=\count184
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.
+code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen220
+\pgfmath@count=\count185
+\pgfmath@box=\box44
+\pgfmath@toks=\toks52
+\pgfmath@stack@operand=\toks53
+\pgfmath@stack@operation=\toks54
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.
+tex
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic
+.code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigo
+nometric.code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.rando
+m.code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.compa
+rison.code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.
+code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round
+.code.tex)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.
+code.tex)))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count186
+))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.co
+de.tex
+File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
+\pgf@picminx=\dimen221
+\pgf@picmaxx=\dimen222
+\pgf@picminy=\dimen223
+\pgf@picmaxy=\dimen224
+\pgf@pathminx=\dimen225
+\pgf@pathmaxx=\dimen226
+\pgf@pathminy=\dimen227
+\pgf@pathmaxy=\dimen228
+\pgf@xx=\dimen229
+\pgf@xy=\dimen230
+\pgf@yx=\dimen231
+\pgf@yy=\dimen232
+\pgf@zx=\dimen233
+Normal \dimen register pool exhausted, switching to extended pool.
+\pgf@zy=\dimen256
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconst
+ruct.code.tex
+File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
+\pgf@path@lastx=\dimen257
+\pgf@path@lasty=\dimen258
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage
+.code.tex
+File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
+\pgf@shorten@end@additional=\dimen259
+\pgf@shorten@start@additional=\dimen260
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.co
+de.tex
+File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
+\pgfpic=\box45
+\pgf@hbox=\box46
+\pgf@layerbox@main=\box47
+\pgf@picture@serial@count=\count187
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicst
+ate.code.tex
+File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
+\pgflinewidth=\dimen261
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransform
+ations.code.tex
+File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
+\pgf@pt@x=\dimen262
+\pgf@pt@y=\dimen263
+\pgf@pt@temp=\dimen264
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.cod
+e.tex
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.c
+ode.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathproce
+ssing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/10/09  (rcs-revision 1.8)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.co
+de.tex
+File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.cod
+e.tex
+File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
+\pgf@max=\dimen265
+\pgf@sys@shading@range@num=\count188
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.cod
+e.tex
+File: pgfcoreimage.code.tex 2010/03/25  (rcs-revision 1.16)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.
+code.tex
+File: pgfcoreexternal.code.tex 2010/09/01  (rcs-revision 1.17)
+\pgfexternal@startupbox=\box48
+))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.co
+de.tex
+File: pgfcorelayers.code.tex 2010/08/27  (rcs-revision 1.2)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretranspare
+ncy.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.
+code.tex
+File: pgfcorepatterns.code.tex 2009/07/02  (rcs-revision 1.3)
+)))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.cod
+e.tex
+File: pgfmoduleshapes.code.tex 2010/09/09  (rcs-revision 1.13)
+\pgfnodeparttextbox=\box49
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.
+tex
+File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
+-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen266
+\pgf@nodesepend=\dimen267
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
+-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+))
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)
+) (/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
+\pgffor@iter=\dimen268
+\pgffor@skip=\dimen269
+\pgffor@stack=\toks55
+\pgffor@toks=\toks56
+))
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.cod
+e.tex
+Package: tikz 2010/10/13 v2.10 (rcs-revision 1.76)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothan
+dlers.code.tex
+File: pgflibraryplothandlers.code.tex 2010/05/31 v2.10 (rcs-revision 1.15)
+\pgf@plot@mark@count=\count189
+\pgfplotmarksize=\dimen270
+)
+\tikz@lastx=\dimen271
+\tikz@lasty=\dimen272
+\tikz@lastxsaved=\dimen273
+\tikz@lastysaved=\dimen274
+\tikzleveldistance=\dimen275
+\tikzsiblingdistance=\dimen276
+\tikz@figbox=\box50
+\tikz@tempbox=\box51
+\tikztreelevel=\count190
+\tikznumberofchildren=\count191
+\tikznumberofcurrentchild=\count192
+\tikz@fig@count=\count193
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.cod
+e.tex
+File: pgfmodulematrix.code.tex 2010/08/24  (rcs-revision 1.4)
+\pgfmatrixcurrentrow=\count194
+\pgfmatrixcurrentcolumn=\count195
+\pgf@matrix@numberofcolumns=\count196
+)
+\tikz@expandcount=\count197
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/06/17 v2.10 (rcs-revision 1.2)
+)))
+Package hyperref Info: Option `colorlinks' set `true' on input line 74.
  (./Main.aux
 
 LaTeX Warning: Label `rational-gcd' multiply defined.
@@ -1008,35 +1299,35 @@ LaTeX Warning: Label `rational-gcd' multiply defined.
 )
 \openout1 = `Main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 81.
-LaTeX Font Info:    Try loading font information for T3+cmr on input line 81.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 85.
+LaTeX Font Info:    Try loading font information for T3+cmr on input line 85.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/tipa/t3cmr.fd
 File: t3cmr.fd 2001/12/31 TIPA font definitions
 )
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 81.
-LaTeX Font Info:    Try loading font information for LGR+cmr on input line 81.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 85.
+LaTeX Font Info:    Try loading font information for LGR+cmr on input line 85.
 
 (/usr/local/texlive/2013/texmf-dist/tex/generic/babel-greek/lgrcmr.fd
 File: lgrcmr.fd 2008/06/17 v2.3 Greek Computer Modern
 )
-LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    ... okay on input line 85.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
@@ -1051,38 +1342,38 @@ Package caption Info: End \AtBeginDocument code.
 
 (/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count178
-\scratchdimen=\dimen211
-\scratchbox=\box43
-\nofMPsegments=\count179
-\nofMParguments=\count180
-\everyMPshowfont=\toks48
-\MPscratchCnt=\count181
-\MPscratchDim=\dimen212
-\MPnumerator=\count182
-\makeMPintoPDFobject=\count183
-\everyMPtoPDFconversion=\toks49
+\scratchcounter=\count198
+\scratchdimen=\dimen277
+\scratchbox=\box52
+\nofMPsegments=\count199
+\nofMParguments=\count200
+\everyMPshowfont=\toks57
+\MPscratchCnt=\count201
+\MPscratchDim=\dimen278
+\MPnumerator=\count202
+\makeMPintoPDFobject=\count203
+\everyMPtoPDFconversion=\toks58
 )
-\c@lstlisting=\count184
-\AtBeginShipoutBox=\box44
-Package hyperref Info: Link coloring ON on input line 81.
+\c@lstlisting=\count204
+\AtBeginShipoutBox=\box53
+Package hyperref Info: Link coloring ON on input line 85.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 (/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count185
+\c@section@level=\count205
 )
-LaTeX Info: Redefining \ref on input line 81.
-LaTeX Info: Redefining \pageref on input line 81.
-LaTeX Info: Redefining \nameref on input line 81.
+LaTeX Info: Redefining \ref on input line 85.
+LaTeX Info: Redefining \pageref on input line 85.
+LaTeX Info: Redefining \nameref on input line 85.
 
 (./Main.out) (./Main.out)
-\@outlinefile=\write5
-\openout5 = `Main.out'.
+\@outlinefile=\write6
+\openout6 = `Main.out'.
 
-Package xypdf Info: Line width: 0.43799pt on input line 81.
+Package xypdf Info: Line width: 0.43799pt on input line 85.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
@@ -1180,37 +1471,43 @@ Package ucs Warning: ***************************
 (ucs)                ***************************
 (ucs)                Activating compatibility mode.
 (ucs)                ***************************
-(ucs)                 on input line 81.
+(ucs)                 on input line 85.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/utf8x.def
 File: utf8x.def 2004/10/17 UCS: Input encoding UTF-8
-) (./Main.lox
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 15.
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-Overfull \hbox (31.99081pt too wide) in paragraph at lines 15--15
- [][] [][][]\T1/cmr/m/n/10.95 Mar-tin Es-cardo's [][]$\T1/cmtt/m/n/10.95 http :
- / / www . cs . bham . ac . uk / \protect \ unhbox \ voidb @ x \ penalty \ 
+ABD: EveryShipout initializing macros (./Main.lox
+Overfull \hbox (1.53253pt too wide) in paragraph at lines 12--12
+ \T1/cmr/m/n/10.95 quo-tients in dif-fer-ent top-ics of math-e-mat-ics. Quo-tie
+nt sets, quo-tient groups 
  []
 
 [1
 
 
 
-{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
-\tf@lox=\write6
-\openout6 = `Main.lox'.
+{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 21.
 
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+Overfull \hbox (31.99081pt too wide) in paragraph at lines 21--21
+ [][] [][][]\T1/cmr/m/n/10.95 Mar-tin Es-cardo's [][]$\T1/cmtt/m/n/10.95 http :
+ / / www . cs . bham . ac . uk / \protect \ unhbox \ voidb @ x \ penalty \ 
+ []
 
-[2]
-<Pictures/2000px-University_of_Nottingham.png, id=351, 2007.5pt x 812.03375pt>
+)
+\tf@lox=\write7
+\openout7 = `Main.lox'.
+
+ [2]
+<Pictures/2000px-University_of_Nottingham.png, id=472, 2007.5pt x 812.03375pt>
 File: Pictures/2000px-University_of_Nottingham.png Graphic file (type png)
 
 <use Pictures/2000px-University_of_Nottingham.png>
 Package pdftex.def Info: Pictures/2000px-University_of_Nottingham.png used on i
-nput line 113.
+nput line 117.
 (pdftex.def)             Requested size: 200.76175pt x 81.20813pt.
  [1
 
@@ -1234,8 +1531,8 @@ nput line 113.
 
 
 ] (./Main.toc [5] [6])
-\tf@toc=\write7
-\openout7 = `Main.toc'.
+\tf@toc=\write8
+\openout8 = `Main.toc'.
 
  [7] [8
 
@@ -1244,8 +1541,8 @@ nput line 113.
  List of Figures
 ------------------------------------------------------------------------------
 (./Main.lof)
-\tf@lof=\write8
-\openout8 = `Main.lof'.
+\tf@lof=\write9
+\openout9 = `Main.lof'.
 
  [9
 
@@ -1256,8 +1553,8 @@ nput line 113.
  List of Tables
 ------------------------------------------------------------------------------
 (./Main.lot)
-\tf@lot=\write9
-\openout9 = `Main.lot'.
+\tf@lot=\write10
+\openout10 = `Main.lot'.
 
  [11
 
@@ -1354,21 +1651,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 307--321
  
  []
 
-[11] [12]
-FiXme Note: 'I will!!' on input line 360.
+[11]
+FiXme Note: 'Cosider moving this part to \autoref {HITs}' on input line 333.
+ [12]
 FiXme Note: 'What conventions we will follow in this thesis and some commonly u
-sed symbols and function' on input line 371.
+sed symbols and function' on input line 367.
 
-Overfull \hbox (37.55579pt too wide) in paragraph at lines 371--372
+Overfull \hbox (37.55579pt too wide) in paragraph at lines 367--368
 [][][][][][][] 
  []
 
-[13]
-FiXme Note: 'one page explanation of why type theory is useful' on input line 4
-02.
- [14]) (./Chapters/QuotientTypes.tex [15] [16
-
-]
+FiXme Note: 'one page explanation of why type theory is useful' on input line 3
+98.
+[13]) (./Chapters/QuotientTypes.tex [14]
 Chapter 3.
 ------------------------------------------------------------------------------
  3 Quotient Types
@@ -1380,27 +1675,39 @@ Overfull \hbox (151.34589pt too wide) in paragraph at lines 6--7
 [][][][][][][] 
  []
 
-[17] [18]
+FiXme Note: 'moving the categorical intuition earlier, because it essentially g
+eneralises the quotients in different topics of mathematics. Quotient sets, quo
+tient groups are just instances and quotient types should also de derviable fro
+m that, and it is much easiler to understand. (and ask Paulo about it?)' on inp
+ut line 24.
+
+Overfull \hbox (972.25558pt too wide) in paragraph at lines 24--25
+[][][][][][][] 
+ []
+
+[15
+
+] [16]
 \openout4 = `Main.ptb'.
 
  (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-32.def
 File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
 )
-Overfull \hbox (5.09415pt too wide) detected at line 132
+Overfull \hbox (5.09415pt too wide) detected at line 140
   |  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 113--132
+Underfull \hbox (badness 10000) in paragraph at lines 121--140
  
  []
 
-[19] <xymatrix 5x3 253> <xymatrix 5x3 253> [20]
-FiXme Note: 'question of where shall we apply pe' on input line 284.
- [21] [22] [23]
-FiXme Note: ')' on input line 451.
- [24] [25])
-(./Chapters/DefinableQuotients.tex [26]
+[17] <xymatrix 5x3 253> <xymatrix 5x3 253> [18]
+FiXme Note: 'question of where shall we apply pe' on input line 292.
+ [19] [20] [21]
+FiXme Note: 'here' on input line 459.
+ [22] [23])
+(./Chapters/DefinableQuotients.tex [24]
 Chapter 4.
 ------------------------------------------------------------------------------
  4 Definable Quotients
@@ -1414,7 +1721,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 30--43
  
  []
 
-[27
+[25
 
 ]
 \openout4 = `Main.ptb'.
@@ -1441,7 +1748,7 @@ Overfull \hbox (8.42047pt too wide) detected at line 84
   |  
  []
 
-[28]
+[26]
 \openout4 = `Main.ptb'.
 
 
@@ -1456,7 +1763,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 149--162
  
  []
 
-[29] [30]
+[27] [28]
 
 Package hyperref Warning: Difference (3) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 252.
@@ -1468,7 +1775,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 256--262
  
  []
 
-[31]
+[29]
 \openout4 = `Main.ptb'.
 
 
@@ -1487,7 +1794,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 320--328
  
  []
 
-[32]
+[30]
 \openout4 = `Main.ptb'.
 
 
@@ -1509,9 +1816,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 403--439
  
  []
 
-[33]
+[31]
 
-LaTeX Warning: Reference `obs-int-nat' on page 34 undefined on input line 448.
+LaTeX Warning: Reference `obs-int-nat' on page 32 undefined on input line 448.
 
 \openout4 = `Main.ptb'.
 
@@ -1540,80 +1847,73 @@ Underfull \hbox (badness 10000) in paragraph at lines 479--502
  
  []
 
+[32]
+FiXme Note: 'add this paragraph:' on input line 532.
+ [33]
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 570--577
+ 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 585--603
+ 
+ []
+
 [34]
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 549--556
- 
- []
-
-[35]
-\openout4 = `Main.ptb'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 564--582
+Underfull \hbox (badness 10000) in paragraph at lines 611--645
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 590--624
- 
- []
-
-[36]
-\openout4 = `Main.ptb'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 633--637
+Underfull \hbox (badness 10000) in paragraph at lines 654--658
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 643--653
+Underfull \hbox (badness 10000) in paragraph at lines 664--674
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 658--664
+Underfull \hbox (badness 10000) in paragraph at lines 679--685
  
  []
 
-) (./Chapters/Reals.tex [37] [38
-
-]
+[35]) (./Chapters/Reals.tex [36]
 Chapter 5.
 ------------------------------------------------------------------------------
  5 Real numbers and other undefinable quotients
 ------------------------------------------------------------------------------
-FiXme Note: 'Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mh
-e/agda/FailureOfTotalSeparatedness.html} should be considered and discussed her
-e, couterexample of Cauchy -> contractible(?)' on input line 6.
+[37
 
-Overfull \hbox (463.341pt too wide) in paragraph at lines 6--7
-[][][][][][][] 
- []
-
-[39] [40]
+] [38]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 103.
 
-[41]
+[39]
 
-LaTeX Warning: Reference `eq:usedbytxa' on page 42 undefined on input line 221.
+LaTeX Warning: Reference `eq:usedbytxa' on page 40 undefined on input line 221.
 
 
-[42] [43] [44]
+[40] [41] [42]
 FiXme Note: 'P(T) -> Connected (T) -> Contractible(T), $\mathbb {R}/ \sim $ is 
 connected but not contractible?' on input line 393.
- [45]
+ [43]
 FiXme Note: 'expand Cauchy completeness of Cauchy reals: it should rely on the 
 axiom of countable choice' on input line 400.
 
@@ -1621,16 +1921,20 @@ Overfull \hbox (35.50739pt too wide) in paragraph at lines 400--401
 [][][][][][][] 
  []
 
-[46]
+FiXme Note: 'decidable order -> of course definable, A-> N definable, give a ex
+plicit proof' on input line 448.
+FiXme Note: 'definable -> split quotient because definable is too general' on i
+nput line 450.
+[44]
 \openout4 = `Main.ptb'.
 
 
-Overfull \hbox (3.59868pt too wide) detected at line 463
+Overfull \hbox (3.59868pt too wide) detected at line 468
   |  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 453--463
+Underfull \hbox (badness 10000) in paragraph at lines 458--468
  
  []
 
@@ -1639,53 +1943,67 @@ Underfull \hbox (badness 10000) in paragraph at lines 453--463
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-38.def
 File: uni-38.def 2013/05/13 UCS: Unicode data U+2600..U+26FF
 )
-Underfull \hbox (badness 10000) in paragraph at lines 467--473
+Underfull \hbox (badness 10000) in paragraph at lines 472--478
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 481--493
+Underfull \hbox (badness 10000) in paragraph at lines 486--498
  
  []
 
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 498--513
+Underfull \hbox (badness 10000) in paragraph at lines 503--518
  
  []
 
+[45]
 \openout4 = `Main.ptb'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 518--530
+Underfull \hbox (badness 10000) in paragraph at lines 523--535
  
  []
 
-[47]) (./Chapters/SetoidModel.tex [48]
+FiXme Note: 'Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mh
+e/agda/FailureOfTotalSeparatedness.html} should be considered and discussed her
+e, couterexample of Connected -> contractible(?)' on input line 554.
+
+Overfull \hbox (478.16173pt too wide) in paragraph at lines 554--555
+[][][][][][][][] 
+ []
+
+) (./Chapters/SetoidModel.tex [46]
 Chapter 6.
 ------------------------------------------------------------------------------
  6 The Setoid Model
 ------------------------------------------------------------------------------
-[49
+FiXme Note: 'the Setoid Model' on input line 5.
+[47
 
 ]
+FiXme Note: 'write why this model is not lccc explicitly. refer to Nicolais's r
+esult' on input line 67.
 
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 74.
 
+Package hyperref Warning: Difference (4) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 73.
 
-Package natbib Warning: Citation `alti:99' on page 50 undefined on input line 7
-6.
+<xymatrix 2x2 182> <xymatrix 2x2 175>
 
-(./CwF/latex/hProp.tex
+Package natbib Warning: Citation `alti:99' on page 48 undefined on input line 1
+06.
+
+[48] (./CwF/latex/hProp.tex
 \openout4 = `Main.ptb'.
 
- [50]
 \openout4 = `Main.ptb'.
 
+ [49]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
@@ -1704,7 +2022,6 @@ Overfull \hbox (2.23874pt too wide) detected at line 160
   |  
  []
 
-[51]
 \openout4 = `Main.ptb'.
 
 
@@ -1732,6 +2049,7 @@ Overfull \hbox (2.89961pt too wide) detected at line 181
   |  
  []
 
+[50]
 \openout4 = `Main.ptb'.
 
 
@@ -1757,7 +2075,7 @@ Overfull \hbox (2.40051pt too wide) detected at line 214
 ) (./CwF/Cats/latex/Category.tex
 \openout4 = `Main.ptb'.
 
- [52]) (./CwF/latex/CategoryOfSetoid.tex
+) [51] (./CwF/latex/CategoryOfSetoid.tex
 \openout4 = `Main.ptb'.
 
 
@@ -1777,25 +2095,32 @@ Overfull \hbox (8.62169pt too wide) detected at line 90
 
 \openout4 = `Main.ptb'.
 
-[53]
+\openout4 = `Main.ptb'.
+
+[52]
+\openout4 = `Main.ptb'.
+
+ [53]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
 
- [54]
+) [54] (./CwF/latex/CwF-setoid.tex
+\openout4 = `Main.ptb'.
+
+ [55]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
 
- [55]) (./CwF/latex/CwF-setoid.tex
 \openout4 = `Main.ptb'.
 
  [56]
 \openout4 = `Main.ptb'.
 
+ [57]
 \openout4 = `Main.ptb'.
 
- [57]
 \openout4 = `Main.ptb'.
 
  [58]
@@ -1803,38 +2128,32 @@ Overfull \hbox (8.62169pt too wide) detected at line 90
 
 \openout4 = `Main.ptb'.
 
-\openout4 = `Main.ptb'.
-
  [59]
-\openout4 = `Main.ptb'.
-
- [60]
-\openout4 = `Main.ptb'.
-
 \openout4 = `Main.ptb'.
 
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-39.def
 File: uni-39.def 2013/05/13 UCS: Unicode data U+2700..U+27FF
-) [61]
-\openout4 = `Main.ptb'.
-
-\openout4 = `Main.ptb'.
-
-
-[62]
+) [60]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
 
-) (./CwF/latex/CwF-ctd.tex [63]
+
+[61]
 \openout4 = `Main.ptb'.
 
 \openout4 = `Main.ptb'.
 
- [64]) (./CwF/latex/CwF-quotient.tex
+) (./CwF/latex/CwF-ctd.tex
+\openout4 = `Main.ptb'.
+
+ [62]
+\openout4 = `Main.ptb'.
+
+) (./CwF/latex/CwF-quotient.tex
 \openout4 = `Main.ptb'.
 
 
@@ -1867,9 +2186,10 @@ Overfull \hbox (9.0978pt too wide) detected at line 155
   |  
  []
 
+[63]
 \openout4 = `Main.ptb'.
 
-[65])) [66] (./Chapters/HITs.tex [67] [68
+ [64])) (./Chapters/HITs.tex [65] [66
 
 ]
 Chapter 7.
@@ -1877,10 +2197,15 @@ Chapter 7.
  7 Homotopy Type Theory and higher inductive types
 ------------------------------------------------------------------------------
 
-Package natbib Warning: Citation `hott-online' on page 69 undefined on input li
-ne 9.
+Package natbib Warning: Citation `hott-online' on page 67 undefined on input li
+ne 22.
 
-) (./Chapters/OGModel.tex [69] [70
+[67] [68] [69]
+FiXme Note: 'discuss with Thorsten' on input line 175.
+ [70]
+FiXme Note: 'Maybe I should combine HIT chapter with weak $\omega $-groupoids\x
+space model chapter?' on input line 199.
+) (./Chapters/OGModel.tex [71] [72
 
 ]
 Chapter 8.
@@ -1899,35 +2224,472 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 ------------------------------------------------------------------------------
  8 the $\omega $-groupoids\xspace Model
 ------------------------------------------------------------------------------
-FiXme Note: 'Before 20th-Mar-2014' on input line 4.
+FiXme Note: 'WORK ON THIS FIRST SO THAT WE CAN REVISE OUR PAPER' on input line 
+4.
+[73] <xymatrix 1x3 14> <xymatrix 1x4 116> <xymatrix 1x4 316> [74]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 21.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\omega' on input line 21.
+(hyperref)                removing `math shift' on input line 107.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 21.
-
-[71]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 68.
+(hyperref)                removing `\omega' on input line 107.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\omega' on input line 68.
+(hyperref)                removing `math shift' on input line 107.
+
+[75] [76]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [77]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [78]
+\openout4 = `Main.ptb'.
 
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 68.
+Overfull \hbox (34.18733pt too wide) in paragraph at lines 383--411
+ [][][][] 
+ []
 
-) (./Chapters/Summary.tex [72] [73] [74
 
-]
+Overfull \hbox (34.18733pt too wide) in paragraph at lines 383--411
+ [][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.18733pt too wide) in paragraph at lines 383--411
+ [][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.18733pt too wide) in paragraph at lines 383--411
+ [][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.18733pt too wide) in paragraph at lines 383--411
+ [][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.18733pt too wide) in paragraph at lines 383--411
+ [][][][] 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (20.07562pt too wide) in paragraph at lines 419--440
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (20.07562pt too wide) in paragraph at lines 419--440
+ [][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (20.07562pt too wide) in paragraph at lines 419--440
+ [][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (20.07562pt too wide) in paragraph at lines 419--440
+ [][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (20.07562pt too wide) in paragraph at lines 419--440
+ [][][][] 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+
+Overfull \hbox (13.88646pt too wide) in paragraph at lines 481--502
+ [][][][] 
+ []
+
+[79]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+LaTeX Font Info:    Try loading font information for OMS+cmss on input line 573
+.
+LaTeX Font Info:    No file OMScmss.fd. on input line 573.
+
+
+LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbullet' on input line 573.
+
+\openout4 = `Main.ptb'.
+
+[80]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][][][] 
+ []
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][][][] 
+ []
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][] 
+ []
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][][][] 
+ []
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (57.4477pt too wide) in paragraph at lines 755--773
+ [][][][] 
+ []
+
+[81]
+\openout4 = `Main.ptb'.
+
+ (./Chapters/OGModel/BasicSyntax2.tex
+\openout4 = `Main.ptb'.
+
+ [82]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+)
+(./Chapters/OGModel/Suspension.tex [83]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [84]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [85]
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+)
+(./Chapters/OGModel/BasicLaws.tex [86]
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (41.66956pt too wide) in paragraph at lines 50--56
+ [][] 
+ []
+
+
+Overfull \hbox (41.66956pt too wide) in paragraph at lines 50--56
+ [][] 
+ []
+
+
+Overfull \hbox (41.66956pt too wide) in paragraph at lines 50--56
+ [][] 
+ []
+
+
+Overfull \hbox (41.66956pt too wide) in paragraph at lines 50--56
+ [][] 
+ []
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+[87]
+\openout4 = `Main.ptb'.
+
+) (./Chapters/OGModel/GroupoidLaws.tex
+\openout4 = `Main.ptb'.
+
+ [88]
+\openout4 = `Main.ptb'.
+
+)
+(./Chapters/OGModel/Telescopes.tex [89]
+\anglebox=\box54
+\coanglebox=\box55
+ [90] [91])
+(./Chapters/OGModel/GlobularSets.tex
+\openout4 = `Main.ptb'.
+
+
+
+LaTeX Warning: Command \textomega invalid in math mode on input line 54.
+
+\openout4 = `Main.ptb'.
+
+[92]) (./Chapters/OGModel/Semantics.tex
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+\openout4 = `Main.ptb'.
+
+ [93]
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (5.09581pt too wide) in paragraph at lines 161--190
+ [][][][] 
+ []
+
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][] 
+ []
+
+
+Overfull \hbox (36.4759pt too wide) in paragraph at lines 193--228
+ [][][][] 
+ []
+
+[94]
+\openout4 = `Main.ptb'.
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][] 
+ []
+
+
+Overfull \hbox (35.66293pt too wide) in paragraph at lines 233--260
+ [][][][] 
+ []
+
+\openout4 = `Main.ptb'.
+
+) [95]) (./Chapters/Summary.tex [96]
 Chapter 9.
 ------------------------------------------------------------------------------
  9 Summary
@@ -1936,7 +2698,9 @@ Chapter 9.
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 4.
 
-) (./Appendices/AppendixA.tex [75] [76
+) (./Appendices/AppendixA.tex [97
+
+] [98
 
 ]
 Appendix A.
@@ -2160,11 +2924,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--120
  
  []
 
-[77]) [78]
+[99]) [100]
 ------------------------------------------------------------------------------
  Bibliography
 ------------------------------------------------------------------------------
-(./Main.bbl [79
+(./Main.bbl [101
 
 
 ]
@@ -2173,25 +2937,28 @@ Underfull \hbox (badness 4416) in paragraph at lines 79--83
 ail-able at:
  []
 
-[80] [81])
+[102] [103])
 
 Package natbib Warning: There were undefined citations.
 
 
-FiXme Summary: Number of notes: 18,
+FiXme Summary: Number of notes: 26,
 (FiXme)        Number of warnings: 0,
 (FiXme)        Number of errors: 0,
 (FiXme)        Number of fatal errors: 0,
-(FiXme)        Total: 18.
+(FiXme)        Total: 26.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 266.
-[82]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 266.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 270.
+[104]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 270.
  (./Main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 266.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 266.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 270.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 270.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: CDE9E5F5BDD346202843035B77F03EBD;14386.
+(rerunfilecheck)             Checksum: 77D28A9DAEE12164301CF160F695F6DF;19442.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
 LaTeX Warning: There were undefined references.
@@ -2199,16 +2966,16 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 266.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 270.
  ) 
 Here is how much of TeX's memory you used:
- 23408 strings out of 493315
- 322842 string characters out of 6137904
- 427830 words of memory out of 5000000
- 26080 multiletter control sequences out of 15000+600000
- 51892 words of font info for 142 fonts, out of 8000000 for 9000
+ 32167 strings out of 493315
+ 497902 string characters out of 6137904
+ 587910 words of memory out of 5000000
+ 34518 multiletter control sequences out of 15000+600000
+ 58265 words of font info for 152 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 49i,19n,127p,1370b,693s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,19n,127p,3232b,817s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
 /usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></u
@@ -2228,37 +2995,38 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2013/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2013/texmf-
 dist/fonts/type1/public/cbfonts/grmi1095.pfb></usr/local/texlive/2013/texmf-dis
-t/fonts/type1/public/cbfonts/gsmn1095.pfb></usr/local/texlive/2013/texmf-dist/f
-onts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2013/texmf-di
-st/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texm
-f-dist/fonts/type1/public/cm-super/sfbi1095.pfb></usr/local/texlive/2013/texmf-
-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/2013/texmf-di
-st/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2013/texmf-dist
-/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2013/texmf-dist/f
-onts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2013/texmf-dist/fon
-ts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2013/texmf-dist/fonts
-/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
-ype1/public/cm-super/sfcc1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
-e1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1
-/public/cm-super/sfcc1440.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/p
-ublic/cm-super/sfrm0600.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pub
-lic/cm-super/sfrm0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publi
-c/cm-super/sfrm0900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
-cm-super/sfrm1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm
--super/sfrm1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-s
-uper/sfss0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-sup
-er/sfss1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super
-/sfti1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/s
-fti1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sft
-i2074.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt0
-900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt109
-5.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/stmaryrd/stmary10.
-pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb><
-/usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
-Output written on Main.pdf (96 pages, 921505 bytes).
+t/fonts/type1/public/cbfonts/grmn1095.pfb></usr/local/texlive/2013/texmf-dist/f
+onts/type1/public/cbfonts/gsmn1095.pfb></usr/local/texlive/2013/texmf-dist/font
+s/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2013/texmf-dist/
+fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-d
+ist/fonts/type1/public/cm-super/sfbi1095.pfb></usr/local/texlive/2013/texmf-dis
+t/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/2013/texmf-dist/
+fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2013/texmf-dist/fo
+nts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2013/texmf-dist/font
+s/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2013/texmf-dist/fonts/
+type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
+pe1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2013/texmf-dist/fonts/type
+1/public/cm-super/sfcc1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
+public/cm-super/sfcc1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pu
+blic/cm-super/sfcc1440.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publ
+ic/cm-super/sfrm0600.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public
+/cm-super/sfrm0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/c
+m-super/sfrm0900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-
+super/sfrm1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-su
+per/sfrm1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-supe
+r/sfss0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/
+sfss1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sf
+ti1095.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti
+1200.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sfti20
+74.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt0900
+.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/cm-super/sftt1095.p
+fb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb
+></usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></us
+r/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
+Output written on Main.pdf (118 pages, 1022005 bytes).
 PDF statistics:
- 1319 PDF objects out of 1440 (max. 8388607)
- 1161 compressed objects within 12 object streams
- 297 named destinations out of 1000 (max. 500000)
- 606 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1604 PDF objects out of 1728 (max. 8388607)
+ 1420 compressed objects within 15 object streams
+ 352 named destinations out of 1000 (max. 500000)
+ 826 words of extra memory for PDF output out of 10000 (max. 10000000)
 

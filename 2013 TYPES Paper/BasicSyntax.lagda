@@ -204,6 +204,57 @@ data Ty Γ where
 
 \subsection{Heterogeneous Equality for Terms}
 
+%new paragraphs
+
+It seems that it is very improper to use heterogeneous equality because uniqueness of identity proof is not allowed in general. However it is justified to use it for some types which fulfil certain properties. Under certain condition the adoption of heterogeneous equality is safe and worthwhile. Here we use it for the syntacic terms because it is dependent on types whose equality are decidable. It means that every equality term can be normalised to refl. The motivation of using this is due to the complexivity when dealing with equality of terms. If we don't use heterogeneous equality, it is still possible to first prove the laws for \emph{subst}, then apply them step by step. But as soon as we found it is safe and justfiable to use the heterogeneous equality, it helps us reduce a lot of complexivity, and the implementation looks more feasible. Here we will give a formalised proof of the reason:
+
+_≟_   : Decidable _≡_
+m ≟ n with ⌜ m ⌝ ℤ₀≟ ⌜ n ⌝
+_ ≟ _    | yes p = yes ⌞ p ⌟
+_ ≟ _    | no ¬p = no $ ¬p ∘ refl' ∘ cong ⌜_⌝
+
+
+\begin{code}
+
+
+tyeq : ∀{Γ : Con}{A : Ty Γ}{a b a₁ b₁ : Tm A} → ((a =h b) ≡ (a₁ =h b₁)) → (a ≡ a₁) × (b ≡ b₁)
+tyeq refl = refl ,, refl
+
+tyeq2 : ∀{Γ : Con}{A A₁ : Ty Γ}{a b : Tm A}{a₁ b₁ : Tm A₁} → ((a =h b) ≡ (a₁ =h b₁)) → A ≡ A₁
+tyeq2 refl = refl
+
+open import Relation.Nullary
+
+_≟ty_ : ∀{Γ : Con}(A B : Ty Γ) → Dec (A ≡ B)
+
+
+_≟tm_ : ∀{Γ : Con}{A : Ty Γ}(a b : Tm A) → Dec (a ≡ b)
+
+
+_≟ty_ * * = yes refl
+_≟ty_ * (a =h b) = no (λ())
+_≟ty_ (a =h b) * = no (λ())
+_≟ty_ (_=h_ {A} a b) (_=h_ {A₁} a₁ b₁) with A ≟ty A₁ 
+(a =h b) ≟ty (a₁ =h b₁) | yes refl with a ≟tm a₁ | b ≟tm b₁ 
+(a =h b) ≟ty (.a =h .b) | yes refl | yes refl | yes refl = yes refl
+(a =h b) ≟ty (.a =h b₁) | yes refl | yes refl | no ¬p = no (λ x → ¬p (proj₂ (tyeq x)))
+(a =h b) ≟ty (a₁ =h b₁) | yes refl | no ¬p | q = no (λ x → ¬p (proj₁ (tyeq x)))
+(a =h b) ≟ty (a₁ =h b₁) | no ¬p = no (λ x → ¬p (tyeq2 x))
+
+
+\end{code}
+
+
+
+
+%new paragraphs
+
+
+
+
+
+
+
 One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential when defining substitution.
 When we used the common identity types which are homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. However we found that the syntactic equality of types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equalities of types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The equality is inhabited only when they are definitionally equal.
 
@@ -311,8 +362,7 @@ _+S_   : {Γ : Con}{Δ : Con}   (δ : Γ ⇒ Δ)  → (B : Ty Γ) → (Γ , B) �
 \end{code}
 }
 
-To define the variables and terms we have to use the weakening rules.
-A Term can be either a variable or a coherence constant ($\mathsf{coh}$). We
+To define the variables we have to use the weakening rules. We
 use typed de Bruijn indices to define variables as either the rightmost
 variable of the context, or some variable in the context which can be
 found by cancelling the rightmost variable along with each $\mathsf{vS}$. The
@@ -324,13 +374,40 @@ be proved simultaneously.
 
 
 \begin{code}
+
+{-
+data Var'           : {Γ : Con}(Last : Ty Γ)(Typ : Ty Γ) → Set
+
+
+data Var' where
+  v0 : {Γ : Con}{A : Ty Γ}              → Var' {Γ} A A
+  vS : {Γ : Con}{A B : Ty Γ} → (x : Var' {Γ} B A) → {C : Ty (Γ , B)} 
+                             → Var' {Γ , B} C (A +T B)
+
+
+_≟v'_ : ∀(Γ : Con)(A B : Ty Γ)(a b : Var' A B) → Dec (a ≡ b)
+_≟v'_ Γ A .A v0 v0 = yes refl
+_≟v'_ .(Γ , B) .(A +T B) .(A +T B) v0 (vS {Γ} {A} {B} b) = no (λ ())
+_≟v'_ .(Γ , B) .(A +T B) .(A +T B) (vS {Γ} {A} {B} a) v0 = ? -- no (λ ())
+-- _≟v'_ .(Γ , B) A₁ .(A +T B) (vS {Γ} {A} {B} a) b = {!b!}
+_≟v'_ Γ A B a b = {!b!}
+-}
+
+
 data Var where
   v0 : {Γ : Con}{A : Ty Γ}              → Var (A +T A)
   vS : {Γ : Con}{A B : Ty Γ}(x : Var A) → Var (A +T B)
+\end{code}
 
+
+A term can be either a variable or a coherence constant ($\mathsf{coh}$).
+It encodes all constants for arbitrary types in a contractible context. 
+
+\begin{code}
 data Tm where
   var : {Γ : Con}{A : Ty Γ} → Var A → Tm A
   coh : {Γ Δ : Con} → isContr Δ → (δ : Γ ⇒ Δ) → (A : Ty Δ) → Tm (A [ δ ]T)
+
 \end{code}
 
 \AgdaHide{
@@ -348,10 +425,10 @@ coh-eq refl = refl _
 \end{code}
 }
 
-Another core part of the syntactic framework is contractible
-contexts. Intuitively speaking, a context is contractible if its geometric
+With variables defined, it is possible to formalise another core part of the syntactic framework, \emph{contractible
+contexts}. Intuitively speaking, a context is contractible if its geometric
 realization is contractible to a point. It either contains one variable of the 0-cell $*$ which is the base case, or we can extend a contractible context with a
-variable of an existing type and an n-cell, namely a morphism, between the new variable and some existing variable.
+variable of an existing type and an n-cell, namely a morphism, between the new variable and some existing variable. The graph can be drawn like branching trees.
 
 \begin{code}
 data isContr where
@@ -669,6 +746,51 @@ vZ = var (vS v0)
 
 vβ : Tm {x:*,y:*,α:x=y,z:*,β:y=z} (vY +tm _ +tm _ =h vZ)
 vβ = var v0
+
+
+
+
+
+
+
+
+
+
+
+
+{-
+data Var' : {Γ : Con}(A : Ty Γ) → Set where
+  v0 : {Γ : Con}{A : Ty Γ} → Var' {Γ , A} (A +T A)
+  vS : {Γ : Con}{A B : Ty Γ}{C : Ty (Γ , A)}(x : Var' (B +T A)) → Var' (B +T A +T C)
+-}
+
+open import Data.Empty
+
+var-ne : ∀ (A : Ty ε) → Var {ε} A → ⊥
+var-ne A ()
+
++T-unif : ∀(Γ : Con)(A B C : Ty Γ) → 
+          A +T B ≡ C +T B → A ≡ C
++T-unif Γ * B * refl = refl
++T-unif Γ * B (a =h b) ()
++T-unif Γ (a =h b) B * ()
++T-unif Γ (a =h b) B (a₁ =h b₁) eq = {!!}
+
+v0only : ∀ (A : Ty ε) → (x : Var {ε , A} (A +T A)) → x ≡ v0
+v0only A x = {!x!}
+
+
+_≟v_ : ∀(Γ : Con)(A : Ty Γ)(a b : Var A) → Dec (a ≡ b)
+_≟v_ .(ε , A) .(A +T A) (v0 {ε} {A}) b = {!b!}
+_≟v_ .(Γ , A , A₁) .(A₁ +T A₁) (v0 {Γ , A} {A₁}) b = {!!}
+_≟v_ .(Γ , B) .(A +T B) (vS {Γ} {A} {B} a) b = {!!}
+
+
+
+
+var x ≟tm var x₁ = {!!}
+var x₁ ≟tm coh x δ A = no (λ ())
+coh x δ A ≟tm b = {!b!}
 
 \end{code}
 }

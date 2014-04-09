@@ -330,14 +330,10 @@ Quotient types is one of the most interesting extensional concepts in type theor
 
 
 \section{Homotopy Type Theory}
+\todo{Cosider moving this part to \autoref{HITs}}
 
 \hott is a variant of intensional \mltt{} which is a new branch developed between theoretical computer science
 and mathematics. Vladimir Voevodsky found a surprising connection between homotopy theory and type theory \cite{voe:06}. He proposed the univalence axiom, which identifies isomorphic structures, as a univalent foundation for mathematics. 
-
-\begin{definition}
-\emph{univalence axiom}. for any two types $X$ and $Y$, 
-$$X = Y \simeq X \simeq Y$$ holds.
-\end{definition}
 
 In \hott, there is an observation that notions in type theory can be interpreted by homotopy-theoretical terms. A type is regarded as a \emph{space} and a term of this type is a \emph{point} of this space. Functions between types are \emph{continous maps} and identity types are usually considered as \emph{paths}. Identity types of identity types are \emph{homotopies}. Although these notions are originally defined with topological bases, we only employ them as homotopical notions on a higher level. 
 
@@ -357,7 +353,7 @@ The eliminator for this type has to take into account the path as well.
 
 
 
-I will not explain this topic in detail here, \todo{I will!!}
+I will not explain this topic in detail here but in \autoref{HITs}.
 
 
 For further reference, a well-written text book on Homotopy Type Theory which is written by many brilliant mathematicians and computer

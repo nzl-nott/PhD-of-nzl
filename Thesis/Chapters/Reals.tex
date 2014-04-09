@@ -1,6 +1,7 @@
 \chapter{Real numbers and other undefinable quotients}
 \label{rl}
 
+If you mean something specific, always write "the"
 
 In the previous chapter, only definable quotient types are
 investigated. But some other
@@ -443,10 +444,15 @@ $$ p \sim q = \Sigma \phi : Fin\,n \rightarrow Fin\,n, \phi\,is\,a\,
 bijection \wedge \forall x, p_x = q_{\phi(x)}$$
 
 
+\todo{decidable order -> of course definable, A-> N definable, give a
+  explicit proof}
+
+\todo{definable -> split quotient because definable is too general}
+
 
 \section{Partiality monad}
 
-Partiality monad is a coninductive type which is available in the
+The partiality monad is a coninductive type which is available in the
 standard library of Agda. It is used to encode delayed computation.
 
 \begin{code}
@@ -471,7 +477,7 @@ A non-terminating program can be defined in a coinductive way.
 \\
 \end{code}
 
-We have two equality for Delay type: strong bisimilarity and weak
+We have two equality for the Delay type: strong bisimilarity and weak
 bisimilarity. 
 Two computation are strongly bisimilar if they are the
 same after the same number of steps delay (there can be infinite
@@ -529,13 +535,36 @@ same value.
 \end{code}
 
 
-The quotient derived from these equivalent relations which represent
+The quotient derived from the equivalent relation (weak bisimilarity) which represent
 the set of all computations can also be a good
 example of undefinable quotient.
 
+It is equivalent to another definition inductively on either left side
+or right side.
+
+
 \section{Not all connected type is contractible}
 
+Martin's example is that we can define a type which is proved
+different but we cannot find a function from it to \emph{2}.
 
 \todo{Martin Escardo's
   \url{http://www.cs.bham.ac.uk/~mhe/agda/FailureOfTotalSeparatedness.html}
-should be considered and discussed here, couterexample of Connected -> contractible(?)}
+should be considered and discussed here, couterexample of Connected ->
+contractible(?)}
+
+conjecture: every quotient definable in pure type theory without
+quotient is split
+
+one way to prove it is any connected type is contractible.
+
+the question is still open.
+
+
+This will implies that reals are not only non-split but also
+undefianble in general.
+
+
+1. why quotients simplifies reasoning. (writened up)
+2. Undefinablity
+3. omega-groupoids model

@@ -18,3 +18,7 @@ latex/BasicSyntax.bbl : latex/my.bib latex/BasicSyntax.aux
 
 pdf : $(DEPS)
 	cd latex ; pdflatex BasicSyntax.tex ;	cd .. 
+
+
+clean :
+	rm -f latex/*.{aux,bbl,blg,log,out,ptb,ptbx,vtc}

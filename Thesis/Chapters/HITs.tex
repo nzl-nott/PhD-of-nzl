@@ -5,38 +5,44 @@
 branch between theoretical computer science
 and mathematics. Indeed it arises from a new interpretation of intensional \mltt
 into homotopy theory where identity types are interpreted as paths and
-the identity types of "paths" as homotopies. 
+the identity types of "paths" as homotopies and extended with the Vladimir Voevodsky's \emph{univalence axiom} which identifies isomorphic
+structures (formally speaking, it identifies isomorphism with
+equality).
 
-It is extended with Vladimir Voevodsky's \emph{univalence axiom} which identifies isomorphic
-structures. 
-Formally speaking, it identifies isomorphism with
-equality.
+In category theory, it is very common to state some notions "... up to
+isomorphism". Isomorphism is the only equivalent relation instead of
+instead of "equality". This seems to be the inspiration for the
+univalent axiom which can be seen as a formalisation of this vague notion.
 
-In category theory, we usually use
-isomorphism instead of "equality". The univalent axiom
-seems like a formalisation of this vague notion.
-
-In \hott, we interpret types as higher groupoids
+In \hott, since paths and higher paths are an essential part of the
+structure of types,  it is appropriate to interpret types as higher groupoids
 which is a "multi-sorted object" which contains points for terms,
 paths for identity types and higher paths for higher level iterated identity
-types\cite{hott-online}. To accomodate this interpretation, inductive
-types are not enough, then a more
+types\cite{hott-online}. 
+
+To accomodate this interpretation, the usual schema to define types --
+\emph{inductive
+types} lacks in expressive power, then a more
 general schema for defining types is invented \textemdash \emph{higher
 inductive types}. Briefly speaking, in a definition of a higher inductive type, there can
 be constructors not only for points but also for paths.
+
 With higher inductive types, it is much easier to define quotient
-types. However the implementation of \hott in \itt{} is still an open problem. We
-work on defining semi-simplicial types and \wog{} to solve it. There
+types. However the implementation of \hott in \itt is still an open problem. We
+work on defining semi-simplicial types and \wog to solve this problem. There
 is also the very new model using cubical sets proposed by Bezem,
 Coquand and Huber in \cite{bezem2013model}.
 
-In this chapter, we will discuss some basic notions in \hott like
-higher inductive types, quotient types in \hott and a discussion of
-the implementation of \hott in \itt. It can be seen as an extended
-introduction to \hott and serves as an essential prerequiste for next chapter.
+In this chapter, we introduce some basic notions in \hott like
+univalent axioms, homotopy types,
+higher inductive types, and discuss quotient types in \hott and the
+models of \hott. It serves as an essential prerequiste for next chapter.
 
 
 \section{Basic Homotopy Type theoretical notions}
+
+Homotopy type theory can be seen as an \itt extended with the
+following axiom:
 
 \subsection{Univalent axiom}
 
@@ -44,10 +50,13 @@ Vladimir Voevodsky proposed to add the following \emph{univalence} to
 type theory, as the fundamental axiom of the \hott.
  
 \begin{definition}
-\emph{univalence axiom}. for any two types $X$ and $Y$, 
-$$X = Y \simeq X \simeq Y$$ holds.
+\emph{univalence axiom}. for any two types $X$ and $Y$, the function 
+$$f : X = Y \rightarrow X \simeq Y$$ is an equivalence.
 \end{definition}
 
+
+The univalent axiom implies functional extensionality and
+propositional equality(?).
 
 \subsection{Homotopy types}
 
@@ -176,15 +185,14 @@ is just a discrete category which is equivalent to sets (?review).
 
 
 
-\section{Various implementations of \hott}
+\section{models of \hott}
 
-\subsection{Simplicial sets}
+\subsection{Kan simplicial sets}
 
+\subsection{semi-simplicial sets}
 
 \subsection{Cubical sets}
 
-
-\subsection{Brunerie's syntactic approach}
 
 \section{Summary}
 

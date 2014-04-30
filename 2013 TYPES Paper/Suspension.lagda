@@ -160,7 +160,6 @@ one-step suspension:
 
 ΣT[Σs]T  : {Γ Δ : Con}(A : Ty Δ)(δ : Γ ⇒ Δ) 
          → (ΣT A) [ Σs δ ]T ≡ ΣT (A [ δ ]T)
-
 \end{code}
 \AgdaHide{
 \begin{code}

@@ -270,33 +270,8 @@ _≟v'_ Γ A B a b = {!b!}
 
 
 
-One of the big challenge we encountered at first is the difficulty to
-formalise and to reason about the equalities of terms, which is
-essential when defining substitution.  When we used the common
-identity types which are homogeneous, we had to use $subst$ function
-in Agda to unify the types on both sides of the equation. It created a
-lot of technical issues that made the encoding too involved to
-proceed. 
-
-\new{A Case of complexity: For example, assume we have a
-context $\Gamma$, three types $A~B : Ty~\Gamma$ and we know $p : A
-\equiv B$. If we have a term $a : Tm ~ A$ and a term $b : Tm ~ B$,
-it is impossible to just write $a \equiv B$ because of type
-unification. We need to write $subst Tm p a \equiv b$. Again assume we
-have another type $C : Ty~\Gamma$, $q : B \equiv C$ and a term of $c :
-Tm ~ C$, to prove a possible lemma $a = c$, we have to write
-something like $subst ~ Tm ~ q ~ (subst~Tm ~ p ~ a) ~ \equiv
-c$. Of course due to this possible nesting of "subst" inside another "subst", we need to prove a coherence lemma
-$subst ~ Tm ~ q ~ (subst ~ Tm ~ p ~ a) \equiv subst ~ Tm ~
-(trans ~ p ~ q)~a$ to help us in other proofs. Indeed, there are much more coherence lemmas to prove to deal with the $subst$ issues.}
-
-However we found that the equality of
-syntactic types of given context which will be introduced later, is
-decidable which means that it is an h-set. In other words, the
-equality of syntactic types is unique, so that it is safe to use the
-JM equality (heterogeneous equality) for terms of different types. The
-heterogeneous equality for terms is inhabited only when their
-syntactic types are definitionally equal.
+One of the big challenge we encountered at first is the difficulty to formalise and to reason about the equalities of terms, which is essential when defining substitution.
+When we used the common identity types which are homogeneous, we had to use $subst$ function in Agda to unify the types on both sides of the equation. It created a lot of technical issues that made the encoding too involved to proceed. \new{A Case of complexity: For example, assume we have a context $\Gamma$, three types $A B : Ty \Gamma$ and we know $p : A \equiv B$. If we have a term $a : Tm  ~ A$ and a term $b : Tm  ~ B$, it is impossible to just write $a \equiv B$ because of type unification. We need to write $subst Tm p a \equiv b$. Again assume we have another type $C : Ty \Gamma$, $q : B \equiv C$ and a term of $c : Tm  ~ C$, to prove a possible lemma $a = c$, we have to write something like $subst  ~ Tm  ~ q ~ (subst~Tm  ~ p  ~ a)  ~ \equiv c$. Of course because of this we need to prove a coherence lemma $subst  ~ Tm  ~ q  ~ (subst  ~ Tm  ~ p  ~ a) \equiv subst  ~ Tm  ~ (trans  ~ p  ~ q) a$ and indeed, there are more lemmas to prove which simplfy the $subst$ issues.} However we found that the equality of syntactic types of given context which will be introduced later, is decidable which means that it is an h-set. In other words, the equality of syntactic types is unique, so that it is safe to use the JM equality (heterogeneous equality) for terms of different types. The heterogeneous equality for terms is inhabited only when their syntactic types are definitionally equal.
 
 \new{In intensional type theory, the uniqueness of identity proof (UIP) in general is not provable, namely not all types are h-sets (homotopy 0-type). However it is justified to claim some types are h-sets. From the Hedberg Theorem we know that inductive types with finitary constructors is a set. Here these types which stands for syntactic components areinductive-inductive types with finitary constructors, and from the same reason, it is safe to claim the UIP for the syntacic contexts, types, terms and variables are all sets. Here we only the UIP for syntactic types so that we can adopt heterogeneous equality for terms which can simplify the work a lot if it is safe. The motivation of using the heterogeneous equality is due to the complexivity when manipulating equality of terms. Without the heterogeneous equality, most propositional equality of terms involves a lot of \emph{subst} (which substite certain values in the dependent type of terms), and repetative utilization of the coherence laws for \emph{subst}.
 }

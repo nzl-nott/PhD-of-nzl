@@ -28,6 +28,7 @@
 \newcommand{\wig}{weak $\infty$-groupoids}
 \newcommand{\og}{$\omega$-groupoids}
 \newcommand{\wog}{weak $\omega$-groupoids}
+\newcommand{\wogs}{weak $\omega$-groupoid} % s for singular
 \newcommand{\hott}{Homotopy Type Theory}
 \newcommand{\ott}{Observational Type Theory}
 \newcommand{\tig}{$\mathcal{T}_{\infty-groupoid}$}
@@ -167,7 +168,7 @@ structure of the identity proofs.
 
 
 The generalised notion is called {\wog} and was proposed by
-Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
+Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalencess. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
 isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
@@ -178,7 +179,7 @@ also require the equalities to be non-strict, in other words, they are
 not definitionally equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
 There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
-This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. \new{This is the first attempt to formalise this approach in Agda, and other languages like Coq.} The approach is to specify when a globular set is a {\wog} by first defining a type theory called {\tig} to describe the internal language
+This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. \new{This is the first attempt to formalise this approach in Agda, and other languages like Coq.} The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language
 of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 
 \section*{Acknowledgements}
@@ -211,7 +212,8 @@ syntactic substitution operation which we need for the general
 statement of the coherence constants. However, defining this constant
 requires us to prove a number of substitution laws at the same
 time. We address this issue by using a heterogeneous equality which
-exploits uniqueness of identity proofs (UIP). Note that UIP holds because all components defined here
+exploits UIP. Note that UIP holds for
+the syntax because all components defined here
 are sets in the sense of Homotopy Type Theory.
 
 % Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
@@ -250,8 +252,11 @@ dependent on types, Contexts morphisms and the contractible contexts.
 
 % Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
 
-It is possible to complete the definition of contexts and types first. Contexts are inductively defined as either an empty context or a context with a type of it. Types are defined as either $*$ which we call it 0-cell, or a morphism between two terms of
-some type A. If the type A is n-cell then we call the morphism $(n+1)$-cell. 
+It is possible to complete the definition of contexts and types
+first. Contexts are inductively defined as either an empty context or
+a context with a type in it. Types are defined as either $*$ which we
+call 0-cells, or a equality type between two terms of some type A. If 
+type A is n-cell then we call its equality type $(n+1)$-cell.
 
 \begin{code}\>\<%
 \\
@@ -353,36 +358,55 @@ data Var' where
 
 
 
-One of the big challenge we encountered at first is the difficulty to
+One of the big challenges we encountered at first is the difficulty to
 formalise and to reason about the equalities of terms, which is
-essential when defining substitution.  When we used the common
-identity types which are homogeneous, we had to use $subst$ function
-in Agda to unify the types on both sides of the equation. It created a
-lot of technical issues that made the encoding too involved to
-proceed. 
+essential when defining substitution.  When the usual identity types
+are used which are homogeneous, one has to use substitution to unify
+the types on both sides of equality types. This results in
+$\mathit{subst}$ to appear in terms, about which one has to state
+substitution lemmas. This further pollutes syntax requiring lemmas
+about lemmas, lemmas about lemmas about lemmas, etc. The resulting
+recurrence pattern has been identified and implemented in
+\cite{txa:csl} for the special cases of coherence cells for
+associativity, units and interchange. However it is not clear how that
+approach could be adapted to the present, much more economical
+formulation of {\wog}. Moreover, the complexity brings the
+Agda type checker to its limits and correctness into question.
 
-\new{A Case of complexity: For example, assume we have a
-context $\Gamma$, three types $A~B : Ty~\Gamma$ and we know $p : A
-\equiv B$. If we have a term $a : Tm ~ A$ and a term $b : Tm ~ B$,
-it is impossible to just write $a \equiv B$ because of type
-unification. We need to write $subst Tm p a \equiv b$. Again assume we
-have another type $C : Ty~\Gamma$, $q : B \equiv C$ and a term of $c :
-Tm ~ C$, to prove a possible lemma $a = c$, we have to write
-something like $subst ~ Tm ~ q ~ (subst~Tm ~ p ~ a) ~ \equiv
-c$. Of course due to this possible nesting of "subst" inside another "subst", we need to prove a coherence lemma
-$subst ~ Tm ~ q ~ (subst ~ Tm ~ p ~ a) \equiv subst ~ Tm ~
-(trans ~ p ~ q)~a$ to help us in other proofs. Indeed, there are much more coherence lemmas to prove to deal with the $subst$ issues.}
 
-However we found that the equality of
-syntactic types of given context which will be introduced later, is
-decidable which means that it is an h-set. In other words, the
-equality of syntactic types is unique, so that it is safe to use the
-JM equality (heterogeneous equality) for terms of different types. The
-heterogeneous equality for terms is inhabited only when their
-syntactic types are definitionally equal.
+\new{For example, assume we have a
+context $\Gamma$, three types $A~B : \mathit{Ty}~\Gamma$ and we know $p : A
+\equiv B$. If we have a term $a : \mathit{Tm} ~ A$ and a term $b : \mathit{Tm} ~ B$,
+it is impossible to just write $a \equiv b$ because of type
+unification. We need to write $\mathit{subst}~ \mathit{Tm}~ p a \equiv b$. Again assume we
+have another type $C : \mathit{Ty}~\Gamma$, $q : B \equiv C$ and a term of $c :
+\mathit{Tm} ~ C$, to prove a possible lemma $a = c$, we have to write
+$\mathit{subst} ~ \mathit{Tm} ~ q ~ (\mathit{subst}~\mathit{Tm} ~ p ~ a) ~ \equiv
+c$. Of course now we need to prove a new coherence lemma
+$\mathit{subst ~ Tm ~ q ~ (subst ~ Tm ~ p ~ a)} \equiv \mathit{subst ~ Tm ~
+(trans ~ p ~ q)~a}$ to help us in other proofs, etc. }
 
-\new{In intensional type theory, the uniqueness of identity proof (UIP) in general is not provable, namely not all types are h-sets (homotopy 0-type). However it is justified to claim some types are h-sets. From the Hedberg Theorem we know that inductive types with finitary constructors is a set. Here these types which stands for syntactic components areinductive-inductive types with finitary constructors, and from the same reason, it is safe to claim the UIP for the syntacic contexts, types, terms and variables are all sets. Here we only the UIP for syntactic types so that we can adopt heterogeneous equality for terms which can simplify the work a lot if it is safe. The motivation of using the heterogeneous equality is due to the complexivity when manipulating equality of terms. Without the heterogeneous equality, most propositional equality of terms involves a lot of \emph{subst} (which substite certain values in the dependent type of terms), and repetative utilization of the coherence laws for \emph{subst}.
-}
+The idea of heterogenous equality, which we use to resolve this issue,
+is that one can define equality for terms of different types, but its
+inhabitants only for terms of definitionally equal types. However, the
+corresponding elimination principle relies on UIP. 
+
+\new{In intensional type theory, UIP is not provable in general,
+  namely not all types are h-sets (homotopy 0-types). However it is
+  justified to claim all type with decidable equality are h-sets.
+  From the Hedberg's Theorem \cite{hed:98} we know that inductive
+  types with finitary constructors have decidable equality. In our
+  case, the types which stand for syntactic components (contexts, types, terms)
+  are inductive-inductive types with finitary constructors and it is
+  therefore safe to assume UIP holds for them. We can therefore safely
+  use heterogenous equality for the syntax because its equality, which
+  will be introduced later, is decidable.  }
+
+
+In summary, the equality of
+syntactic types is unique, so it is safe to use heterogeneous equality
+and do without the substitution lemmas which would otherwise be
+necessary to match terms of different types.
 
 %Here we use it for the syntacic terms because it is dependent on types whose equality are decidable. It means that every equalit%y term can be normalised to refl. . Here we will give a formalised proof of the reason:
 %
@@ -524,9 +548,11 @@ more convenient to formalise and to reason about term equations.
 
 \subsection{Substitutions}
 
-With context morphism, we can define substitutions for types variables and terms.
-Usually we define a set of symbols together and we name a function $*$ as $*C$ for contexts, $*T$ for types, 
-$*V$ for variables $*tm$ for terms and  $*S$ for context morphisms. For example the substitution for typese is defined as follows
+With context morphisms, we can define substitutions for types
+variables and terms.  Usually we define a set of symbols together and
+we name a function $*$ as $*C$ for contexts, $*T$ for types, $*V$ for
+variables $*tm$ for terms and $*S$ for context morphisms. For example
+the substitution for types is defined as follows
 
 \begin{code}\>\<%
 \\
@@ -534,7 +560,8 @@ $*V$ for variables $*tm$ for terms and  $*S$ for context morphisms. For example 
 \\
 \>\<\end{code}
 
-In this paper, we will not present the others in the same set, but you can find them in the code.
+In this paper, we will not present the others of the same sort, but you
+can find them in the code.
 
 \AgdaHide{
 \begin{code}\>\<%
@@ -582,8 +609,8 @@ composition of contexts can be understood as substitution for context morphisms 
 
 \subsection{Weakening Rules}
 
-We can freely add types to the contexts of any given type
-judgments, term judgments or context morphisms. These are weakening rules.
+We can freely add types to the contexts of any given type judgments,
+term judgments or context morphisms. These are weakening rules.
 
 \begin{code}\>\>[0]\AgdaIndent{3}{}\<[3]%
 \>[3]\<%
@@ -649,7 +676,7 @@ judgments, term judgments or context morphisms. These are weakening rules.
 \>\<\end{code}
 }
 
-To define the variables we have to use the weakening rules. We
+To define variables we have to use the weakening rules. We
 use typed de Bruijn indices to define variables as either the rightmost
 variable of the context, or some variable in the context which can be
 found by cancelling the rightmost variable along with each $\mathsf{vS}$. The
@@ -699,7 +726,7 @@ It encodes all constants for arbitrary types in a contractible context.
 %
 \\
 \>\AgdaComment{\{-
--- the symbol is \textbackslash||
+-- the symbol is 	extbackslash||
 
 
 data TyU : Set
@@ -867,9 +894,11 @@ Context morphisms are defined inductively similarly to contexts. A context morph
 
 \subsection{Lemmas}
 
-The following lemmas are essential for constructions and theorem proving in later part.
-The first set of lemmas state that to substitute a type, a variable, a term, or a context morphism with two
-context morphisms consecutively, is equivalent to substitute with the composition of the two context morphisms:
+The following lemmas are essential for constructions and theorem
+proving later.  The first set of lemmas states that to substitute a
+type, a variable, a term, or a context morphism with two context
+morphisms consecutively, is equivalent to substitute with the
+composition of the two context morphisms:
 
 \begin{code}\>\<%
 \\
@@ -932,7 +961,7 @@ context morphisms consecutively, is equivalent to substitute with the compositio
 \>\<\end{code}
 }
 
-The second set state that weakening inside substitution is equivalent to weakening outside:
+The second set states that weakening inside substitution is equivalent to weakening outside:
 
 \begin{code}\>\<%
 \\

@@ -20,11 +20,16 @@ To interpret the syntax, we need globular types
 record Glob : Set₁ where
   constructor _∣∣_
   field
-    obj  : Set
-    hom  : obj → obj → ∞ Glob
-open Glob public renaming (obj to ∣_∣) 
+    ∣_∣   : Set
+    hom  : ∣_∣ → ∣_∣ → ∞ Glob
 \end{code}
 
+\AgdaHide{
+\begin{code}
+open Glob public
+-- open Glob public renaming (obj to ∣_∣) 
+\end{code}
+}
 If all the object types are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
 
 %Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
@@ -81,7 +86,7 @@ module UniverseGS (U : Set)(El : U → Set) where
 Π : (A : Set)(B : A → Glob) → Glob
 Π A B = 
   record 
-  { obj = (a : A) → ∣ B a ∣
+  { ∣_∣  = (a : A) → ∣ B a ∣
   ; hom = λ f g → ♯ Π A (λ x → ♭ (hom (B x) (f x) (g x)))
   }
 

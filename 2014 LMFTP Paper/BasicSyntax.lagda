@@ -127,7 +127,12 @@ infixl 7 _⊚_
 
 %why do we need to use omega groupoid
 
-In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alti:lics99}. The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can be seen as a refinement of isomorphism without UIP \cite{txa:csl}. For example, a weak equivalence
+In Type Theory, a type can be interpreted as a setoid which is a set equipped with an equivalence relation \cite{alti:lics99}.
+The equivalence proof of the relation consists of reflexivity, symmetry and transitivity whose proofs are unique. 
+However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). 
+Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. 
+Weak equivalence can be seen as a refinement of isomorphism without UIP \cite{txa:csl}. 
+For example, a weak equivalence 
 between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
 corresponding inverse morphism $ g : B \to A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
@@ -149,7 +154,7 @@ structure of the identity proofs.
 
 
 The generalised notion is called {\wog} and was proposed by
-Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalencess. As we know that a set can be seen as a discrete
+Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism is unique between
 two objects. A groupoid is more generalised, every morphism is
 isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
@@ -355,11 +360,13 @@ necessary to match terms of different types.
 %Here we use it for the syntacic terms because it is dependent on types whose equality are decidable. It means that every equalit%y term can be normalised to refl. . Here we will give a formalised proof of the reason:
 %
 
+
 \begin{code}
 data _≅_ {Γ : Con}{A : Ty Γ} :
          {B : Ty Γ} → Tm A → Tm B → Set where
   refl : (b : Tm A) → b ≅ b
 \end{code}
+
 
 \AgdaHide{
 \begin{code}
@@ -1024,10 +1031,6 @@ There is still a lot of work to do within the syntactic framework. For instance,
 
 We would like to formalise a proof of that Id$\omega$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with Id$\omega$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with J are equivalence. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
 
-
-
-
-\newpage
 \bibliography{my.bib}
 
 \end{document}

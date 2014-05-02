@@ -35,18 +35,24 @@ To interpret the syntax, we need globular types
 \>[2]\AgdaKeyword{field}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{obj} \<[9]%
-\>[9]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\>[4]\AgdaField{∣\_∣} \<[10]%
+\>[10]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaField{hom} \<[9]%
-\>[9]\AgdaSymbol{:} \AgdaBound{obj} \AgdaSymbol{→} \AgdaBound{obj} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaRecord{Glob}\<%
-\\
-\>\AgdaKeyword{open} \AgdaModule{Glob} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}obj \AgdaSymbol{to} ∣\_∣\AgdaSymbol{)} \<[39]%
-\>[39]\<%
+\>[9]\AgdaSymbol{:} \AgdaBound{∣\_∣} \AgdaSymbol{→} \AgdaBound{∣\_∣} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaRecord{Glob}\<%
 \\
 \>\<\end{code}
 
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Glob} \AgdaKeyword{public}\<%
+\\
+\>\AgdaComment{-- open Glob public renaming (obj to ∣\_∣) }\<%
+\\
+\>\<\end{code}
+}
 If all the object types are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
 
 %Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
@@ -161,7 +167,8 @@ Note that this is usually not a globular set.
 \>[9]\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaSymbol{\{} \AgdaField{obj} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{B} \AgdaBound{a} \AgdaFunction{∣}\<%
+\>[2]\AgdaSymbol{\{} \AgdaField{∣\_∣} \<[9]%
+\>[9]\AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{B} \AgdaBound{a} \AgdaFunction{∣}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaSymbol{;} \AgdaField{hom} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{g} \AgdaSymbol{→} \AgdaCoinductiveConstructor{♯} \AgdaFunction{Π} \AgdaBound{A} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaSymbol{(}\AgdaBound{B} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaBound{x}\AgdaSymbol{)))}\<%

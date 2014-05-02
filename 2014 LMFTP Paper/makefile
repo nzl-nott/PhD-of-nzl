@@ -9,7 +9,6 @@ all : pdf
 latex/%.tex : %.lagda
 	agda $(AGDA_ARGS) --latex  -i . -i $(AGDA_LIB) $<
 
-
 latex/BasicSyntax.aux : $(DEPS)
 	cd latex ; pdflatex BasicSyntax.tex ;	cd .. 
 
@@ -17,7 +16,7 @@ latex/BasicSyntax.bbl : latex/my.bib latex/BasicSyntax.aux
 	bibtex latex/BasicSyntax
 
 pdf : $(DEPS)
-	cd latex ; pdflatex BasicSyntax.tex ;	cd .. 
+	cd latex ; pdflatex BasicSyntax.tex ;	pdflatex BasicSyntax.tex ; cd .. 
 
 
 clean :

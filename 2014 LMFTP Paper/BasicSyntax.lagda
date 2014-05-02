@@ -206,9 +206,10 @@ We first declare the syntax of our type theory which is
 called \tig{} namely the internal language of \wog. The following declarations in order are contexts as sets,
 types are sets dependent on contexts, terms and variables are sets
 dependent on types, Contexts morphisms and the contractible contexts.
+\new{Since the definitions of them involve each other, it is necessary to define them inductive-inductively. Therefore we claim their types first and then define the constructors later.
+}
 
 \begin{code}
-
 data Con           : Set
 data Ty (Γ : Con)  : Set
 data Tm            : {Γ : Con}(A : Ty Γ) → Set
@@ -219,7 +220,7 @@ data isContr       : Con → Set
 
 % Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
 
-It is possible to complete the definition of contexts and types
+\new{Nuo: The first sentence is useless I think.} It is possible to complete the definition of contexts and types
 first. Contexts are inductively defined as either an empty context or
 a context with a type in it. Types are defined as either $*$ which we
 call 0-cells, or a equality type between two terms of some type A. If 

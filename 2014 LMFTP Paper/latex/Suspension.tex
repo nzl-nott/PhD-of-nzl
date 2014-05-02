@@ -820,10 +820,10 @@ an important role later in the definition of composition.
 After we have suspended a context by inserting an appropriate number of
 variables, we may proceed to a substitution which fills the stalk for
 $A$ with $A$. The context morphism representing this substitution is
-called $\mathsf{filter}$. In the final step we combine it with
+called $\AgdaFunction{filter}$. In the final step we combine it with
 $\Gamma$, the context of $A$.  The new context contains two parts, the
 first is the same as $\Gamma$, and the second is the suspended $\Delta$
-substituted by $\mathsf{filter}$. However, we also have to drop
+substituted by $\AgdaFunction{filter}$. However, we also have to drop
 the stalk of $A$ becuse it already exists in $\Gamma$.
 
 Geometrically speaking, the context resulting from replacing $*$ in $\Delta$ by
@@ -850,9 +850,9 @@ As always, we define replacement for contexts, types and terms:
 \\
 \>\<\end{code}
 
-Replacement for contexts, $\mathsf{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
+Replacement for contexts, $\AgdaFunction{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
 a context which begins as $\Gamma$ and follows by each type of $\Delta$ with $*$ replaced with (pasted onto)  $A$. 
-To this end we must define the substitution $\mathsf{filter}$ which
+To this end we must define the substitution $\AgdaFunction{filter}$ which
 pulls back each type from suspended $\Delta$ to the new context. 
 
 \begin{code}\>\<%

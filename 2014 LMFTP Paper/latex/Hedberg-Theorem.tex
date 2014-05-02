@@ -1,0 +1,183 @@
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaComment{------------------------------------------------------------------------}\<%
+\\
+\>\AgdaComment{-- Sets with decidable equality have unique identity proofs}\<%
+\\
+\>\AgdaComment{------------------------------------------------------------------------}\<%
+\\
+%
+\\
+\>\AgdaSymbol{\{-\#} \AgdaKeyword{OPTIONS} --without-K \AgdaSymbol{\#-\}}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Following a proof by Michael Hedberg ("A coherence theorem for}\<%
+\\
+\>\AgdaComment{-- Martin-Löf's type theory", JFP 1998).}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Equality}\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{Hedberg-Theorem}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{reflexive}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{eq} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Equality-with-J} \AgdaBound{a} \AgdaBound{p} \AgdaBound{reflexive}\AgdaSymbol{)} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Derived-definitions-and-properties} \AgdaBound{eq}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Prelude}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Constant functions.}\<%
+\\
+%
+\\
+\>\AgdaFunction{Constant} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{⊔} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Constant} \AgdaBound{f} \AgdaSymbol{=} \AgdaSymbol{∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{f} \AgdaBound{x} \AgdaFunction{≡} \AgdaBound{f} \AgdaBound{y}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Left inverses.}\<%
+\\
+%
+\\
+\>\AgdaFunction{\_Left-inverse-of\_} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→}\<%
+\\
+\>[2]\AgdaIndent{20}{}\<[20]%
+\>[20]\AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{→} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaBound{a}\<%
+\\
+\>\AgdaBound{g} \AgdaFunction{Left-inverse-of} \AgdaBound{f} \AgdaSymbol{=} \AgdaSymbol{∀} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{g} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{≡} \AgdaBound{x}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{-- A set with a constant endofunction with a left inverse is proof}\<%
+\\
+\>\AgdaComment{-- irrelevant.}\<%
+\\
+%
+\\
+\>\AgdaFunction{irrelevant} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→}\<%
+\\
+\>[6]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaFunction{∃} \AgdaSymbol{λ} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{Constant} \AgdaBound{f}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(}\AgdaFunction{∃} \AgdaSymbol{λ} \AgdaBound{g} \AgdaSymbol{→} \AgdaBound{g} \AgdaFunction{Left-inverse-of} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{f}\AgdaSymbol{))} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaFunction{Proof-irrelevant} \AgdaBound{A}\<%
+\\
+\>\AgdaFunction{irrelevant} \AgdaSymbol{(}\AgdaBound{f} \AgdaInductiveConstructor{,} \AgdaBound{constant}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaInductiveConstructor{,} \AgdaBound{left-inverse}\AgdaSymbol{)} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{=}\<%
+\\
+ \AgdaBound{x} \<[10]%
+\>[10]\AgdaFunction{≡⟨} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaBound{left-inverse} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{⟩}\<%
+\\
+ \AgdaBound{g} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{x}\AgdaSymbol{)} \<[10]%
+\>[10]\AgdaFunction{≡⟨} \AgdaFunction{cong} \AgdaBound{g} \AgdaSymbol{(}\AgdaBound{constant} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{)} \AgdaFunction{⟩}\<%
+\\
+ \AgdaBound{g} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{y}\AgdaSymbol{)} \<[10]%
+\>[10]\AgdaFunction{≡⟨} \AgdaBound{left-inverse} \AgdaBound{y} \AgdaFunction{⟩∎}\<%
+\\
+ \AgdaBound{y} \<[10]%
+\>[10]\AgdaFunction{∎}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Endofunction families on \_≡\_ always have left inverses.}\<%
+\\
+%
+\\
+\>\AgdaFunction{left-inverse} \AgdaSymbol{:}\<%
+\\
+ \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{x} \AgdaFunction{≡} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{x} \AgdaFunction{≡} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+ \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{∃} \AgdaSymbol{λ} \AgdaBound{g} \AgdaSymbol{→} \AgdaBound{g} \AgdaFunction{Left-inverse-of} \AgdaBound{f} \AgdaBound{x} \AgdaBound{y}\<%
+\\
+\>\AgdaFunction{left-inverse} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{A}\AgdaSymbol{\}} \AgdaBound{f} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{=}\<%
+\\
+ \AgdaSymbol{(λ} \AgdaBound{x≡y} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaBound{x} \<[7]%
+\>[7]\AgdaFunction{≡⟨} \AgdaBound{x≡y} \AgdaFunction{⟩}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaBound{y} \<[7]%
+\>[7]\AgdaFunction{≡⟨} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{y} \AgdaBound{y} \AgdaSymbol{(}\AgdaFunction{refl} \AgdaBound{y}\AgdaSymbol{))} \AgdaFunction{⟩∎}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaBound{y} \<[7]%
+\>[7]\AgdaFunction{∎}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
+\\
+ \AgdaFunction{elim} \AgdaSymbol{(λ} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y}\AgdaSymbol{\}} \AgdaBound{x≡y} \AgdaSymbol{→} \AgdaFunction{trans} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{x} \AgdaBound{y} \AgdaBound{x≡y}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{y} \AgdaBound{y} \AgdaSymbol{(}\AgdaFunction{refl} \AgdaBound{y}\AgdaSymbol{)))} \AgdaFunction{≡} \AgdaBound{x≡y}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{trans-symʳ} \AgdaSymbol{\_)}\<%
+\\
+%
+\\
+\>\AgdaComment{-- A set A has unique identity proofs if there is a family of}\<%
+\\
+\>\AgdaComment{-- constant endofunctions on \_≡\_ \{A = A\}.}\<%
+\\
+%
+\\
+\>\AgdaFunction{constant⇒UIP} \AgdaSymbol{:}\<%
+\\
+ \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→}\<%
+\\
+ \AgdaSymbol{((}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∃} \AgdaSymbol{λ} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{x} \AgdaFunction{≡} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{x} \AgdaFunction{≡} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{Constant} \AgdaBound{f}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+ \AgdaFunction{Uniqueness-of-identity-proofs} \AgdaBound{A}\<%
+\\
+\>\AgdaFunction{constant⇒UIP} \AgdaBound{constant} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{=}\<%
+\\
+ \AgdaFunction{irrelevant} \AgdaSymbol{(}\AgdaBound{constant} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{)}\<%
+\\
+\>[6]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(}\AgdaFunction{left-inverse} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{proj₁} \AgdaFunction{\$} \AgdaBound{constant} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Sets which are decidable come with constant endofunctions.}\<%
+\\
+%
+\\
+\>\AgdaFunction{constant} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{Dec} \AgdaBound{A} \AgdaSymbol{→}\<%
+\\
+\>[-4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{∃} \AgdaSymbol{λ} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{Constant} \AgdaBound{f}\<%
+\\
+\>\AgdaFunction{constant} \AgdaSymbol{(}\AgdaInductiveConstructor{inj₁} \<[16]%
+\>[16]\AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{const} \AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{refl} \AgdaBound{x}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{constant} \AgdaSymbol{(}\AgdaInductiveConstructor{inj₂} \AgdaBound{¬x}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{id} \<[30]%
+\>[30]\AgdaInductiveConstructor{,} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{⊥-elim} \AgdaFunction{∘} \AgdaBound{¬x}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Sets with decidable equality have unique identity proofs.}\<%
+\\
+%
+\\
+\>\AgdaFunction{decidable⇒UIP} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→}\<%
+\\
+ \AgdaFunction{Decidable-equality} \AgdaBound{A} \AgdaSymbol{→} \AgdaFunction{Uniqueness-of-identity-proofs} \AgdaBound{A}\<%
+\\
+\>\AgdaFunction{decidable⇒UIP} \AgdaBound{dec} \AgdaSymbol{=} \AgdaFunction{constant⇒UIP} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{constant} \AgdaSymbol{(}\AgdaBound{dec} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\<\end{code}

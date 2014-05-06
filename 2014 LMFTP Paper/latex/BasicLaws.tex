@@ -76,6 +76,8 @@ Next we define the reflexivity, symmetry and transitivity terms of any type.
 \\
 \>\<\end{code}
 
+\vspace{-0.3cm}
+
 \noindent To obtain the reflexivity term for any given type, we just  use replacement.
 
 \begin{code}\>\<%
@@ -91,7 +93,7 @@ Next we define the reflexivity, symmetry and transitivity terms of any type.
 \>[11]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{refl*}\<%
 \\
 \>\<\end{code}
-
+\vspace{-0.5cm}
 \AgdaHide{
 \begin{code}\>\<%
 \\
@@ -170,11 +172,9 @@ Next we define the reflexivity, symmetry and transitivity terms of any type.
 \\
 %
 \\
-\>\AgdaFunction{sym-Tm} \<[10]%
-\>[10]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{sym*-Ty}\AgdaSymbol{)}\<%
+\>\AgdaFunction{sym-Tm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{sym*-Ty}\AgdaSymbol{)}\<%
 \\
-\>\AgdaFunction{sym-Tm} \AgdaBound{A} \<[10]%
-\>[10]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{sym*-Tm}\<%
+\>\AgdaFunction{sym-Tm} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{sym*-Tm}\<%
 \\
 \>\<\end{code}
 
@@ -312,10 +312,8 @@ Next we define the reflexivity, symmetry and transitivity terms of any type.
 \\
 %
 \\
-\>\AgdaFunction{trans-Tm} \<[12]%
-\>[12]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{trans*-Ty}\AgdaSymbol{)}\<%
+\>\AgdaFunction{trans-Tm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{trans*-Ty}\AgdaSymbol{)}\<%
 \\
-\>\AgdaFunction{trans-Tm} \AgdaBound{A} \<[12]%
-\>[12]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{trans*-Tm}\<%
+\>\AgdaFunction{trans-Tm} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{trans*-Tm}\<%
 \\
 \>\<\end{code}

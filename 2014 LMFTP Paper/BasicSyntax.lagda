@@ -41,8 +41,7 @@
 
 \begin{document}
 \pagenumbering{gobble}
-%\title{An Implementation of Syntactic Weak $\omega$-Groupoids in Agda}
-\title{Some constructions on $\omega$-groupoids}
+\title{Some constructions on {\huge$\omega$}-groupoids}
 
 \numberofauthors{3}
 \author{
@@ -117,7 +116,7 @@ infixl 7 _⊚_
 
 \terms{Theory}
 
-\keywords{Type Theory, Homotopy Type Theory, Category Theory, Higher dimensional structures}
+\keywords{Type Theory, Homotopy Type Theory, Category Theory, Higher dimensional structures, \new{Agda}}
 
 
 
@@ -140,8 +139,9 @@ proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
 
 Voevodsky proposed the univalence axiom which basically says that
 isomorphic types are equal. This can be viewed as a strong
-extensionality axiom and it does imply functional extensionality (a
-coq proof of this can be found in \cite{uafe}). However, adding
+extensionality axiom and it does imply functional extensionality.
+%(a coq proof of this can be found in \cite{uafe})
+However, adding
 univalence as an axiom destroys canonicity, i.e. that every closed
 term of type $\mathbb{N}$ is reducible to a numeral. In the special case of
 extensionality and assuming a strong version of UIP we were able to
@@ -165,7 +165,7 @@ also require the equalities to be non-strict, in other words, they are
 not definitionally equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
 There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
-This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. \new{This is the first attempt to formalise this approach in Agda, and other languages like Coq.} The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language
+This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in dependently typed languages like Agda and Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language
 of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
 
 \section*{Acknowledgements}
@@ -657,12 +657,10 @@ composition of the two context morphisms:
 \begin{code}
 [⊚]T    : {Γ Δ Θ : Con}{A : Ty Θ}{θ : Δ ⇒ Θ}
           {δ : Γ ⇒ Δ} → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T  
-
 \end{code}
 
 \AgdaHide{
 \begin{code}
-
 [⊚]v    : {Γ Δ Θ : Con}{A : Ty Θ}(x : Var A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
         → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
 
@@ -721,7 +719,6 @@ wk-tm+ B t  = t ⟦ [+S]T ⟫
 
 [+S]T {A = *}     = refl
 [+S]T {A = a =h b} = hom≡ ([+S]tm a) ([+S]tm b)
-
 \end{code}
 }
 
@@ -990,11 +987,6 @@ coh x δ A ≟tm b = {!b!}
 
 -}
 
-
-
-
-
-
 \end{code}
 }
 
@@ -1029,8 +1021,8 @@ In this paper, we present an implementation of \wog{} following  Brunerie's work
 
 There is still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
-We would like to formalise a proof of that Id$\omega$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with Id$\omega$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with J are equivalence. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
+We would like to formalise a proof of that  $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with J are equivalence. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
 
-\bibliography{my.bib}
+\bibliography{latex/my.bib}
 
 \end{document}

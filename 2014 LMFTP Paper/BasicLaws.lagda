@@ -47,6 +47,8 @@ refl* : Tm {x:*} (var v0 =h var v0)
 refl* = Coh-Contr c*
 \end{code}
 
+\vspace{-0.3cm}
+
 \noindent To obtain the reflexivity term for any given type, we just  use replacement.
 
 \begin{code}
@@ -54,7 +56,7 @@ refl-Tm    : {Γ : Con}(A : Ty Γ)
            → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
 refl-Tm A  = rpl-tm A refl*
 \end{code}
-
+\vspace{-0.5cm}
 \AgdaHide{
 \begin{code}
 
@@ -91,8 +93,8 @@ sym*-Ty = vY =h vX
 sym*-Tm : Tm {x:*,y:*,α:x=y} sym*-Ty
 sym*-Tm = Coh-Contr (ext c* v0)
 
-sym-Tm    : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
-sym-Tm A  = rpl-tm A sym*-Tm
+sym-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
+sym-Tm A = rpl-tm A sym*-Tm
 \end{code}
 
 \AgdaHide{
@@ -145,6 +147,6 @@ trans*-Ty = (vX +tm _ +tm _) =h vZ
 trans*-Tm : Tm trans*-Ty
 trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
 
-trans-Tm    : {Γ : Con}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
-trans-Tm A  = rpl-tm A trans*-Tm
+trans-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
+trans-Tm A = rpl-tm A trans*-Tm
 \end{code}

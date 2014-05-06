@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{1}
 
 \bibitem{alti:lics99}
 Thorsten Altenkirch.
@@ -24,18 +24,9 @@ D.~{Ara}.
 \newblock {On the homotopy theory of Grothendieck $\infty$-groupoids}.
 \newblock {\em ArXiv e-prints}, June 2012.
 
-\bibitem{uafe}
-Andrej Bauer and Peter~LeFanu Lumsdaine.
-\newblock A {C}oq proof that {U}nivalence {A}xioms implies {F}unctional
-  {E}xtensionality.
-\newblock 2013.
-
 \bibitem{gb:wog}
 Guillaume Brunerie.
-\newblock Syntactic {G}rothendieck weak {$\infty$}-groupoids.
-\newblock
-  http://uf-ias-2012.wikispaces.com/file/view/SyntacticInfinityGroupoidsRawDefinition.pdf,
-  2013.
+\newblock Syntactic {G}rothendieck weak {$\infty$}-groupoids, 2013.
 
 \bibitem{gro:ps}
 Alexander Grothendieck.
@@ -45,7 +36,7 @@ Alexander Grothendieck.
 
 \bibitem{hed:98}
 Michael Hedberg.
-\newblock A coherence theorem for martin-l\"{o}f's type theory.
+\newblock A coherence theorem for {M}artin-{L}\"{o}f's type theory.
 \newblock 1998.
 
 \bibitem{mal:gwog}
@@ -56,7 +47,7 @@ G.~{Maltsiniotis}.
 
 \bibitem{hott}
 The Univalent~Foundations Program.
-\newblock Homotopy type theory: Univalent foundations of mathematics.
-\newblock Technical report, Institute for Advanced Study, 2013.
+\newblock {\em Homotopy type theory: Univalent foundations of mathematics}.
+\newblock 2013.
 
 \end{thebibliography}

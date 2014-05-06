@@ -44,9 +44,11 @@ record Semantic (G : Glob) : Set₁ where
 
 $\AgdaFunction{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
 
+\vspace{-0.1cm}
 \begin{code}
     π      : ∀{Γ A}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
 \end{code}
+\vspace{-0.5cm}
 
 Following are the computation laws for the interpretations of contexts and types.
 
@@ -83,13 +85,13 @@ Since the computation laws for the interpretations of terms and context morphism
     ⟦_⟧tm-β1  : ∀{Γ A}{x : Var A}{γ : ⟦ Γ ⟧C}
               → ⟦ var x ⟧tm γ ≡ π x γ
 
-    ⟦_⟧cm-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} → ⟦ • ⟧cm γ ≡ 
-                                 coerce ⟦_⟧C-β1 tt
+    ⟦_⟧cm-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} 
+             → ⟦ • ⟧cm γ ≡ coerce ⟦_⟧C-β1 tt
 
     ⟦_⟧cm-β2  : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}{γ : ⟦ Γ ⟧C}
-                {a : Tm (A [ δ ]T)}
-              → ⟦ δ , a ⟧cm γ ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧cm γ) ,
-                             subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
+                {a : Tm (A [ δ ]T)} → ⟦ δ , a ⟧cm γ 
+              ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧cm γ) ,
+                subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
 \end{code}
 The semantic weakening properties should actually be deriavable since weakening is equivalent to projection substitution.
 
@@ -99,31 +101,27 @@ The semantic weakening properties should actually be deriavable since weakening 
                ⟦ A ⟧T γ
   
     semWk-cm  : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}
-                (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧cm 
+              → (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧cm 
                 (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧cm γ
 
 
     semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
-                 (a : Tm A) → subst ∣_∣ (semWk-T γ v) 
-                 (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
+             → (a : Tm A) → subst ∣_∣ (semWk-T γ v) 
+               (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
                  ≡ (⟦ a ⟧tm γ)
-
 \end{code}
 
 Here we declare them as properties because they are essential for the computation laws of function $\pi$.
 
 
 \begin{code}
-
     π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 
           → subst ∣_∣ (semWk-T γ v) 
             (π v0 (coerce ⟦_⟧C-β2 (γ , v))) ≡ v
 
     π-β2  : ∀{Γ A B}(x : Var A)(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣) 
           → subst ∣_∣ (semWk-T γ v) (π (vS {Γ} {A} {B} x) 
-            (coerce ⟦_⟧C-β2 (γ , v)))
-            ≡ π x γ
-
+            (coerce ⟦_⟧C-β2 (γ , v))) ≡ π x γ
 \end{code}
 
 The only part of the semantics where we have any freedom is the interpretation of the coherence constants:
@@ -137,6 +135,6 @@ behaved wrt to substitution which in turn relies on the interpretation
 of all terms. To address this we state the required properties in a
 redundant form because the correctness for any other part of the
 syntax follows from the defining equations we have already
-stated. However, there seems to be no way to avoid this.
+stated.There seems to be no way to avoid this.
 
 If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.

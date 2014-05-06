@@ -35,3 +35,14 @@
 -*.log
 
 -
+2014 LMFTP Paper/latex/BasicSyntax.aux
+
+*.bbl
+
+*.blg
+
+*.log
+
+*.pdf
+
+*.ptb

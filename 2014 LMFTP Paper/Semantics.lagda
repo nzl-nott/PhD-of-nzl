@@ -73,7 +73,6 @@ The semantic substitution properties are essential,
 Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
 
 \begin{code}
-
     ⟦_⟧tm-β1  : ∀{Γ A}{x : Var A}{γ : ⟦ Γ ⟧C}
               → ⟦ var x ⟧tm γ ≡ π x γ
 

@@ -171,8 +171,7 @@ of Grothendieck {\wog}, then interpret it with a globular set and a dependent fu
 \subsection{Agda}
 
 1. Agda is a dependently typed programming languages which offers a set of tools for theorem proving. It is a variant of \mltt.
-A good introductory resources can be found on Agda wiki, especially this:
-\url{http://www.cse.chalmers.se/~ulfn/papers/afp08/tutorial.pdf}
+A good introductory resources can be found on Agda wiki.
 
 2. short introduction to Agda syntax
 

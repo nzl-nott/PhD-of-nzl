@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  6 MAY 2014 15:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  6 MAY 2014 15:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -612,29 +612,29 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-3.def
 File: uni-3.def 2013/05/13 UCS: Unicode data U+0300..U+03FF
 )
-LaTeX Font Info:    Try loading font information for LGR+aer on input line 256.
+LaTeX Font Info:    Try loading font information for LGR+aer on input line 267.
 
-LaTeX Font Info:    No file LGRaer.fd. on input line 256.
+LaTeX Font Info:    No file LGRaer.fd. on input line 267.
 
 
 LaTeX Font Warning: Font shape `LGR/aer/m/it' undefined
-(Font)              using `LGR/cmr/m/n' instead on input line 256.
+(Font)              using `LGR/cmr/m/n' instead on input line 267.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-33.def
 File: uni-33.def 2013/05/13 UCS: Unicode data U+2100..U+21FF
 )
 \openout3 = `BasicSyntax.ptb'.
 
-LaTeX Font Info:    Try loading font information for LGR+aess on input line 292
+LaTeX Font Info:    Try loading font information for LGR+aess on input line 303
 .
-LaTeX Font Info:    No file LGRaess.fd. on input line 292.
+LaTeX Font Info:    No file LGRaess.fd. on input line 303.
 
 
 LaTeX Font Warning: Font shape `LGR/aess/m/n' undefined
-(Font)              using `LGR/cmr/m/n' instead on input line 292.
+(Font)              using `LGR/cmr/m/n' instead on input line 303.
 
 
-Overfull \hbox (8.98816pt too wide) in paragraph at lines 392--393
+Overfull \hbox (8.98816pt too wide) in paragraph at lines 403--404
 [] \OMS/cmsy/m/n/9 ^^Q []$ \T1/aer/m/n/9 to help
  []
 
@@ -650,47 +650,47 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-39.def
 File: uni-39.def 2013/05/13 UCS: Unicode data U+2700..U+27FF
 )
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
+Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
  [][][][] 
  []
 
@@ -699,17 +699,17 @@ Overfull \hbox (30.8256pt too wide) in paragraph at lines 484--508
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (23.49579pt too wide) in paragraph at lines 595--600
+Overfull \hbox (23.49579pt too wide) in paragraph at lines 606--611
  [][][][] 
  []
 
 
-Overfull \hbox (23.49579pt too wide) in paragraph at lines 595--600
+Overfull \hbox (23.49579pt too wide) in paragraph at lines 606--611
  [][][][] 
  []
 
 
-Overfull \hbox (23.49579pt too wide) in paragraph at lines 595--600
+Overfull \hbox (23.49579pt too wide) in paragraph at lines 606--611
  [][][][] 
  []
 
@@ -721,27 +721,27 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 697--708
+Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
  [][][][] 
  []
 
 
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 697--708
+Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
  [][][][] 
  []
 
 
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 697--708
+Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 697--708
+Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
  [][][][] 
  []
 
 
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 697--708
+Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
  [][][][] 
  []
 
@@ -750,32 +750,32 @@ Overfull \hbox (12.69128pt too wide) in paragraph at lines 697--708
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
+Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
  [][][][] 
  []
 
 
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
+Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
  [][][][] 
  []
 
 
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
+Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
+Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
+Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
+Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
  [][][][] 
  []
 
@@ -784,83 +784,56 @@ Overfull \hbox (21.17043pt too wide) in paragraph at lines 821--838
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-32.def
 File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
 )
-LaTeX Font Info:    Try loading font information for OMS+aess on input line 857
+LaTeX Font Info:    Try loading font information for OMS+aess on input line 868
 .
-LaTeX Font Info:    No file OMSaess.fd. on input line 857.
+LaTeX Font Info:    No file OMSaess.fd. on input line 868.
 
 
 LaTeX Font Warning: Font shape `OMS/aess/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbullet' on input line 857.
+(Font)              for symbol `textbullet' on input line 868.
 
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 910--919
+Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
  [][][][] 
  []
 
 
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 910--919
+Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
  [][][][][][] 
  []
 
 
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 910--919
+Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
  [][][][][][] 
  []
 
 
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 910--919
+Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
  [][][][] 
  []
 
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 969--979
+Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
  [][][][] 
  []
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 969--979
+Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
  [][][][][][] 
  []
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 969--979
+Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 969--979
- [][][][] 
- []
-
-\openout3 = `BasicSyntax.ptb'.
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1005--1017
- [][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1005--1017
- [][][][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1005--1017
- [][][][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1005--1017
- [][][][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1005--1017
+Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
  [][][][] 
  []
 
@@ -870,8 +843,34 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [3]
 \openout3 = `BasicSyntax.ptb'.
 
+
+Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
+ [][][][] 
+ []
+
+
+Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
+ [][][][] 
+ []
+
 \openout3 = `BasicSyntax.ptb'.
 
+\openout3 = `BasicSyntax.ptb'.
 
 (./BasicSyntax2.tex
 \openout3 = `BasicSyntax.ptb'.
@@ -1003,9 +1002,6 @@ Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
  []
 
 \openout3 = `BasicSyntax.ptb'.
-
-
-Underfull \vbox (badness 2564) has occurred while \output is active []
 
 \openout3 = `BasicSyntax.ptb'.
 
@@ -1367,6 +1363,7 @@ Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
 
 \openout3 = `BasicSyntax.ptb'.
 
+[7]
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1419,7 +1416,6 @@ Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
  [][][][] 
  []
 
-[7]
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1708,10 +1704,10 @@ Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
  [][][][] 
  []
 
-\openout3 = `BasicSyntax.ptb'.
-
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
+
+\openout3 = `BasicSyntax.ptb'.
 
 )
 (./BasicSyntax.bbl [8]) [9
@@ -1724,7 +1720,7 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Here is how much of TeX's memory you used:
  9924 strings out of 493315
  131912 string characters out of 6137904
- 252170 words of memory out of 5000000
+ 255596 words of memory out of 5000000
  13100 multiletter control sequences out of 15000+600000
  84965 words of font info for 145 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -1760,7 +1756,7 @@ vr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><
 l/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr/local/tex
 live/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb></usr/local/texlive/
 2013/texmf-dist/fonts/type1/public/xypic/xydash10.pfb>
-Output written on BasicSyntax.pdf (9 pages, 332453 bytes).
+Output written on BasicSyntax.pdf (9 pages, 332580 bytes).
 PDF statistics:
  160 PDF objects out of 1000 (max. 8388607)
  116 compressed objects within 2 object streams

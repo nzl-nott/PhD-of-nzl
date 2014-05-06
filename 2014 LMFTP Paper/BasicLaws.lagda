@@ -36,19 +36,14 @@ Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → isContr Δ
 Coh-rpl {Δ = Δ} A B isc = 
   coh (ΣC-it-ε-Contr A isc) (filter Δ A) (ΣT-it A B)
 \end{code}
+Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from the basic case as for the base type *.
 
-Next we define the reflexivity, symmetry and transitivity terms of any type.
-
-
-\noindent \textbf{Reflexivity} Let's start from the basic case as for the base type *. It is trivially inhabited because the context is the basic case of a contractible context.
+\noindent \textbf{Reflexivity} It is trivially inhabited because the context is the basic case of a contractible context.
 
 \begin{code}
 refl* : Tm {x:*} (var v0 =h var v0)
 refl* = Coh-Contr c*
 \end{code}
-
-\vspace{-0.3cm}
-
 \noindent To obtain the reflexivity term for any given type, we just  use replacement.
 
 \begin{code}
@@ -56,7 +51,6 @@ refl-Tm    : {Γ : Con}(A : Ty Γ)
            → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
 refl-Tm A  = rpl-tm A refl*
 \end{code}
-\vspace{-0.5cm}
 \AgdaHide{
 \begin{code}
 
@@ -79,8 +73,7 @@ refl-Fun Γ A x =  (refl-Tm A)
                  ⟦ sym (trans (congT (rpl-T-p2 x:* A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
 \end{code}
 }
-
-\noindent  \textbf{Symmetry} Symmetry (inverse) is defined similarly. Note that the intricate names of contexts, as in \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y} indicate their definitions which have been hidden. For instance we are assuming the definition:
+\noindent  \textbf{Symmetry} (inverse) It is defined similarly. Note that the intricate names of contexts, as in \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y} indicate their definitions which have been hidden. For instance we are assuming the definition:
 \AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaFunction{ε ,*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}
 
 
@@ -138,7 +131,7 @@ Fun-sym Γ A a b t = (sym-Tm A) [ rpl-sub Γ A a b t ]tm
 \end{code}
 }
 
-\textbf{Trasitivity} (composition). Note that each of these cells is defined by a different choice of the contractible context $\Delta$. 
+\textbf{Trasitivity} (composition) Note that each of these cells is defined by a different choice of the contractible context $\Delta$. 
 
 \begin{code}
 trans*-Ty : Ty x:*,y:*,α:x=y,z:*,β:y=z

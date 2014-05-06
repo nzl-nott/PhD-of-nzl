@@ -40,15 +40,9 @@ record Semantic (G : Glob) : Set₁ where
     ⟦_⟧T  : ∀{Γ} → Ty Γ → ⟦ Γ ⟧C → Glob
     ⟦_⟧tm : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
     ⟦_⟧cm : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
+    π     : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
 \end{code}
-
-$\AgdaFunction{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
-
-\vspace{-0.1cm}
-\begin{code}
-    π      : ∀{Γ A}(x : Var A)(γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
-\end{code}
-\vspace{-0.5cm}
+$\AgdaField{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
 
 Following are the computation laws for the interpretations of contexts and types.
 
@@ -62,7 +56,6 @@ Following are the computation laws for the interpretations of contexts and types
              → ⟦ u =h v ⟧T γ ≡
                ♭ (hom (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
 \end{code}
-
 The semantic substitution properties are essential,
 
 \begin{code}
@@ -77,7 +70,6 @@ The semantic substitution properties are essential,
     semSb-cm : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
              → ⟦ θ ⊚ δ ⟧cm γ ≡ ⟦ θ ⟧cm (⟦ δ ⟧cm γ)
 \end{code}
-
 Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
 
 \begin{code}
@@ -110,7 +102,6 @@ The semantic weakening properties should actually be deriavable since weakening 
                (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
                  ≡ (⟦ a ⟧tm γ)
 \end{code}
-
 Here we declare them as properties because they are essential for the computation laws of function $\pi$.
 
 
@@ -123,7 +114,6 @@ Here we declare them as properties because they are essential for the computatio
           → subst ∣_∣ (semWk-T γ v) (π (vS {Γ} {A} {B} x) 
             (coerce ⟦_⟧C-β2 (γ , v))) ≡ π x γ
 \end{code}
-
 The only part of the semantics where we have any freedom is the interpretation of the coherence constants:
 
 \begin{code}

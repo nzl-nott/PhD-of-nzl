@@ -49,16 +49,19 @@
 \alignauthor
 Thorsten Altenkirch\\
        \affaddr{University of Nottingham}\\
+       \affaddr{United Kingdom}\\
        \email{txa@cs.nott.ac.uk}
 % 2nd. author
 \alignauthor
 Nuo Li\\
        \affaddr{University of Nottingham}\\
+       \affaddr{United Kingdom}\\
        \email{nzl@cs.nott.ac.uk}
 % 3rd. author
 \alignauthor
 Ond\v{r}ej Ryp\'a\v{c}ek\\
        \affaddr{University of Oxford}\\
+       \affaddr{United Kingdom}\\
        \email{ondrej.rypacek@gmail.com}
 }
 
@@ -233,21 +236,20 @@ data Var           : {Γ : Con}(A : Ty Γ) → Set
 data _⇒_           : Con → Con → Set
 data isContr       : Con → Set
 \end{code}
-
 % Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
-
-\new{Nuo: The first sentence is useless I think.} It is possible to complete the definition of contexts and types
-first. Contexts are inductively defined as either an empty context or
-a context with a type in it. Types are defined as either $*$ which we
-call 0-cells, or a equality type between two terms of some type A. If 
-type A is n-cell then we call its equality type $(n+1)$-cell.
+Contexts are inductively defined as either an empty context or
+a context with a type in it.
 
 \begin{code}
 data Con where
   ε     : Con
   _,_   : (Γ : Con)(A : Ty Γ) → Con
+\end{code}
+Types are defined as either $*$ which we
+call 0-cells, or a equality type between two terms of some type A. If 
+type A is n-cell then we call its equality type $(n+1)$-cell.
 
-
+\begin{code}
 data Ty Γ where
   *     : Ty Γ
   _=h_  : {A : Ty Γ}(a b : Tm A) → Ty Γ
@@ -335,7 +337,7 @@ Agda type checker to its limits and correctness into question.
 
 
 \new{For example, assume we have a
-context $\Gamma$, three types $A~B : \mathit{Ty}~\Gamma$ and we know $p : A
+context $\Gamma$, types $A~B : \mathit{Ty}~\Gamma$ and a term of the equality $p : A
 \equiv B$. If we have a term $a : \mathit{Tm} ~ A$ and a term $b : \mathit{Tm} ~ B$,
 it is impossible to just write $a \equiv b$ because of type
 unification. We need to write $\mathit{subst}~ \mathit{Tm}~ p a \equiv b$. Again assume we
@@ -398,7 +400,6 @@ _∾_ {c = c} (refl .c) (refl .c) = refl c
 
 \end{code}
 }
-
 Once we have the heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call coercion here
 since it gives us a term of type A if we have a term of type B and the
 two types are equal. We can also prove that the coerced term is heterogeneously equal to the
@@ -444,28 +445,19 @@ cong≅ f (refl _) = refl _
 With context morphisms, we can define substitutions for types
 variables and terms.  Usually we define a set of symbols together and
 we name a function $*$ as $*C$ for contexts, $*T$ for types, $*V$ for
-variables $*tm$ for terms and $*S$ for context morphisms. For example
+variables $*tm$ for terms and $*S$ (or $*cm$) for context morphisms. For example
 the substitution for types is defined as follows
 
 \begin{code}
-_[_]T : {Γ Δ : Con} → Ty Δ → (δ : Γ ⇒ Δ) → Ty Γ
+_[_]T   : ∀{Γ Δ} → Ty Δ → Γ ⇒ Δ → Ty Γ
+_[_]V   : ∀{Γ Δ A} → Var A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
+_[_]tm  : ∀{Γ Δ A} → Tm A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)    
 \end{code}
-
-In this paper, we will not present the others of the same sort, but you
-can find them in the code.
-
-\AgdaHide{
-\begin{code}
-_[_]V   : {Γ Δ : Con}{A : Ty Δ}  → Var A   → (δ : Γ ⇒ Δ)   → Tm (A [ δ ]T)
-_[_]tm  : {Γ Δ : Con}{A : Ty Δ}  → Tm A    → (δ : Γ ⇒ Δ)   → Tm (A [ δ ]T)    
-\end{code}
-}
-
 Indeed the
 composition of contexts can be understood as substitution for context morphisms as well.
 
 \begin{code}
-_⊚_ : {Γ Δ Θ : Con} → Δ ⇒ Θ → (δ : Γ ⇒ Δ) → Γ ⇒ Θ   
+_⊚_ : ∀{Γ Δ Θ} → Δ ⇒ Θ → (δ : Γ ⇒ Δ) → Γ ⇒ Θ   
 \end{code}
 
 \AgdaHide{
@@ -484,14 +476,11 @@ We can freely add types to the contexts of any given type judgments,
 term judgments or context morphisms. These are weakening rules.
 
 \begin{code}   
-_+T_ : {Γ : Con}(A : Ty Γ) → (B : Ty Γ) → Ty (Γ , B)
+_+T_  : ∀{Γ}(A : Ty Γ)(B : Ty Γ) → Ty (Γ , B)
+_+tm_ : ∀{Γ}{A : Ty Γ}(a : Tm A)(B : Ty Γ) → Tm (A +T B)   
+_+S_  : ∀{Γ Δ}(δ : Γ ⇒ Δ)(B : Ty Γ) → (Γ , B) ⇒ Δ   
 \end{code}
-\AgdaHide{
-\begin{code}
-_+tm_  : {Γ : Con}{A : Ty Γ}  (a : Tm A)   → (B : Ty Γ) → Tm (A +T B)   
-_+S_   : {Γ : Con}{Δ : Con}   (δ : Γ ⇒ Δ)  → (B : Ty Γ) → (Γ , B) ⇒ Δ   
-\end{code}
-}
+
 
 \AgdaHide{
 \begin{code}   
@@ -515,11 +504,10 @@ _+S_   : {Γ : Con}{Δ : Con}   (δ : Γ ⇒ Δ)  → (B : Ty Γ) → (Γ , B) �
 
 \end{code}
 }
-
 To define variables we have to use the weakening rules. We
 use typed de Bruijn indices to define variables as either the rightmost
 variable of the context, or some variable in the context which can be
-found by cancelling the rightmost variable along with each $\mathsf{vS}$. The
+found by cancelling the rightmost variable along with each $\AgdaInductiveConstructor{vS}$. The
 coherence constants are one of the major part of this syntax, which
 are primitive terms of the primitive types in contractible contexts
 which will be introduced later. Since contexts, types, variables and
@@ -532,9 +520,7 @@ data Var where
   v0 : {Γ : Con}{A : Ty Γ}              → Var (A +T A)
   vS : {Γ : Con}{A B : Ty Γ}(x : Var A) → Var (A +T B)
 \end{code}
-
-
-A term can be either a variable or a coherence constant ($\mathsf{coh}$).
+A term can be either a variable or a coherence constant ($\AgdaInductiveConstructor{coh}$).
 It encodes all constants for arbitrary types in a contractible context. 
 
 \begin{code}
@@ -615,7 +601,6 @@ coh-eq refl = refl _
 
 \end{code}
 }
-
 With variables defined, it is possible to formalise another core part of the syntactic framework, \emph{contractible
 contexts}. Intuitively speaking, a context is contractible if its geometric
 realization is contractible to a point. It either contains one variable of the 0-cell $*$ which is the base case, or we can extend a contractible context with a
@@ -624,16 +609,15 @@ variable of an existing type and an n-cell, namely a morphism, between the new v
 \begin{code}
 data isContr where
   c*   : isContr (ε , *)
-  ext  : {Γ : Con} → isContr Γ → {A : Ty Γ}(x : Var A) 
+  ext  : ∀{Γ} → isContr Γ → {A : Ty Γ}(x : Var A) 
        → isContr (Γ , A , (var (vS x) =h var v0))     
 \end{code}
-
 Context morphisms are defined inductively similarly to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of the morphism.
 
 \begin{code}
 data _⇒_ where
-  •    : {Γ : Con} → Γ ⇒ ε
-  _,_  : {Γ Δ : Con}(δ : Γ ⇒ Δ){A : Ty Δ}
+  •    : ∀{Γ} → Γ ⇒ ε
+  _,_  : ∀{Γ Δ}(δ : Γ ⇒ Δ){A : Ty Δ}
          (a : Tm (A [ δ ]T)) → Γ ⇒ (Δ , A)
 \end{code}
 
@@ -666,7 +650,7 @@ morphisms consecutively, is equivalent to substitute with the
 composition of the two context morphisms:
 
 \begin{code}
-[⊚]T    : {Γ Δ Θ : Con}{A : Ty Θ}{θ : Δ ⇒ Θ}
+[⊚]T    : ∀{Γ Δ Θ}{A : Ty Θ}{θ : Δ ⇒ Θ}
           {δ : Γ ⇒ Δ} → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T  
 \end{code}
 
@@ -696,30 +680,26 @@ composition of the two context morphisms:
 The second set states that weakening inside substitution is equivalent to weakening outside:
 
 \begin{code}
-[+S]T   : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}{B : Ty Γ} 
+[+S]T   : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}{B : Ty Γ} 
         → A [ δ +S B ]T ≡ (A [ δ ]T) +T B 
-\end{code}
 
-
-\AgdaHide{
-\begin{code}
-[+S]tm  : {Γ Δ : Con}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}{B : Ty Γ}
+[+S]tm  : ∀{Γ Δ}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}{B : Ty Γ}
         → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
 
-[+S]S   : ∀{Γ Δ Δ₁ : Con}{δ : Δ ⇒ Δ₁}{γ : Γ ⇒ Δ}{B : Ty Γ}
+[+S]S   : ∀{Γ Δ Θ}{δ : Δ ⇒ Θ}{γ : Γ ⇒ Δ}{B : Ty Γ}
         → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
 \end{code}
-}
 
-\todo{maybe hide this part}
-There are also some auxiliary functions derived from these lemmas. For instance, the function shown below is used a lot in proofs.
 
+%There are also some auxiliary functions derived from these lemmas. For instance, the function shown below is used a lot in proofs.
+
+\AgdaHide{
 \begin{code}
 wk-tm+      : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}(B : Ty Γ) 
             → Tm (A [ δ ]T +T B) → Tm (A [ δ +S B ]T)
 wk-tm+ B t  = t ⟦ [+S]T ⟫
 \end{code}
-\todo{maybe hide this part}
+}
 
 \AgdaHide{
 
@@ -732,23 +712,18 @@ wk-tm+ B t  = t ⟦ [+S]T ⟫
 [+S]T {A = a =h b} = hom≡ ([+S]tm a) ([+S]tm b)
 \end{code}
 }
-
 We can cancel the last term in the substitution for weakened objects
 since weakening doesn't introduce new variables in types and terms.
 
 \begin{code}
-+T[,]T    : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}
++T[,]T    : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}
             {B : Ty Δ}{b : Tm (B [ δ ]T)} 
           → (A +T B) [ δ , b ]T ≡ A [ δ ]T
-\end{code}
 
-\AgdaHide{
-\begin{code}
-+tm[,]tm  : {Γ Δ : Con}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}{B : Ty Δ}{c : Tm (B [ δ ]T)}
++tm[,]tm  : ∀{Γ Δ}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}
+            {B : Ty Δ}{c : Tm (B [ δ ]T)}
           → (a +tm B) [ δ , c ]tm ≅ a [ δ ]tm 
 \end{code}
-}
-
 \AgdaHide{
 \begin{code}
 
@@ -847,7 +822,6 @@ wk+S+S eq = trans [+S]S (cong (λ x → x +S _) eq)
 
 \end{code}
 }
-
 Most of the substitutions are defined as usual, except the one for coherence constants. We do
 substitution in the context morphism part of the coherence constants.
 

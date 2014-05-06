@@ -144,9 +144,9 @@
 \fi
 
 \newenvironment{code}%
-{\vspace{-0.3cm}\small\noindent\ignorespaces\advance\leftskip\mathindent\AgdaCodeStyle\pboxed}%
-{\vspace{-0.5cm}\endpboxed\par\noindent%
+{\vspace{-0.3cm}\small\noindent\ignorespaces\advance\leftskip1em\AgdaCodeStyle\pboxed}%
+{\endpboxed\vspace{-0.4cm}\par\noindent%
 \ignorespacesafterend}
-
+%\mathindent - was between "\leftskip" and "\AgdaCodeStyle"
 % Default column for polytable.
 \defaultcolumn{l}

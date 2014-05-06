@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  6 MAY 2014 15:20
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  6 MAY 2014 17:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -593,7 +593,7 @@ fontencoding LGR patched
 T3\textscriptg already defined.
 fontencoding T3 patched
 )
-Overfull \hbox (9.90643pt too wide) in paragraph at lines 75--75
+Overfull \hbox (9.90643pt too wide) in paragraph at lines 78--78
  []\eaddfnt ondrej.rypacek@gmail.com| 
  []
 
@@ -612,29 +612,31 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-3.def
 File: uni-3.def 2013/05/13 UCS: Unicode data U+0300..U+03FF
 )
-LaTeX Font Info:    Try loading font information for LGR+aer on input line 267.
+LaTeX Font Info:    Try loading font information for LGR+aer on input line 270.
 
-LaTeX Font Info:    No file LGRaer.fd. on input line 267.
+LaTeX Font Info:    No file LGRaer.fd. on input line 270.
 
 
 LaTeX Font Warning: Font shape `LGR/aer/m/it' undefined
-(Font)              using `LGR/cmr/m/n' instead on input line 267.
+(Font)              using `LGR/cmr/m/n' instead on input line 270.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-33.def
 File: uni-33.def 2013/05/13 UCS: Unicode data U+2100..U+21FF
 )
 \openout3 = `BasicSyntax.ptb'.
 
-LaTeX Font Info:    Try loading font information for LGR+aess on input line 303
+LaTeX Font Info:    Try loading font information for LGR+aess on input line 287
 .
-LaTeX Font Info:    No file LGRaess.fd. on input line 303.
+LaTeX Font Info:    No file LGRaess.fd. on input line 287.
 
 
 LaTeX Font Warning: Font shape `LGR/aess/m/n' undefined
-(Font)              using `LGR/cmr/m/n' instead on input line 303.
+(Font)              using `LGR/cmr/m/n' instead on input line 287.
+
+\openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (8.98816pt too wide) in paragraph at lines 403--404
+Overfull \hbox (8.98816pt too wide) in paragraph at lines 404--405
 [] \OMS/cmsy/m/n/9 ^^Q []$ \T1/aer/m/n/9 to help
  []
 
@@ -650,47 +652,74 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-39.def
 File: uni-39.def 2013/05/13 UCS: Unicode data U+2700..U+27FF
 )
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
  [][][][][][] 
  []
 
 
-Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
+Overfull \hbox (16.82158pt too wide) in paragraph at lines 495--519
+ [][][][] 
+ []
+
+\openout3 = `BasicSyntax.ptb'.
+
+
+Overfull \hbox (27.80255pt too wide) in paragraph at lines 575--587
+ [][][][] 
+ []
+
+
+Overfull \hbox (27.80255pt too wide) in paragraph at lines 575--587
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (27.80255pt too wide) in paragraph at lines 575--587
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (27.80255pt too wide) in paragraph at lines 575--587
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (27.80255pt too wide) in paragraph at lines 575--587
  [][][][] 
  []
 
@@ -699,141 +728,135 @@ Overfull \hbox (30.8256pt too wide) in paragraph at lines 495--519
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (23.49579pt too wide) in paragraph at lines 606--611
+Overfull \hbox (26.57195pt too wide) in paragraph at lines 618--631
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (26.57195pt too wide) in paragraph at lines 618--631
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (26.57195pt too wide) in paragraph at lines 618--631
  [][][][] 
  []
 
 
-Overfull \hbox (23.49579pt too wide) in paragraph at lines 606--611
- [][][][] 
+Overfull \hbox (26.57195pt too wide) in paragraph at lines 618--631
+ [][][][][][][][] 
  []
 
 
-Overfull \hbox (23.49579pt too wide) in paragraph at lines 606--611
+Overfull \hbox (26.57195pt too wide) in paragraph at lines 618--631
  [][][][] 
  []
-
-\openout3 = `BasicSyntax.ptb'.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 \openout3 = `BasicSyntax.ptb'.
 
-
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
- [][][][] 
- []
-
-
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
- [][][][] 
- []
-
-
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
- [][][][] 
- []
-
-
-Overfull \hbox (12.69128pt too wide) in paragraph at lines 708--719
- [][][][] 
- []
+\openout3 = `BasicSyntax.ptb'.
 
 \openout3 = `BasicSyntax.ptb'.
 
 \openout3 = `BasicSyntax.ptb'.
 
-
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
- [][][][] 
- []
-
-
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
- [][][][] 
- []
-
-
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (21.17043pt too wide) in paragraph at lines 832--849
- [][][][] 
- []
-
-\openout3 = `BasicSyntax.ptb'.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-32.def
 File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
 )
-LaTeX Font Info:    Try loading font information for OMS+aess on input line 868
+LaTeX Font Info:    Try loading font information for OMS+aess on input line 840
 .
-LaTeX Font Info:    No file OMSaess.fd. on input line 868.
+LaTeX Font Info:    No file OMSaess.fd. on input line 840.
 
 
 LaTeX Font Warning: Font shape `OMS/aess/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbullet' on input line 868.
-
-\openout3 = `BasicSyntax.ptb'.
+(Font)              for symbol `textbullet' on input line 840.
 
 
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
- [][][][] 
+Overfull \hbox (8.80486pt too wide) detected at line 840
+  |  
  []
 
 
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
- [][][][][][] 
- []
-
-
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
- [][][][][][] 
- []
-
-
-Overfull \hbox (20.9545pt too wide) in paragraph at lines 921--930
- [][][][] 
+Overfull \hbox (8.80486pt too wide) detected at line 840
+  |  
  []
 
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
+Overfull \hbox (6.95047pt too wide) in paragraph at lines 893--902
  [][][][] 
  []
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
+Overfull \hbox (6.95047pt too wide) in paragraph at lines 893--902
  [][][][][][] 
  []
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
+Overfull \hbox (6.95047pt too wide) in paragraph at lines 893--902
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (6.95047pt too wide) in paragraph at lines 893--902
+ [][][][] 
+ []
+
+\openout3 = `BasicSyntax.ptb'.
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][][][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (18.44003pt too wide) in paragraph at lines 980--990
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][][][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][][][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][][][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
+ [][][][] 
+ []
+
+
+Overfull \hbox (21.98988pt too wide) in paragraph at lines 952--978
  [][][][] 
  []
 
@@ -843,34 +866,8 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [3]
 \openout3 = `BasicSyntax.ptb'.
 
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
- [][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
- [][][][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
- [][][][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
- [][][][][][] 
- []
-
-
-Overfull \hbox (38.22374pt too wide) in paragraph at lines 1016--1028
- [][][][] 
- []
-
 \openout3 = `BasicSyntax.ptb'.
 
-\openout3 = `BasicSyntax.ptb'.
 
 (./BasicSyntax2.tex
 \openout3 = `BasicSyntax.ptb'.
@@ -885,22 +882,22 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (21.6739pt too wide) in paragraph at lines 117--125
+Overfull \hbox (7.66988pt too wide) in paragraph at lines 117--125
  [][][][] 
  []
 
 
-Overfull \hbox (21.6739pt too wide) in paragraph at lines 117--125
+Overfull \hbox (7.66988pt too wide) in paragraph at lines 117--125
  [][][][] 
  []
 
 
-Overfull \hbox (21.6739pt too wide) in paragraph at lines 117--125
+Overfull \hbox (7.66988pt too wide) in paragraph at lines 117--125
  [][][][] 
  []
 
 
-Overfull \hbox (21.6739pt too wide) in paragraph at lines 117--125
+Overfull \hbox (7.66988pt too wide) in paragraph at lines 117--125
  [][][][] 
  []
 
@@ -914,124 +911,39 @@ Overfull \hbox (21.6739pt too wide) in paragraph at lines 117--125
 
 \openout3 = `BasicSyntax.ptb'.
 
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][][][] 
- []
-
-
-Overfull \hbox (5.8033pt too wide) in paragraph at lines 268--292
- [][][][] 
- []
-
 \openout3 = `BasicSyntax.ptb'.
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][][][][][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][][][][][] 
- []
-
-
-Overfull \hbox (10.35889pt too wide) in paragraph at lines 496--512
- [][] 
- []
 
 \openout3 = `BasicSyntax.ptb'.
 
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
+Overfull \hbox (4.488pt too wide) in paragraph at lines 830--845
  [][][][] 
  []
 
 
-Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
+Overfull \hbox (4.488pt too wide) in paragraph at lines 830--845
  [][][][] 
  []
 
 
-Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
+Overfull \hbox (4.488pt too wide) in paragraph at lines 830--845
  [][][][] 
  []
 
 
-Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
+Overfull \hbox (4.488pt too wide) in paragraph at lines 830--845
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
+Overfull \hbox (4.488pt too wide) in paragraph at lines 830--845
  [][][][] 
  []
 
 
-Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
+Overfull \hbox (4.488pt too wide) in paragraph at lines 830--845
  [][][][] 
  []
 
@@ -1045,64 +957,9 @@ Overfull \hbox (18.49203pt too wide) in paragraph at lines 836--851
 LaTeX Font Warning: Font shape `LGR/aer/m/n' undefined
 (Font)              using `LGR/cmr/m/n' instead on input line 64.
 
-
-Overfull \hbox (12.15997pt too wide) in paragraph at lines 50--64
- [][][][] 
- []
-
-
-Overfull \hbox (12.15997pt too wide) in paragraph at lines 50--64
- [][][][] 
- []
-
-
-Overfull \hbox (12.15997pt too wide) in paragraph at lines 50--64
- [][][][][][] 
- []
-
-
-Overfull \hbox (12.15997pt too wide) in paragraph at lines 50--64
- [][][][][][] 
- []
-
-
-Overfull \hbox (12.15997pt too wide) in paragraph at lines 50--64
- [][][][][][] 
- []
-
-
-Overfull \hbox (12.15997pt too wide) in paragraph at lines 50--64
- [][][][] 
- []
-
 \openout3 = `BasicSyntax.ptb'.
 
 \openout3 = `BasicSyntax.ptb'.
-
-
-Overfull \hbox (10.94252pt too wide) in paragraph at lines 83--95
- [][][][] 
- []
-
-
-Overfull \hbox (10.94252pt too wide) in paragraph at lines 83--95
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (10.94252pt too wide) in paragraph at lines 83--95
- [][][][] 
- []
-
-
-Overfull \hbox (10.94252pt too wide) in paragraph at lines 83--95
- [][][][] 
- []
-
-
-Overfull \hbox (10.94252pt too wide) in paragraph at lines 83--95
- [][][][] 
- []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1182,107 +1039,107 @@ Overfull \hbox (7.98059pt too wide) detected at line 174
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
 
-Overfull \hbox (32.81125pt too wide) in paragraph at lines 129--174
+Overfull \hbox (18.80722pt too wide) in paragraph at lines 129--174
  [][][][] 
  []
 
@@ -1311,7 +1168,7 @@ mr/m/n/9 [\OML/cmm/m/it/9 i[]\OT1/cmr/m/n/9 ][]$ \T1/aer/m/n/9 is a type,
 
 
 
-LaTeX Warning: Command \textomega invalid in math mode on input line 60.
+LaTeX Warning: Command \textomega invalid in math mode on input line 57.
 
 \openout3 = `BasicSyntax.ptb'.
 
@@ -1322,394 +1179,357 @@ File: uni-38.def 2013/05/13 UCS: Unicode data U+2600..U+26FF
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
+Overfull \hbox (7.20763pt too wide) detected at line 85
+  |  
+ []
+
+
+Overfull \hbox (7.20763pt too wide) detected at line 85
+  |  
+ []
+
+
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
  [][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
  [][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
  [][][][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
- [][][][][][][][] 
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
+ [][][][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
- [][][][][][][][] 
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
+ [][][][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
- [][][][] 
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
+ [][][][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
- [][][][] 
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
+ [][][][][][] 
  []
 
 
-Overfull \hbox (22.90427pt too wide) in paragraph at lines 60--81
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
  [][][][] 
  []
 
 \openout3 = `BasicSyntax.ptb'.
+
+\openout3 = `BasicSyntax.ptb'.
+
+
+Overfull \hbox (5.4576pt too wide) detected at line 156
+  |  
+ []
+
+
+Overfull \hbox (5.4576pt too wide) detected at line 156
+  |  
+ []
+
+
+Overfull \hbox (5.4576pt too wide) detected at line 156
+  |  
+ []
+
+
+Overfull \hbox (5.4576pt too wide) detected at line 156
+  |  
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
+ [][][][] 
+ []
 
 [7]
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
  [][][][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
- [][][][][][][][] 
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][][][] 
+ []
+
+
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][] 
+ []
+
+
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
  [][][][][][][][][][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
  [][][][][][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
- [][][][][][][][] 
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
  [][][][][][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
  [][][][] 
  []
 
 
-Overfull \hbox (11.23209pt too wide) in paragraph at lines 97--129
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (4.2828pt too wide) in paragraph at lines 159--196
  [][][][] 
  []
 
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (5.4576pt too wide) detected at line 164
+Overfull \hbox (8.42336pt too wide) detected at line 244
   |  
  []
 
 
-Overfull \hbox (5.4576pt too wide) detected at line 164
+Overfull \hbox (5.0636pt too wide) detected at line 244
   |  
  []
 
 
-Overfull \hbox (5.4576pt too wide) detected at line 164
-  |  
- []
-
-
-Overfull \hbox (5.4576pt too wide) detected at line 164
-  |  
- []
-
-
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][][][] 
  []
 
 
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][][][][][] 
  []
 
 
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][] 
  []
 
 
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
- [][][][] 
- []
-
-
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
- [][][][][][] 
- []
-
-
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
- [][][][][][] 
- []
-
-
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
- [][][][][][] 
- []
-
-
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][] 
  []
 
 
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
- [][][][] 
- []
-
-
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][][][][][] 
  []
 
 
-Overfull \hbox (28.68092pt too wide) in paragraph at lines 133--164
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (8.26524pt too wide) in paragraph at lines 199--244
  [][][][] 
  []
 
 \openout3 = `BasicSyntax.ptb'.
 
 
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
+Overfull \hbox (8.19794pt too wide) detected at line 276
+  |  
+ []
+
+
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][][][] 
  []
 
 
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][] 
- []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][][][][][] 
- []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][][][] 
- []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][] 
- []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][][][][][][][][][] 
  []
 
 
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][][][][][] 
  []
 
 
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][] 
  []
 
 
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][][][][][] 
- []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][][][][][][][] 
  []
 
 
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
+ [][][][][][][][] 
+ []
+
+
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
+ [][][][][][] 
+ []
+
+
+Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][][][] 
  []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][][][][][] 
- []
-
-
-Overfull \hbox (18.28683pt too wide) in paragraph at lines 168--205
- [][][][] 
- []
-
-\openout3 = `BasicSyntax.ptb'.
-
-
-Overfull \hbox (8.42336pt too wide) detected at line 253
-  |  
- []
-
-
-Overfull \hbox (5.0636pt too wide) detected at line 253
-  |  
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][][][] 
- []
-
-
-Overfull \hbox (22.26927pt too wide) in paragraph at lines 208--253
- [][][][] 
- []
-
-\openout3 = `BasicSyntax.ptb'.
-
-
-Overfull \hbox (8.19794pt too wide) detected at line 286
-  |  
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][][][][][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][][][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][][][] 
- []
-
-
-Overfull \hbox (32.36021pt too wide) in paragraph at lines 258--286
- [][][][] 
- []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
 \openout3 = `BasicSyntax.ptb'.
 
 )
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 (./BasicSyntax.bbl [8]) [9
 
 ] (./BasicSyntax.aux)
@@ -1718,10 +1538,10 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 9924 strings out of 493315
- 131912 string characters out of 6137904
- 255596 words of memory out of 5000000
- 13100 multiletter control sequences out of 15000+600000
+ 9944 strings out of 493315
+ 132210 string characters out of 6137904
+ 260271 words of memory out of 5000000
+ 13120 multiletter control sequences out of 15000+600000
  84965 words of font info for 145 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  41i,11n,115p,1250b,498s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1756,7 +1576,7 @@ vr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><
 l/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr/local/tex
 live/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb></usr/local/texlive/
 2013/texmf-dist/fonts/type1/public/xypic/xydash10.pfb>
-Output written on BasicSyntax.pdf (9 pages, 332580 bytes).
+Output written on BasicSyntax.pdf (9 pages, 332862 bytes).
 PDF statistics:
  160 PDF objects out of 1000 (max. 8388607)
  116 compressed objects within 2 object streams

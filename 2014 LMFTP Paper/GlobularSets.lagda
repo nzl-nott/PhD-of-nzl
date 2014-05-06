@@ -23,11 +23,9 @@ record Glob : Set₁ where
     ∣_∣   : Set
     hom  : ∣_∣ → ∣_∣ → ∞ Glob
 \end{code}
-
 \AgdaHide{
 \begin{code}
 open Glob public
--- open Glob public renaming (obj to ∣_∣) 
 \end{code}
 }
 If all the object types are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
@@ -40,9 +38,7 @@ As an example, we could construct the identity globular type called $Idω$.
 Idω    : (A : Set) → Glob
 Idω A  = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
 \end{code}
-
 Note that this is usually not a globular set.
-
 
 \AgdaHide{
 

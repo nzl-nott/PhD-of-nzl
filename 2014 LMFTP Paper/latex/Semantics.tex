@@ -78,19 +78,12 @@ The record definition also require some semantic weakening and semantic substitu
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaField{⟦\_⟧cm} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Δ} \AgdaBound{⟧C}\<%
 \\
-\>\<\end{code}
-
-$\AgdaFunction{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
-
-\vspace{-0.1cm}
-\begin{code}\>\<%
-\\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{π} \<[11]%
-\>[11]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{Var} \AgdaBound{A}\AgdaSymbol{)(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
+\>[4]\AgdaField{π} \<[10]%
+\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
 \\
 \>\<\end{code}
-\vspace{-0.5cm}
+$\AgdaField{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
 
 Following are the computation laws for the interpretations of contexts and types.
 
@@ -127,7 +120,6 @@ Following are the computation laws for the interpretations of contexts and types
 \>[15]\AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{u} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{v} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{))}\<%
 \\
 \>\<\end{code}
-
 The semantic substitution properties are essential,
 
 \begin{code}\>\<%
@@ -162,7 +154,6 @@ The semantic substitution properties are essential,
 \>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{θ} \AgdaBound{⟧cm} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
-
 Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
 
 \begin{code}\>\<%
@@ -251,7 +242,6 @@ The semantic weakening properties should actually be deriavable since weakening 
 \>[17]\AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{a} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
-
 Here we declare them as properties because they are essential for the computation laws of function $\pi$.
 
 
@@ -284,7 +274,6 @@ Here we declare them as properties because they are essential for the computatio
 \>[12]\AgdaSymbol{(}\AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β2} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaBound{v}\AgdaSymbol{)))} \AgdaDatatype{≡} \AgdaBound{π} \AgdaBound{x} \AgdaBound{γ}\<%
 \\
 \>\<\end{code}
-
 The only part of the semantics where we have any freedom is the interpretation of the coherence constants:
 
 \begin{code}\>\<%

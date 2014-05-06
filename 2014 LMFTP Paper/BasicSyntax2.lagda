@@ -95,7 +95,6 @@ It allows us to define at once:
 Coh-Contr      : {Γ : Con}{A : Ty Γ} → isContr Γ → Tm A
 Coh-Contr isC  = coh isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
-
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
 want to define, we construct a minimal contractible context built out
 of variables together with a context morphism that populates the

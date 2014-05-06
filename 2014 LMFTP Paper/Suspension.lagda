@@ -118,7 +118,6 @@ by one level.
 ΣC ε        = ε , * , *
 ΣC (Γ , A)  = ΣC Γ , ΣT A
 \end{code}
-
 \noindent The rest of the definitions is straightforward by structural
 recursion. In particular we suspend variables, terms and context morphisms:
 
@@ -142,14 +141,12 @@ recursion. In particular we suspend variables, terms and context morphisms:
 
 \end{code}
 }
-
 \noindent The following lemma establishes preservation of contractibility by
 one-step suspension:
 
 \begin{code}
 ΣC-Contr : (Δ : Con) → isContr Δ → isContr (ΣC Δ)
 \end{code}
-
 \noindent It is also essential that suspension respects weakening and substitution:
 
 \begin{code}
@@ -249,7 +246,6 @@ cohOpΣtm t p =  congΣtm (cohOp p)
                                                                   (cohOpV (sym (ΣT[+T] A A)) -¹))
                                                                  (ext (ΣC-Contr Γ r) {ΣT A} (Σv x))
 \end{code}}
-
 General suspension to the level of a type $A$ is defined by iteration of
 one-level suspension. For symmetry and ease of reading the following
 suspension functions take as a parameter a type $A$ in $\Gamma$, while they
@@ -384,7 +380,6 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
                                                Σtm[+tm] (Σtm-it A (var x)) (ΣT-it A C)
 \end{code}
 }
-
 \noindent Finally, it is clear that iterated suspension preserves contractibility. 
 
 \begin{code}
@@ -397,7 +392,6 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 ΣC-it-Contr {Γ}{Δ}(_=h_ {A} a b) x = ΣC-Contr (ΣC-it A Δ) (ΣC-it-Contr A x) 
 \end{code}
 }
-
 By suspending the minimal contractible context,
 *, we obtain a so-called span. They are
 also stalks with a top variable added. For example $(x_0: *)$ (the one-variable
@@ -444,7 +438,6 @@ rpl-T   : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (rpl-C A Δ)
 rpl-tm  : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B 
         → Tm (rpl-T A B)
 \end{code}
-
 Replacement for contexts, $\AgdaFunction{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
 a context which begins as $\Gamma$ and follows by each type of $\Delta$ with $*$ replaced with (pasted onto)  $A$. 
 To this end we must define the substitution $\AgdaFunction{filter}$ which

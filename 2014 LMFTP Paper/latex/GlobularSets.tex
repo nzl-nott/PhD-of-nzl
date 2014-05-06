@@ -43,13 +43,10 @@ To interpret the syntax, we need globular types
 \>[9]\AgdaSymbol{:} \AgdaBound{∣\_∣} \AgdaSymbol{→} \AgdaBound{∣\_∣} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaRecord{Glob}\<%
 \\
 \>\<\end{code}
-
 \AgdaHide{
 \begin{code}\>\<%
 \\
 \>\AgdaKeyword{open} \AgdaModule{Glob} \AgdaKeyword{public}\<%
-\\
-\>\AgdaComment{-- open Glob public renaming (obj to ∣\_∣) }\<%
 \\
 \>\<\end{code}
 }
@@ -68,9 +65,7 @@ As an example, we could construct the identity globular type called $Idω$.
 \>[7]\AgdaSymbol{=} \AgdaBound{A} \AgdaInductiveConstructor{∣∣} \AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{→} \AgdaCoinductiveConstructor{♯} \AgdaFunction{Idω} \AgdaSymbol{(}\AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{))}\<%
 \\
 \>\<\end{code}
-
 Note that this is usually not a globular set.
-
 
 \AgdaHide{
 

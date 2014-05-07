@@ -618,15 +618,16 @@ term judgments or context morphisms. These are weakening rules.
 \begin{code}\>\>[0]\AgdaIndent{3}{}\<[3]%
 \>[3]\<%
 \\
-\>\AgdaFunction{\_+T\_} \<[6]%
-\>[6]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{B}\AgdaSymbol{)}\<%
+\>\AgdaFunction{\_+T\_} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
-\>\AgdaFunction{\_+tm\_} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{B}\AgdaSymbol{)} \<[59]%
-\>[59]\<%
-\\
-\>\AgdaFunction{\_+S\_} \<[6]%
-\>[6]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{B}\AgdaSymbol{)} \AgdaDatatype{⇒} \AgdaBound{Δ} \<[52]%
+\>\AgdaFunction{\_+tm\_} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{B}\AgdaSymbol{)} \<[52]%
 \>[52]\<%
+\\
+\>\AgdaFunction{\_+S\_} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{B}\AgdaSymbol{)} \AgdaDatatype{⇒} \AgdaBound{Δ} \<[53]%
+\>[53]\<%
 \\
 \>\<\end{code}
 
@@ -686,11 +687,11 @@ be proved simultaneously.
 \>\AgdaKeyword{data} \AgdaDatatype{Var} \AgdaKeyword{where}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{v0} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \<[40]%
-\>[40]\AgdaSymbol{→} \AgdaDatatype{Var} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)}\<%
+\>[2]\AgdaInductiveConstructor{v0} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \<[35]%
+\>[35]\AgdaSymbol{→} \AgdaDatatype{Var} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{vS} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{Var} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{B}\AgdaSymbol{)}\<%
+\>[2]\AgdaInductiveConstructor{vS} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{Var} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
 A term can be either a variable or a coherence constant ($\AgdaInductiveConstructor{coh}$).
@@ -701,14 +702,16 @@ It encodes all constants for arbitrary types in a contractible context.
 \>\AgdaKeyword{data} \AgdaDatatype{Tm} \AgdaKeyword{where}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{var} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
+\>[2]\AgdaInductiveConstructor{var} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{coh} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)} \<[46]%
-\>[46]\<%
+\>[2]\AgdaInductiveConstructor{coh} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)} \<[42]%
+\>[42]\<%
 \\
-\>[2]\AgdaIndent{6}{}\<[6]%
-\>[6]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)}\<%
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
 
@@ -832,10 +835,10 @@ Context morphisms are defined inductively similarly to contexts. A context morph
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaInductiveConstructor{\_,\_} \<[7]%
-\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{))}\<%
 \\
-\>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{))} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaSymbol{(}\AgdaBound{Δ} \AgdaInductiveConstructor{,} \AgdaBound{A}\AgdaSymbol{)}\<%
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaSymbol{(}\AgdaBound{Δ} \AgdaInductiveConstructor{,} \AgdaBound{A}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
 
@@ -846,13 +849,13 @@ Context morphisms are defined inductively similarly to contexts. A context morph
 \\
 \>\AgdaFunction{hom≡} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaBound{A'} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}}\<%
 \\
-\>[9]\AgdaIndent{16}{}\<[16]%
+\>[7]\AgdaIndent{16}{}\<[16]%
 \>[16]\AgdaSymbol{\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{\}\{}\AgdaBound{a'} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A'}\AgdaSymbol{\}(}\AgdaBound{q} \AgdaSymbol{:} \AgdaBound{a} \AgdaDatatype{≅} \AgdaBound{a'}\AgdaSymbol{)}\<%
 \\
-\>[9]\AgdaIndent{16}{}\<[16]%
+\>[7]\AgdaIndent{16}{}\<[16]%
 \>[16]\AgdaSymbol{\{}\AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{\}\{}\AgdaBound{b'} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A'}\AgdaSymbol{\}(}\AgdaBound{r} \AgdaSymbol{:} \AgdaBound{b} \AgdaDatatype{≅} \AgdaBound{b'}\AgdaSymbol{)}\<%
 \\
-\>[9]\AgdaIndent{16}{}\<[16]%
+\>[7]\AgdaIndent{16}{}\<[16]%
 \>[16]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{=h} \AgdaBound{b}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{a'} \AgdaInductiveConstructor{=h} \AgdaBound{b'}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{hom≡} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{A'}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A'}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{refl} \AgdaSymbol{.}\AgdaBound{a'}\AgdaSymbol{)} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{b'}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b'}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{refl} \AgdaSymbol{.}\AgdaBound{b'}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
@@ -863,7 +866,7 @@ Context morphisms are defined inductively similarly to contexts. A context morph
 \\
 \>\AgdaFunction{cm-eq} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
 \\
-\>[-1]\AgdaIndent{8}{}\<[8]%
+\>[1]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{γ} \AgdaFunction{]T}\AgdaSymbol{)\}\{}\AgdaBound{a'} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}} \<[48]%
 \>[48]\<%
 \\
@@ -893,19 +896,17 @@ composition of the two context morphisms:
 \begin{code}\>\<%
 \\
 \>\AgdaFunction{[⊚]T} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}}\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaBound{A}\AgdaSymbol{\}\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}} \<[43]%
+\>[43]\<%
 \\
-\>[8]\AgdaIndent{10}{}\<[10]%
-\>[10]\AgdaSymbol{\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{]T}\AgdaSymbol{)}\AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T} \<[57]%
-\>[57]\<%
+\>[0]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaSymbol{→} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{]T}\AgdaSymbol{)}\AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T} \<[43]%
+\>[43]\<%
 \\
-\>\<\end{code}
-
-\AgdaHide{
-\begin{code}\>\<%
+%
 \\
 \>\AgdaFunction{[⊚]v} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Θ}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{Var} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaBound{A}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{Var} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{→} \AgdaBound{x} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaFunction{]V} \AgdaDatatype{≅} \AgdaSymbol{(}\AgdaBound{x} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{]V}\AgdaSymbol{)} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]tm}\<%
@@ -913,7 +914,7 @@ composition of the two context morphisms:
 %
 \\
 \>\AgdaFunction{[⊚]tm} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Θ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaBound{A}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaFunction{]tm} \AgdaDatatype{≅} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{[} \AgdaBound{θ} \AgdaFunction{]tm}\AgdaSymbol{)} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]tm}\<%
@@ -921,15 +922,15 @@ composition of the two context morphisms:
 %
 \\
 \>\AgdaFunction{⊚assoc} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaBound{Ω} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{Θ} \AgdaDatatype{⇒} \AgdaBound{Ω}\AgdaSymbol{)\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}} \<[60]%
-\>[60]\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaBound{Ω}\AgdaSymbol{\}(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{Θ} \AgdaDatatype{⇒} \AgdaBound{Ω}\AgdaSymbol{)\{}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}} \<[55]%
+\>[55]\<%
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaFunction{⊚} \AgdaBound{θ}\AgdaSymbol{)} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaDatatype{≡} \AgdaBound{γ} \AgdaFunction{⊚} \AgdaSymbol{(}\AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ}\AgdaSymbol{)} \<[37]%
 \>[37]\<%
 \\
 \>\<\end{code}
-}
+
 
 
 \AgdaHide{
@@ -952,8 +953,7 @@ The second set states that weakening inside substitution is equivalent to weaken
 \begin{code}\>\<%
 \\
 \>\AgdaFunction{[+S]T} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \<[48]%
-\>[48]\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{→} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{+S} \AgdaBound{B} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)} \AgdaFunction{+T} \AgdaBound{B} \<[42]%
@@ -962,7 +962,7 @@ The second set states that weakening inside substitution is equivalent to weaken
 %
 \\
 \>\AgdaFunction{[+S]tm} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}}\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{+S} \AgdaBound{B} \AgdaFunction{]tm} \AgdaDatatype{≅} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]tm}\AgdaSymbol{)} \AgdaFunction{+tm} \AgdaBound{B}\<%
@@ -970,16 +970,13 @@ The second set states that weakening inside substitution is equivalent to weaken
 %
 \\
 \>\AgdaFunction{[+S]S} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}}\<%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ} \AgdaBound{B}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{→} \AgdaBound{δ} \AgdaFunction{⊚} \AgdaSymbol{(}\AgdaBound{γ} \AgdaFunction{+S} \AgdaBound{B}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{δ} \AgdaFunction{⊚} \AgdaBound{γ}\AgdaSymbol{)} \AgdaFunction{+S} \AgdaBound{B}\<%
 \\
 \>\<\end{code}
-
-
 %There are also some auxiliary functions derived from these lemmas. For instance, the function shown below is used a lot in proofs.
-
 \AgdaHide{
 \begin{code}\>\<%
 \\
@@ -995,9 +992,7 @@ The second set states that weakening inside substitution is equivalent to weaken
 \\
 \>\<\end{code}
 }
-
 \AgdaHide{
-
 \begin{code}\>\<%
 \\
 \>\AgdaInductiveConstructor{•} \<[8]%
@@ -1022,11 +1017,8 @@ since weakening doesn't introduce new variables in types and terms.
 \begin{code}\>\<%
 \\
 \>\AgdaFunction{+T[,]T} \<[10]%
-\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
-\\
-\>[8]\AgdaIndent{12}{}\<[12]%
-\>[12]\AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{B} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}} \<[42]%
-\>[42]\<%
+\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{B} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}} \<[53]%
+\>[53]\<%
 \\
 \>[-6]\AgdaIndent{10}{}\<[10]%
 \>[10]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{B}\AgdaSymbol{)} \AgdaFunction{[} \AgdaBound{δ} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\<%
@@ -1034,10 +1026,11 @@ since weakening doesn't introduce new variables in types and terms.
 %
 \\
 \>\AgdaFunction{+tm[,]tm} \<[10]%
-\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{c} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{B} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}}\<%
 \\
-\>[0]\AgdaIndent{12}{}\<[12]%
-\>[12]\AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{c} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{B} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}}\<%
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \<[23]%
+\>[23]\<%
 \\
 \>[0]\AgdaIndent{10}{}\<[10]%
 \>[10]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{+tm} \AgdaBound{B}\AgdaSymbol{)} \AgdaFunction{[} \AgdaBound{δ} \AgdaInductiveConstructor{,} \AgdaBound{c} \AgdaFunction{]tm} \AgdaDatatype{≅} \AgdaBound{a} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]tm} \<[46]%

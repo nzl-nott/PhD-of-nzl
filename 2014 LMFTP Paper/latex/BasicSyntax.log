@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.9.29)  7 MAY 2014 18:08
-=======
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  7 MAY 2014 17:22
->>>>>>> aad1552c6f875df48521155947b5496e8093f865
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  7 MAY 2014 20:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -992,21 +988,19 @@ LaTeX Font Warning: Font shape `LGR/aer/m/n' undefined
 (Font)              using `LGR/cmr/m/n' instead on input line 87.
 
 
-Overfull \hbox (6.39673pt too wide) in paragraph at lines 90--150
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5]
+Overfull \hbox (6.39673pt too wide) in paragraph at lines 87--147
 \T1/aer/m/n/9 con-text for which we are as-sum-ing the def-i-ni-tion: []\T1/aes
 s/m/n/9 x:*,y:*,\LGR/aess/m/n/9 a\T1/aess/m/n/9 :x=y[]
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [5]
 \openout3 = `BasicSyntax.ptb'.
 
 \openout3 = `BasicSyntax.ptb'.
 
-)
-(./GroupoidLaws.tex
+) (./GroupoidLaws.tex
 Overfull \hbox (10.50038pt too wide) in paragraph at lines 39--42
 \T1/aer/m/n/9 con-struct ap-pro-pri-ate co-her-ence 2-cells wit-ness-ing the gr
 oupoid
@@ -1202,7 +1196,7 @@ LaTeX Warning: Command \textomega invalid in math mode on input line 57.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-38.def
 File: uni-38.def 2013/05/13 UCS: Unicode data U+2600..U+26FF
 ))
-(./Semantics.tex
+(./Semantics.tex [6]
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1260,10 +1254,8 @@ Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
  [][][][] 
  []
 
-[6]
 \openout3 = `BasicSyntax.ptb'.
 
-[7]
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1495,6 +1487,9 @@ Overfull \hbox (8.26524pt too wide) in paragraph at lines 197--242
  [][][][] 
  []
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1547,21 +1542,9 @@ Overfull \hbox (18.35619pt too wide) in paragraph at lines 246--274
  [][][][] 
  []
 
-
-<<<<<<< HEAD
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 \openout3 = `BasicSyntax.ptb'.
 
-) [7]
-(./BasicSyntax.bbl) [8
-=======
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-)
-(./BasicSyntax.bbl [8]) [9
->>>>>>> aad1552c6f875df48521155947b5496e8093f865
+) [7] (./BasicSyntax.bbl) [8
 
 ] (./BasicSyntax.aux)
 
@@ -1569,25 +1552,16 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
-<<<<<<< HEAD
- 9929 strings out of 493315
- 132057 string characters out of 6137904
- 259228 words of memory out of 5000000
- 13108 multiletter control sequences out of 15000+600000
+ 9961 strings out of 493315
+ 132535 string characters out of 6137904
+ 259237 words of memory out of 5000000
+ 13140 multiletter control sequences out of 15000+600000
  84035 words of font info for 142 fonts, out of 8000000 for 9000
-=======
- 9976 strings out of 493315
- 132688 string characters out of 6137904
- 259280 words of memory out of 5000000
- 13152 multiletter control sequences out of 15000+600000
- 84965 words of font info for 145 fonts, out of 8000000 for 9000
->>>>>>> aad1552c6f875df48521155947b5496e8093f865
  957 hyphenation exceptions out of 8191
  41i,11n,115p,1250b,498s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/tex
 live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texl
-<<<<<<< HEAD
 ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texliv
 e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/
 2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/20
@@ -1611,38 +1585,7 @@ elvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/ut
 mb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
 </usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr
 /local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
-Output written on BasicSyntax.pdf (8 pages, 293785 bytes).
-=======
-ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texliv
-e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/20
-13/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2013
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2013/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2013/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2013/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2013/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmss9.pfb></usr/local/texlive/2013/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2013/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publ
-ic/cbfonts/grmn0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
-cbfonts/grmn0900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
-fonts/symbols/msam10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public
-/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pu
-blic/stmaryrd/stmary8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publi
-c/stmaryrd/stmary9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helv
-etic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uh
-vr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><
-/usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr/local/tex
-live/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/public/xypic/xydash10.pfb>
-Output written on BasicSyntax.pdf (9 pages, 333583 bytes).
->>>>>>> aad1552c6f875df48521155947b5496e8093f865
+Output written on BasicSyntax.pdf (8 pages, 294590 bytes).
 PDF statistics:
  136 PDF objects out of 1000 (max. 8388607)
  99 compressed objects within 1 object stream

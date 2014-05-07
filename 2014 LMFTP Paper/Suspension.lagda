@@ -388,8 +388,7 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 \end{code}
 }
 By suspending the minimal contractible context,
-*, we obtain a so-called span. They are
-also stalks with a top variable added. For example $(x_0: *)$ (the one-variable
+*, we obtain a so-called \emph{span}. They are stalks with a top variable added. For example $(x_0: *)$ (the one-variable
 context) for $n=0$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1)$ for
 $n=1$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
 x_0\,=_{\mathsf{h}}\,x_1, x_4 : x_2\,=_\mathsf{h}\,x_3)$ for $n=2$, etc. 
@@ -420,10 +419,11 @@ first is the same as $\Gamma$, and the second is the suspended $\Delta$
 substituted by $\AgdaFunction{filter}$. However, we also have to drop
 the stalk of $A$ becuse it already exists in $\Gamma$.
 
+\new{This operation is called \emph{replacement} because we can interpret it as replacing $*$ in $\Delta$ by
+$A$.}
 Geometrically speaking, the context resulting from replacing $*$ in $\Delta$ by
 $A$ is a new context which corresponds to the pasting of
 $\Delta$ to $\Gamma$ to $A$.
-
 
 As always, we define replacement for contexts, types and terms:
 

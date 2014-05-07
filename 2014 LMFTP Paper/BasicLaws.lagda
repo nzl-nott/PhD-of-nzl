@@ -25,16 +25,16 @@ We can proceed to the definition of the groupoid structure of the syntax. We sta
 We start by an essential lemma which formalises the discussion at the
 beginning of this Section: to construct a term in a type $A$ in an
 arbitrary context, we first restrict attention to a suitable
-contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull the term built by $\mathsf{coh}$ in $\Delta$
-back.  This relies on the fact that a lifted contractible context is
+contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull
+ the term built by $\AgdaInductiveConstructor{coh}$ in $\Delta$
+back. This relies on the fact that a lifted contractible context is
 also contractible, and therefore any type lifted from a contractible
 context is also inhabited.
 
 \begin{code}
-Coh-rpl : {Γ Δ : Con}(A : Ty Γ)(B : Ty Δ) → isContr Δ 
-        → Tm {rpl-C A Δ} (rpl-T A B)
-Coh-rpl {Δ = Δ} A B isc = 
-  coh (ΣC-it-ε-Contr A isc) (filter Δ A) (ΣT-it A B)
+Coh-rpl  : ∀{Γ Δ}(A : Ty Γ)(B : Ty Δ) → isContr Δ
+         → Tm (rpl-T A B)
+Coh-rpl {_} {Δ} A _ isC = coh (ΣC-it-ε-Contr A isC) _ _
 \end{code}
 Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from the basic case as for the base type *.
 

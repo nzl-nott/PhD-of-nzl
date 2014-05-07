@@ -42,24 +42,21 @@ We can proceed to the definition of the groupoid structure of the syntax. We sta
 We start by an essential lemma which formalises the discussion at the
 beginning of this Section: to construct a term in a type $A$ in an
 arbitrary context, we first restrict attention to a suitable
-contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull the term built by $\mathsf{coh}$ in $\Delta$
-back.  This relies on the fact that a lifted contractible context is
+contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull
+ the term built by $\AgdaInductiveConstructor{coh}$ in $\Delta$
+back. This relies on the fact that a lifted contractible context is
 also contractible, and therefore any type lifted from a contractible
 context is also inhabited.
 
 \begin{code}\>\<%
 \\
-\>\AgdaFunction{Coh-rpl} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ} \<[54]%
-\>[54]\<%
+\>\AgdaFunction{Coh-rpl} \<[9]%
+\>[9]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ}\<%
 \\
-\>[0]\AgdaIndent{8}{}\<[8]%
-\>[8]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{rpl-C} \AgdaBound{A} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{)}\<%
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
-\>\AgdaFunction{Coh-rpl} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaBound{B} \AgdaBound{isc} \AgdaSymbol{=} \<[26]%
-\>[26]\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{coh} \AgdaSymbol{(}\AgdaFunction{ΣC-it-ε-Contr} \AgdaBound{A} \AgdaBound{isc}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{filter} \AgdaBound{Δ} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{ΣT-it} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{)}\<%
+\>\AgdaFunction{Coh-rpl} \AgdaSymbol{\{\_\}} \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{\_} \AgdaBound{isC} \AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaSymbol{(}\AgdaFunction{ΣC-it-ε-Contr} \AgdaBound{A} \AgdaBound{isC}\AgdaSymbol{)} \AgdaSymbol{\_} \AgdaSymbol{\_}\<%
 \\
 \>\<\end{code}
 Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from the basic case as for the base type *.
@@ -81,7 +78,7 @@ Next we define the reflexivity, symmetry and transitivity terms of any type. Let
 \>[11]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[33]%
 \>[33]\<%
 \\
-\>[0]\AgdaIndent{11}{}\<[11]%
+\>[9]\AgdaIndent{11}{}\<[11]%
 \>[11]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
 \\
 \>\AgdaFunction{refl-Tm} \AgdaBound{A} \<[11]%

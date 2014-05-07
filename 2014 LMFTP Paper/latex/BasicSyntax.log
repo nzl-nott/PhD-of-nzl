@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.1.31)  6 MAY 2014 17:32
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.9.29)  7 MAY 2014 18:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -962,6 +962,12 @@ LaTeX Font Warning: Font shape `LGR/aer/m/n' undefined
 \openout3 = `BasicSyntax.ptb'.
 
 
+Overfull \hbox (6.39673pt too wide) in paragraph at lines 90--150
+\T1/aer/m/n/9 con-text for which we are as-sum-ing the def-i-ni-tion: []\T1/aes
+s/m/n/9 x:*,y:*,\LGR/aess/m/n/9 a\T1/aess/m/n/9 :x=y[]
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5]
@@ -1150,20 +1156,11 @@ Overfull \hbox (5.26796pt too wide) detected at line 191
   |  
  []
 
-) (./Telescopes.tex
+) (./Telescopes2.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6]
-Overfull \hbox (3.67789pt too wide) in paragraph at lines 126--135
-\T1/aer/m/n/9 The sub-sti-tu-tion $\OML/cmm/m/it/9 ^^[[]\OT1/cmr/m/n/9 [\OML/cm
-m/m/it/9 i[]\OT1/cmr/m/n/9 ][] [] [\OML/cmm/m/it/9 i[]\OT1/cmr/m/n/9 ][][\OML/c
-mm/m/it/9 i[]\OT1/cmr/m/n/9 ][] \OMS/cmsy/m/n/9 ^^Q \OML/cmm/m/it/9 ^^[[]\OT1/c
-mr/m/n/9 [\OML/cmm/m/it/9 i[]\OT1/cmr/m/n/9 ][]$ \T1/aer/m/n/9 is a type,
- []
-
-\anglebox=\box35
-\coanglebox=\box36
-) (./GlobularSets.tex
+)
+(./GlobularSets.tex
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1233,6 +1230,7 @@ Overfull \hbox (12.49261pt too wide) in paragraph at lines 60--85
  [][][][] 
  []
 
+[6]
 \openout3 = `BasicSyntax.ptb'.
 
 \openout3 = `BasicSyntax.ptb'.
@@ -1317,7 +1315,6 @@ Overfull \hbox (14.6769pt too wide) in paragraph at lines 125--156
  [][][][] 
  []
 
-[7]
 \openout3 = `BasicSyntax.ptb'.
 
 
@@ -1524,13 +1521,13 @@ Overfull \hbox (18.35619pt too wide) in paragraph at lines 248--276
  [][][][] 
  []
 
-\openout3 = `BasicSyntax.ptb'.
 
-)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+\openout3 = `BasicSyntax.ptb'.
 
-(./BasicSyntax.bbl [8]) [9
+) [7]
+(./BasicSyntax.bbl) [8
 
 ] (./BasicSyntax.aux)
 
@@ -1538,48 +1535,43 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 9944 strings out of 493315
- 132210 string characters out of 6137904
- 260271 words of memory out of 5000000
- 13120 multiletter control sequences out of 15000+600000
- 84965 words of font info for 145 fonts, out of 8000000 for 9000
+ 9929 strings out of 493315
+ 132057 string characters out of 6137904
+ 259228 words of memory out of 5000000
+ 13108 multiletter control sequences out of 15000+600000
+ 84035 words of font info for 142 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  41i,11n,115p,1250b,498s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/tex
 live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texl
-ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texliv
-e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/20
-13/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2013
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2013/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2013/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2013/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2013/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmss9.pfb></usr/local/texlive/2013/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2013/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publ
-ic/cbfonts/grmn0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
-cbfonts/grmn0900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
-fonts/symbols/msam10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public
-/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pu
-blic/stmaryrd/stmary8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publi
-c/stmaryrd/stmary9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helv
-etic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uh
-vr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><
-/usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr/local/tex
-live/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/public/xypic/xydash10.pfb>
-Output written on BasicSyntax.pdf (9 pages, 332862 bytes).
+ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texliv
+e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/
+2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/20
+13/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2013/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2013/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2013/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/local/texlive/2013/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2013/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
+e1/public/cbfonts/grmn0800.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
+public/cbfonts/grmn0900.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pub
+lic/amsfonts/symbols/msam10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1
+/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
+ype1/public/stmaryrd/stmary8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type
+1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/h
+elvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/ut
+mb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+</usr/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
+Output written on BasicSyntax.pdf (8 pages, 293785 bytes).
 PDF statistics:
- 160 PDF objects out of 1000 (max. 8388607)
- 116 compressed objects within 2 object streams
+ 136 PDF objects out of 1000 (max. 8388607)
+ 99 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

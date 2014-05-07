@@ -476,9 +476,9 @@ We can freely add types to the contexts of any given type judgments,
 term judgments or context morphisms. These are weakening rules.
 
 \begin{code}   
-_+T_  : ∀{Γ}(A : Ty Γ)(B : Ty Γ) → Ty (Γ , B)
-_+tm_ : ∀{Γ}{A : Ty Γ}(a : Tm A)(B : Ty Γ) → Tm (A +T B)   
-_+S_  : ∀{Γ Δ}(δ : Γ ⇒ Δ)(B : Ty Γ) → (Γ , B) ⇒ Δ   
+_+T_   : ∀{Γ}(A : Ty Γ)(B : Ty Γ) → Ty (Γ , B)
+_+tm_  : ∀{Γ A}(a : Tm A)(B : Ty Γ) → Tm (A +T B)   
+_+S_   : ∀{Γ Δ}(δ : Γ ⇒ Δ)(B : Ty Γ) → (Γ , B) ⇒ Δ   
 \end{code}
 
 
@@ -517,17 +517,17 @@ be proved simultaneously.
 
 \begin{code}
 data Var where
-  v0 : {Γ : Con}{A : Ty Γ}              → Var (A +T A)
-  vS : {Γ : Con}{A B : Ty Γ}(x : Var A) → Var (A +T B)
+  v0 : ∀{Γ}{A : Ty Γ}              → Var (A +T A)
+  vS : ∀{Γ}{A B : Ty Γ}(x : Var A) → Var (A +T B)
 \end{code}
 A term can be either a variable or a coherence constant ($\AgdaInductiveConstructor{coh}$).
 It encodes all constants for arbitrary types in a contractible context. 
 
 \begin{code}
 data Tm where
-  var : {Γ : Con}{A : Ty Γ} → Var A → Tm A
-  coh : {Γ Δ : Con} → isContr Δ → (δ : Γ ⇒ Δ) 
-      → (A : Ty Δ) → Tm (A [ δ ]T)
+  var  : ∀{Γ}{A : Ty Γ} → Var A → Tm A
+  coh  : ∀{Γ Δ} → isContr Δ → (δ : Γ ⇒ Δ) 
+       → (A : Ty Δ) → Tm (A [ δ ]T)
 \end{code}
 
 \AgdaHide{
@@ -617,8 +617,8 @@ Context morphisms are defined inductively similarly to contexts. A context morph
 \begin{code}
 data _⇒_ where
   •    : ∀{Γ} → Γ ⇒ ε
-  _,_  : ∀{Γ Δ}(δ : Γ ⇒ Δ){A : Ty Δ}
-         (a : Tm (A [ δ ]T)) → Γ ⇒ (Δ , A)
+  _,_  : ∀{Γ Δ}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T))
+       → Γ ⇒ (Δ , A)
 \end{code}
 
 \AgdaHide{
@@ -650,22 +650,19 @@ morphisms consecutively, is equivalent to substitute with the
 composition of the two context morphisms:
 
 \begin{code}
-[⊚]T    : ∀{Γ Δ Θ}{A : Ty Θ}{θ : Δ ⇒ Θ}
-          {δ : Γ ⇒ Δ} → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T  
-\end{code}
+[⊚]T    : ∀{Γ Δ Θ A}{θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ} 
+        → A [ θ ⊚ δ ]T ≡ (A [ θ ]T)[ δ ]T  
 
-\AgdaHide{
-\begin{code}
-[⊚]v    : {Γ Δ Θ : Con}{A : Ty Θ}(x : Var A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+[⊚]v    : ∀{Γ Δ Θ A}(x : Var A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
         → x [ θ ⊚ δ ]V ≅ (x [ θ ]V) [ δ ]tm
 
-[⊚]tm   : {Γ Δ Θ : Con}{A : Ty Θ}(a : Tm A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
+[⊚]tm   : ∀{Γ Δ Θ A}(a : Tm A){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}
         → a [ θ ⊚ δ ]tm ≅ (a [ θ ]tm) [ δ ]tm
 
-⊚assoc  : {Γ Δ Θ Ω : Con}(γ : Θ ⇒ Ω){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}  
+⊚assoc  : ∀{Γ Δ Θ Ω}(γ : Θ ⇒ Ω){θ : Δ ⇒ Θ}{δ : Γ ⇒ Δ}  
         → (γ ⊚ θ) ⊚ δ ≡ γ ⊚ (θ ⊚ δ)  
 \end{code}
-}
+
 
 
 \AgdaHide{
@@ -680,19 +677,16 @@ composition of the two context morphisms:
 The second set states that weakening inside substitution is equivalent to weakening outside:
 
 \begin{code}
-[+S]T   : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}{B : Ty Γ} 
+[+S]T   : ∀{Γ Δ A B}{δ : Γ ⇒ Δ}
         → A [ δ +S B ]T ≡ (A [ δ ]T) +T B 
 
-[+S]tm  : ∀{Γ Δ}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}{B : Ty Γ}
+[+S]tm  : ∀{Γ Δ A B}(a : Tm A){δ : Γ ⇒ Δ}
         → a [ δ +S B ]tm ≅ (a [ δ ]tm) +tm B
 
-[+S]S   : ∀{Γ Δ Θ}{δ : Δ ⇒ Θ}{γ : Γ ⇒ Δ}{B : Ty Γ}
+[+S]S   : ∀{Γ Δ Θ B}{δ : Δ ⇒ Θ}{γ : Γ ⇒ Δ}
         → δ ⊚ (γ +S B) ≡ (δ ⊚ γ) +S B
 \end{code}
-
-
 %There are also some auxiliary functions derived from these lemmas. For instance, the function shown below is used a lot in proofs.
-
 \AgdaHide{
 \begin{code}
 wk-tm+      : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}(B : Ty Γ) 
@@ -700,9 +694,7 @@ wk-tm+      : {Γ Δ : Con}{A : Ty Δ}{δ : Γ ⇒ Δ}(B : Ty Γ)
 wk-tm+ B t  = t ⟦ [+S]T ⟫
 \end{code}
 }
-
 \AgdaHide{
-
 \begin{code}
 •       +S B = •
 (δ , a) +S B = (δ +S B) , wk-tm+ B (a +tm B)
@@ -716,12 +708,11 @@ We can cancel the last term in the substitution for weakened objects
 since weakening doesn't introduce new variables in types and terms.
 
 \begin{code}
-+T[,]T    : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}
-            {B : Ty Δ}{b : Tm (B [ δ ]T)} 
++T[,]T    : ∀{Γ Δ A B}{δ : Γ ⇒ Δ}{b : Tm (B [ δ ]T)} 
           → (A +T B) [ δ , b ]T ≡ A [ δ ]T
 
-+tm[,]tm  : ∀{Γ Δ}{A : Ty Δ}(a : Tm A){δ : Γ ⇒ Δ}
-            {B : Ty Δ}{c : Tm (B [ δ ]T)}
++tm[,]tm  : ∀{Γ Δ A B}{δ : Γ ⇒ Δ}{c : Tm (B [ δ ]T)}
+          → (a : Tm A) 
           → (a +tm B) [ δ , c ]tm ≅ a [ δ ]tm 
 \end{code}
 \AgdaHide{

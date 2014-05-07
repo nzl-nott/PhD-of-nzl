@@ -48,11 +48,16 @@ $\AgdaFunction{level}~\AgdaBound{A}~ \AgdaSymbol{\equiv}~ \AgdaBound{n}$, where
 \>\<\end{code}
 %
 In any $\omega$-category, any $n$-cell $a$ has a  domain (source), $s^n_m\,a$, and
+<<<<<<< HEAD
 a codomain (target), $s^n_m\,a$, for each $m \le n$. These are 
 $(n\text{-}m)$-cells. For each pair of $n$-cells such that for some
+=======
+a codomain (target), $s^n_m\,a$, for each $m \le n$. These are, of
+course, $(n \textminus m)$-cells. For each pair of $n$-cells such that for some
+>>>>>>> aad1552c6f875df48521155947b5496e8093f865
 $m$ $s^n_m a \equiv t^n_m b$, there must exist their composition
 $a\circ^n_m b$ which is an $n$-cell. Composition is (weakly)
-associative. Moreover for any $(n\text{-}m)$-cell $\AgdaBound{x}$ there
+associative. Moreover for any $(n \textminus m)$-cell $\AgdaBound{x}$ there
 exists an $n$-cell $\mathsf{id}^n_m\,\AgdaBound{x}$ which
 behaves like a (weak) identity with respect to $\circ^n_m$.
 For the time being we discuss only the construction of cells and omit
@@ -70,7 +75,7 @@ identity on $a$, $\mathsf{id}^2_1\,a =
 \mathsf{id}^2_2\mathsf{id}^1_1\,a$. 
 
 Thus each $\omega$-groupoid construction is defined with respect to a
-\emph{level}, $m$, and depth $n\text{-}m$ and the structure of
+\emph{level}, $m$, and depth $n \textminus m$ and the structure of
 an $\omega$-groupoid is repeated on each level. As we are working purely syntactically we
 may make use of this fact and define all groupoid structure only at level
 $m=1$ and provide a so-called \emph{replacement operation} which allows us to lift
@@ -99,15 +104,14 @@ context morphisms:
 
 \begin{code}\>\<%
 \\
-\>\AgdaFunction{IdCm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Γ}\<%
+\>\AgdaFunction{IdCm} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Γ}\<%
 \\
 \>\<\end{code}
 It satisfies the following property:
 
 \begin{code}\>\<%
 \\
-\>\AgdaFunction{IC-T} \<[6]%
-\>[6]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{A} \AgdaFunction{[} \AgdaFunction{IdCm} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaBound{A}\<%
+\>\AgdaFunction{IC-T} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{A} \AgdaFunction{[} \AgdaFunction{IdCm} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaBound{A}\<%
 \\
 \>\<\end{code}
 The definition proceeds by structural recursion and therefore extends
@@ -116,11 +120,10 @@ It allows us to define at once:
 
 \begin{code}\>\<%
 \\
-\>\AgdaFunction{Coh-Contr} \<[15]%
-\>[15]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
+\>\AgdaFunction{Coh-Contr} \<[14]%
+\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
 \\
-\>\AgdaFunction{Coh-Contr} \AgdaBound{isC} \<[15]%
-\>[15]\AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaBound{isC} \AgdaFunction{IdCm} \AgdaSymbol{\_} \AgdaFunction{⟦} \AgdaFunction{sym} \AgdaFunction{IC-T} \AgdaFunction{⟫}\<%
+\>\AgdaFunction{Coh-Contr} \AgdaBound{isC} \AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaBound{isC} \AgdaFunction{IdCm} \AgdaSymbol{\_} \AgdaFunction{⟦} \AgdaFunction{sym} \AgdaFunction{IC-T} \AgdaFunction{⟫}\<%
 \\
 \>\<\end{code}
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we

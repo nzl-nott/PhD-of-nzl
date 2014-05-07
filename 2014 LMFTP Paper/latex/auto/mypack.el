@@ -11,5 +11,6 @@
      "C"
      "itt"
      "ett"
-     "mltt")))
+     "mltt"
+     "textminus")))
 

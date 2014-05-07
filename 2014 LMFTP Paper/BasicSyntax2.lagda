@@ -30,11 +30,16 @@ level (_=h_ {A} _ _)  = suc (level A)
 \end{code}
 %
 In any $\omega$-category, any $n$-cell $a$ has a  domain (source), $s^n_m\,a$, and
+<<<<<<< HEAD
 a codomain (target), $s^n_m\,a$, for each $m \le n$. These are 
 $(n\text{-}m)$-cells. For each pair of $n$-cells such that for some
+=======
+a codomain (target), $s^n_m\,a$, for each $m \le n$. These are, of
+course, $(n \textminus m)$-cells. For each pair of $n$-cells such that for some
+>>>>>>> aad1552c6f875df48521155947b5496e8093f865
 $m$ $s^n_m a \equiv t^n_m b$, there must exist their composition
 $a\circ^n_m b$ which is an $n$-cell. Composition is (weakly)
-associative. Moreover for any $(n\text{-}m)$-cell $\AgdaBound{x}$ there
+associative. Moreover for any $(n \textminus m)$-cell $\AgdaBound{x}$ there
 exists an $n$-cell $\mathsf{id}^n_m\,\AgdaBound{x}$ which
 behaves like a (weak) identity with respect to $\circ^n_m$.
 For the time being we discuss only the construction of cells and omit
@@ -52,7 +57,7 @@ identity on $a$, $\mathsf{id}^2_1\,a =
 \mathsf{id}^2_2\mathsf{id}^1_1\,a$. 
 
 Thus each $\omega$-groupoid construction is defined with respect to a
-\emph{level}, $m$, and depth $n\text{-}m$ and the structure of
+\emph{level}, $m$, and depth $n \textminus m$ and the structure of
 an $\omega$-groupoid is repeated on each level. As we are working purely syntactically we
 may make use of this fact and define all groupoid structure only at level
 $m=1$ and provide a so-called \emph{replacement operation} which allows us to lift
@@ -80,20 +85,20 @@ which complete the definition of a \emph{category} of contexts and
 context morphisms:
 
 \begin{code}
-IdCm : ∀ {Γ} → Γ ⇒ Γ
+IdCm : ∀{Γ} → Γ ⇒ Γ
 \end{code}
 It satisfies the following property:
 
 \begin{code}
-IC-T  : ∀{Γ : Con}{A : Ty Γ} → A [ IdCm ]T ≡ A
+IC-T : ∀{Γ}{A : Ty Γ} → A [ IdCm ]T ≡ A
 \end{code}
 The definition proceeds by structural recursion and therefore extends
 to terms, variables and context morphisms with analogous properties. 
 It allows us to define at once:
 
 \begin{code}
-Coh-Contr      : {Γ : Con}{A : Ty Γ} → isContr Γ → Tm A
-Coh-Contr isC  = coh isC IdCm _ ⟦ sym IC-T ⟫
+Coh-Contr     : ∀{Γ}{A : Ty Γ} → isContr Γ → Tm A
+Coh-Contr isC = coh isC IdCm _ ⟦ sym IC-T ⟫
 \end{code}
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
 want to define, we construct a minimal contractible context built out

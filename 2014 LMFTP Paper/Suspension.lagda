@@ -113,7 +113,7 @@ by one level.
 
 \begin{code}
 ΣC : Con → Con
-ΣT : {Γ : Con} → Ty Γ → Ty (ΣC Γ)
+ΣT : ∀{Γ} → Ty Γ → Ty (ΣC Γ)
 
 ΣC ε        = ε , * , *
 ΣC (Γ , A)  = ΣC Γ , ΣT A
@@ -122,9 +122,9 @@ by one level.
 recursion. In particular we suspend variables, terms and context morphisms:
 
 \begin{code}
-Σv   : {Γ : Con}{A : Ty Γ} → Var A → Var (ΣT A)
-Σtm  : {Γ : Con}{A : Ty Γ} → Tm A → Tm (ΣT A)
-Σs   : {Γ Δ : Con} → Γ ⇒ Δ → ΣC Γ ⇒ ΣC Δ
+Σv   : ∀{Γ}{A : Ty Γ} → Var A → Var (ΣT A)
+Σtm  : ∀{Γ}{A : Ty Γ} → Tm A → Tm (ΣT A)
+Σs   : ∀{Γ Δ} → Γ ⇒ Δ → ΣC Γ ⇒ ΣC Δ
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -145,17 +145,18 @@ recursion. In particular we suspend variables, terms and context morphisms:
 one-step suspension:
 
 \begin{code}
-ΣC-Contr : (Δ : Con) → isContr Δ → isContr (ΣC Δ)
+ΣC-Contr : ∀ Δ → isContr Δ → isContr (ΣC Δ)
 \end{code}
 \noindent It is also essential that suspension respects weakening and substitution:
 
 \begin{code}
-ΣT[+T]   : {Γ : Con}(A : Ty Γ)(B : Ty Γ) 
+ΣT[+T]   : ∀{Γ}(A B : Ty Γ) 
          → ΣT (A +T B) ≡ ΣT A +T ΣT B
-Σtm[+tm] : {Γ : Con}{A : Ty Γ}(a : Tm A)(B : Ty Γ) 
+
+Σtm[+tm] : ∀{Γ A}(a : Tm A)(B : Ty Γ) 
          → Σtm (a +tm B) ≅ Σtm a +tm ΣT B
 
-ΣT[Σs]T  : {Γ Δ : Con}(A : Ty Δ)(δ : Γ ⇒ Δ) 
+ΣT[Σs]T  : ∀{Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ) 
          → (ΣT A) [ Σs δ ]T ≡ ΣT (A [ δ ]T)
 \end{code}
 \AgdaHide{
@@ -252,14 +253,13 @@ suspension functions take as a parameter a type $A$ in $\Gamma$, while they
 depend only on its level. 
 
 \begin{code}
-ΣC-it : {Γ : Con}(A : Ty Γ) → Con → Con
+ΣC-it   : ∀{Γ}(A : Ty Γ) → Con → Con
 
-ΣT-it : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (ΣC-it A Δ)
+ΣT-it   : ∀{Γ Δ}(A : Ty Γ) → Ty Δ → Ty (ΣC-it A Δ)
 
-Σtm-it : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} 
-       → Tm B → Tm (ΣT-it A B)
+Σtm-it  : ∀{Γ Δ}(A : Ty Γ){B : Ty Δ} → Tm B 
+        → Tm (ΣT-it A B)
 \end{code}
-
 \AgdaHide{
 \begin{code}
 
@@ -277,11 +277,6 @@ suspend-cm : {Γ Δ Θ : Con}(A : Ty Γ) → Θ ⇒ Δ → (ΣC-it A Θ) ⇒ (Σ
 suspend-cm * γ = γ
 suspend-cm (_=h_ {A} a b) γ = Σs (suspend-cm A γ)
 
-\end{code}
-}
-
-\AgdaHide{
-\begin{code}
 minimum-cm : ∀ {Γ : Con}(A : Ty Γ) → Γ ⇒ ΣC-it A ε
 
 ΣC-p1 :{Γ : Con}(A : Ty Γ) → ΣC (Γ , A) ≡ ΣC Γ , ΣT A
@@ -383,8 +378,8 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 \noindent Finally, it is clear that iterated suspension preserves contractibility. 
 
 \begin{code}
-ΣC-it-Contr : ∀ {Γ Δ}(A : Ty Γ) → isContr Δ 
-            → isContr (ΣC-it A Δ)
+ΣC-it-Contr  : ∀ {Γ Δ}(A : Ty Γ) → isContr Δ 
+             → isContr (ΣC-it A Δ)
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -393,8 +388,7 @@ fci-l1 {Γ} (_=h_ {A} a b) = trans [⊚]T (trans
 \end{code}
 }
 By suspending the minimal contractible context,
-*, we obtain a so-called span. They are
-also stalks with a top variable added. For example $(x_0: *)$ (the one-variable
+*, we obtain a so-called \emph{span}. They are stalks with a top variable added. For example $(x_0: *)$ (the one-variable
 context) for $n=0$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1)$ for
 $n=1$; $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
 x_0\,=_{\mathsf{h}}\,x_1, x_4 : x_2\,=_\mathsf{h}\,x_3)$ for $n=2$, etc. 
@@ -425,30 +419,33 @@ first is the same as $\Gamma$, and the second is the suspended $\Delta$
 substituted by $\AgdaFunction{filter}$. However, we also have to drop
 the stalk of $A$ becuse it already exists in $\Gamma$.
 
+\new{This operation is called \emph{replacement} because we can interpret it as replacing $*$ in $\Delta$ by
+$A$.}
 Geometrically speaking, the context resulting from replacing $*$ in $\Delta$ by
 $A$ is a new context which corresponds to the pasting of
 $\Delta$ to $\Gamma$ to $A$.
 
-
 As always, we define replacement for contexts, types and terms:
 
 \begin{code}
-rpl-C   : {Γ : Con}(A : Ty Γ) → Con → Con
-rpl-T   : {Γ Δ : Con}(A : Ty Γ) → Ty Δ → Ty (rpl-C A Δ)
-rpl-tm  : {Γ Δ : Con}(A : Ty Γ){B : Ty Δ} → Tm B 
+rpl-C   : ∀{Γ}(A : Ty Γ) → Con → Con
+rpl-T   : ∀{Γ Δ}(A : Ty Γ) → Ty Δ → Ty (rpl-C A Δ)
+rpl-tm  : ∀{Γ Δ}(A : Ty Γ){B : Ty Δ} → Tm B 
         → Tm (rpl-T A B)
 \end{code}
 Replacement for contexts, $\AgdaFunction{rpl-C}$, defines for a type $A$ in $\Gamma$ and another context $\Delta$ 
 a context which begins as $\Gamma$ and follows by each type of $\Delta$ with $*$ replaced with (pasted onto)  $A$. 
-To this end we must define the substitution $\AgdaFunction{filter}$ which
+
+\begin{code}
+rpl-C {Γ} A ε    = Γ
+rpl-C A (Δ , B)  = rpl-C A Δ , rpl-T A B
+\end{code}
+\noindent To this end we must define the substitution $\AgdaFunction{filter}$ which
 pulls back each type from suspended $\Delta$ to the new context. 
 
 \begin{code}
-filter : {Γ : Con}(Δ : Con)(A : Ty Γ) 
-       → rpl-C A Δ ⇒ ΣC-it A Δ
-
-rpl-C {Γ} A ε    = Γ
-rpl-C A (Δ , B)  = rpl-C A Δ , rpl-T A B
+filter  : ∀{Γ}(Δ : Con)(A : Ty Γ) 
+        → rpl-C A Δ ⇒ ΣC-it A Δ
 
 rpl-T A B = ΣT-it A B [ filter _ A ]T
 \end{code}

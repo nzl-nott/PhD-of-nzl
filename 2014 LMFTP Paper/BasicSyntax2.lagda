@@ -30,8 +30,8 @@ level (_=h_ {A} _ _)  = suc (level A)
 \end{code}
 %
 In any $\omega$-category, any $n$-cell $a$ has a  domain (source), $s^n_m\,a$, and
-a codomain (target), $s^n_m\,a$, for each $m \le n$. These are, of
-course, $(n\text{-}m)$-cells. For each pair of $n$-cells such that for some
+a codomain (target), $s^n_m\,a$, for each $m \le n$. These are 
+$(n\text{-}m)$-cells. For each pair of $n$-cells such that for some
 $m$ $s^n_m a \equiv t^n_m b$, there must exist their composition
 $a\circ^n_m b$ which is an $n$-cell. Composition is (weakly)
 associative. Moreover for any $(n\text{-}m)$-cell $\AgdaBound{x}$ there
@@ -98,7 +98,7 @@ Coh-Contr isC  = coh isC IdCm _ ⟦ sym IC-T ⟫
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
 want to define, we construct a minimal contractible context built out
 of variables together with a context morphism that populates the
-context with terms and a lemma that states a definitional equality
+context with terms and a lemma that states an equality
 between the substitution and the original type.
 
 \AgdaHide{

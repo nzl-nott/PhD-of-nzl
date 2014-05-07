@@ -985,7 +985,7 @@ coh x δ A ≟tm b = {!b!}
 
 \input{GroupoidLaws}
 
-\input{Telescopes}
+\input{Telescopes2}
 
 \section{Semantics}
 

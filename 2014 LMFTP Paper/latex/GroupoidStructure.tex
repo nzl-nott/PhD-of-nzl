@@ -1,0 +1,455 @@
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaSymbol{\{-\#} \AgdaKeyword{OPTIONS} --type-in-type --no-positivity-check --no-termination-check \AgdaSymbol{\#-\}}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{GroupoidStructure} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality} \<[50]%
+\>[50]\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product} \AgdaKeyword{renaming} \AgdaSymbol{(}\_,\_ \AgdaSymbol{to} \_,,\_\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{BasicSyntax} \AgdaKeyword{renaming} \AgdaSymbol{(}\_∾\_ \AgdaSymbol{to} htrans\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{IdentityContextMorphisms}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Suspension}\<%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+\subsection{First-level Groupoid Structure}
+We can proceed to the definition of the groupoid structure of the syntax. We start with the base case: 1-cells. Replacement defined above allows us to lift this structure to an arbitrary level $n$ (we leave most of the routine details out). This shows that the syntax is a 1-groupoid on each level. In the next section we show how also the higher-groupoid structure can be defined. 
+
+We start by an essential lemma which formalises the discussion at the
+beginning of this Section: to construct a term in a type $A$ in an
+arbitrary context, we first restrict attention to a suitable
+contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull
+ the term built by $\AgdaInductiveConstructor{coh}$ in $\Delta$
+back. This relies on the fact that a lifted contractible context is
+also contractible, and therefore any type lifted from a contractible
+context is also inhabited.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Coh-rpl} \<[9]%
+\>[9]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Coh-rpl} \AgdaSymbol{\{\_\}} \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{\_} \AgdaBound{isC} \AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaSymbol{(}\AgdaFunction{ΣC-it-ε-Contr} \AgdaBound{A} \AgdaBound{isC}\AgdaSymbol{)} \AgdaSymbol{\_} \AgdaSymbol{\_}\<%
+\\
+\>\<\end{code}
+Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from the basic case as for the base type *.
+
+\noindent \textbf{Reflexivity} (identities) For any variable, \AgdaFunction{x}, in the empty context, the type \AgdaFunction{x = x} is trivially inhabited because the empty context is contractible.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{refl*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{refl*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaInductiveConstructor{c*}\<%
+\\
+\>\<\end{code}
+\noindent To obtain the reflexivity term for any given type, we use replacement.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{refl-Tm} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[33]%
+\>[33]\<%
+\\
+\>[9]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{refl-Tm} \AgdaBound{A} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{refl*}\<%
+\\
+\>\<\end{code}
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaComment{-- The version without lifting function}\<%
+\\
+%
+\\
+\>\AgdaFunction{refl-Tm'} \AgdaSymbol{:} \<[12]%
+\>[12]\AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{refl-Tm'} \AgdaBound{A} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{refl-Tm} \AgdaBound{A}\AgdaSymbol{)} \<[26]%
+\>[26]\AgdaFunction{[} \AgdaFunction{map-1} \AgdaFunction{]tm} \AgdaFunction{⟦} \AgdaFunction{prf1} \AgdaFunction{⟫}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{prf} \AgdaSymbol{:} \AgdaFunction{rpl-tm} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaFunction{[} \AgdaFunction{map-1} \AgdaFunction{]tm} \AgdaDatatype{≅} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{prf} \AgdaSymbol{=} \AgdaFunction{htrans} \AgdaSymbol{(}\AgdaFunction{congtm} \AgdaSymbol{(}\AgdaFunction{htrans} \AgdaSymbol{(}\AgdaFunction{[⊚]tm} \AgdaSymbol{(}\AgdaFunction{Σtm-it} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)))} \<[61]%
+\>[61]\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{(}\AgdaFunction{htrans} \AgdaSymbol{(}\AgdaFunction{congtm} \AgdaSymbol{(}\AgdaFunction{Σtm-it-p1} \AgdaBound{A}\AgdaSymbol{))} \AgdaSymbol{(}\AgdaFunction{htrans} \AgdaFunction{wk-coh} \AgdaFunction{wk-coh+}\AgdaSymbol{))))} \<[68]%
+\>[68]\<%
+\\
+\>[10]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{(}\AgdaFunction{1-1cm-same-v0} \AgdaSymbol{(}\AgdaFunction{ΣT-it-p1} \AgdaBound{A}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>[-3]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{prf1} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{rpl-T} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaFunction{[} \AgdaFunction{map-1} \AgdaFunction{]T}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{prf1} \AgdaSymbol{=} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{congT} \AgdaSymbol{(}\AgdaFunction{rpl-T-p2} \AgdaFunction{x:*} \AgdaBound{A}\AgdaSymbol{))} \AgdaSymbol{(}\AgdaFunction{hom≡} \AgdaFunction{prf} \AgdaFunction{prf}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaFunction{refl-Fun} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{x} \AgdaInductiveConstructor{=h} \AgdaBound{x}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{refl-Fun} \AgdaBound{Γ} \AgdaBound{A} \AgdaBound{x} \AgdaSymbol{=} \<[18]%
+\>[18]\AgdaSymbol{(}\AgdaFunction{refl-Tm} \AgdaBound{A}\AgdaSymbol{)} \<[30]%
+\>[30]\<%
+\\
+\>[4]\AgdaIndent{17}{}\<[17]%
+\>[17]\AgdaFunction{[} \AgdaFunction{IdCm} \AgdaInductiveConstructor{,} \AgdaBound{x} \AgdaFunction{⟦} \AgdaFunction{rpl*-A} \AgdaFunction{⟫} \AgdaFunction{]tm} \<[43]%
+\>[43]\<%
+\\
+\>[4]\AgdaIndent{17}{}\<[17]%
+\>[17]\AgdaFunction{⟦} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{congT} \AgdaSymbol{(}\AgdaFunction{rpl-T-p2} \AgdaFunction{x:*} \AgdaBound{A}\AgdaSymbol{))} \AgdaSymbol{(}\AgdaFunction{hom≡} \AgdaSymbol{(}\AgdaFunction{rpl*-a} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{rpl*-a} \AgdaBound{A}\AgdaSymbol{)))} \AgdaFunction{⟫}\<%
+\\
+\>\<\end{code}
+}
+\noindent  \textbf{Symmetry} (inverse) It is defined similarly. Note that the intricate names of contexts, as in \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y} indicate their definitions which have been hidden. Recall that Agda treats all sequences of characters uninterrupted by whitespace as identifiers. For instance \AgdaFunction{x:*,y:*,α:x=y} is a name of a context for which we are assuming the definition:
+\AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaFunction{ε ,*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}
+
+
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{sym*-Ty} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y}\<%
+\\
+\>\AgdaFunction{sym*-Ty} \AgdaSymbol{=} \AgdaFunction{vY} \AgdaInductiveConstructor{=h} \AgdaFunction{vX}\<%
+\\
+%
+\\
+\>\AgdaFunction{sym*-Tm} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}} \AgdaFunction{sym*-Ty}\<%
+\\
+\>\AgdaFunction{sym*-Tm} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{sym-Tm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{sym*-Ty}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{sym-Tm} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{sym*-Tm}\<%
+\\
+\>\<\end{code}
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Tm-sym-fun} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[33]%
+\>[33]\<%
+\\
+\>[6]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \<[20]%
+\>[20]\AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{))} \<[63]%
+\>[63]\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \<[20]%
+\>[20]\AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)))}\<%
+\\
+\>\AgdaFunction{Tm-sym-fun} \AgdaBound{Γ} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{fun} \AgdaSymbol{(}\AgdaFunction{sym-Tm} \AgdaBound{A} \AgdaFunction{⟦} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{rpl-T-p3} \AgdaSymbol{(}\AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{)} \AgdaBound{A}\AgdaSymbol{)} \AgdaFunction{⟫}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{Tm-sym-fun2} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[34]%
+\>[34]\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{A} \AgdaInductiveConstructor{,} \AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \<[53]%
+\>[53]\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{A} \AgdaInductiveConstructor{,} \AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{Tm-sym-fun2} \AgdaBound{Γ} \AgdaBound{A} \AgdaBound{t} \AgdaSymbol{=}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaBound{t} \AgdaFunction{[} \AgdaSymbol{(}\AgdaFunction{wk-id} \AgdaInductiveConstructor{,} \<[16]%
+\>[16]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaFunction{⟦} \AgdaFunction{eq1} \AgdaFunction{⟫}\AgdaSymbol{))} \AgdaInductiveConstructor{,}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaFunction{⟦} \AgdaFunction{eq2} \AgdaFunction{⟫}\AgdaSymbol{)} \AgdaFunction{]tm}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaFunction{wk-hom} \AgdaSymbol{(}\AgdaFunction{hom≡} \AgdaSymbol{(}\AgdaFunction{htrans} \AgdaSymbol{(}\AgdaFunction{cohOp} \AgdaFunction{+T[,]T}\AgdaSymbol{)} \<[51]%
+\>[51]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{(}\AgdaFunction{cohOp} \AgdaFunction{eq1}\AgdaSymbol{))} \<[17]%
+\>[17]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{(}\AgdaFunction{cohOp} \AgdaFunction{eq2}\AgdaSymbol{)))} \AgdaFunction{⟫}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where} \<[8]%
+\>[8]\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{wk-id} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaBound{A} \AgdaInductiveConstructor{,} \AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)} \AgdaDatatype{⇒} \AgdaBound{Γ} \<[33]%
+\>[33]\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{wk-id} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{IdCm} \AgdaFunction{+S} \AgdaBound{A}\AgdaSymbol{)} \AgdaFunction{+S} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{eq1} \AgdaSymbol{:} \AgdaBound{A} \AgdaFunction{[} \AgdaFunction{wk-id} \AgdaFunction{]T} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)} \AgdaFunction{+T} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)} \<[46]%
+\>[46]\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{eq1} \AgdaSymbol{=} \AgdaFunction{wk+S+T} \AgdaSymbol{(}\AgdaFunction{wk+S+T} \AgdaFunction{IC-T}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{eq2} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)} \AgdaFunction{[} \AgdaFunction{wk-id} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaFunction{⟦} \AgdaFunction{eq1} \AgdaFunction{⟫}\AgdaSymbol{)} \AgdaFunction{]T} \<[49]%
+\>[49]\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)} \AgdaFunction{+T} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{+T} \AgdaBound{A}\AgdaSymbol{)} \<[35]%
+\>[35]\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{eq2} \AgdaSymbol{=} \AgdaFunction{trans} \AgdaFunction{+T[,]T} \AgdaFunction{eq1}\<%
+\\
+%
+\\
+\>\AgdaFunction{Fun-sym} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{=h} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{b} \AgdaInductiveConstructor{=h} \AgdaBound{a}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Fun-sym} \AgdaBound{Γ} \AgdaBound{A} \AgdaBound{a} \AgdaBound{b} \AgdaBound{t} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{sym-Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaFunction{[} \AgdaFunction{rpl-sub} \AgdaBound{Γ} \AgdaBound{A} \AgdaBound{a} \AgdaBound{b} \AgdaBound{t} \AgdaFunction{]tm} \<[55]%
+\>[55]\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaFunction{⟦} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{rpl-T-p3-wk} \AgdaSymbol{(}\AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{)} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{congT} \AgdaSymbol{(}\AgdaFunction{rpl-T-p2} \AgdaSymbol{(}\AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{)} \AgdaBound{A}\AgdaSymbol{))} \<[90]%
+\>[90]\<%
+\\
+\>[9]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{(}\AgdaFunction{hom≡} \AgdaSymbol{(}\AgdaFunction{rpl-tm-v0} \AgdaSymbol{(}\AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{)} \AgdaBound{A} \AgdaSymbol{(}\AgdaFunction{cohOp} \AgdaSymbol{(}\AgdaFunction{rpl*-A2} \AgdaBound{A}\AgdaSymbol{)))} \AgdaSymbol{(}\AgdaFunction{htrans} \AgdaSymbol{(}\AgdaFunction{rpl-tm-vS} \AgdaSymbol{(}\AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*}\AgdaSymbol{)} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+\>[11]\AgdaIndent{17}{}\<[17]%
+\>[17]\AgdaSymbol{(}\AgdaFunction{rpl*-a} \AgdaBound{A}\AgdaSymbol{)))))} \AgdaFunction{⟫}\<%
+\\
+%
+\\
+%
+\\
+\>\<\end{code}
+}
+\textbf{Transitivity} (composition) Note that each of these cells is defined by a different choice of the contractible context $\Delta$. 
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{trans*-Ty} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y,z:*,β:y=z}\<%
+\\
+\>\AgdaFunction{trans*-Ty} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{vX} \AgdaFunction{+tm} \AgdaSymbol{\_} \AgdaFunction{+tm} \AgdaSymbol{\_)} \AgdaInductiveConstructor{=h} \AgdaFunction{vZ}\<%
+\\
+%
+\\
+\>\AgdaFunction{trans*-Tm} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaFunction{trans*-Ty}\<%
+\\
+\>\AgdaFunction{trans*-Tm} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaFunction{trans-Tm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{trans*-Ty}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{trans-Tm} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{trans*-Tm}\<%
+\\
+\>\<\end{code}
+For each of reflexivity, symmetry and transitivity we can construct appropriate coherence 2-cells witnessing the groupoid axioms. 
+The base case for variable contexts is proved simply using contractibility. 
+We use substitution to define the application of the three basic terms we have defined above.
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{reflX} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{vX} \AgdaInductiveConstructor{=h} \AgdaFunction{vX}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{reflX} \AgdaSymbol{=} \AgdaFunction{refl-Tm} \AgdaInductiveConstructor{*} \AgdaFunction{+tm} \AgdaSymbol{\_} \AgdaFunction{+tm} \AgdaSymbol{\_}\<%
+\\
+%
+\\
+\>\AgdaFunction{reflY} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{vY} \AgdaInductiveConstructor{=h} \AgdaFunction{vY}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{reflY} \AgdaSymbol{=} \AgdaFunction{refl-Tm} \AgdaInductiveConstructor{*} \AgdaFunction{+tm} \AgdaSymbol{\_}\<%
+\\
+%
+\\
+\>\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q} \AgdaSymbol{:} \AgdaDatatype{Con}\<%
+\\
+\>\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q} \AgdaSymbol{=} \AgdaFunction{x:*,y:*,α:x=y,z:*,β:y=z} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{vM} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaInductiveConstructor{*}\<%
+\\
+\>\AgdaFunction{vM} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))))))}\<%
+\\
+%
+\\
+\>\AgdaFunction{vN} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaInductiveConstructor{*}\<%
+\\
+\>\AgdaFunction{vN} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)))))}\<%
+\\
+%
+\\
+\>\AgdaFunction{vMN} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{vM} \AgdaInductiveConstructor{=h} \AgdaFunction{vN}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{vMN} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))))}\<%
+\\
+%
+\\
+\>\AgdaFunction{vP} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaInductiveConstructor{*}\<%
+\\
+\>\AgdaFunction{vP} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)))}\<%
+\\
+%
+\\
+\>\AgdaFunction{vNP} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{vN} \AgdaInductiveConstructor{=h} \AgdaFunction{vP}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{vNP} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaFunction{vQ} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaInductiveConstructor{*}\<%
+\\
+\>\AgdaFunction{vQ} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{vPQ} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{vP} \AgdaInductiveConstructor{=h} \AgdaFunction{vQ}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{vPQ} \AgdaSymbol{=} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\<%
+\\
+%
+\\
+\>\AgdaFunction{Ty-G-assoc*} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaFunction{m:*,n:*,α:m=n,p:*,β:n=p,q:*,γ:p=q}\<%
+\\
+\>\AgdaFunction{Ty-G-assoc*} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((((}\AgdaInductiveConstructor{•} \AgdaInductiveConstructor{,} \AgdaFunction{vM}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vP}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \<[47]%
+\>[47]\<%
+\\
+\>[17]\AgdaIndent{23}{}\<[23]%
+\>[23]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaFunction{]tm}\AgdaSymbol{))} \AgdaInductiveConstructor{,} \AgdaFunction{vQ}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vPQ} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \<[71]%
+\>[71]\<%
+\\
+\>[-7]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{(}\AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaInductiveConstructor{,} \AgdaFunction{vQ}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \<[56]%
+\>[56]\<%
+\\
+\>[0]\AgdaIndent{23}{}\<[23]%
+\>[23]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((((}\AgdaInductiveConstructor{•} \AgdaInductiveConstructor{,} \AgdaFunction{vN}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vP}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vNP}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vQ}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vPQ} \AgdaFunction{]tm}\AgdaSymbol{)} \AgdaFunction{]tm}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Tm-right-identity*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaFunction{IdCm} \AgdaInductiveConstructor{,} \AgdaFunction{vY} \AgdaInductiveConstructor{,} \AgdaFunction{reflY} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{vα}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Tm-right-identity*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{Tm-left-identity*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((}\AgdaFunction{IdCm} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
+\\
+\>[9]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{reflX} \AgdaInductiveConstructor{,} \AgdaFunction{vY} \AgdaInductiveConstructor{,} \AgdaFunction{vα} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{vα}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Tm-left-identity*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{(}\AgdaFunction{IdCm} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{reflX}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{Tm-left-inverse*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((}\AgdaInductiveConstructor{•} \AgdaInductiveConstructor{,} \AgdaFunction{vY}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vX} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaInductiveConstructor{,} \AgdaFunction{vY}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vα} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{reflY}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Tm-left-inverse*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{Tm-G-assoc*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaFunction{Ty-G-assoc*}\<%
+\\
+\>\AgdaFunction{Tm-G-assoc*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\\
+\>\<\end{code}
+\noindent Their general versions are defined using replacement. For instance, for associativity, we define:
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Tm-G-assoc} \<[14]%
+\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{Ty-G-assoc*}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Tm-G-assoc} \AgdaBound{A} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{Tm-G-assoc*} \<[37]%
+\>[37]\<%
+\\
+\>\<\end{code}
+

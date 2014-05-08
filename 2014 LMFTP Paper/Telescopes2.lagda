@@ -10,9 +10,9 @@ open import Data.Product renaming (_,_ to _,,_)
 open import Data.Nat
 
 open import BasicSyntax renaming (_∾_ to htrans)
-open import BasicSyntax2
+open import IdentityContextMorphisms
 open import Suspension
-open import GroupoidLaws
+open import GroupoidStructure
 \end{code}
 }
 

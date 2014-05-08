@@ -65,12 +65,6 @@ Ond\v{r}ej Ryp\'a\v{c}ek\\
        \email{ondrej.rypacek@gmail.com}
 }
 
-%\author[1]{Thorsten Altenkirch}
-%\author[1]{Nuo Li}
-%\author[2]{Ond\v{r}ej Ryp\'a\v{c}ek}
-%\affaddr[1]{University of Nottingham}
-%\affaddr[2]{University of Oxford}
-%\authorrunning{T.Altenkirch, N.Li and O.Ryp\'a\v{c}ek}
 
 \newcommand{\txa}[1]{\marginpar{txa:#1}}
 \newcommand{\oxr}[1]{\marginpar{\footnotesize oxr:#1}}
@@ -222,11 +216,9 @@ are sets in the sense of Homotopy Type Theory.
 \subsection{Basic Objects}
 
 We first declare the syntax of our type theory which is
-called \tig{} namely the internal language of \wog. The following declarations in order are contexts as sets,
+called \tig{} namely the internal language of \wog. Since the definitions of syntactic objects involve each others, it is essential to define them in a inductive-inductive way. Agda allows us to state the types and constructors separately for involved inductive-inductive definitions. The following declarations in order are contexts as sets,
 types are sets dependent on contexts, terms and variables are sets
 dependent on types, Contexts morphisms and the contractible contexts.
-\new{Since the definitions of them involve each other, it is necessary to define them inductive-inductively. Therefore we claim their types first and then define the constructors later.
-}
 
 \begin{code}
 data Con           : Set
@@ -236,7 +228,6 @@ data Var           : {Γ : Con}(A : Ty Γ) → Set
 data _⇒_           : Con → Con → Set
 data isContr       : Con → Set
 \end{code}
-% Altenkirch also suggests to use Higher Inductive-Inductive definitions for these sets which he coined as Quotient Inductive-Inductive Types (QIIT), in other words, to given an equivalence relation for each of them as one constructor. However we do not use it here.
 Contexts are inductively defined as either an empty context or
 a context with a type in it.
 
@@ -257,69 +248,6 @@ data Ty Γ where
 
 \subsection{Heterogeneous Equality for Terms}
 
-
-
-
-
-\AgdaHide{
-\begin{code}
-
-{-
-
-
-tyeq : ∀{Γ : Con}{A : Ty Γ}{a b a₁ b₁ : Tm A} → ((a =h b) ≡ (a₁ =h b₁)) → (a ≡ a₁) × (b ≡ b₁)
-tyeq refl = refl ,, refl
-
-tyeq2 : ∀{Γ : Con}{A A₁ : Ty Γ}{a b : Tm A}{a₁ b₁ : Tm A₁} → ((a =h b) ≡ (a₁ =h b₁)) → A ≡ A₁
-tyeq2 refl = refl
-
-open import Relation.Nullary
-
-_≟ty_ : ∀{Γ : Con}(A B : Ty Γ) → Dec (A ≡ B)
-
-
-_≟tm_ : ∀{Γ : Con}{A : Ty Γ}(a b : Tm A) → Dec (a ≡ b)
-
-
-_≟ty_ * * = yes refl
-_≟ty_ * (a =h b) = no (λ())
-_≟ty_ (a =h b) * = no (λ())
-_≟ty_ (_=h_ {A} a b) (_=h_ {A₁} a₁ b₁) with A ≟ty A₁ 
-(a =h b) ≟ty (a₁ =h b₁) | yes refl with a ≟tm a₁ | b ≟tm b₁ 
-(a =h b) ≟ty (.a =h .b) | yes refl | yes refl | yes refl = yes refl
-(a =h b) ≟ty (.a =h b₁) | yes refl | yes refl | no ¬p = no (λ x → ¬p (proj₂ (tyeq x)))
-(a =h b) ≟ty (a₁ =h b₁) | yes refl | no ¬p | q = no (λ x → ¬p (proj₁ (tyeq x)))
-(a =h b) ≟ty (a₁ =h b₁) | no ¬p = no (λ x → ¬p (tyeq2 x))
-
--}
-
-
-{-
-data Var'           : {Γ : Con}(Last : Ty Γ)(Typ : Ty Γ) → Set
-
-
-data Var' where
-  v0 : {Γ : Con}{A : Ty Γ}              → Var' {Γ} A A
-  vS : {Γ : Con}{A B : Ty Γ} → (x : Var' {Γ} B A) → {C : Ty (Γ , B)} 
-                             → Var' {Γ , B} C (A +T B)
-
-
-_≟v'_ : ∀(Γ : Con)(A B : Ty Γ)(a b : Var' A B) → Dec (a ≡ b)
-_≟v'_ Γ A .A v0 v0 = yes refl
-_≟v'_ .(Γ , B) .(A +T B) .(A +T B) v0 (vS {Γ} {A} {B} b) = no (λ ())
-_≟v'_ .(Γ , B) .(A +T B) .(A +T B) (vS {Γ} {A} {B} a) v0 = ? -- no (λ ())
--- _≟v'_ .(Γ , B) A₁ .(A +T B) (vS {Γ} {A} {B} a) b = {!b!}
-_≟v'_ Γ A B a b = {!b!}
--}
-
-\end{code}
-}
-
-
-
-
-
-
 One of the big challenges we encountered at first is the difficulty to
 formalise and to reason about the equalities of terms, which is
 essential when defining substitution.  When the usual identity types
@@ -327,7 +255,7 @@ are used which are homogeneous, one has to use substitution to unify
 the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas
-about lemmas, lemmas about lemmas about lemmas, etc. The resulting
+about lemmas, lemmas about lemmas about lemmas, etc. \new{For example, we have to prove using $\mathit{subst}$ consecutively with two equalities of types is propositionally equal to using $\mathit{subst}$ with the composition of these two equalities. There are more and more lemmas needed as the complexity of the proofs grows.} The resulting
 recurrence pattern has been identified and implemented in
 \cite{txa:csl} for the special cases of coherence cells for
 associativity, units and interchange. However it is not clear how that
@@ -335,43 +263,21 @@ approach could be adapted to the present, much more economical
 formulation of {\wog}. Moreover, the complexity brings the
 Agda type checker to its limits and correctness into question.
 
-
-\new{For example, assume we have a
-context $\Gamma$, types $A~B : \mathit{Ty}~\Gamma$ and a term of the equality $p : A
-\equiv B$. If we have a term $a : \mathit{Tm} ~ A$ and a term $b : \mathit{Tm} ~ B$,
-it is impossible to just write $a \equiv b$ because of type
-unification. We need to write $\mathit{subst}~ \mathit{Tm}~ p a \equiv b$. Again assume we
-have another type $C : \mathit{Ty}~\Gamma$, $q : B \equiv C$ and a term of $c :
-\mathit{Tm} ~ C$, to prove a possible lemma $a = c$, we have to write
-$\mathit{subst} ~ \mathit{Tm} ~ q ~ (\mathit{subst}~\mathit{Tm} ~ p ~ a) ~ \equiv
-c$. Of course now we need to prove a new coherence lemma
-$\mathit{subst ~ Tm ~ q ~ (subst ~ Tm ~ p ~ a)} \equiv \mathit{subst ~ Tm ~
-(trans ~ p ~ q)~a}$ to help us in other proofs, etc. }
-
 The idea of heterogenous equality, which we use to resolve this issue,
 is that one can define equality for terms of different types, but its
 inhabitants only for terms of definitionally equal types. However, the
-corresponding elimination principle relies on UIP. 
-
-\new{In intensional type theory, UIP is not provable in general,
+corresponding elimination principle relies on UIP. \new{In intensional type theory, UIP is not provable in general,
   namely not all types are h-sets (homotopy 0-types). However it is
   justified to claim all type with decidable equality are h-sets.
   From the Hedberg's Theorem \cite{hed:98} we know that inductive
   types with finitary constructors have decidable equality. In our
-  case, the types which stand for syntactic components (contexts, types, terms)
-  are inductive-inductive types with finitary constructors and it is
-  therefore safe to assume UIP holds for them. We can therefore safely
-  use heterogenous equality for the syntax because its equality, which
-  will be introduced later, is decidable.  }
-
-
+  case, the types which stand for syntactic objects (contexts, types, terms)
+  are all inductive-inductive types with finitary constructors and it is
+  therefore safe to assume UIP holds for them. }
 In summary, the equality of
 syntactic types is unique, so it is safe to use heterogeneous equality
 and do without the substitution lemmas which would otherwise be
-necessary to match terms of different types.
-
-%Here we use it for the syntacic terms because it is dependent on types whose equality are decidable. It means that every equalit%y term can be normalised to refl. . Here we will give a formalised proof of the reason:
-%
+necessary to match terms of different types. \new{From a computational perspective, it means that every equality of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$ to construct terms is proof-irrelevant, which is expressed in the definition of heterogeneous equality for terms. }
 
 
 \begin{code}
@@ -968,13 +874,11 @@ coh x δ A ≟tm b = {!b!}
 
 \section{Some Important Derivable Constructions}
 
-\input{BasicSyntax2}
+\input{IdentityContextMorphisms}
 
 \input{Suspension}
 
-\input{BasicLaws}
-
-\input{GroupoidLaws}
+\input{GroupoidStructure}
 
 \input{Telescopes2}
 
@@ -982,7 +886,7 @@ coh x δ A ≟tm b = {!b!}
 
 \subsection{Globular Types}
 
-\input{GlobularSets}
+\input{GlobularTypes}
 
 %\txa{Can we show that substitution is correct}
 %\txa{Some discussion on why we don't need coherence laws.}

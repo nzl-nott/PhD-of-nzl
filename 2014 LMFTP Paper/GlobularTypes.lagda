@@ -3,7 +3,7 @@
 
 \begin{code}
 
-module GlobularSets where
+module GlobularTypes where
 
 open import Data.Product
 open import Coinduction
@@ -32,7 +32,7 @@ If all the object types are indeed sets, i.e. uniqueness of identity types holds
 
 %Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
 
-As an example, we could construct the identity globular type called $Idω$.
+As an example, we could construct the identity globular type called $\AgdaFunction{Idω}$.
 
 \begin{code}
 Idω    : (A : Set) → Glob

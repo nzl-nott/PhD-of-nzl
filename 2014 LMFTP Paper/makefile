@@ -2,7 +2,7 @@ ifeq ($(AGDA_LIB),)
 	AGDA_LIB=~/Agda/lib/src
 endif
 
-DEPS = latex/BasicSyntax2.tex latex/GlobularSets.tex latex/BasicLaws.tex latex/GroupoidLaws.tex latex/Suspension.tex latex/BasicSyntax.tex latex/BasicSyntax.bbl latex/Semantics.tex latex/Telescopes2.tex
+DEPS = latex/IdentityContextMorphisms.tex latex/GlobularTypes.tex latex/GroupoidStructure.tex latex/Suspension.tex latex/BasicSyntax.tex latex/BasicSyntax.bbl latex/Semantics.tex latex/Telescopes2.tex
 
 all : pdf
 

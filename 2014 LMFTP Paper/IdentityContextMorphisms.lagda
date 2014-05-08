@@ -1,7 +1,7 @@
 
 \AgdaHide{
 \begin{code}
-module BasicSyntax2 where
+module IdentityContextMorphisms where
 
 
 open import BasicSyntax
@@ -13,7 +13,6 @@ open import Data.Nat
 }
 \newcommand{\Tm}{\mathsf{Tm}}
 \newcommand{\Ty}{\mathsf{Ty}}
-
 
 
 

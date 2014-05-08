@@ -4,19 +4,20 @@
 \begin{code}
 {-# OPTIONS --no-positivity-check --no-termination-check #-}
 
-open import GlobularSets
 
 
 
 module Semantics where
 
 open import BasicSyntax
-open import BasicSyntax2
+open import IdentityContextMorphisms
 open import Data.Unit
 open import Data.Product
 open import Coinduction
 open import Relation.Binary.PropositionalEquality hiding ([_])
-open import GroupoidLaws
+open import GroupoidStructure
+
+open import GlobularTypes
 
 
 coerce : {A B : Set} → B ≡ A → A → B
@@ -116,8 +117,8 @@ Here we declare them as properties because they are essential for the computatio
 The only part of the semantics where we have any freedom is the interpretation of the coherence constants:
 
 \begin{code}
-    ⟦coh⟧ : ∀{Θ} → isContr Θ → (A : Ty Θ) 
-          → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
+    ⟦coh⟧  : ∀{Θ} → isContr Θ → (A : Ty Θ) 
+           → (θ : ⟦ Θ ⟧C) → ∣ ⟦ A ⟧T θ ∣
 \end{code}
 However, we also need to require that the coherence constants are well
 behaved wrt to substitution which in turn relies on the interpretation

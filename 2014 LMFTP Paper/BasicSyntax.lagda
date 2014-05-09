@@ -33,6 +33,7 @@
 \newcommand{\ott}{Observational Type Theory}
 \newcommand{\tig}{$\mathcal{T}_{\infty-groupoid}$}
 
+\usepackage[hyphens]{url}
 
 \newcommand{\new}{\textcolor{red}}
 
@@ -48,14 +49,14 @@
 % 1st. author
 \alignauthor
 Thorsten Altenkirch\\
+       \affaddr{The School of Computer Science}\\
        \affaddr{University of Nottingham}\\
-       \affaddr{United Kingdom}\\
        \email{txa@cs.nott.ac.uk}
 % 2nd. author
 \alignauthor
 Nuo Li\\
+       \affaddr{The School of Computer Science}\\
        \affaddr{University of Nottingham}\\
-       \affaddr{United Kingdom}\\
        \email{nzl@cs.nott.ac.uk}
 % 3rd. author
 \alignauthor
@@ -163,7 +164,7 @@ not definitionally equalities. Finally we should use {\wog} to interpret types a
 
 There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
 This paper explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in a dependently typed language like Agda or Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language
-of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online \footnote{The code is available on }, in which there are only some minor differences.
+of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online \footnote{The source code is available on \url{github.com/nzl-nott}.}, in which there are only some minor differences.
 
 \subsection{Agda}
 
@@ -207,8 +208,8 @@ Brunerie's proposal which made this work possible.
 We develop the type theory of $\omega$-groupoids formally, following
 \cite{gb:wog}. This is a Type Theory with only one type former which
 we can view as equality types and interpret as the homsets of the
-$\omega$-groupoid. There are no definitional equalities which
-correspond to the fact that we consider weak $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e. definitional) but all are witnessed by
+$\omega$-groupoid. There are no definitional equalities, this
+corresponds to the fact that we consider weak $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e. definitional) but all are witnessed by
 terms. Compared to \cite{txa:csl} the definition is very much
 simplified by the observation that all laws of a weak $\omega$-groupoid follow from the existence of coherence constants for
 any contractible context.
@@ -235,7 +236,7 @@ are sets in the sense of Homotopy Type Theory.
 We first declare the syntax of our type theory which is
 called \tig{} namely the internal language of \wog. Since the definitions of syntactic objects involve each others, it is essential to define them in a inductive-inductive way. Agda allows us to state the types and constructors separately for involved inductive-inductive definitions. The following declarations in order are contexts as sets,
 types are sets dependent on contexts, terms and variables are sets
-dependent on types, Contexts morphisms and the contractible contexts.
+dependent on types, context morphisms and contractible contexts.
 
 \begin{code}
 data Con           : Set
@@ -254,8 +255,8 @@ data Con where
   _,_   : (Γ : Con)(A : Ty Γ) → Con
 \end{code}
 Types are defined as either $*$ which we
-call 0-cells, or a equality type between two terms of some type A. If 
-type A is n-cell then we call its equality type $(n+1)$-cell.
+call 0-cells, or a equality type between two terms of some type A. If the
+type A is an n-cell then we call its equality type an $(n+1)$-cell.
 
 \begin{code}
 data Ty Γ where
@@ -266,14 +267,14 @@ data Ty Γ where
 \subsection{Heterogeneous Equality for Terms}
 
 One of the big challenges we encountered at first is the difficulty to
-formalise and to reason about the equalities of terms, which is
-essential when defining substitution.  When the usual identity types
-are used which are homogeneous, one has to use substitution to unify
+formalise and reason about the equalities of terms, which is
+essential when defining substitution.  When the usual homogeneous identity types
+are used, one has to use substitution to unify
 the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas
 about lemmas, lemmas about lemmas about lemmas, etc. \new{For example, we have to prove using $\mathit{subst}$ consecutively with two equalities of types is propositionally equal to using $\mathit{subst}$ with the composition of these two equalities. There are more and more lemmas needed as the complexity of the proofs grows.} The resulting
-recurrence pattern has been identified and implemented in
+recurring pattern has been identified and implemented in
 \cite{txa:csl} for the special cases of coherence cells for
 associativity, units and interchange. However it is not clear how that
 approach could be adapted to the present, much more economical
@@ -284,16 +285,15 @@ The idea of heterogenous equality, which we use to resolve this issue,
 is that one can define equality for terms of different types, but its
 inhabitants only for terms of definitionally equal types. However, the
 corresponding elimination principle relies on UIP. \new{In intensional type theory, UIP is not provable in general,
-  namely not all types are h-sets (homotopy 0-types). However it is
-  justified to claim all type with decidable equality are h-sets.
-  From the Hedberg's Theorem \cite{hed:98} we know that inductive
+  namely not all types are h-sets (homotopy 0-types). However every type with decidable equality is an h-set.
+  From Hedberg's Theorem \cite{hed:98} we know that inductive
   types with finitary constructors have decidable equality. In our
   case, the types which stand for syntactic objects (contexts, types, terms)
   are all inductive-inductive types with finitary constructors and it is
-  therefore safe to assume UIP holds for them. }
+  therefore safe to assume that UIP holds for them. }
 In summary, the equality of
 syntactic types is unique, so it is safe to use heterogeneous equality
-and do without the substitution lemmas which would otherwise be
+and proceed without using substitution lemmas which would otherwise be
 necessary to match terms of different types. \new{From a computational perspective, it means that every equality of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$ to construct terms is proof-irrelevant, which is expressed in the definition of heterogeneous equality for terms. }
 
 
@@ -323,11 +323,11 @@ _∾_ {c = c} (refl .c) (refl .c) = refl c
 
 \end{code}
 }
-Once we have the heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call coercion here
+Once we have heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call coercion
 since it gives us a term of type A if we have a term of type B and the
 two types are equal. We can also prove that the coerced term is heterogeneously equal to the
 original term. Combining these definitions, it is much
-more convenient to formalise and to reason about term equations.
+more convenient to formalise and reason about term equations.
 
 \begin{code}
 _⟦_⟫        : {Γ : Con}{A B : Ty Γ}(a : Tm B) 
@@ -365,56 +365,42 @@ cong≅ f (refl _) = refl _
 
 \subsection{Substitutions}
 
-With context morphisms, we can define substitutions for types
-variables and terms.  Usually we define a set of symbols together and
-we name a function $*$ as $*C$ for contexts, $*T$ for types, $*V$ for
-variables $*tm$ for terms and $*S$ (or $*cm$) for context morphisms. For example
-the substitution for types is defined as follows
+In this paper we usually define a set of functions together and
+we name a function $\mathsf{x}$ as $\mathsf{xC}$ for contexts, $\mathsf{xT}$ for types, $\mathsf{xV}$ for
+variables $\mathsf{xtm}$ for terms and $\mathsf{xS}$ (or $\mathsf{xcm}$) for context morphisms. For example
+the substitutions are declared as follows:
 
 \begin{code}
 _[_]T   : ∀{Γ Δ} → Ty Δ → Γ ⇒ Δ → Ty Γ
 _[_]V   : ∀{Γ Δ A} → Var A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)
 _[_]tm  : ∀{Γ Δ A} → Tm A → (δ : Γ ⇒ Δ) → Tm (A [ δ ]T)    
 \end{code}
-Indeed the
-composition of contexts can be understood as substitution for context morphisms as well.
+Indeed, composition of context morphisms can be understood as substitution for context morphisms as well.
 
 \begin{code}
 _⊚_ : ∀{Γ Δ Θ} → Δ ⇒ Θ → (δ : Γ ⇒ Δ) → Γ ⇒ Θ   
 \end{code}
 
-\AgdaHide{
+Context morphisms are defined inductively similarly to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of the morphism.
+
 \begin{code}
--- _[_]T   : {Γ Δ : Con}            → Ty Δ    → (δ : Γ ⇒ Δ)   → Ty Γ        
--- _[_]V   : {Γ Δ : Con}{A : Ty Δ}  → Var A   → (δ : Γ ⇒ Δ)   → Tm (A [ δ ]T)
--- _[_]tm  : {Γ Δ : Con}{A : Ty Δ}  → Tm A    → (δ : Γ ⇒ Δ)   → Tm (A [ δ ]T)    
--- _⊚_     : {Γ Δ Θ : Con}          → Δ ⇒ Θ → (δ : Γ ⇒ Δ)   → Γ ⇒ Θ   
+data _⇒_ where
+  •    : ∀{Γ} → Γ ⇒ ε
+  _,_  : ∀{Γ Δ}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T))
+       → Γ ⇒ (Δ , A)
 \end{code}
-}
 
-
-\subsection{Weakening Rules}
+\subsection{Weakening}
 
 We can freely add types to the contexts of any given type judgments,
-term judgments or context morphisms. These are weakening rules.
+term judgments or context morphisms. These are the weakening rules.
 
 \begin{code}   
 _+T_   : ∀{Γ}(A : Ty Γ)(B : Ty Γ) → Ty (Γ , B)
 _+tm_  : ∀{Γ A}(a : Tm A)(B : Ty Γ) → Tm (A +T B)   
 _+S_   : ∀{Γ Δ}(δ : Γ ⇒ Δ)(B : Ty Γ) → (Γ , B) ⇒ Δ   
 \end{code}
-
-
-\AgdaHide{
-\begin{code}   
--- _+T_   : {Γ : Con}            (A : Ty Γ)   → (B : Ty Γ) → Ty (Γ , B)   
--- _+tm_  : {Γ : Con}{A : Ty Γ}  (a : Tm A)   → (B : Ty Γ) → Tm (A +T B)   
--- _+S_   : {Γ : Con}{Δ : Con}   (δ : Γ ⇒ Δ)  → (B : Ty Γ) → (Γ , B) ⇒ Δ   
-\end{code}
-}
-
-%We could first define the weakening rule and substitution for types.
-
+%We could first define the weakening and substitution for types.
 \AgdaHide{
 \begin{code}
 
@@ -427,24 +413,25 @@ _+S_   : ∀{Γ Δ}(δ : Γ ⇒ Δ)(B : Ty Γ) → (Γ , B) ⇒ Δ
 
 \end{code}
 }
-To define variables we have to use the weakening rules. We
+
+\subsection{Terms}
+
+A term can be either a variable or a coherence constant ($\AgdaInductiveConstructor{coh}$).
+
+We first define variables separately using the weakening rules. We
 use typed de Bruijn indices to define variables as either the rightmost
 variable of the context, or some variable in the context which can be
-found by cancelling the rightmost variable along with each $\AgdaInductiveConstructor{vS}$. The
-coherence constants are one of the major part of this syntax, which
-are primitive terms of the primitive types in contractible contexts
-which will be introduced later. Since contexts, types, variables and
-terms are all mutually defined, most of their properties have to
-be proved simultaneously.
-
+found by cancelling the rightmost variable along with each $\AgdaInductiveConstructor{vS}$.
 
 \begin{code}
 data Var where
   v0 : ∀{Γ}{A : Ty Γ}              → Var (A +T A)
   vS : ∀{Γ}{A B : Ty Γ}(x : Var A) → Var (A +T B)
 \end{code}
-A term can be either a variable or a coherence constant ($\AgdaInductiveConstructor{coh}$).
-It encodes all constants for arbitrary types in a contractible context. 
+
+The coherence constants are one of the major part of this syntax, which
+are primitive terms of the primitive types in contractible contexts
+which will be introduced later. \new{A coherence constant is a substitution into a contractible context (which will be defined later). It's type can be any type in the contractible context. It encodes all constants for arbitrary types in a contractible context and also terms in arbitrary context obtained by substituting into contractible context.}
 
 \begin{code}
 data Tm where
@@ -452,67 +439,8 @@ data Tm where
   coh  : ∀{Γ Δ} → isContr Δ → (δ : Γ ⇒ Δ) 
        → (A : Ty Δ) → Tm (A [ δ ]T)
 \end{code}
-
 \AgdaHide{
 \begin{code}
-
-{-
--- the symbol is \||
-
-
-data TyU : Set
-data VarU : Set
-data TmU : Set
-
-
-∥_∥Ty : {Γ : Con} → Ty Γ → TyU
-∥_∥V : {Γ : Con}{A : Ty Γ} → Var A → VarU
-∥_∥Tm : {Γ : Con}{A : Ty Γ} → Tm A → TmU
-
-data TyU where
-  *     : TyU
-  _=h_  : {A : TyU} → (a b : TmU) → TyU
-
-data VarU where
-  v0 : VarU
-  vS : VarU → VarU
-
-data TmU where
-  var : VarU → TmU
-  coh : TyU → TmU
-
-
-∥ * ∥Ty = *
-∥ _=h_ {A} a b ∥Ty =  _=h_ { ∥ A ∥Ty } ∥ a ∥Tm ∥ b ∥Tm
-
-∥_∥Ty-inj : {Γ : Con} → (a b : Ty Γ) → ∥ a ∥Ty ≡ ∥ b ∥Ty → a ≡ b
-∥_∥Ty-inj * * refl = refl
-∥_∥Ty-inj * (a =h b) ()
-∥_∥Ty-inj (a =h b) * ()
-∥_∥Ty-inj (_=h_ {A} a b) (_=h_ {A₁} a₁ b₁) eq = {!eq!}
-
-
-∥ v0 ∥V = v0
-∥ vS a ∥V = vS ∥ a ∥V
-
-
-
-∥ a ∥Tm = {!!}
-
-
-data Var'' : {Γ : Con}(A : Ty Γ) → Set where
-  v0' : {Γ : Con}{A : Ty Γ}{B : Ty (Γ , A)} -> (B ≡ A +T A)  → Var'' B
-  vS' : {Γ : Con}{A B : Ty Γ}{C : Ty (Γ , B)}(x : Var'' A) → (C ≡ A +T B) → Var'' C
-
-
-
-
-
-∥_∥inj : {Γ : Con}{A : Ty Γ} → (a b : Var A) → ∥ a ∥ ≡ ∥ b ∥ → a ≡ b
-∥_∥inj v0 b eq = {!b!}
-∥_∥inj (vS a) b eq = {!!}
--}
-
 cohOpV : {Γ : Con}{A B : Ty Γ}{x : Var A}(p : A ≡ B) → var (subst Var p x) ≅ var x
 cohOpV {x = x} refl = refl (var x)
 
@@ -534,14 +462,6 @@ data isContr where
   c*   : isContr (ε , *)
   ext  : ∀{Γ} → isContr Γ → {A : Ty Γ}(x : Var A) 
        → isContr (Γ , A , (var (vS x) =h var v0))     
-\end{code}
-Context morphisms are defined inductively similarly to contexts. A context morphism is a list of terms corresponding to the list of types in the context on the right hand side of the morphism.
-
-\begin{code}
-data _⇒_ where
-  •    : ∀{Γ} → Γ ⇒ ε
-  _,_  : ∀{Γ Δ}(δ : Γ ⇒ Δ){A : Ty Δ}(a : Tm (A [ δ ]T))
-       → Γ ⇒ (Δ , A)
 \end{code}
 
 \AgdaHide{
@@ -565,6 +485,10 @@ cm-eq refl (refl _) = refl
 
 
 \subsection{Lemmas}
+
+Since contexts, types, variables and
+terms are all mutually defined, most of their properties have to
+be proved simultaneously.
 
 The following lemmas are essential for constructions and theorem
 proving later.  The first set of lemmas states that to substitute a

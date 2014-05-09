@@ -492,7 +492,7 @@ Since contexts, types, variables and
 terms are all mutually defined, most of their properties have to
 be proved simultaneously.
 
-The following lemmas are essential for constructions and theorem
+The following lemmas are essential for the constructions and theorem
 proving later.  The first set of lemmas states that to substitute a
 type, a variable, a term, or a context morphism with two context
 morphisms consecutively, is equivalent to substitute with the
@@ -662,8 +662,7 @@ wk+S+S eq = trans [+S]S (cong (λ x → x +S _) eq)
 
 \end{code}
 }
-Most of the substitutions are defined as usual, except the one for coherence constants. We do
-substitution in the context morphism part of the coherence constants.
+Most of the substitutions are defined as usual, except the one for coherence constants. In this case, we substitute in the context morphism part.
 
 \begin{code}
 var x       [ δ ]tm = x [ δ ]V

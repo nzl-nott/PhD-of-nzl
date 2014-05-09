@@ -29,7 +29,7 @@ level (_=h_ {A} _ _)  = suc (level A)
 \end{code}
 %
 In any $\omega$-category, any $n$-cell $a$ has a  domain (source), $s^n_m\,a$, and
-a codomain (target), $s^n_m\,a$, for each $m \le n$. These are, of
+a codomain (target), $t^n_m\,a$, for each $m \le n$. These are, of
 course, $(n \textminus m)$-cells. For each pair of $n$-cells such that for some
 $m$ $s^n_m a \equiv t^n_m b$, there must exist their composition
 $a\circ^n_m b$ which is an $n$-cell. Composition is (weakly)

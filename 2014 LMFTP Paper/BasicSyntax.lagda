@@ -33,7 +33,7 @@
 \newcommand{\ott}{Observational Type Theory}
 \newcommand{\tig}{$\mathcal{T}_{\infty-groupoid}$}
 
-usepackage[hyphens]{url}
+\usepackage{url}
 
 \newcommand{\new}{\textcolor{red}}
 

@@ -33,6 +33,7 @@
 \newcommand{\ott}{Observational Type Theory}
 \newcommand{\tig}{$\mathcal{T}_{\infty-groupoid}$}
 
+\usepackage[hyphens]{url}
 
 \newcommand{\new}{\textcolor{red}}
 
@@ -182,7 +183,7 @@ not definitionally equalities. Finally we should use {\wog} to interpret types a
 
 There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
 This paper explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in a dependently typed language like Agda or Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language
-of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online \footnote{The code is available on }, in which there are only some minor differences.
+of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online \footnote{The source code is available on \url{github.com/nzl-nott}.}, in which there are only some minor differences.
 
 \subsection*{Agda}
 
@@ -226,8 +227,8 @@ Brunerie's proposal which made this work possible.
 We develop the type theory of $\omega$-groupoids formally, following
 \cite{gb:wog}. This is a Type Theory with only one type former which
 we can view as equality types and interpret as the homsets of the
-$\omega$-groupoid. There are no definitional equalities which
-correspond to the fact that we consider weak $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e. definitional) but all are witnessed by
+$\omega$-groupoid. There are no definitional equalities, this
+corresponds to the fact that we consider weak $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e. definitional) but all are witnessed by
 terms. Compared to \cite{txa:csl} the definition is very much
 simplified by the observation that all laws of a weak $\omega$-groupoid follow from the existence of coherence constants for
 any contractible context.
@@ -254,7 +255,7 @@ are sets in the sense of Homotopy Type Theory.
 We first declare the syntax of our type theory which is
 called \tig{} namely the internal language of \wog. Since the definitions of syntactic objects involve each others, it is essential to define them in a inductive-inductive way. Agda allows us to state the types and constructors separately for involved inductive-inductive definitions. The following declarations in order are contexts as sets,
 types are sets dependent on contexts, terms and variables are sets
-dependent on types, Contexts morphisms and the contractible contexts.
+dependent on types, context morphisms and contractible contexts.
 
 \begin{code}%
 \>\AgdaKeyword{
@@ -277,8 +278,8 @@ dat}a\AgdaDatatype{ Co}n\AgdaKeyword{ wher}e
 \<%
 \end{code}
 Types are defined as either $*$ which we
-call 0-cells, or a equality type between two terms of some type A. If 
-type A is n-cell then we call its equality type $(n+1)$-cell.
+call 0-cells, or a equality type between two terms of some type A. If the
+type A is an n-cell then we call its equality type an $(n+1)$-cell.
 
 \begin{code}%
 \>\AgdaKeyword{
@@ -291,14 +292,14 @@ dat}a\AgdaDatatype{ T}y Γ\AgdaKeyword{ wher}e
 \subsection{Heterogeneous Equality for Terms}
 
 One of the big challenges we encountered at first is the difficulty to
-formalise and to reason about the equalities of terms, which is
-essential when defining substitution.  When the usual identity types
-are used which are homogeneous, one has to use substitution to unify
+formalise and reason about the equalities of terms, which is
+essential when defining substitution.  When the usual homogeneous identity types
+are used, one has to use substitution to unify
 the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas
 about lemmas, lemmas about lemmas about lemmas, etc. \new{For example, we have to prove using $\mathit{subst}$ consecutively with two equalities of types is propositionally equal to using $\mathit{subst}$ with the composition of these two equalities. There are more and more lemmas needed as the complexity of the proofs grows.} The resulting
-recurrence pattern has been identified and implemented in
+recurring pattern has been identified and implemented in
 \cite{txa:csl} for the special cases of coherence cells for
 associativity, units and interchange. However it is not clear how that
 approach could be adapted to the present, much more economical
@@ -309,16 +310,15 @@ The idea of heterogenous equality, which we use to resolve this issue,
 is that one can define equality for terms of different types, but its
 inhabitants only for terms of definitionally equal types. However, the
 corresponding elimination principle relies on UIP. \new{In intensional type theory, UIP is not provable in general,
-  namely not all types are h-sets (homotopy 0-types). However it is
-  justified to claim all type with decidable equality are h-sets.
-  From the Hedberg's Theorem \cite{hed:98} we know that inductive
+  namely not all types are h-sets (homotopy 0-types). However every type with decidable equality is an h-set.
+  From Hedberg's Theorem \cite{hed:98} we know that inductive
   types with finitary constructors have decidable equality. In our
   case, the types which stand for syntactic objects (contexts, types, terms)
   are all inductive-inductive types with finitary constructors and it is
-  therefore safe to assume UIP holds for them. }
+  therefore safe to assume that UIP holds for them. }
 In summary, the equality of
 syntactic types is unique, so it is safe to use heterogeneous equality
-and do without the substitution lemmas which would otherwise be
+and proceed without using substitution lemmas which would otherwise be
 necessary to match terms of different types. \new{From a computational perspective, it means that every equality of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$ to construct terms is proof-irrelevant, which is expressed in the definition of heterogeneous equality for terms. }
 
 
@@ -352,11 +352,11 @@ infix}r 4 \_∾\_
 \<%
 \end{code}
 }
-Once we have the heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call coercion here
+Once we have heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call coercion
 since it gives us a term of type A if we have a term of type B and the
 two types are equal. We can also prove that the coerced term is heterogeneously equal to the
 original term. Combining these definitions, it is much
-more convenient to formalise and to reason about term equations.
+more convenient to formalise and reason about term equations.
 
 \begin{code}%
 \>\AgdaFunction{
@@ -400,8 +400,8 @@ cong}≅ f \AgdaInductiveConstructor{(ref}l\AgdaSymbol{ \_}) =\AgdaInductiveCons
 
 With context morphisms, we can define substitutions for types
 variables and terms.  Usually we define a set of symbols together and
-we name a function $*$ as $*C$ for contexts, $*T$ for types, $*V$ for
-variables $*tm$ for terms and $*S$ (or $*cm$) for context morphisms. For example
+we name a function $\mathsf{x}$ as $\mathsf{xC}$ for contexts, $\mathsf{xT}$ for types, $\mathsf{xV}$ for
+variables $\mathsf{xtm}$ for terms and $\mathsf{xS}$ (or $\mathsf{xcm}$) for context morphisms. For example
 the substitution for types is defined as follows
 
 \begin{code}%

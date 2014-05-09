@@ -167,11 +167,28 @@ of Grothendieck {\wog}, then interpret it with a globular set and a dependent fu
 
 \subsection{Agda}
 
-1. Agda is a dependently typed programming languages which offers a set of tools for theorem proving. It is a variant of \mltt.
-A good introductory resources can be found on Agda wiki.
-
-2. short introduction to Agda syntax
-
+Agda is a programming language and development environment based on
+Martin-Löf Type Theory \cite{agda-wiki}. Readers with background in
+Type Theory (e.g. from reading the introductory chapters of
+\cite{hott-book}) should find it easy to read the Agda code presented
+in this paper. Some hints: $\Pi$-types are written in a generalized
+arrow notation $(x : A) → B$ for $\Pi x:A.B$, implicit arguments are
+indicated by curly brackets, eg. $\{x : A\} → B$, in this case the Agda
+will try to generate the argument automatically and we don't supply it
+to make the code more readable. If we don't want to supply $A$ because
+it can be inferred we write $\forall x$ or $\forall\{x\}$.
+Agda uses a flexible mixfix notation
+where the position of arguments are indicated by underline characters.
+e.g. $\_⇒\_$ is one identifier which can be applied to two arguments as
+in $A ⇒ B$.  
+We use data \textbf{data} to define constructor based datatypes (both
+inductive and coinductive) and \textbf{record} to define dependent record
+types (this generalizes $\Sigma$-types. The representation of
+coinductive types and more generally mixed inductive/coinductive types
+\cite{txa:mpc2010g}
+uses the type constructor $\infty$ whose elements are computations of type
+$A$ which are written as $\sharp a$ where |a| is an expression which can be
+evaluated to an element of type $A$.
 
 \section*{Acknowledgements}
 

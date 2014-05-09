@@ -212,4 +212,4 @@ Tm-G-assoc    : ∀{Γ}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
 Tm-G-assoc A  = rpl-tm A Tm-G-assoc* 
 \end{code}
 
-Following the same pattern, the n-level groupoid laws can be obtained as the coherence constants.
+Following the same pattern, the n-level groupoid laws can be obtained as the coherence constants as well.

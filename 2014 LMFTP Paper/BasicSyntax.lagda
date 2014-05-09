@@ -165,12 +165,12 @@ There are several approaches to formalise {\wog} in Type Theory. For instance, A
 This paper explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in a dependently typed language like Agda or Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language
 of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online \footnote{The code is available on }, in which there are only some minor differences.
 
-\subsection{Agda}
+\subsection*{Agda}
 
 Agda is a programming language and development environment based on
 Martin-Löf Type Theory \cite{agda-wiki}. Readers with background in
 Type Theory (e.g. from reading the introductory chapters of
-\cite{hott-book}) should find it easy to read the Agda code presented
+\cite{hott}) should find it easy to read the Agda code presented
 in this paper. Some hints: $\Pi$-types are written in a generalized
 arrow notation $(x : A) → B$ for $\Pi x:A.B$, implicit arguments are
 indicated by curly brackets, eg. $\{x : A\} → B$, in this case the Agda

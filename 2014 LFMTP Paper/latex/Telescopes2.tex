@@ -1,4 +1,3 @@
-
 \AgdaHide{
 \begin{code}\>\<%
 \\
@@ -29,7 +28,6 @@
 \\
 \>\<\end{code}
 }
-
 \subsection{Higher Structure} In the previous text we have shown how
 to define 1-groupoid structure on an arbitrary level. Here we indicate
 how all levels also bear the structure of $n$-groupoid for arbitrary
@@ -45,7 +43,7 @@ $n$. Denote a span of depth $n$ $S_n$. Then there is a chain of
 context morphisms $S_0 \Rightarrow S_1 \Rightarrow \cdots \Rightarrow
 S_n$. Each $S_{n+1}$ has one additional variable standing for the
 identity iterated $n\text{+}1$-times. Because $S_{n+1}$ is contractible, one
-can define a morphism $S_n \Rightarrow S_{n+1}$ using $\AgdaFunction{coh}$
+can define a morphism $S_n \Rightarrow S_{n+1}$ using $\AgdaInductiveConstructor{coh}$
 to fill the last variable and variable terms on the first $n$
 levels. By composition of the context morphisms one defines $n$ new
 terms in the basic one variable context $*$ -- the iterated
@@ -60,7 +58,7 @@ of the composition is the composition of the boundaries.  Thus for
 arbitrary $n$ we proceed using a chain of $V$-shaped contractible
 contexts. That is contexts that are two spans conjoined at the base
 level at a common middle variable. Each successive composition is
-defined using contractibility and \AgdaFunction{coh}.
+defined using contractibility and \AgdaInductiveConstructor{coh}.
 
 To fully imitate the development in \cite{txa:csl}, one would
 also have to define all higher coherence laws. But the sole purpose

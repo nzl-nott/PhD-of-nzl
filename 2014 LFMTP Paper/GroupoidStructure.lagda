@@ -36,7 +36,7 @@ Coh-rpl  : ∀{Γ Δ}(A : Ty Γ)(B : Ty Δ) → isContr Δ
          → Tm (rpl-T A B)
 Coh-rpl {_} {Δ} A _ isC = coh (ΣC-it-ε-Contr A isC) _ _
 \end{code}
-Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from some base cases. Each of the base cases is derivable in a minimum contractible context with \AgdaFunction{Coh-Contr} which gives you a coherence constant for any type in any contractible context.
+Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from some base cases. Each of the base cases is derivable in a different contractible context with \AgdaFunction{Coh-Contr} which gives you a coherence constant for any type in any contractible context.
 
 \noindent \textbf{Reflexivity} (identity) It only requires a one-object context.
 
@@ -64,8 +64,6 @@ trans*-Ty = (vX +tm _ +tm _) =h vZ
 trans*-Tm : Tm trans*-Ty
 trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
 \end{code}
-Note that each of these cells is defined by a different choice of the contractible context $\Delta$.
-
 \noindent To obtain these terms for any given type in any give context, we use replacement.
 
 \begin{code}
@@ -192,11 +190,11 @@ Tm-left-identity* : Tm {x:*,y:*,α:x=y}
           reflX , vY , vα ]tm =h vα)
 Tm-left-identity* = Coh-Contr (ext c* v0)
 
-
-
 Tm-right-inverse* : Tm {x:*,y:*,α:x=y}
          (trans*-Tm [ (IdCm , vX) , sym*-Tm ]tm =h reflX)
 Tm-right-inverse* = Coh-Contr (ext c* v0)
+
+
 
 Tm-left-inverse* : Tm {x:*,y:*,α:x=y}
          (trans*-Tm [ ((• , vY) , vX , sym*-Tm , vY) , vα ]tm =h reflY)
@@ -211,5 +209,4 @@ Tm-G-assoc* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) (vS v0))
 Tm-G-assoc    : ∀{Γ}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
 Tm-G-assoc A  = rpl-tm A Tm-G-assoc* 
 \end{code}
-
 Following the same pattern, the n-level groupoid laws can be obtained as the coherence constants as well.

@@ -59,7 +59,7 @@ context is also inhabited.
 \>\AgdaFunction{Coh-rpl} \AgdaSymbol{\{\_\}} \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{\_} \AgdaBound{isC} \AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaSymbol{(}\AgdaFunction{ΣC-it-ε-Contr} \AgdaBound{A} \AgdaBound{isC}\AgdaSymbol{)} \AgdaSymbol{\_} \AgdaSymbol{\_}\<%
 \\
 \>\<\end{code}
-Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from some base cases. Each of the base cases is derivable in a minimum contractible context with \AgdaFunction{Coh-Contr} which gives you a coherence constant for any type in any contractible context.
+Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from some base cases. Each of the base cases is derivable in a different contractible context with \AgdaFunction{Coh-Contr} which gives you a coherence constant for any type in any contractible context.
 
 \noindent \textbf{Reflexivity} (identity) It only requires a one-object context.
 
@@ -102,8 +102,6 @@ Next we define the reflexivity, symmetry and transitivity terms of any type. Let
 \>\AgdaFunction{trans*-Tm} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
 \\
 \>\<\end{code}
-Note that each of these cells is defined by a different choice of the contractible context $\Delta$.
-
 \noindent To obtain these terms for any given type in any give context, we use replacement.
 
 \begin{code}\>\<%
@@ -413,16 +411,16 @@ For each of reflexivity, symmetry and transitivity we can construct appropriate 
 \\
 %
 \\
-%
-\\
-%
-\\
 \>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{(}\AgdaFunction{IdCm} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{reflX}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+%
+\\
+%
 \\
 %
 \\
@@ -452,5 +450,4 @@ For each of reflexivity, symmetry and transitivity we can construct appropriate 
 \>[37]\<%
 \\
 \>\<\end{code}
-
 Following the same pattern, the n-level groupoid laws can be obtained as the coherence constants as well.

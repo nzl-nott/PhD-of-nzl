@@ -117,7 +117,7 @@ infixl 7 _⊚_
 
 \terms{Theory}
 
-\keywords{Type Theory, Homotopy Type Theory, Category Theory, Higher dimensional structures, Agda}
+\keywords{Type Theory, Homotopy Type Theory, Category Theory, Formalisation, Higher dimensional structures, Agda}
 
 
 
@@ -771,7 +771,7 @@ vβ = var v0
 \input{GroupoidStructure}
 
 \input{Telescopes2}
-\vspace*{5\baselineskip}
+\vspace*{2\baselineskip}
 \section{Semantics}
 
 \subsection{Globular Types}

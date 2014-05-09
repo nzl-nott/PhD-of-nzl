@@ -14,7 +14,7 @@ open import Relation.Binary.PropositionalEquality
 
 To interpret the syntax, we need globular types
 \footnote{Even though we use the Agda \AgdaPrimitiveType{Set}, this isn't necessarily a set in the sense of Homotopy Type Theory.}
-. Globular types are defined coinductively as follows.
+. Globular types are defined coinductively as follows:
 
 \begin{code}
 record Glob : Set₁ where
@@ -28,7 +28,7 @@ record Glob : Set₁ where
 open Glob public
 \end{code}
 }
-If all the object types are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
+If all the object types ($\AgdaField{∣\_∣}$) are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
 
 %Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
 

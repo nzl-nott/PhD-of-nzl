@@ -53,11 +53,7 @@
 \\
 \>\<\end{code}
 }
-
-Given a globular set G, we can interpret the syntactic objects.
-
-The record definition also require some semantic weakening and semantic substitution laws. The semantic weakening rules tell us how to deal with the weakening inside interpretation.
-
+Given a globular type $G$, we can interpret the syntactic objects.
 
 \begin{code}\>\<%
 \\
@@ -85,7 +81,7 @@ The record definition also require some semantic weakening and semantic substitu
 \>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
 \\
 \>\<\end{code}
-$\AgdaField{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
+$\AgdaField{π}$ provides the projection of the semantic variable out of a semantic context.
 
 Following are the computation laws for the interpretations of contexts and types.
 
@@ -122,7 +118,8 @@ Following are the computation laws for the interpretations of contexts and types
 \>[15]\AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{u} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{v} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{))}\<%
 \\
 \>\<\end{code}
-The semantic substitution properties are essential,
+Semantic substitution and semantic weakening laws are also required.
+The semantic substitution properties are essential for dealing with substitutions inside interpretation,
 
 \begin{code}\>\<%
 \\
@@ -242,8 +239,7 @@ The semantic weakening properties should actually be deriavable since weakening 
 \>[17]\AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{a} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
-Here we declare them as properties because they are essential for the computation laws of function $\pi$.
-
+Here we declare them as properties because they are essential for the computation laws of function $\AgdaField{π}$.
 
 \begin{code}\>\<%
 \\

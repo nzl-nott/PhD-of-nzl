@@ -28,11 +28,7 @@ coerce refl a = a
 
 \end{code}
 }
-
-Given a globular set G, we can interpret the syntactic objects.
-
-The record definition also require some semantic weakening and semantic substitution laws. The semantic weakening rules tell us how to deal with the weakening inside interpretation.
-
+Given a globular type $G$, we can interpret the syntactic objects.
 
 \begin{code}
 record Semantic (G : Glob) : Set₁ where
@@ -43,7 +39,7 @@ record Semantic (G : Glob) : Set₁ where
     ⟦_⟧cm : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
     π     : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
 \end{code}
-$\AgdaField{$\pi$}$ provides the projection of the semantic variable out of a semantic context.
+$\AgdaField{π}$ provides the projection of the semantic variable out of a semantic context.
 
 Following are the computation laws for the interpretations of contexts and types.
 
@@ -57,7 +53,8 @@ Following are the computation laws for the interpretations of contexts and types
              → ⟦ u =h v ⟧T γ ≡
                ♭ (hom (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
 \end{code}
-The semantic substitution properties are essential,
+Semantic substitution and semantic weakening laws are also required.
+The semantic substitution properties are essential for dealing with substitutions inside interpretation,
 
 \begin{code}
     semSb-T  : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
@@ -102,8 +99,7 @@ The semantic weakening properties should actually be deriavable since weakening 
                (⟦ a +tm B ⟧tm (coerce ⟦_⟧C-β2 (γ , v))) 
                  ≡ (⟦ a ⟧tm γ)
 \end{code}
-Here we declare them as properties because they are essential for the computation laws of function $\pi$.
-
+Here we declare them as properties because they are essential for the computation laws of function $\AgdaField{π}$.
 
 \begin{code}
     π-β1  : ∀{Γ A}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ A ⟧T γ ∣) 

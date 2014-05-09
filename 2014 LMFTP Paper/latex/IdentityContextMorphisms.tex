@@ -49,8 +49,8 @@ $\AgdaFunction{level}~\AgdaBound{A}~ \AgdaSymbol{\equiv}~ \AgdaBound{n}$, where
 In any $\omega$-category, any $n$-cell $a$ has a  domain (source), $s^n_m\,a$, and
 a codomain (target), $t^n_m\,a$, for each $m \le n$. These are, of
 course, $(n \textminus m)$-cells. For each pair of $n$-cells such that for some
-$m$ $s^n_m a \equiv t^n_m b$, there must exist their composition
-$a\circ^n_m b$ which is an $n$-cell. Composition is (weakly)
+$m$, $s^n_m a \equiv t^n_m b$, there must exist their composition
+${a \circ^n_m b}$ which is an $n$-cell. Composition is (weakly)
 associative. Moreover for any $(n \textminus m)$-cell $\AgdaBound{x}$ there
 exists an $n$-cell $\mathsf{id}^n_m\,\AgdaBound{x}$ which
 behaves like a (weak) identity with respect to $\circ^n_m$.
@@ -114,10 +114,11 @@ It allows us to define at once:
 
 \begin{code}\>\<%
 \\
-\>\AgdaFunction{Coh-Contr} \<[14]%
-\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
+\>\AgdaFunction{Coh-Contr} \<[15]%
+\>[15]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
 \\
-\>\AgdaFunction{Coh-Contr} \AgdaBound{isC} \AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaBound{isC} \AgdaFunction{IdCm} \AgdaSymbol{\_} \AgdaFunction{⟦} \AgdaFunction{sym} \AgdaFunction{IC-T} \AgdaFunction{⟫}\<%
+\>\AgdaFunction{Coh-Contr} \AgdaBound{isC} \<[15]%
+\>[15]\AgdaSymbol{=} \AgdaInductiveConstructor{coh} \AgdaBound{isC} \AgdaFunction{IdCm} \AgdaSymbol{\_} \AgdaFunction{⟦} \AgdaFunction{sym} \AgdaFunction{IC-T} \AgdaFunction{⟫}\<%
 \\
 \>\<\end{code}
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we

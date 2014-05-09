@@ -23,7 +23,7 @@ open import Suspension
 We can proceed to the definition of the groupoid structure of the syntax. We start with the base case: 1-cells. Replacement defined above allows us to lift this structure to an arbitrary level $n$ (we leave most of the routine details out). This shows that the syntax is a 1-groupoid on each level. In the next section we show how also the higher-groupoid structure can be defined. 
 
 We start by an essential lemma which formalises the discussion at the
-beginning of this Section: to construct a term in a type $A$ in an
+beginning of this section: to construct a term in a type $A$ in an
 arbitrary context, we first restrict attention to a suitable
 contractible context $\Delta$ and use lifting and substitution -- replacement -- to pull
  the term built by $\AgdaInductiveConstructor{coh}$ in $\Delta$
@@ -36,20 +36,48 @@ Coh-rpl  : ∀{Γ Δ}(A : Ty Γ)(B : Ty Δ) → isContr Δ
          → Tm (rpl-T A B)
 Coh-rpl {_} {Δ} A _ isC = coh (ΣC-it-ε-Contr A isC) _ _
 \end{code}
-Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from the basic case as for the base type *.
+Next we define the reflexivity, symmetry and transitivity terms of any type. Let's start from some base cases. Each of the base cases is derivable in a minimum contractible context with \AgdaFunction{Coh-Contr} which gives you a coherence constant for any type in any contractible context.
 
-\noindent \textbf{Reflexivity} (identities) For any variable, \AgdaFunction{x}, in the empty context, the type \AgdaFunction{x = x} is trivially inhabited because the empty context is contractible.
+\noindent \textbf{Reflexivity} (identity) It only requires a one-object context.
 
 \begin{code}
-refl* : Tm {x:*} (var v0 =h var v0)
-refl* = Coh-Contr c*
+refl*-Tm : Tm {x:*} (var v0 =h var v0)
+refl*-Tm = Coh-Contr c*
 \end{code}
-\noindent To obtain the reflexivity term for any given type, we use replacement.
+\noindent  \textbf{Symmetry} (inverse) It is defined similarly. Note that the intricate names of contexts, as in \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y} indicate their definitions which have been hidden. Recall that Agda treats all sequences of characters uninterrupted by whitespace as identifiers. For instance \AgdaFunction{x:*,y:*,α:x=y} is a name of a context for which we are assuming the definition:
+\AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}.
+
+
+\begin{code}
+sym*-Ty : Ty x:*,y:*,α:x=y
+sym*-Ty = vY =h vX
+
+sym*-Tm : Tm {x:*,y:*,α:x=y} sym*-Ty
+sym*-Tm = Coh-Contr (ext c* v0)
+\end{code}
+\textbf{Transitivity} (composition)
+
+\begin{code}
+trans*-Ty : Ty x:*,y:*,α:x=y,z:*,β:y=z
+trans*-Ty = (vX +tm _ +tm _) =h vZ
+
+trans*-Tm : Tm trans*-Ty
+trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
+\end{code}
+Note that each of these cells is defined by a different choice of the contractible context $\Delta$.
+
+\noindent To obtain these terms for any given type in any give context, we use replacement.
 
 \begin{code}
 refl-Tm    : {Γ : Con}(A : Ty Γ) 
            → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
-refl-Tm A  = rpl-tm A refl*
+refl-Tm A  = rpl-tm A refl*-Tm
+
+sym-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
+sym-Tm A = rpl-tm A sym*-Tm
+
+trans-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
+trans-Tm A = rpl-tm A trans*-Tm
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -71,25 +99,7 @@ refl-Fun : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
 refl-Fun Γ A x =  (refl-Tm A) 
                  [ IdCm , x ⟦ rpl*-A ⟫ ]tm 
                  ⟦ sym (trans (congT (rpl-T-p2 x:* A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
-\end{code}
-}
-\noindent  \textbf{Symmetry} (inverse) It is defined similarly. Note that the intricate names of contexts, as in \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y} indicate their definitions which have been hidden. Recall that Agda treats all sequences of characters uninterrupted by whitespace as identifiers. For instance \AgdaFunction{x:*,y:*,α:x=y} is a name of a context for which we are assuming the definition:
-\AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaFunction{ε ,*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}
 
-
-
-\begin{code}
-sym*-Ty : Ty x:*,y:*,α:x=y
-sym*-Ty = vY =h vX
-
-sym*-Tm : Tm {x:*,y:*,α:x=y} sym*-Ty
-sym*-Tm = Coh-Contr (ext c* v0)
-
-sym-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
-sym-Tm A = rpl-tm A sym*-Tm
-\end{code}
-\AgdaHide{
-\begin{code}
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
        → Tm (rpl-T  {Δ = ε , * , *} A (var (vS v0) =h var v0)) 
        → Tm (rpl-T  {Δ = ε , * , *} A (var v0 =h var (vS v0)))
@@ -128,21 +138,7 @@ Fun-sym Γ A a b t = (sym-Tm A) [ rpl-sub Γ A a b t ]tm
 
 \end{code}
 }
-\textbf{Transitivity} (composition) Note that each of these cells is defined by a different choice of the contractible context $\Delta$. 
-
-\begin{code}
-trans*-Ty : Ty x:*,y:*,α:x=y,z:*,β:y=z
-trans*-Ty = (vX +tm _ +tm _) =h vZ
-
-trans*-Tm : Tm trans*-Ty
-trans*-Tm = Coh-Contr (ext (ext c* v0) (vS v0))
-
-trans-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
-trans-Tm A = rpl-tm A trans*-Tm
-\end{code}
-For each of reflexivity, symmetry and transitivity we can construct appropriate coherence 2-cells witnessing the groupoid axioms. 
-The base case for variable contexts is proved simply using contractibility. 
-We use substitution to define the application of the three basic terms we have defined above.
+For each of reflexivity, symmetry and transitivity we can construct appropriate coherence 2-cells witnessing the groupoid laws. The base case for variable contexts is proved simply using contractibility as well. However the types of these laws are not as trivial as the proving parts. We use substitution to define the application of the three basic terms we have defined above.
 
 \AgdaHide{
 \begin{code}
@@ -196,6 +192,8 @@ Tm-left-identity* : Tm {x:*,y:*,α:x=y}
           reflX , vY , vα ]tm =h vα)
 Tm-left-identity* = Coh-Contr (ext c* v0)
 
+
+
 Tm-right-inverse* : Tm {x:*,y:*,α:x=y}
          (trans*-Tm [ (IdCm , vX) , sym*-Tm ]tm =h reflX)
 Tm-right-inverse* = Coh-Contr (ext c* v0)
@@ -214,3 +212,4 @@ Tm-G-assoc    : ∀{Γ}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
 Tm-G-assoc A  = rpl-tm A Tm-G-assoc* 
 \end{code}
 
+Following the same pattern, the n-level groupoid laws can be obtained as the coherence constants.

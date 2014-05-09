@@ -41,10 +41,7 @@ Idω A  = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
 Note that this is usually not a globular set.
 
 \AgdaHide{
-
-
 \begin{code}
-
 
 data _≅'_ {A : Glob} : {B : Glob} → ∣ A ∣ →  ∣ B ∣ → Set where
   refl : (a : ∣ A ∣) → _≅'_ {A} {A} a a

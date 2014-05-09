@@ -1,9 +1,8 @@
 
 \AgdaHide{
 
-\begin{code}\>\<%
-\\
-%
+\begin{code}%
+\>\<%
 \\
 \>\AgdaKeyword{module} \AgdaModule{GlobularTypes} \AgdaKeyword{where}\<%
 \\
@@ -15,17 +14,15 @@
 \\
 \>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality}\<%
 \\
-%
-\\
-\>\<\end{code}
+\>\<%
+\end{code}
 }
 
 To interpret the syntax, we need globular types
-\footnote{Even though we use the Agda |Set|, this isn't necessarily a set in the sense of Homotopy Type Theory.}
+\footnote{Even though we use the Agda \AgdaPrimitiveType{Set}, this isn't necessarily a set in the sense of Homotopy Type Theory.}
 . Globular types are defined coinductively as follows.
 
-\begin{code}\>\<%
-\\
+\begin{code}%
 \>\AgdaKeyword{record} \AgdaRecord{Glob} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
@@ -41,14 +38,11 @@ To interpret the syntax, we need globular types
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaField{hom} \<[9]%
 \>[9]\AgdaSymbol{:} \AgdaBound{∣\_∣} \AgdaSymbol{→} \AgdaBound{∣\_∣} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaRecord{Glob}\<%
-\\
-\>\<\end{code}
+\end{code}
 \AgdaHide{
-\begin{code}\>\<%
-\\
+\begin{code}%
 \>\AgdaKeyword{open} \AgdaModule{Glob} \AgdaKeyword{public}\<%
-\\
-\>\<\end{code}
+\end{code}
 }
 If all the object types are indeed sets, i.e. uniqueness of identity types holds, we call this a globular set.
 
@@ -56,55 +50,52 @@ If all the object types are indeed sets, i.e. uniqueness of identity types holds
 
 As an example, we could construct the identity globular type called $\AgdaFunction{Idω}$.
 
-\begin{code}\>\<%
-\\
+\begin{code}%
 \>\AgdaFunction{Idω} \<[7]%
 \>[7]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Glob}\<%
 \\
 \>\AgdaFunction{Idω} \AgdaBound{A} \<[7]%
 \>[7]\AgdaSymbol{=} \AgdaBound{A} \AgdaInductiveConstructor{∣∣} \AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{→} \AgdaCoinductiveConstructor{♯} \AgdaFunction{Idω} \AgdaSymbol{(}\AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{))}\<%
-\\
-\>\<\end{code}
+\end{code}
 Note that this is usually not a globular set.
 
 \AgdaHide{
 
 
-\begin{code}\>\<%
+\begin{code}%
+\>\<%
 \\
 %
 \\
-%
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{\_≅'\_} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣} \AgdaSymbol{→} \<[45]%
-\>[45]\AgdaFunction{∣} \AgdaBound{B} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\>\AgdaKeyword{data} \AgdaDatatype{\_≅'\_} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣} \AgdaSymbol{→} \<[45]%
+\>[45]\AgdaField{∣} \AgdaBound{B} \AgdaField{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{\_≅'\_} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaBound{a} \AgdaBound{a}\<%
+\>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{\_≅'\_} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaBound{a} \AgdaBound{a}\<%
 \\
 %
 \\
 %
 \\
-\>\AgdaFunction{EqGlob} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Σ} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣} \AgdaDatatype{≡} \AgdaFunction{∣} \AgdaBound{B} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{(λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{x} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaRecord{Glob}\AgdaSymbol{)} \AgdaBound{p} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaBound{A}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{hom} \AgdaBound{B}\AgdaSymbol{)}\<%
+\>\AgdaFunction{EqGlob} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Σ} \AgdaSymbol{(}\AgdaField{∣} \AgdaBound{A} \AgdaField{∣} \AgdaDatatype{≡} \AgdaField{∣} \AgdaBound{B} \AgdaField{∣}\AgdaSymbol{)} \AgdaSymbol{(λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{x} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaRecord{Glob}\AgdaSymbol{)} \AgdaBound{p} \AgdaSymbol{(}\AgdaField{hom} \AgdaBound{A}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaField{hom} \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{EqGlob} \AgdaSymbol{.}\AgdaBound{B} \AgdaBound{B} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{refl}\<%
 \\
 %
 \\
-\>\AgdaFunction{EqHom} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{m} \AgdaBound{n} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{B} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaBound{p} \AgdaBound{x} \AgdaDatatype{≡} \AgdaBound{m}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaBound{p} \AgdaBound{y} \AgdaDatatype{≡} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaBound{A} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaBound{B} \AgdaBound{m} \AgdaBound{n}\AgdaSymbol{)}\<%
+\>\AgdaFunction{EqHom} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{m} \AgdaBound{n} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{B} \AgdaField{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaBound{p} \AgdaBound{x} \AgdaDatatype{≡} \AgdaBound{m}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaBound{p} \AgdaBound{y} \AgdaDatatype{≡} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaField{hom} \AgdaBound{A} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaField{hom} \AgdaBound{B} \AgdaBound{m} \AgdaBound{n}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{EqHom} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{B}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaInductiveConstructor{refl} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{m}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{n}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{m}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{n}\AgdaSymbol{\}} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
 \\
 %
 \\
-\>\AgdaFunction{subst-p1} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaBound{p} \AgdaBound{x} \AgdaDatatype{≡} \AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaBound{q} \AgdaBound{x}\<%
+\>\AgdaFunction{subst-p1} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣}\AgdaSymbol{)(}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaBound{p} \AgdaBound{x} \AgdaDatatype{≡} \AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaBound{q} \AgdaBound{x}\<%
 \\
 \>\AgdaFunction{subst-p1} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{∣\_∣} \AgdaInductiveConstructor{∣∣} \AgdaSymbol{.}\AgdaBound{hom}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{∣\_∣} \AgdaInductiveConstructor{∣∣} \AgdaBound{hom}\AgdaSymbol{\}} \AgdaBound{x} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
 \\
 %
 \\
-\>\AgdaFunction{subst-p2} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaBound{C} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{B} \AgdaDatatype{≡} \AgdaBound{C}\AgdaSymbol{)(}\AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaBound{p} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaBound{q} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaBound{q} \AgdaBound{p}\AgdaSymbol{)} \AgdaBound{x}\<%
+\>\AgdaFunction{subst-p2} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaBound{C} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}(}\AgdaBound{x} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣}\AgdaSymbol{)(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{B} \AgdaDatatype{≡} \AgdaBound{C}\AgdaSymbol{)(}\AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaBound{p} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaBound{q} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{subst} \AgdaField{∣\_∣} \AgdaSymbol{(}\AgdaFunction{trans} \AgdaBound{q} \AgdaBound{p}\AgdaSymbol{)} \AgdaBound{x}\<%
 \\
 \>\AgdaFunction{subst-p2} \AgdaSymbol{\{}\AgdaSymbol{.}\AgdaBound{∣\_∣} \AgdaInductiveConstructor{∣∣} \AgdaSymbol{.}\AgdaBound{hom}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{∣\_∣} \AgdaInductiveConstructor{∣∣} \AgdaBound{hom}\AgdaSymbol{\}} \AgdaBound{x} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
 \\
@@ -113,10 +104,10 @@ Note that this is usually not a globular set.
 \>\AgdaKeyword{data} \AgdaDatatype{[\_]\_≅s\_} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{B} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\>[9]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Glob}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣} \AgdaSymbol{→} \AgdaField{∣} \AgdaBound{B} \AgdaField{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{[} \AgdaBound{A} \AgdaDatatype{]} \AgdaBound{b} \AgdaDatatype{≅s} \AgdaBound{b}\<%
+\>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{b} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{[} \AgdaBound{A} \AgdaDatatype{]} \AgdaBound{b} \AgdaDatatype{≅s} \AgdaBound{b}\<%
 \\
 %
 \\
@@ -163,10 +154,10 @@ Note that this is usually not a globular set.
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaSymbol{\{} \AgdaField{∣\_∣} \<[9]%
-\>[9]\AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{B} \AgdaBound{a} \AgdaFunction{∣}\<%
+\>[9]\AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaField{∣} \AgdaBound{B} \AgdaBound{a} \AgdaField{∣}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaSymbol{;} \AgdaField{hom} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{g} \AgdaSymbol{→} \AgdaCoinductiveConstructor{♯} \AgdaFunction{Π} \AgdaBound{A} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaSymbol{(}\AgdaBound{B} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaBound{x}\AgdaSymbol{)))}\<%
+\>[2]\AgdaSymbol{;} \AgdaField{hom} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{g} \AgdaSymbol{→} \AgdaCoinductiveConstructor{♯} \AgdaFunction{Π} \AgdaBound{A} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaField{hom} \AgdaSymbol{(}\AgdaBound{B} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaBound{x}\AgdaSymbol{)))}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaSymbol{\}}\<%
@@ -186,17 +177,16 @@ Note that this is usually not a globular set.
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaField{∣\_∣f} \<[11]%
-\>[11]\AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\>[11]\AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{homf} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaBound{a'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{∣\_∣f} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{∣\_∣f} \AgdaBound{a'} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaFunction{hom} \AgdaBound{A} \AgdaBound{a} \AgdaBound{a'}\AgdaSymbol{)} \AgdaRecord{⇒Glob}\<%
+\>[4]\AgdaField{homf} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaBound{a'} \AgdaSymbol{:} \AgdaField{∣} \AgdaBound{A} \AgdaField{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{∣\_∣f} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{∣\_∣f} \AgdaBound{a'} \AgdaSymbol{→} \AgdaFunction{♭} \AgdaSymbol{(}\AgdaField{hom} \AgdaBound{A} \AgdaBound{a} \AgdaBound{a'}\AgdaSymbol{)} \AgdaRecord{⇒Glob}\<%
 \\
 \>\AgdaKeyword{open} \AgdaModule{\_⇒Glob}\<%
 \\
 %
 \\
-%
-\\
-\>\<\end{code}
+\>\<%
+\end{code}
 
 }

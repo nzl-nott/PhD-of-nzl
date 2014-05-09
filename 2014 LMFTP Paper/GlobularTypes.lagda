@@ -13,7 +13,7 @@ open import Relation.Binary.PropositionalEquality
 }
 
 To interpret the syntax, we need globular types
-\footnote{Even though we use the Agda |Set|, this isn't necessarily a set in the sense of Homotopy Type Theory.}
+\footnote{Even though we use the Agda \AgdaPrimitiveType{Set}, this isn't necessarily a set in the sense of Homotopy Type Theory.}
 . Globular types are defined coinductively as follows.
 
 \begin{code}

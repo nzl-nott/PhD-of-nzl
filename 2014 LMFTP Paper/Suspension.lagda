@@ -419,11 +419,10 @@ first is the same as $\Gamma$, and the second is the suspended $\Delta$
 substituted by $\AgdaFunction{filter}$. However, we also have to drop
 the stalk of $A$ becuse it already exists in $\Gamma$.
 
-\new{This operation is called \emph{replacement} because we can interpret it as replacing $*$ in $\Delta$ by
-$A$.}
-Geometrically speaking, the context resulting from replacing $*$ in $\Delta$ by
-$A$ is a new context which corresponds to the pasting of
-$\Delta$ to $\Gamma$ to $A$.
+This operation is called \emph{replacement} because we can interpret it as replacing $*$ in $\Delta$ by
+$A$.
+Geometrically speaking, the resulting context is a new context which corresponds to the pasting of
+$\Delta$ to $\Gamma$ at $A$.
 
 As always, we define replacement for contexts, types and terms:
 

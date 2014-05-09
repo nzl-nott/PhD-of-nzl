@@ -49,13 +49,13 @@
 % 1st. author
 \alignauthor
 Thorsten Altenkirch\\
-       \affaddr{The School of Computer Science}\\
+       \affaddr{Computer Science}\\
        \affaddr{University of Nottingham}\\
        \email{txa@cs.nott.ac.uk}
 % 2nd. author
 \alignauthor
 Nuo Li\\
-       \affaddr{The School of Computer Science}\\
+       \affaddr{Computer Science}\\
        \affaddr{University of Nottingham}\\
        \email{nzl@cs.nott.ac.uk}
 % 3rd. author
@@ -114,7 +114,7 @@ infixl 7 _⊚_
 
 \terms{Theory}
 
-\keywords{Type Theory, Homotopy Type Theory, Category Theory, Higher dimensional structures, \new{Agda}}
+\keywords{Type Theory, Homotopy Type Theory, Category Theory, Higher dimensional structures, Agda}
 
 
 
@@ -205,7 +205,7 @@ Brunerie's proposal which made this work possible.
 
 
 
-\section{Syntax}\label{sec:syntax}
+\section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}
 
 We develop the type theory of $\omega$-groupoids formally, following
 \cite{gb:wog}. This is a Type Theory with only one type former which
@@ -275,7 +275,7 @@ are used, one has to use substitution to unify
 the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas
-about lemmas, lemmas about lemmas about lemmas, etc. \new{For example, we have to prove using $\mathit{subst}$ consecutively with two equalities of types is propositionally equal to using $\mathit{subst}$ with the composition of these two equalities. There are more and more lemmas needed as the complexity of the proofs grows.} The resulting
+about lemmas, lemmas about lemmas about lemmas, etc. For example, we have to prove using $\mathit{subst}$ consecutively with two equalities of types is propositionally equal to using $\mathit{subst}$ with the composition of these two equalities. There are more and more lemmas needed as the complexity of the proofs grows. The resulting
 recurring pattern has been identified and implemented in
 \cite{txa:csl} for the special cases of coherence cells for
 associativity, units and interchange. However it is not clear how that
@@ -286,17 +286,18 @@ Agda type checker to its limits and correctness into question.
 The idea of heterogenous equality, which we use to resolve this issue,
 is that one can define equality for terms of different types, but its
 inhabitants only for terms of definitionally equal types. However, the
-corresponding elimination principle relies on UIP. \new{In intensional type theory, UIP is not provable in general,
+corresponding elimination principle relies on UIP. 
+In \itt{}, UIP is not provable in general,
   namely not all types are h-sets (homotopy 0-types). However every type with decidable equality is an h-set.
   From Hedberg's Theorem \cite{hed:98} we know that inductive
   types with finitary constructors have decidable equality. In our
   case, the types which stand for syntactic objects (contexts, types, terms)
   are all inductive-inductive types with finitary constructors and it is
-  therefore safe to assume that UIP holds for them. }
+  therefore safe to assume that UIP holds for them.
 In summary, the equality of
 syntactic types is unique, so it is safe to use heterogeneous equality
 and proceed without using substitution lemmas which would otherwise be
-necessary to match terms of different types. \new{From a computational perspective, it means that every equality of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$ to construct terms is proof-irrelevant, which is expressed in the definition of heterogeneous equality for terms. }
+necessary to match terms of different types. From a computational perspective, it means that every equality of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$ to construct terms is proof-irrelevant, which is expressed in the definition of heterogeneous equality for terms.
 
 
 \begin{code}
@@ -304,8 +305,6 @@ data _≅_ {Γ : Con}{A : Ty Γ} :
          {B : Ty Γ} → Tm A → Tm B → Set where
   refl : (b : Tm A) → b ≅ b
 \end{code}
-
-
 \AgdaHide{
 \begin{code}
 
@@ -321,7 +320,6 @@ _∾_ : {Γ : Con}
       b ≅ c 
     → a ≅ c
 _∾_ {c = c} (refl .c) (refl .c) = refl c
-
 
 \end{code}
 }

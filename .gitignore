@@ -5,7 +5,6 @@
 *.log
 *.ptb
 *.blg
-# *.tex
 *.dvi
 *.bbl
 *.ddf
@@ -14,16 +13,25 @@
 .DS_Store
 *.new
 *.agdax
-*.ptbx
-
+*.ptb
+*.toc
+*.out
 2013 TYPES Paper/latex/BasicSyntax.pdf
-
+2013 TYPES Paper/latex/SomeConstructionsOnOmegaGroupoids.pdf
 2013 TYPES Paper/latex/ConstructionOmegaGroupoids.pdf
-
 2013 TYPES Paper/latex/lipics-manual.pdf
-
 2013 TYPES Paper/latex/lipics-sample-article.pdf
 
 Thesis/Main.pdf
 
-2014 LMFTP Paper/latex/BasicSyntax.pdf
+
+
+Thesis/Main.out
+
+Thesis/Main.toc
+
+Thesis/Main.lox
+
+Thesis/Main.log
+
+Thesis/Main.blg

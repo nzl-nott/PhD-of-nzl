@@ -4,7 +4,7 @@
 Regular mathematics is based on classical logic and ZFC set theory. Set theory is a language to describe definitions of most mathematical objects, in other words, it serves as a foundational system for mathematics.
 
 George Cantor and Richard Dedekind invented set theory in 1870s. However, in the 1900s, Bertrand Russell discovered a paradox in their system. In this naive set theory, there was no distinction between small sets like the set of natural numbers or the set of real numbers and "larger" sets like the set of all sets. This lead to the famous contradiction named after Russell. To avoid this paradox, he
-proposed the theories\todo{theory?} of types \cite{rus:1903} as an alternative to
+proposed the theory of types \cite{rus:1903} as an alternative to
 naïve set theory. Each mathematical object is assigned a type. This is done in a hierarchical structure such that "larger" sets and small sets reside in different levels. The set of all
 sets is no longer on the same level as its elements and the
 paradox disappears.
@@ -27,12 +27,11 @@ theory, it is impossible to avoid mentioning the type of object $\mathsf{2}$. Us
 
 Since Russell's type theory, a variety of type theories have been developed by mathematicians and computer scientists, for example Gödel's System T \cite{gdl:1931}. There are two families of famous type theories building the bridges between mathematics and computer science, \emph{lambda calculus} and \emph{\mltt}.
 
-% lambda calculus
 \subsection{Lambda Calculus}
 
 Alonzo Church introduced lambda calculus in the 1930s. He first introduced
 an untyped lambda calculus which turned out to be inconsistent due to
-the Kleene-Rosser paradox\todo{?cite?}. Then he refined it with adding types. This theory is also called
+the Kleene-Rosser paradox\cite{kleene1935inconsistency}. Then he refined it with adding types. This theory is also called
 Church's theory of types or simply typed lambda calculus is
 introduced as a foundation of mathematics. An important change is that functions become primitive objects which means functions are types defined inductively using the $\rightarrow$ type former. It is widely applied to
 various fields especially computer science. Some languages are extentions of lambda calculus, for example Haskell. Haskell belongs to one of the variants of lambda calculus called System F, although it has evovled into System FC recently. There are also other refinements of lambda calculus which is illustrated by the $\lambda$-cube \cite{barendregt1991introduction}.

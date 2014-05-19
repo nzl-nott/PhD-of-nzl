@@ -1,20 +1,114 @@
 \chapter{Introduction}
 
+Theories of dependent types have been proposed as a foundation of construct- ive mathematics [72,19] and as a framework in which to construct certified pro- grams [64,19,109] and to extract programs from proofs [27,87]. Using implement- ations of such type theories, substantial pieces of constructive mathematics have been formalised and medium scale program developments and verifications have been carried out.
 
-\todo{Write: what we are going to write}
+
+Type theory is usually considered as an more rigorous foundation of
+constructive mathematics. Per Martin-L\"{o}f's developed several
+versions of type theory which we usually call them Martin-Löf's
+intuitionistic type theory (or in short Martin-Löf's type theory). A number of
+dependently typed functional programmming languages are based on his
+type theory, including NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
+The Curry-Howard correspondence (propositions corresponds to types and
+proofs corresponds to terms), and the notion of dependent types from
+\mltt make it possible to do computer-based reasoning within these
+languages.
+
+These languages are themselves type theories. Agda is one of them
+which is based on the intensional version of \mltt and is quite
+popular in the field of mathematical reasoning and programs
+verifications. Programs can be written can certified within the same
+language. It is also very popular in the community of the recently
+developed field \hott and people are trying to implement \hott within
+it.
+
+However there are many important extensional concepts missing in the
+intensional variants of \mltt. The equality in mathematics is
+subdivided into several different notions in type theory and many
+problems arose.
+\emph{Quotient types} is one of these extensional
+concepts which does not exist in \itt like Agda. 
+
+The main subject of this thesis is to study the approaches to encode
+quotients and to implement quotient types in type theory.
 
 \section{Equality and extensional concepts}
 
+We first learn equality for numbers in mathematics. It generally
+expressed the sameness of two mathematical objects such as numbers or sets.
+$1+2=3$ tells us the mathematical object calculated from $1+2$ is the
+same as $3$.
+
+From ages before, mathematicians are arguing about the correct way to
+characterise equality. The most common idea is that equality is just
+identity. Leibniz's law can be seen as a "definition" of
+equality:
+
+Given any $x$ and $y$, $x = y$ if, given any predicate $P$, $P(x)$ if and only
+if $P(y)$.
+
+In type theory, equality also plays a very important role.
+It is not difficult to imagine that the subject of equality is also
+contentious in type theory. Considering a variety of issues, there are
+several notions of equality in type theory.
+We can compare whether two types are equal or two terms are equal. If two
+expressions can be computed to the same object then we claim they are
+ \emph{definitionally} equal.  In addition we can define types to
+ internalise these propositions. A term of this type is just a witness or evidence of
+ this equality. We usually call these types identity types or
+ propositional equalities.
+
+The problem also arises from the computational difficulties. We
+usually equate functions which gives the same outputs if we feed in the
+same inputs. However this equality is extensional because the intension
+of functions are definitions which can be different. In \itt, which is
+more widely used, the encoding of this extensional equality of
+functions is also a problem. A type checker can easily decide whether two
+values of inductive types are the same, but not whether two functions
+are extensionally equal. Even suppose we encode the method to compute
+the definitional equality of the outputs for each given input, it can
+only decide the equality for finite types. Because there is no
+attached equality for each types other than trivial identity, it is
+necessary to use a different model of type theory in which types are
+equipped with equalities.
+
 \section{Quotient types}
 
+
+In mathematics, a quotient set is a set of the equivalence classes of
+some equivalence relation on another set. More generally, we have
+derivative notions such as quotient group, quotient category etc. As
+long as we have a type and an equivalence relation, it is natural to
+think of how can we obtain a quotient of it.
+
+\todo{write more discussion}
+
+
+
 \section{different models}
+
+If each type comes with its own equality, it looks like it naturally
+encodes quotient types.
+
 
 \section{Applications}
 
 \todo{mention the definable quotient is very useful}
 
+Quotients are very useful in general. The definable quotient structure
+which can be implemented without any extension already provide some
+good mechanisms. In a definable quotient structure, the ``quotient''
+is defined separately as a self-cotained type and what benefits us are
+the lifting functions. In some cases, for example, to use a pair of
+natural number to represent an integer, it helps us prove properties
+on the setoids then lift them to the ones on the ``quotient'' type. To
+be more precise, it provides a bridge between the types which we know
+a lot (have plenty of theorems and functions) and the new
+``quotient'' types.
 
 
+In a type theory with quotient type, real numbers can be encoded as
+the cauchy sequences with an equivalence relation.
 
 
 
@@ -52,7 +146,10 @@ quotients types of paired natural numbers over the equivalence
 relation that two pairs are equal if they represent the same
 subtraction.
 
-In \autoref{rl},
+In \autoref{rl}, we discuss the undefinable quotients, specially the
+real numbers. Also multisets and partiality monads are mentioned as
+examples of quotients which can be implemented as long as we have
+quotient types. 
 
 
 In \autoref{sm}, we will talk about the setoid model approach to encode

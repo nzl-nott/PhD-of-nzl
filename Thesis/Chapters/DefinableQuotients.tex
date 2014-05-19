@@ -117,6 +117,8 @@ This helps us define a relation but it is not enough. This is an
 equation in mathamtics, but in Type Theory we have to prove that it is an
 equivalence relation, namely, it is reflexive, symmetric and transitive.
 
+\subsection{The setoid of Integers}
+
 Combining the carrier (the pair of natural numbers), the equivalence
 relation and its proof, we have a setoid.
 
@@ -167,6 +169,8 @@ It is not trivial but easy to observe that the function is
 sound\footnote{the formal proof can be found in appendix (we cheat a
   bit by defining embedding function to make it simpler)}.
 
+\subsection{The definable quotient of integers}
+
 A setoid and a function respects this equivalence (not necessary to be
 a normalisation function) constitute a prequotient.
 
@@ -177,9 +181,9 @@ Prequotient.
 Given a setoid $(A,\sim)$,  a \emph{prequotient} $(Q,[\_],\sound)$ over that setoid consists in
 \begin{enumerate}
 \item \label{enum:Q} a set $Q$,
-\item \label{enum:box}a function $[\_]: A \to Q$,
+\item \label{enum:box}a function $[\_]: A \rightarrow Q$,
 \item \label{enum:sound} a proof \emph{sound} that  the function $[\_]$ is compatible with the relation $\sim$,
-that is \[\sound\colon (a,b : A) \to a\sim b \to [a] = [b],\]
+that is \[\sound\colon (a,b : A) \rightarrow a\sim b \rightarrow [a] = [b],\]
 \end{enumerate}
 
 
@@ -189,11 +193,11 @@ rules. To complete a \emph{quotient}, we also need the elimination rule added in
 \begin{enumerate}
 \setcounter{enumi}{3}
 \item \label{enum:elim}
-for any $B: Q\to\Set$, an eliminator
+for any $B: Q\rightarrow\Set$, an eliminator
  \begin{align*}
- \qelim_B\,\,:\,\,\,&(f\colon (a:A) \to B\,\class a) \\
-        {\to}\, &((p:a\sim b) \to f\,a \simeq_{\sound\,p}f\,b)\\
-        {\to}\, &((q:Q) \to B\,q)
+ \qelim_B\,\,:\,\,\,&(f\colon (a:A) \rightarrow B\,\class a) \\
+        {\rightarrow}\, &((p:a\sim b) \rightarrow f\,a \simeq_{\sound\,p}f\,b)\\
+        {\rightarrow}\, &((q:Q) \rightarrow B\,q)
  \end{align*}
 such that $\qelimbeta : \qelim_B\,f \,p\,\class a\equiv f\,a$.
 \end{enumerate}
@@ -206,11 +210,11 @@ given by Martin Hofmann
 which has a non-dependent eliminator with an induction principle
 instead.
 
-\[\lift\colon (f\colon A \to B) \to (\forall a,b\cdot a\sim b \to f\,a
-\equiv f\,b) \to (Q \to B)\]
+\[\lift\colon (f\colon A \rightarrow B) \rightarrow (\forall a,b\cdot a\sim b \rightarrow f\,a
+\equiv f\,b) \rightarrow (Q \rightarrow B)\]
 
 Suppose $B$ is a predicate, 
-\[\qind \colon((a: A)\to B \,\class a)\to ((q : Q)\to B\,q)\]
+\[\qind \colon((a: A)\rightarrow B \,\class a)\rightarrow ((q : Q)\rightarrow B\,q)\]
 
 However, it is oberservable that given any non-empty set $Q$, all
 constant functions fit in this definition. Any element of $Q$ has to
@@ -219,7 +223,7 @@ $(A,\sim)$. This property is called \emph{exact} here
 
 \begin{enumerate}
 \setcounter{enumi}{4}
-\item $exact :(\forall a,b : A) \to  \class a \equiv \class b \to a \sim b$.
+\item $exact :(\forall a,b : A) \rightarrow  \class a \equiv \class b \rightarrow a \sim b$.
 
 \end{enumerate}
 \end{definition}
@@ -236,9 +240,9 @@ flexible way to eliminate the quotient type $Q$ and if a
 prequotient $(Q, \class{\dotph}, \sound)$ on a setoid $(A,\sim)$ has
 an embedding function which is specified as
 \begin{align*}
-\emb &: Q \to A\\
-\complete &: (a : A) \to \emb {\class a} \sim a\\
-\stable &: (q:Q) \to \class{\emb\,q} \equiv q.\\
+\emb &: Q \rightarrow A\\
+\complete &: (a : A) \rightarrow \emb {\class a} \sim a\\
+\stable &: (q:Q) \rightarrow \class{\emb\,q} \equiv q.\\
 \end{align*}
 
 Then it is a \emph{definable quotient}. Composing the ``normalisation'' function $\class\dotph$ with the
@@ -246,8 +250,8 @@ embedding function, we obtain the real normalisation function. A
 definable quotient is an \emph{exact} quotient which is proved in \cite{aan}.
 
 
-
-\paragraph{Operations}
+\begin{itemize}
+\item{\textbf{\large{Operations}}}
 
 For a definable quotient, we can lift an operation by mixing the
 normalisation and embedding functions. For example, given an unary
@@ -292,7 +296,7 @@ other cases.
 \end{code}
 
 
-\paragraph{Properties}
+\item{\textbf{\large{Properties}}}
 
 We can also define the ring of $\Z$. It contains a lot of properties
 to prove which are seemed as axioms in classic mathematics. In
@@ -304,7 +308,11 @@ only has two constructors, it gradually increase the difficulty of
 proving when doing case analyses on more and more integers. One
 example is the proving of distributivity.
 
-\paragraph{An efficient utilization of quotient structure: the proving of distributivity}
+
+\end{itemize}
+
+\subsection{An efficient utilization of quotient structure: the
+  proving of distributivity}
 
 One of the most important motivations of using setoid integers is that
 the setoid definition reduces the complexity of programs involving
@@ -548,7 +556,7 @@ using rational numbers, even some people claims that it will be too
 large such that it is less efficient.
 
 
-
+\subsection{The setoid of rational numbers: unreduced fractions}
 
 The quotient of rational numbers is better known than the previous
 quotient of integers. We usually write two integers $m$ and $n$ ($n$ is not zero) in
@@ -602,6 +610,8 @@ Therefore the equivalence relation can be defined as,
 \\
 \end{code}
 
+\subsection{The set definition of rational numbers: reduced fractions}
+
 The normal form of rational numbers, namely the quotient type in this quotient is the set of irreducible fractions. We only need to add a restriction that the numerator and denominator is coprime,
 
 $$\Q = \Sigma (n \colon \Z). \Sigma (d \colon \N). \mathsf{coprime} \,n \,(d +1)$$
@@ -643,6 +653,8 @@ It can be defined as follows which is available in standard library,
 \>[2]\AgdaFunction{coprime} \AgdaSymbol{=} \AgdaFunction{toWitness} \AgdaFunction{isCoprime}\<%
 \\
 \end{code}
+
+\subsection{The definable quotient of rational numbers}
 
 The normalisation function is an implementation of the reducing
 process. But first we need to  the |gcd| function which calculates the greatest common

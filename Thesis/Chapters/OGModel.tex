@@ -1,8 +1,6 @@
 \chapter{the \og Model}
 \label{wog}
 
-\todo{WORK ON THIS FIRST SO THAT WE CAN REVISE OUR PAPER}
-
 
 % Background
 
@@ -111,13 +109,13 @@ types in Homotopy Type Theory which is a variant of \mltt. In
 Homotopy Type Theory, we reject
 the principle of uniqueness of identity proofs (UIP) but instead we accept the univalence axiom which
 says that equality of types is weakly equivalent to weak equivalence. Weak equivalence can been seen as a refinement of isomorphism without UIP \cite{txa:csl}. To make it more precise, a weak equivalence
-between two objects A and B in a 2-category is a morphism $f : A \to B$ which has a
-corresponding inverse morphism $ g : B \to A$, but instead of the
+between two objects A and B in a 2-category is a morphism $f : A \rightarrow B$ which has a
+corresponding inverse morphism $ g : B \rightarrow A$, but instead of the
 proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
 2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$.
 Since the setoid interpretation of types in setoid
 model, as we mentioned before, relies on UIP, it  has to be
-generalised so that we could formalise it in \itt{}.
+generalised so that we could formalise it in \itt.
 
 
 The generalised notion is called Grothendieck \og{}. Grothendieck introduced the notion of \og{} in 1983 in a famous Manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also present a slight variation of the simplification of \wog{} in \cite{ara:wog}. Categorically
@@ -141,11 +139,6 @@ example reflexivity. One of the main contribution of our work is to
 use the heterogeneous equality for terms to overcome some very
 difficult problems when we used the normal homogeneous one. When
 introducing our implementation, we omit some complicated but less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
-
-
-\subsection{Syntax}
-
-Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
 
 
 \section{Syntax}\label{sec:syntax}

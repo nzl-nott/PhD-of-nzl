@@ -181,18 +181,104 @@ one. This looks like a setoid, but indeed there is no difference
 between sets and setoids categorically because a skeleton of "setoids"
 is just a discrete category which is equivalent to sets (?review).
 
-\todo{discuss with Thorsten}
+As an example, it can be used to encode permutation trees (unordered trees). Usually a
+tree data structure consists of a parent node and an ordered list of
+subtrees. However the order does not exist as a factor of the
+tree then we have a permutation tree which identitfies trees with a
+possible permutation of subtrees:
 
 
+\begin{definition}
+A permutation tree (unorder tree) is a tree who has a
+multiset of permutation subtrees.
+\end{definition}
+
+
+To encode the definition in type theory, we first define a tree which
+has an ordered set of subtrees.
+
+Assume we define a permutation subtree of type $A$ as:
+
+\begin{itemize}
+\item A leaf $l: A \rightarrow \mathsf{Tree}~A$, 
+\item A set of subtrees $st : \mathbb{N} \rightarrow \mathsf{Tree}~A$,
+  and
+\item a path relates two permutated trees:
+$p : \forall a\,b: \mathsf{Tree}~A, \exists f\,g: \mathbb{N} \rightarrow \mathbb{N},
+\forall n: \mathbb{N}, st~a~n  \equiv st~b~(f~n) \wedge st~a~(g~n)
+\equiv st~b~n \rightarrow a \equiv b$
+\end{itemize}
+
+
+It is possible to define a binary permutation trees because the
+equivalence relation is decidable. The lifting of functions can be
+nested as we will show later \todo{}.
+However a problem arises when defing a infinite permutation trees
+whose child nodes can be inifinitely many on each level.
+
+We use a symbol $Tree^{\sim}~A$ for the permutation trees.
+
+To define a function on permutation trees, it is necessary to define
+them as
+
+$f : Tree~A \rightarrow B$ which respects the equivalence relation
+$a~b : Tree~A, f a = f b$
 
 \section{models of \hott}
 
 \subsection{Kan simplicial sets}
 
+To interpret types as weak $\omega$-groupoids, one main problems is
+the complexity of the definition of weak $\omega$-groupoid. The
+coherence conditions are very difficult to specified.
+
+However it is feasible and simpler to interpret types as Kan
+simplicial sets.
+
+\begin{definition}
+A simplicial set $X$ is a functor from $\Delta^{op}$ to $\Set$ where
+$\Delta$ is the simplex category.
+\end{definition}
+
+$\Delta^{op}$ is a category whose objects are non-empty totally ordered
+finite sets. The morphisms are order-preserving functions. 
+Face maps and degeneracy maps are the most important morphisms in this
+category. \todo{more explanation of face maps and degeneracy maps} 
+
+A simplexes is a generalisation of a triangle to arbitrary
+dimensions. 3-dimensional simplex is tetrahedron and k+1-simplex can
+be obtained by adding one point to k-simplex which does not lie in the
+dimension where the k-simplex is.
+
+A simplicial complex is a collection of simplexes. Topologically speaking, it
+is constructed by gluing n-dimensional simplexes together. 
+\todo{show an example graph}
+
+A simplicial set, therefore, can be illustrate by the same graph where
+the set of points is given by $X_0$, the set of lines is $X_1$ and so
+on. The graph looks very similar to n-groupoids. In fact simplical
+sets can interpret types in a similar way (?).
+
+
 \subsection{semi-simplicial sets}
+
+However the simplicial set model is not constructive as Coquand showed
+that there is something classical in the simplical model.
+The distinction of semi-simplicial set is there is only face maps
+but no degeneracy maps. We can denote a semi-simplicial set as a
+functor $X : \Delta_{inj} \rightarrow |Set$. The morphisms in $\Delta_{inj}$ are not only order preserving
+but also injective.
+A “iterated dependency” approach is believed to solve the coherence
+issues.
+
+%Klaus and me were trying to implement semi-simplical set in Agda. 
+
 
 \subsection{Cubical sets}
 
+Someone can deduce what is a cubical set from the name literaly. It is
+also a functor $S : \Box^{op} \rightarrow \Set$ (or a presheaf on the
+cube category $ \Box^{op}$).
 
 \section{Summary}
 
@@ -202,6 +288,3 @@ thesyntactic implementation of \wog following
 Brunerie's approach. We attempt to formalise the groupoid model of
 \hott in intensional type theory, specially in Agda.
 
-
-
-\todo{Maybe I should combine HIT chapter with \wog model chapter?}

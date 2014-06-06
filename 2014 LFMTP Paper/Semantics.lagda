@@ -36,7 +36,7 @@ record Semantic (G : Glob) : Set₁ where
     ⟦_⟧C  : Con → Set
     ⟦_⟧T  : ∀{Γ} → Ty Γ → ⟦ Γ ⟧C → Glob
     ⟦_⟧tm : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
-    ⟦_⟧cm : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
+    ⟦_⟧S : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
     π     : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
 \end{code}
 $\AgdaField{π}$ provides the projection of the semantic variable out of a semantic context.
@@ -58,15 +58,15 @@ The semantic substitution properties are essential for dealing with substitution
 
 \begin{code}
     semSb-T  : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
-             → ⟦ A [ δ ]T ⟧T γ ≡ ⟦ A ⟧T (⟦ δ ⟧cm γ)
+             → ⟦ A [ δ ]T ⟧T γ ≡ ⟦ A ⟧T (⟦ δ ⟧S γ)
 
     semSb-tm : ∀{Γ Δ}{A : Ty Δ}(a : Tm A)(δ : Γ ⇒ Δ)
                (γ : ⟦ Γ ⟧C)
              → subst ∣_∣ (semSb-T A δ γ) (⟦ a [ δ ]tm ⟧tm γ)
-                ≡ ⟦ a ⟧tm (⟦ δ ⟧cm γ)
+                ≡ ⟦ a ⟧tm (⟦ δ ⟧S γ)
 
-    semSb-cm : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
-             → ⟦ θ ⊚ δ ⟧cm γ ≡ ⟦ θ ⟧cm (⟦ δ ⟧cm γ)
+    semSb-S : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
+             → ⟦ θ ⊚ δ ⟧S γ ≡ ⟦ θ ⟧S (⟦ δ ⟧S γ)
 \end{code}
 Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
 
@@ -74,12 +74,12 @@ Since the computation laws for the interpretations of terms and context morphism
     ⟦_⟧tm-β1  : ∀{Γ A}{x : Var A}{γ : ⟦ Γ ⟧C}
               → ⟦ var x ⟧tm γ ≡ π x γ
 
-    ⟦_⟧cm-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} 
-             → ⟦ • ⟧cm γ ≡ coerce ⟦_⟧C-β1 tt
+    ⟦_⟧S-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} 
+             → ⟦ • ⟧S γ ≡ coerce ⟦_⟧C-β1 tt
 
-    ⟦_⟧cm-β2  : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}{γ : ⟦ Γ ⟧C}
-                {a : Tm (A [ δ ]T)} → ⟦ δ , a ⟧cm γ 
-              ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧cm γ) ,
+    ⟦_⟧S-β2  : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}{γ : ⟦ Γ ⟧C}
+                {a : Tm (A [ δ ]T)} → ⟦ δ , a ⟧S γ 
+              ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧S γ) ,
                 subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
 \end{code}
 The semantic weakening properties should actually be deriavable since weakening is equivalent to projection substitution.
@@ -89,9 +89,9 @@ The semantic weakening properties should actually be deriavable since weakening 
              → ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ 
                ⟦ A ⟧T γ
   
-    semWk-cm  : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}
-              → (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧cm 
-                (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧cm γ
+    semWk-S  : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}
+              → (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧S 
+                (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧S γ
 
 
     semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
@@ -123,4 +123,4 @@ redundant form because the correctness for any other part of the
 syntax follows from the defining equations we have already
 stated. There seems to be no way to avoid this.
 
-If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
+If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g.\ by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we do not currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.

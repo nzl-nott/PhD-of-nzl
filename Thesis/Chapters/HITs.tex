@@ -152,7 +152,8 @@ equivalence relation into the definition of certain types. Therefore
 it is possible to define quotient types in this model.
 
 Assume $A$ is a set and $\_\sim\_ : A \rightarrow A \rightarrow \Prop$
-($\Prop$ stands for mere propositions in \hott). The quotient set $\qset{A}$
+($\Prop$ stands for mere propositions in \hott) which is an
+equivalence relation. The quotient set $\qset{A}$
 can be defined as a higher inductive type:
 
 \begin{itemize}
@@ -168,47 +169,82 @@ which is a set as well, so
 Notice that the first one is the constructor of objects, the second
 one builds the morphism and the third one states that all path spaces
 are contractible so that the resulting types are h-sets. It is not a
-generic quotient construction of any types but specially for sets, so we call it set-quotient. 
+generic quotient construction of any types but specially for sets, so
+we also it set-quotient. Since it is quotient types defined with the
+help of HITs we also call it QITs (quotient inductive types).
 
 
-
-\section{Quotient inductive inductive types}
-
-Altenkirch points out that we could apply higher inductive types in a
-specific way. We can construct a \emph{set} by using a a mere
-relation. So in this sense, each non-trivial morphism is the unique
-one. This looks like a setoid, but indeed there is no difference
-between sets and setoids categorically because a skeleton of "setoids"
-is just a discrete category which is equivalent to sets (?review).
-
-As an example, it can be used to encode permutation trees (unordered trees). Usually a
-tree data structure consists of a parent node and an ordered list of
-subtrees. However the order does not exist as a factor of the
-tree then we have a permutation tree which identitfies trees with a
-possible permutation of subtrees:
-
+\textbf{An example of Quotient Inductive types}
+We can prove that QITs are more powerful than quotient types by an
+example: \emph{unordered trees}. 
 
 \begin{definition}
-A permutation tree (unorder tree) is a tree who has a
-multiset of permutation subtrees.
+An unordered tree is a tree where there is no ordering on subtrees.
 \end{definition}
 
-
-To encode the definition in type theory, we first define a tree which
-has an ordered set of subtrees.
-
-Assume we define a permutation subtree of type $A$ as:
+Here we considered $\omega$-ary trees. Firsrtly we define the ordered version $\mathsf{Tree}$ as:
 
 \begin{itemize}
-\item A leaf $l: A \rightarrow \mathsf{Tree}~A$, 
-\item A set of subtrees $st : \mathbb{N} \rightarrow \mathsf{Tree}~A$,
-  and
-\item a path relates two permutated trees:
-$p : \forall a\,b: \mathsf{Tree}~A, \exists f\,g: \mathbb{N} \rightarrow \mathbb{N},
-\forall n: \mathbb{N}, st~a~n  \equiv st~b~(f~n) \wedge st~a~(g~n)
-\equiv st~b~n \rightarrow a \equiv b$
+\item A leaf $l: \mathsf{Tree}$, or
+\item A span which is indexed by $\mathbb{N}$, $sp : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
 \end{itemize}
 
+Then we ought to define the equivalence relation so that we can encode
+the unordered trees as quotient types.
+
+\begin{itemize}
+\item Leafs are trivially equal, $l \sim l$,
+\item a leaf is not equivalent to a span and vice versa, and
+\item two spans $sp~f$ and $sp~g$ are equivalent if $f$ is a
+  permutation of $g$.
+ $(\exists p: \mathbb{N} \rightarrow \mathbb{N}, p~\text{is bijective} \rightarrow
+\forall n: \mathbb{N},  f~n \sim g~(p~n)) \rightarrow sp~f \sim sp~g$,
+\end{itemize}
+
+What would be the quotient type? $ \mathsf{Tree^{\sim}} =
+\qset{\mathsf{Tree}}$ 
+
+$\overline{sp} : (\mathbb{N} \rightarrow \mathsf{Tree^{\sim}}) \rightarrow \mathsf{Tree^{\sim}}$
+
+such that for any $f : \mathbb{N} \rightarrow \mathsf{Tree}$
+
+$\overline{sp}~ ([\_] \circ f) = [ sp~f ] $
+
+it seems that it is impossible to define $\overline{sp}$ because we
+cannot eliminate infinite number of $\mathsf{Tree^{\sim}}$.
+However it is possible for binary trees.
+
+$\overline{sp} : (\textbf{2} \rightarrow \mathsf{BTree}^{\sim}) \rightarrow
+\mathsf{BTree}^{\sim}$ which is ismorphic to
+
+$\overline{sp} : \mathsf{BTree}^{\sim} \rightarrow \mathsf{BTree}^{\sim} \rightarrow \mathsf{BTree}^{\sim}$
+
+$\overline{sp}~a~b = lift~(lift~sp~a)~b$
+
+
+For k-ary tree, we can follow the same approach to lift the the span
+function for finite number of times. However, it is impossible to lift
+it infinitely for $\omega$-ary trees (where the subtree is indexed by
+the set of $\mathbb{N}$).
+
+It means that we are unable to define this permutation tree using
+quotient types because the definition and equivalence has to be
+defined mutually (?).
+
+However quotient inductive types are more powerful. It provides us the
+way to define trees and paths simultaneously.
+
+\begin{itemize}
+\item A leaf $l: \mathsf{Tree}$, 
+\item A set of subtrees $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
+  and
+\item a set of pathes relates two permutated trees:
+
+$l_{eq} : l  =_{\mathsf{Tree}} l $
+
+$st_{eq} : \forall f~g : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow
+f \sim_{p} g \rightarrow  st~f = st~g$
+\end{itemize}
 
 It is possible to define a binary permutation trees because the
 equivalence relation is decidable. The lifting of functions can be
@@ -223,6 +259,16 @@ them as
 
 $f : Tree~A \rightarrow B$ which respects the equivalence relation
 $a~b : Tree~A, f a = f b$
+
+\section{Quotient inductive inductive types}
+
+Altenkirch points out that we could apply higher inductive types in a
+specific way. We can construct a \emph{set} by using a a mere
+relation. So in this sense, each non-trivial morphism is the unique
+one. This looks like a setoid, but indeed there is no difference
+between sets and setoids categorically because a skeleton of "setoids"
+is just a discrete category which is equivalent to sets (?review).
+
 
 \section{models of \hott}
 

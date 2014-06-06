@@ -88,14 +88,14 @@ refl-Tm' A = (refl-Tm A)  [ map-1 ]tm ⟦ prf1 ⟫
     prf : rpl-tm {Δ = x:*} A (var v0) [ map-1 ]tm ≅ var v0
     prf = htrans (congtm (htrans ([⊚]tm (Σtm-it A (var v0))) 
           (htrans (congtm (Σtm-it-p1 A)) (htrans wk-coh wk-coh+)))) 
-           (1-1cm-same-v0 (ΣT-it-p1 A))
+           (1-1S-same-v0 (ΣT-it-p1 A))
 
     prf1 : (var v0 =h var v0) ≡ rpl-T {Δ = x:*} A (var v0 =h var v0) [ map-1 ]T
     prf1 = sym (trans (congT (rpl-T-p2 x:* A)) (hom≡ prf prf))
 
 refl-Fun : (Γ : Con)(A : Ty Γ)(x : Tm A) → Tm (x =h x)
 refl-Fun Γ A x =  (refl-Tm A) 
-                 [ IdCm , x ⟦ rpl*-A ⟫ ]tm 
+                 [ IdS , x ⟦ rpl*-A ⟫ ]tm 
                  ⟦ sym (trans (congT (rpl-T-p2 x:* A)) (hom≡ (rpl*-a A) (rpl*-a A))) ⟫
 
 Tm-sym-fun : (Γ : Con)(A : Ty Γ) 
@@ -116,7 +116,7 @@ Tm-sym-fun2 Γ A t =
 
   where 
     wk-id : (Γ , A , A +T A) ⇒ Γ 
-    wk-id = (IdCm +S A) +S (A +T A)
+    wk-id = (IdS +S A) +S (A +T A)
   
     eq1 : A [ wk-id ]T ≡ (A +T A) +T (A +T A) 
     eq1 = wk+S+T (wk+S+T IC-T)
@@ -182,16 +182,16 @@ Ty-G-assoc* = (trans*-Tm [ ((((• , vM) , vP) ,
 
 \begin{code}
 Tm-right-identity* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ IdCm , vY , reflY ]tm =h vα)
+         (trans*-Tm [ IdS , vY , reflY ]tm =h vα)
 Tm-right-identity* = Coh-Contr (ext c* v0)
 
 Tm-left-identity* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ ((IdCm ⊚ pr1 ⊚ pr1) , vX) ,
+         (trans*-Tm [ ((IdS ⊚ pr1 ⊚ pr1) , vX) ,
           reflX , vY , vα ]tm =h vα)
 Tm-left-identity* = Coh-Contr (ext c* v0)
 
 Tm-right-inverse* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ (IdCm , vX) , sym*-Tm ]tm =h reflX)
+         (trans*-Tm [ (IdS , vX) , sym*-Tm ]tm =h reflX)
 Tm-right-inverse* = Coh-Contr (ext c* v0)
 
 
@@ -209,4 +209,4 @@ Tm-G-assoc* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) (vS v0))
 Tm-G-assoc    : ∀{Γ}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
 Tm-G-assoc A  = rpl-tm A Tm-G-assoc* 
 \end{code}
-Following the same pattern, the n-level groupoid laws can be obtained as the coherence constants as well.
+Following the same pattern, the $n$-level groupoid laws can be obtained as the coherence constants as well.

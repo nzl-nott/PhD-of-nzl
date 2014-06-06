@@ -79,12 +79,12 @@ which complete the definition of a \emph{category} of contexts and
 context morphisms:
 
 \begin{code}
-IdCm : ∀{Γ} → Γ ⇒ Γ
+IdS : ∀{Γ} → Γ ⇒ Γ
 \end{code}
 It satisfies the following property:
 
 \begin{code}
-IC-T : ∀{Γ}{A : Ty Γ} → A [ IdCm ]T ≡ A
+IC-T : ∀{Γ}{A : Ty Γ} → A [ IdS ]T ≡ A
 \end{code}
 The definition proceeds by structural recursion and therefore extends
 to terms, variables and context morphisms with analogous properties. 
@@ -92,7 +92,7 @@ It allows us to define at once:
 
 \begin{code}
 Coh-Contr      : ∀{Γ}{A : Ty Γ} → isContr Γ → Tm A
-Coh-Contr isC  = coh isC IdCm _ ⟦ sym IC-T ⟫
+Coh-Contr isC  = coh isC IdS _ ⟦ sym IC-T ⟫
 \end{code}
 We use $\AgdaFunction{Coh-Contr}$ as follows: for each kind of cell we
 want to define, we construct a minimal contractible context built out
@@ -102,12 +102,12 @@ between the substitution and the original type.
 
 \AgdaHide{
 \begin{code}
-IC-v  : ∀{Γ : Con}{A : Ty Γ}(x : Var A) → x [ IdCm ]V ≅ var x
-IC-cm  : ∀{Γ Δ : Con}(δ : Γ ⇒ Δ)        → δ ⊚ IdCm ≡ δ
-IC-tm : ∀{Γ : Con}{A : Ty Γ}(a : Tm A) → a [ IdCm ]tm ≅ a
+IC-v  : ∀{Γ : Con}{A : Ty Γ}(x : Var A) → x [ IdS ]V ≅ var x
+IC-S  : ∀{Γ Δ : Con}(δ : Γ ⇒ Δ)        → δ ⊚ IdS ≡ δ
+IC-tm : ∀{Γ : Con}{A : Ty Γ}(a : Tm A) → a [ IdS ]tm ≅ a
 
-IdCm {ε}       = •
-IdCm {Γ , A} = IdCm +S _ , var v0 ⟦ wk+S+T IC-T ⟫
+IdS {ε}       = •
+IdS {Γ , A} = IdS +S _ , var v0 ⟦ wk+S+T IC-T ⟫
 
 IC-T {Γ} {*} = refl
 IC-T {Γ} {a =h b} = hom≡ (IC-tm a) (IC-tm b)
@@ -115,11 +115,11 @@ IC-T {Γ} {a =h b} = hom≡ (IC-tm a) (IC-tm b)
 IC-v {.(Γ , A)} {.(A +T A)} (v0 {Γ} {A}) = wk-coh ∾ cohOp (wk+S+T IC-T)
 IC-v {.(Γ , B)} {.(A +T B)} (vS {Γ} {A} {B} x) = wk-coh ∾ wk+S+tm (var x) (IC-v _)
 
-IC-cm • = refl
-IC-cm (δ , a) = cm-eq (IC-cm δ) (cohOp [⊚]T ∾ IC-tm a) 
+IC-S • = refl
+IC-S (δ , a) = S-eq (IC-S δ) (cohOp [⊚]T ∾ IC-tm a) 
 
 IC-tm (var x) = IC-v x
-IC-tm (coh x δ A) = cohOp (sym [⊚]T) ∾ coh-eq (IC-cm δ)
+IC-tm (coh x δ A) = cohOp (sym [⊚]T) ∾ coh-eq (IC-S δ)
 
 pr1 : ∀ {Γ A} → (Γ , A) ⇒ Γ
 pr2 : ∀ {Γ A} → Tm {Γ , A} (A [ pr1 ]T)
@@ -127,20 +127,20 @@ pr2 : ∀ {Γ A} → Tm {Γ , A} (A [ pr1 ]T)
 pr1-wk-T  : ∀{Γ : Con}{A B : Ty Γ} → A [ pr1 ]T ≡ A +T B
 pr1-wk-tm : ∀{Γ : Con}{A B : Ty Γ}{a : Tm A} 
           → a [ pr1 ]tm ≅ a +tm B
-pr1-wk-cm : ∀{Γ Δ : Con}{A B : Ty Γ}(δ : Γ ⇒ Δ) 
+pr1-wk-S : ∀{Γ Δ : Con}{A B : Ty Γ}(δ : Γ ⇒ Δ) 
           → δ ⊚ (pr1 {Γ} {B}) ≡ δ +S _
 
 pr2-v0 : ∀ {Γ A} → pr2 {Γ} {A} ≅ var v0
 
-pr-beta : ∀ {Γ A} → (pr1 {Γ} {A} , pr2) ≡ IdCm
+pr-beta : ∀ {Γ A} → (pr1 {Γ} {A} , pr2) ≡ IdS
 
-pr1 {Γ} = IdCm +S _
+pr1 {Γ} = IdS +S _
 
 pr1-wk-T = wk+S+T IC-T
 
 pr1-wk-tm {a = a} = wk+S+tm a (IC-tm a)
 
-pr1-wk-cm δ = wk+S+S (IC-cm _)
+pr1-wk-S δ = wk+S+S (IC-S _)
 
 pr2 = var v0 ⟦ wk+S+T IC-T ⟫
 
@@ -157,7 +157,7 @@ data IsId : {Γ Δ : Con}(γ : Γ ⇒ Δ) → Set where
            → IsId {Γ , A} {Δ , B} (γ +S _ , var v0 ⟦ wk+S+T eq ⟫)
 
 
-IC-IsId : {Γ : Con} → IsId (IdCm {Γ})
+IC-IsId : {Γ : Con} → IsId (IdS {Γ})
 IC-IsId {ε} = isId-bsc
 IC-IsId {Γ , A} = isId-ind (IC-IsId {Γ}) IC-T
 
@@ -169,21 +169,21 @@ IC-tm'-v0 (isId-ind isd refl) = wk-coh ∾ cohOp (trans [+S]T refl)
 Id-with : {Γ : Con}{A : Ty Γ} →
            (x : Tm A) 
          → Γ ⇒ (Γ , A)
-Id-with x = IdCm , (x ⟦ IC-T ⟫)
+Id-with x = IdS , (x ⟦ IC-T ⟫)
 
 
-apply-cm'' : {Γ Δ : Con}{A : Ty Γ} →
+apply-S'' : {Γ Δ : Con}{A : Ty Γ} →
              (x : Tm A)(γ : Γ ⇒ Δ){B : Ty Δ}(p : B [ γ ]T ≡ A)
           → Γ ⇒ (Δ , B)
-apply-cm'' x γ p = γ , (x ⟦ p ⟫)
+apply-S'' x γ p = γ , (x ⟦ p ⟫)
 
 
 apply'' : {Γ Δ : Con}{A : Ty Γ}
           (x : Tm A)(γ : Γ ⇒ Δ){B : Ty Δ}
           (p : B [ γ ]T ≡ A){C : Ty (Δ , B)}
           (f : Tm {Δ , B} C)
-        → Tm (C [ apply-cm'' x γ p ]T)
-apply'' x γ p f = f [ apply-cm'' x γ p ]tm
+        → Tm (C [ apply-S'' x γ p ]T)
+apply'' x γ p f = f [ apply-S'' x γ p ]tm
 
 apply-x : {Γ : Con}{A : Ty Γ} →
           {x : Tm A} 

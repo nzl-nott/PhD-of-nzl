@@ -9,6 +9,7 @@
     (TeX-run-style-hooks
      "tikz"
      "mypack"
+     "todonotes"
      "fixme"
      "xkvltxp"
      "natbib"
@@ -46,7 +47,7 @@
      "openright"
      "macros"
      "Chapters/Introduction"
-     "Chapters/Background"
+     "Chapters/TypeTheory"
      "Chapters/QuotientTypes"
      "Chapters/DefinableQuotients"
      "Chapters/Reals"

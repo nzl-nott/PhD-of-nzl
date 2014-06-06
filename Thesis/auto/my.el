@@ -1,6 +1,7 @@
 (TeX-add-style-hook "my"
  (lambda ()
     (LaTeX-add-bibitems
+     "bove2009brief"
      "kleene1935inconsistency"
      "van2011types"
      "bezem2013model"
@@ -11,7 +12,6 @@
      "martin1984intuitionistic"
      "barendregt1991introduction"
      "gdl:1931"
-     "hofmann1995interpretation"
      "clairambault2005categories"
      "hott"
      "mal:gwog"
@@ -20,8 +20,6 @@
      "uafe"
      "ms:uff"
      "gb:wog"
-     "txa:csl"
-     "alti:ott-conf"
      "txa:cie10"
      "CRC"
      "field"
@@ -46,7 +44,6 @@
      "nor:90"
      "str93:"
      "pal:10"
-     "hed:98"
      "nuo:10"
      "cou:01"
      "hof:95:sm"
@@ -59,7 +56,6 @@
      "bar:96"
      "coq:92"
      "cab"
-     "alti:lics99"
      "men:90"
      "rus:1903"
      "nor:00"
@@ -73,5 +69,16 @@
      "voe:hset"
      "Dyb:96"
      "hof:97"
-     "bar:03")))
+     "bar:03"
+     "hofmann1995interpretation"
+     "DBLP:conf/csl/1994"
+     "alti:lics99"
+     "DBLP:conf/lics/1999"
+     "alti:ott-conf"
+     "DBLP:conf/plpv/2007"
+     "txa:csl"
+     "DBLP:conf/csl/2012"
+     "txa:mpc2010g"
+     "DBLP:conf/mpc/2010"
+     "hed:98")))
 

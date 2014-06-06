@@ -1,7 +1,10 @@
 (TeX-add-style-hook "my"
  (lambda ()
     (LaTeX-add-bibitems
-     "hofmann1995interpretation"
+     "alti:lics99"
+     "DBLP:conf/lics/1999"
+     "alti:ott-conf"
+     "DBLP:conf/plpv/2007"
      "clairambault2005categories"
      "hott"
      "mal:gwog"
@@ -11,7 +14,6 @@
      "ms:uff"
      "gb:wog"
      "txa:csl"
-     "alti:ott-conf"
      "txa:cie10"
      "CRC"
      "field"
@@ -49,7 +51,6 @@
      "bar:96"
      "coq:92"
      "cab"
-     "alti:lics99"
      "men:90"
      "rus:1903"
      "nor:00"

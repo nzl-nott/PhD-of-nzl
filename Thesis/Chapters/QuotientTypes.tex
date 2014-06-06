@@ -291,7 +291,7 @@ equivalence class.
 
 \todo{question of where shall we apply pe}
 with the proposional extensionality we can prove that
-\begin{theorem}
+\begin{theorem}\label{thm-p-e}
 Given $(P , prf) : \qset{A}$, all proofs of $\exists x : A, P (x)$ are equal
 \end{theorem}
 
@@ -323,20 +323,32 @@ Given any two proofs of $\exists x : A, P (x)$ written as $(x , px)$ and $(y
 Moreover we have another suprising theorem:
 
 \begin{theorem}
-if we have propositional univalence, we can prove that all
-quotients are effective.
+if we have \emph{propositional univalence}, all quotients are effective.
 \end{theorem}
-
 \begin{proof}
-Suppose we have a set $A$ with equivalence relation $\sim$.
+Suppose we have a set $A$ with an equivalence relation $\sim : A \to A
+\to \Prop$.
 
-Given $a : A$, and a predicate $P : A \rightarrow Prop$ defined as 
-$$P x = a \sim x$$
+Given $a : A$, and a predicate $P : A \rightarrow \Prop$ defined as 
+$$P~x := a \sim x$$
 
-With the lifting operator for quotient types,
-we have a lifted version of $P$ such that
+We need to show that this predicate preserves the equivalence
+relation, $x \sim y \rightarrow P~x = P~y$, namely it is well-defined
+\textit{w.r.t} $\sim$,
 
-$$\hat{P} [ x ] =  P x$$
+Suppose we have $x \sim y$,
+
+by symmtry transitivity, we have
+
+$a \sim x \iff a \sim y$ which is definitionally equal to
+
+$P~x \iff P~y$, and by propositional univalence,
+
+$P~x = P~y$
+
+Satisfying this condition, we can lift $P$ as
+
+$$\hat{P}~[ x ] \equiv  P~x$$
 
 Suppose we have a premise $[ a ] = [ b ]$, it is true that
 
@@ -344,7 +356,7 @@ $$[ a ] = [ b ]$$
 
 and then
 
-$$P a = \hat{P} [ a ] = \hat{P} [ b ] = P b$$
+$$P~a = \hat{P} [ a ] = \hat{P} [ b ] = P~b$$
 
 which is just
 
@@ -358,8 +370,99 @@ since $a \sim a$ is the reflexivity which is true trivially,
 
 $$ a \sim b$$ is also true.
 
-Therefore we have a proof that $[ a ] = [ b ] -> a \sim b$ which means
+Therefore we have a proof that $[ a ] = [ b ] \rightarrow a \sim b$ which means
 that the quotient is effective.
+\end{proof}
+
+Alternatively, we can prove it as follows:
+
+\begin{proof}
+
+Firstly we prove the equivalence relation is well-defined on the
+quotient types, namely it respects the equivalence relation:
+
+Suppose we have $a \sim b$ and $c \sim d$, we can deduce $a \sim c \iff
+b \sim d$. Then applying the propositional univalence axiom, we know
+that $a \sim c = b \sim d$, hence the equivalence relation is
+well-defined.
+
+Because it is well-defined, we can lift it such that
+
+$[ a ] ~\hat{\sim}~ [ b ] \equiv a \sim b$
+
+\todo{$\equiv$ or $=$}
+
+From reflexivity of the equivalence relation, $\forall x : A, x \sim x$, 
+we know that $\forall x : A, [x]~\hat{\sim}~[x]$.
+
+Assume $[a]=[b]$, using J-eliminator in $[a]~\hat{\sim}~[a]$
+(reflexivity), $[a]~\hat{\sim}~[b]$ which is definitionally equal
+(\todo{depends on the choice above}) to $a \sim b$, Hence the quotient is
+effective.
+\end{proof}
+
+\begin{corollary}
+If we generalise the theorem \ref{thm-p-e}, assume we quotient a type
+(\todo{or set?}) with a groupoid relation, $\infixeqv: A \to A \to
+\Set$, the soundness $[\_]^{=}$ is an equivalence (or isomorphism),
+namely it has an inverse \emph{effecitive}.
+\end{corollary}
+
+Note that the additional structure we attach is not propositional but
+groupoid, therefore the quotient types have more higher structures, or
+we can say $[\_]$ is functorial.
+
+As usual, we have soundness
+
+$[\_]^{=} : a \sim b \to [a] = [b]$
+
+on the next level, we need
+
+$[\_]^{id}: [ \text{refl}^{\sim} ]^{=} = \text{refl}$ and
+
+$[\_]^{comp}: [ p ; q ]^{=} =  [ p ]^{=} ; [ q ]^{=} $
+
+
+\begin{proof}
+
+First, let's prove that $\infixeqv$ is well-defined (functorial).
+
+Given $p : a \sim a'$ and $q : b \sim b'$,  we can constuct an
+equivalence $p \sim_1 q : a \sim b \to a' \sim b'$ which is defined as
+$(p \sim_1 q)(r) := p^{-1} ; r ; q$ (and vice versa)
+
+\begin{displaymath}
+    \xymatrix{a \ar[r]^r  \ar[d]_p & b \ar[d]^q \\
+      a' \ar@{.>}[r] & b'\\ }
+\end{displaymath}
+
+From univalence axiom we can deduce that $a \sim b = a' \sim b'$.
+
+On the next level, 
+
+$(\trefl^{\sim} \sim_1 \trefl^{\sim})(r) \equiv \trefl^{\sim-1} ; r ; \trefl^{\sim} = r$ and
+
+$((p;p') \sim_1 (q;q'))(r) \equiv (p;p')^{-1} ; r ; (q;q') =
+p'^{-1};p^{-1};r;q;q' = p'^{-1}(p^{-1};r;q);q' \equiv (p' \sim_1
+q')((p~q)(r))$
+
+hence the equivalence relation is functorial and we can lift it as
+well. Following condition must be satisfied,
+
+$[a]~\hat{\sim}~[b] \equiv a \sim b$
+
+By definition, $\trefl : a \sim a$ is also of type $[a]~\hat{\sim}~[a]$,
+but to make it more clear we call it $\trefl_{\hat{\sim}}$.
+
+The inverse of soundness, $[a]=[b] \to
+[a]~\hat{\sim}~[b]$ can be defined as
+
+$[\_]^{=-1} := \lambda p \to \transport(p)(\trefl_{\hat{\sim}})$
+
+To prove it is indeed an inverse of soundness,
+
+$ [[p]^{=}]^{=-1} \equiv \transport ([p]^{=})(\trefl_{\hat{\sim}}) $
+
 \end{proof}
 
 

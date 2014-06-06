@@ -1,26 +1,35 @@
 \chapter{Introduction}
 
-Theories of dependent types have been proposed as a foundation of construct- ive mathematics [72,19] and as a framework in which to construct certified pro- grams [64,19,109] and to extract programs from proofs [27,87]. Using implement- ations of such type theories, substantial pieces of constructive mathematics have been formalised and medium scale program developments and verifications have been carried out.
+The aim of this work is to find out the approach to implement quotient
+types in intensional \mltt. Type theory serves as both a foundation of
+mathematics and a programming language. In set theory quotient set is
+a set of the equivalence classes of some equivalence relation on
+another set. The word \emph{Quotient} is usually used to capture
+similar notions in other abstract branches, such as quotient group,
+quotient space, quotient category etc. Move to type theory, it is
+expected to have \emph{Quotient types} to construct similar objects in
+mathematics. However in current setting of \itt, it is not
+available. Motivated by this fact, I start to extend type theory with
+quotient types. This thesis \todo{fill in the missing part}
 
+
+
+
+
+
+
+Theories of dependent types have been proposed as a foundation of constructive mathematic and as a framework in which to construct certified programs and to extract programs from proofs. Using implementations of such type theories, substantial pieces of constructive mathematics have been formalised and medium scale program developments and verifications have been carried out.
 
 Type theory is usually considered as an more rigorous foundation of
-constructive mathematics. Per Martin-L\"{o}f's developed several
+constructive mathematics that set theory. Per Martin-L\"{o}f's developed several
 versions of type theory which we usually call them Martin-Löf's
 intuitionistic type theory (or in short Martin-Löf's type theory). A number of
-dependently typed functional programmming languages are based on his
-type theory, including NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
+dependently typed functional programmming languages are developed upon
+one of his type theories, including NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
 The Curry-Howard correspondence (propositions corresponds to types and
 proofs corresponds to terms), and the notion of dependent types from
 \mltt make it possible to do computer-based reasoning within these
 languages.
-
-These languages are themselves type theories. Agda is one of them
-which is based on the intensional version of \mltt and is quite
-popular in the field of mathematical reasoning and programs
-verifications. Programs can be written can certified within the same
-language. It is also very popular in the community of the recently
-developed field \hott and people are trying to implement \hott within
-it.
 
 However there are many important extensional concepts missing in the
 intensional variants of \mltt. The equality in mathematics is
@@ -32,7 +41,9 @@ concepts which does not exist in \itt like Agda.
 The main subject of this thesis is to study the approaches to encode
 quotients and to implement quotient types in type theory.
 
-\section{Equality and extensional concepts}
+\section{Background}
+
+\subsection{Equality and extensional concepts}
 
 We first learn equality for numbers in mathematics. It generally
 expressed the sameness of two mathematical objects such as numbers or sets.
@@ -72,26 +83,51 @@ attached equality for each types other than trivial identity, it is
 necessary to use a different model of type theory in which types are
 equipped with equalities.
 
-\section{Quotient types}
+\subsection{Quotient types}
 
 
 In mathematics, a quotient set is a set of the equivalence classes of
-some equivalence relation on another set. More generally, we have
-derivative notions such as quotient group, quotient category etc. As
-long as we have a type and an equivalence relation, it is natural to
-think of how can we obtain a quotient of it.
+some equivalence relation on another set. Abstracted from this
+concept, there are also quotient groups, quotient categories etc.
 
-\todo{write more discussion}
+Naturally, given a type and an equivalence relation, quotient types
+are interesting to study. Due to the difference of type theory and set
+theory, quotient types can not be constructed via equivalence classes
+(or we need some other axioms as we will discussed in detail
+later).
 
+Quotient types are very useful in three aspects. 
+When the quotients
+can be defined without the help of quotient types, it provides us
+framework to define functions and properties on the base types and
+lift them if they respects the equivalence relation. This sounds
+superfluous at first, but in practise, it is much easier to define
+functions for the base types (because usually they have a bundle of
+library codes) on underlying level, and the ''quotient types'' has no
+redundant on the surface level.
+Quotient types can also enable us define some types which are not
+definable in standard \itt, for example real numbers, multisets etc.
+Usually the examples we want to implement by quotient types are cases
+of quotient sets in mathematics. However, there are not only sets
+(whose equality is propositional), but also other types with higher
+level of structures. It is an interesting topic in \hott and quotient
+types are extended to cover types which are more than $h-sets$.
 
+The topic of quotient types started very early and there are already
+several models of type theory to encode extensional concepts including
+quotient types.
 
-\section{different models}
+\subsection{different models}
 
 If each type comes with its own equality, it looks like it naturally
 encodes quotient types.
 
+\todo{short explanation of models or leave it for later discusssion.}
 
-\section{Applications}
+
+
+
+\subsection{Applications}
 
 \todo{mention the definable quotient is very useful}
 
@@ -111,8 +147,32 @@ In a type theory with quotient type, real numbers can be encoded as
 the cauchy sequences with an equivalence relation.
 
 
+\section{Programming in Agda}
 
+In this thesis we use Agda as the only programming language. Agda is a dependently typed, functional programming language, which is
+based on the intensional version of \mltt. It is mainly developed by
+Ulf Norell, Nils Anders Danielsson, and Andreas Abel.
+It is a functional language like Haskell, but has dependent types. It has dependent pattern
+matching, type checker, coverage checker and termination checker. It
+supports a bundle of scheme of defing data types such as inductive, inductive-recursive, mutually inductive,
+coinductive types. Its syntax is close to Haskell, in addition, it has
+unicode support and mixfix operators. All these features including
+type checker, unicode typing and interactive programming present in
+its emacs interface. It is quite popular in the field of mathematical reasoning and programs
+verifications. Many researchers implement their work of type theory in
+Agda. It is also one of the popular languages in the community of the recently
+developed field \hott and the library of \hott is under construction.
+The adequate reasoning library code also helps in writing certified programs.
 
+In chapter \ref{bg} we present a brief introduction to it for someone
+who meet this language for the first time. In chapter 3 we use Agda to
+show...\todo{Write where we use Agda and how}
+
+Agda wiki\cite{agdawiki:main} is a good reference to it and there are
+several good tutorials to Agda for example Ulf Norell's
+\cite{tutorial}, Ana Bove, Peter Dybjer, and Ulf Norell's \cite{bove2009brief}.
+
+\section{Related work}
 
 
 \section{Overview}

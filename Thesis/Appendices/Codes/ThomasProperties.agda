@@ -3,12 +3,12 @@ module ThomasProperties where
 
 open import Algebra
 open import Function
-open import Data.Nat
+open import Data.Nat hiding (zero)
 open import Data.Nat.Properties as Nat
 private
    module N = CommutativeSemiring Nat.commutativeSemiring
 
-open import Data.Product renaming (proj₁ to _₁ ; proj₂ to _₂)
+open import Data.Product
 
 open import Level hiding (suc)
 
@@ -30,35 +30,23 @@ subst∘const refl = refl
 cong_,_ : {A : Set } {B : A → Set} → (a a' : A) → (p : a ≡ a') →  (b : B a)  →  _,_ {A = A} {B = B} a b  ≡ a' , subst B p b
 cong_,_ a .a refl b = refl  
 
-congΣ : {A : Set} {B : A → Set}(a a' : A)(p : a ≡ a')(f : (a : A) → B a) → _≡_ {_} {Σ A B} (a , f a) (a' , subst B p (f a))
-congΣ .a' a' refl f = refl
-
-cong'_,_ : {A : Set} {B : A → Set} → (a : A) →  (b b' : B a) → ( q : b ≡ b') →  _,_ {A = A} {B = B} a b  ≡ a , b'
+cong'_,_ : {A : Set } {B : A → Set} → (a : A) →  (b b' : B a) → ( q : b ≡ b') →  _,_ {A = A} {B = B} a b  ≡ a , b'
 cong'_,_ a b .b refl = refl
 
-cong-proj₁ : {A : Set} {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') → x ₁ ≡ x' ₁
+cong-proj₁ : {A : Set } {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') → proj₁ x ≡ proj₁ x'
 cong-proj₁ .x' x' refl = refl
 
-cong-proj₂ : {A : Set} {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') →  subst B (cong _₁ p) (_₂ {A = A} {B = B} x) ≡ _₂ {A = A} {B = B} x'
+cong-proj₂ : {A : Set } {B : A → Set} → (x x' : Σ A B) → (p : x ≡ x') →  subst B (cong proj₁ p) (proj₂ {A = A} {B = B} x) ≡ proj₂ {A = A} {B = B} x'
 cong-proj₂ .x' x' refl = refl
 
--- aa : {A : Set } {B : A → Set} → (a : A) → (b b' : B a) → (p : _,_ {A} {B} a b ≡ (a , b')) → b ≡ b'
--- aa a .b' b' refl = refl
 
 
-Σeq-split : {A : Set}{B : A → Set}{a a' : A} → (p : a ≡ a') → {b : B a}{b' : B a'} → subst B p b ≡ b' → a , b ≡ a' , b'
-Σeq-split refl q = cong'_,_ _ _ _ q 
-
-
-
+{-
 
 ≡-prfIrr : {A : Set} → (a a' : A) → (p p' : a ≡ a') → p ≡ p'
 ≡-prfIrr .a' a' refl refl = refl
+-}
 
-
-
-substIrr : {A : Set} → {a a' : A} → (P : A → Set) → {p p' : a ≡ a'}{x : P a} → subst P p x ≡ subst P p' x
-substIrr P {refl} {refl} = refl
 
 -- Some notation to shorten simple proofs or make them more human readable without using heavy  equational reasoning (begin ... ) 
 infixr 41  _⋆_
@@ -70,7 +58,7 @@ _▶_ = trans
 ⟨_⟩ :  {a : Set} → Symmetric {A = a} _≡_
 ⟨_⟩ = sym
 
-Congruential : ({a : Set} → (a → a → Set)) → Set1
+Congruential : ({a : Set} → Rel a zero) → Set1
 Congruential ∼ = ∀ {a b} → (f : a → b) → f Preserves ∼ ⟶ ∼
 
 _⋆_ : Congruential _≡_
@@ -87,14 +75,20 @@ _≡∷≡_ = cong₂ _∷_
 _, : {A : Set} → {B : Set} → B → A →  A × B
 _, = flip _,_ 
 
-≡⇒≈ : {A : Set} → {_≈_ : A → A → Set}  → {p : Reflexive _≈_} → _≡_ ⇒ _≈_
+≡⇒≈ : {A : Set} → {_≈_ : Rel A zero}  → {p : Reflexive _≈_} → _≡_ ⇒ _≈_
 ≡⇒≈ {A} {_≈_} {p} refl = p
 
-_Preserves'_ : ∀ {a} → (a → a) → (a → a → Set) → Set
+_Preserves'_ : ∀ {a} → (a → a) → Rel a zero → Set
 f Preserves' ∼ = f Preserves ∼ ⟶ ∼ 
 
-_Preserves₂'_ : ∀ {a} → (a → a → a) → (a → a → Set) → Set
+_Preserves₂'_ : ∀ {a} → (a → a → a) → Rel a zero → Set
 + Preserves₂' ∼  = + Preserves₂ ∼ ⟶ ∼ ⟶ ∼
+
+_₁ : ∀ {a b}{A : Set a}{B : A → Set b} → Σ A B → A
+_₁ = proj₁
+
+_₂ : ∀ {a b}{A : Set a}{B : A → Set b} → (p : Σ A B) → B (p ₁)
+_₂ = proj₂
 
 ℕ² : Set
 ℕ² = ℕ × ℕ
@@ -128,3 +122,20 @@ lem₃ k₁ k₂ l₁ l₂ m₁ m₂ n₁ n₂ p q = lem₁ k₁ m₁ l₂ n₂ 
 lem₄ : ∀ m₁ m₂ n₁ n₂ →  m₁ + n₂ ≡ n₁ + m₂  → m₂ + n₁ ≡ n₂ + m₁
 lem₄ m₁ m₂ n₁ n₂ p = N.+-comm m₂ n₁  ▶  ⟨ p ⟩  ▶  N.+-comm m₁ n₂  
 
+
+
+
+{-
+
+    begin
+    ?
+     ≡⟨ ? ⟩
+    ?
+     ≡⟨ ? ⟩
+    ?
+     ≡⟨ ? ⟩ 
+    ?
+     ≡⟨ ? ⟩
+    ?
+    ∎
+-}

@@ -1,6 +1,10 @@
-\chapter{Background}
+\chapter{Type Theory}
 \label{bg}
 
+
+\section{Set Theory v.s. Type Theory}
+
+\subsection{Set Theory}
 Regular mathematics is based on classical logic and ZFC set theory. Set theory is a language to describe definitions of most mathematical objects, in other words, it serves as a foundational system for mathematics.
 
 George Cantor and Richard Dedekind invented set theory in 1870s. However, in the 1900s, Bertrand Russell discovered a paradox in their system. In this naive set theory, there was no distinction between small sets like the set of natural numbers or the set of real numbers and "larger" sets like the set of all sets. This lead to the famous contradiction named after Russell. To avoid this paradox, he
@@ -10,16 +14,7 @@ sets is no longer on the same level as its elements and the
 paradox disappears.
 
 
-\section{Type Theory}
-
-
-%To introduce type theory, it is helpful to start from set theory first. Set theory is a language to describe most definitions of mathematical objects, in another word, it serves as a foundation system for mathematics. 
-% In 1870s, George Cantor and Richard Dedekind firstly studied set theory. However, in the 1900s, Bertrand Russell discovered the famous paradox in naive set
-% theory. It tells people that if we can does not distinguish between small sets like natural numbers and real numbers with "larger" sets like the set of all sets, then it will lead to contradiction. To avoid this paradox, he
-% proposed the theories of types \cite{rus:1903} as an alternative to
-% naïve set theory. The objects are assigned to types in a hierarchical structure such that "larger" sets and small sets reside in different levels. The set of all
-% sets are no longer on the same level as its elements such that the
-% paradox disappears. 
+\subsection{Type Theory}
 
 The elementary notion of type theory is \emph{type} which plays a similar role to set in set theory, but differs fundamentally. Every object in type theory comes with its unique type, while an object in set theory can appear in multiple sets and we can talk about an object without knowing which sets it belongs to.
 To explain the difference, we use the the number $\mathsf{2}$ as an example. In set theory, 2 is not an element of only one specific set, it belongs to the set of natural numbers $\N$ and also the set of integers $\Z$. While in type
@@ -27,7 +22,16 @@ theory, it is impossible to avoid mentioning the type of object $\mathsf{2}$. Us
 
 Since Russell's type theory, a variety of type theories have been developed by mathematicians and computer scientists, for example Gödel's System T \cite{gdl:1931}. There are two families of famous type theories building the bridges between mathematics and computer science, \emph{lambda calculus} and \emph{\mltt}.
 
-\subsection{Lambda Calculus}
+\subsection{Category Theory}
+
+Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and trasformations.
+A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are callled categorical laws to obey. 
+
+The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
+
+Category theory abstracts a lot of similar concepts in different fields and provides a concise language for mathematics for mathematicians.
+
+\section{Lambda Calculus}
 
 Alonzo Church introduced lambda calculus in the 1930s. He first introduced
 an untyped lambda calculus which turned out to be inconsistent due to
@@ -37,19 +41,17 @@ introduced as a foundation of mathematics. An important change is that functions
 various fields especially computer science. Some languages are extentions of lambda calculus, for example Haskell. Haskell belongs to one of the variants of lambda calculus called System F, although it has evovled into System FC recently. There are also other refinements of lambda calculus which is illustrated by the $\lambda$-cube \cite{barendregt1991introduction}.
 
 
-\subsection{Per Martin-L\"{o}f's Type Theories}
+\section{Per Martin-L\"{o}f's Type Theory}
 
-In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. His 1971's formulation which is impredicative was proved to be inconsistent with the Girard's paradox \cite{hurkens1995simplification}. The impredicativty means that for a universe $\mathsf{U}$, there is an axiom $\mathsf{U} \in \mathsf{U}$. The later version is predicative and is more widely used.
+In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. His 1971's formulation which is impredicative was proved to be inconsistent because of Girard's paradox \cite{hurkens1995simplification}. The impredicativty means that for a universe $\mathsf{U}$, there is an axiom $\mathsf{U} \in \mathsf{U}$. The later version is predicative and is more widely used.
 
-Like set theory, it can also serve as also a foundation of constructive mathematics \cite{martin1984intuitionistic}. Different to set theory whose axioms are based on first-order logic or intuitionistic logic, \mltt provides a means of implementing intuitionistic logic. This is achieved by the Curry-Howard
+It serves as a foundation of constructive mathematics \cite{martin1984intuitionistic}. Different to set theory whose axioms are based on first-order logic, \mltt provides a means of implementing intuitionistic logic. This is achieved by the Curry-Howard
 isomorphism:
 
 \emph{``propositions can be interpreted as types and their
-  proofs are inhabitants of that types''} 
+  proofs are inhabitants of these types''} 
 
-\todo{more explanation}
-
-Different to simply lambda calculus, dependent types are introduced.
+Based on these, implications are functions, conjunctions are products, negations are functions into empty types, modus ponens is function application etc. Given any proposition (type), we can give a proof of it by construct a program of this type. There is no obvious distinction between computer science programs and proofs. This makes it a programming languages to write certified programs. Propositions are also very useful in the specification of programs. It is not necessary to verfify programs after finished it, restrictions can be carried along with the definition. The type systems of simply lambda calculus like Haskell are not expressive enough to encode predicate logic without dependent types.
 
 \begin{definition}\label{dpty}
 \textit{Dependent type}. Dependent types are types that depends on values of other types \cite{dtw}. 
@@ -141,8 +143,6 @@ There are various implementations based on different variants of it, such as
 NuPRL, LEGO, Coq, Epigram and Agda. Since we usually discuss in \itt, we will use Agda throughout this thesis.
 
 \section{Agda}
-
-
 
 Agda is a dependently typed functional programming language which is designed based on intensional version
 of \mltt{} \cite{agdawiki:main}. 
@@ -369,14 +369,6 @@ The universe of small types is encoded as $\Set_{0}$ or $\Set$ rather than $\Typ
 
 
 
-\section{a very short introduction to category theory}
-
-Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and trasformations.
-A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are callled categorical laws to obey. 
-
-The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
-
-Category theory abstracts a lot of similar concepts in different fields and provides a concise language for mathematics for mathematicians.
 
 
 \section{Extensional concepts in \itt}

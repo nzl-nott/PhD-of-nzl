@@ -64,7 +64,10 @@
     \colorbox{fx#1bg}{\color {fx#1}\ignorespaces #3\@fxcolon #2}}}
 \makeatother
 
-%\usepackage{todonotes}
+
+\usepackage[textwidth=3cm]{todonotes}
+\reversemarginpar
+\setlength{\marginparwidth}{3cm}
 
 \input{macros}
 \usepackage{mypack}
@@ -104,7 +107,7 @@
 \hypersetup{pdfkeywords=\keywordnames}
 
 
-\listoffixmes
+\listoftodos
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -214,7 +217,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \input{Chapters/Introduction}
 %%
 
-\input{Chapters/Background}
+\input{Chapters/TypeTheory}
 
 %\input{Chapters/Extensionality}
 

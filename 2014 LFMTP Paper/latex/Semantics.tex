@@ -74,7 +74,7 @@ Given a globular type $G$, we can interpret the syntactic objects.
 \>[4]\AgdaField{⟦\_⟧tm} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧cm} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Δ} \AgdaBound{⟧C}\<%
+\>[4]\AgdaField{⟦\_⟧S} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Δ} \AgdaBound{⟧C}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaField{π} \<[10]%
@@ -128,7 +128,7 @@ The semantic substitution properties are essential for dealing with substitution
 \>[13]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{13}{}\<[13]%
-\>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ}\AgdaSymbol{)}\<%
+\>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧S} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 %
 \\
@@ -142,15 +142,15 @@ The semantic substitution properties are essential for dealing with substitution
 \>[13]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaSymbol{(}\AgdaBound{semSb-T} \AgdaBound{A} \AgdaBound{δ} \AgdaBound{γ}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{a} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]tm} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{16}{}\<[16]%
-\>[16]\AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{a} \AgdaBound{⟧tm} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ}\AgdaSymbol{)}\<%
+\>[16]\AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{a} \AgdaBound{⟧tm} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧S} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 %
 \\
 \>[0]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{semSb-cm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ}\AgdaSymbol{\}(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{)}\<%
+\>[4]\AgdaField{semSb-S} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{Θ}\AgdaSymbol{\}(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{θ} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaDatatype{⇒} \AgdaBound{Θ}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{13}{}\<[13]%
-\>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{θ} \AgdaBound{⟧cm} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ}\AgdaSymbol{)}\<%
+\>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{θ} \AgdaFunction{⊚} \AgdaBound{δ} \AgdaBound{⟧S} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{θ} \AgdaBound{⟧S} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧S} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
 Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
@@ -167,25 +167,25 @@ Since the computation laws for the interpretations of terms and context morphism
 %
 \\
 \>[0]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧cm-β1} \<[14]%
-\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{\}} \<[33]%
-\>[33]\<%
+\>[4]\AgdaField{⟦\_⟧S-β1} \<[13]%
+\>[13]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{\}} \<[32]%
+\>[32]\<%
 \\
 \>[0]\AgdaIndent{13}{}\<[13]%
-\>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaInductiveConstructor{•} \AgdaBound{⟧cm} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β1} \AgdaInductiveConstructor{tt}\<%
+\>[13]\AgdaSymbol{→} \AgdaBound{⟦} \AgdaInductiveConstructor{•} \AgdaBound{⟧S} \AgdaBound{γ} \AgdaDatatype{≡} \AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β1} \AgdaInductiveConstructor{tt}\<%
 \\
 %
 \\
 \>[0]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧cm-β2} \<[14]%
-\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{\}}\<%
+\>[4]\AgdaField{⟦\_⟧S-β2} \<[13]%
+\>[13]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{16}{}\<[16]%
-\>[16]\AgdaSymbol{\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{δ} \AgdaInductiveConstructor{,} \AgdaBound{a} \AgdaBound{⟧cm} \AgdaBound{γ} \<[52]%
-\>[52]\<%
+\>[16]\AgdaSymbol{\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)\}} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{δ} \AgdaInductiveConstructor{,} \AgdaBound{a} \AgdaBound{⟧S} \AgdaBound{γ} \<[51]%
+\>[51]\<%
 \\
 \>[0]\AgdaIndent{14}{}\<[14]%
-\>[14]\AgdaDatatype{≡} \AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β2} \AgdaSymbol{((}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
+\>[14]\AgdaDatatype{≡} \AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β2} \AgdaSymbol{((}\AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧S} \AgdaBound{γ}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
 \\
 \>[0]\AgdaIndent{16}{}\<[16]%
 \>[16]\AgdaFunction{subst} \AgdaFunction{∣\_∣} \AgdaSymbol{(}\AgdaBound{semSb-T} \AgdaBound{A} \AgdaBound{δ} \AgdaBound{γ}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{⟦} \AgdaBound{a} \AgdaBound{⟧tm} \AgdaBound{γ}\AgdaSymbol{))}\<%
@@ -210,15 +210,15 @@ The semantic weakening properties should actually be deriavable since weakening 
 \>[2]\<%
 \\
 \>[0]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{semWk-cm} \<[14]%
-\>[14]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{B}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{\}\{}\AgdaBound{v} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{B} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
+\>[4]\AgdaField{semWk-S} \<[13]%
+\>[13]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaBound{B}\AgdaSymbol{\}\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{\}\{}\AgdaBound{v} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{B} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
 \\
 \>[4]\AgdaIndent{14}{}\<[14]%
-\>[14]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{δ} \AgdaFunction{+S} \AgdaBound{B} \AgdaBound{⟧cm} \<[43]%
-\>[43]\<%
+\>[14]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{δ} \AgdaFunction{+S} \AgdaBound{B} \AgdaBound{⟧S} \<[42]%
+\>[42]\<%
 \\
 \>[14]\AgdaIndent{16}{}\<[16]%
-\>[16]\AgdaSymbol{(}\AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β2} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaBound{v}\AgdaSymbol{))} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧cm} \AgdaBound{γ}\<%
+\>[16]\AgdaSymbol{(}\AgdaFunction{coerce} \AgdaBound{⟦\_⟧C-β2} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaBound{v}\AgdaSymbol{))} \AgdaDatatype{≡} \AgdaBound{⟦} \AgdaBound{δ} \AgdaBound{⟧S} \AgdaBound{γ}\<%
 \\
 %
 \\
@@ -290,4 +290,4 @@ redundant form because the correctness for any other part of the
 syntax follows from the defining equations we have already
 stated. There seems to be no way to avoid this.
 
-If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g. by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we don't currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
+If the underlying globular type is not a globular set we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime examle $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g.\ by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we do not currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.

@@ -4,7 +4,6 @@
      '("dlift" 1)
      '("class" 1)
      '("ra" 1)
-     '("todo" 1)
      '("morph" 2)
      '("qset" 1)
      '("climeta" 1)
@@ -24,6 +23,7 @@
      "wog"
      "tig"
      "iscauchy"
+     "infixeqv"
      "dotph"
      "dotop"
      "abs"

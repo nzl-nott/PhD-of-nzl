@@ -1,4 +1,20 @@
-\documentclass{acm_proc_article-sp}
+\documentclass{sig-alternate}
+
+% TeXSupport
+\makeatletter
+\def\doi#1{\gdef\@doi{#1}}\def\@doi{}
+\toappear{\the\boilerplate\par{\confname{\the\conf}} \the\confinfo\par \the\copyrightetc.\ifx\@doi\@empty\else\par\@doi.\fi}
+%\global\copyrightetc{Copyright \the\copyrtyr\ ACM \the\acmcopyr\ ...\$15.00}
+\global\copyrightetc{ACM \the\acmcopyr\ ...\$15.00}
+
+%% Below definition reduced the font size
+%% of permission/copyright statement.  
+%
+\newfont{\mycrnotice}{ptmr8t at 7pt}
+\newfont{\myconfname}{ptmri8t at 7pt}
+\let\crnotice\mycrnotice%
+\let\confname\myconfname%
+\makeatother
 
 \PassOptionsToPackage{utf8x}{inputenc}
 
@@ -37,11 +53,30 @@
 
 \newcommand{\new}{\textcolor{red}}
 
-%\let\oldcode\code
-%\def\code{\oldcode\tiny}
+
+
+
+
 
 \begin{document}
-\pagenumbering{gobble}
+%\pagenumbering{gobble}
+
+
+% Permission Statement
+\permission{\new{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from Permissions@acm.org.}}
+
+
+% Conference Information
+\conferenceinfo{LFMTP '14,}{July 17 2014, Vienna, Austria\\
+Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
+\CopyrightYear{2014}
+\crdata{\new{978-1-4503-2817-3/14/07}}
+
+% DOI
+\doi{\new{http://dx.doi.org/10.1145/2631172.2631179}}
+
+
+
 \title{Some constructions on {\huge$\omega$}-groupoids}
 
 \numberofauthors{3}

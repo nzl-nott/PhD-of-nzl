@@ -5,5 +5,6 @@
      "dpty"
      "reflection"
      "fun-ext"
-     "functional extensionality is available in ett")))
+     "functional extensionality is available in ett"
+     "UIP")))
 

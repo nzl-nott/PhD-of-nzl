@@ -57,7 +57,7 @@
 
 
 
-
+\hyphenation{group-oid}
 
 
 \begin{document}
@@ -79,7 +79,7 @@ Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
 
 
 
-\title{Some constructions on {\huge$\omega$}-groupoids \titlenote{This work is supported by Natural Science Foundation of China (Grant No. : 61070023) and Ningbo Natural Science Programme by Ningbo S\&T bureau (Grant No. : 2010A610104).}}
+\title{\titlenote{This work is partially supported by Natural Science Foundation of China (Grant No. : 61070023) and Ningbo Natural Science Programme by Ningbo S\&T bureau (Grant No. : 2010A610104).} Some constructions on {\huge$\omega$}-groupoids}
 
 \numberofauthors{3}
 \author{
@@ -202,7 +202,7 @@ also require the equalities to be non-strict, in other words, they are
 not definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
 There are several approaches to formalise {\wog} in Type Theory, for instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
-This paper explains an implementation of {\wog} following Brunerie's approach in Agda which is a \new{popular} theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in a dependently typed language like Agda or Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online%
+This paper explains an implementation of {\wog} following Brunerie's approach in Agda which is a popular theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in a dependently typed language like Agda or Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online%
 \footnote{The source code is available on \url{github.com/nzl-nott}.}.
 
 \subsection*{Agda}\label{Agda}
@@ -493,7 +493,7 @@ coh-eq refl = refl _
 With variables defined, it is possible to formalise another core part of the syntactic framework, \emph{contractible
 contexts}. Intuitively speaking, a context is contractible if its geometric
 realization is contractible to a point. It either contains one variable of the 0-cell $*$ which is the base case, or we can extend a contractible context with a
-variable of an existing type and an $n$-cell, namely a morphism, between the new variable and some existing variable. The graph can be drawn like branching trees. \new{TODO : delete the sentence "The graph can be drawn like branching trees." ?}
+variable of an existing type and an $n$-cell, namely a morphism, between the new variable and some existing variable.
 
 \begin{code}
 data isContr where
@@ -823,11 +823,11 @@ vβ = var v0
 
 \section{Conclusion}
 
-In this paper, we presented an implementation of \wog{} following Brunerie's work. Briefly speaking, we defined the syntax of the type theory \tig{}, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we used heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We constructed the identity morphisms and verified some groupoid laws in the syntactic framework. The suspensions for all sorts of objects were also defined for other later constructions.
+In this paper, we presented an implementation of \wog{} following Brunerie's suggestion. Briefly speaking, we defined the syntax of the type theory \tig{}, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we used heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We constructed the identity morphisms and verified some groupoid laws in the syntactic framework. The suspensions for all sorts of objects were also defined for other later constructions.
 
 There is still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
-We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$-\new{eliminator} are equivalent. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
+We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$ are equivalent. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
 
 \bibliography{latex/my.bib}
 

@@ -51,6 +51,8 @@
 
 \usepackage{url}
 
+\usepackage[stable]{footmisc}
+
 \newcommand{\new}{\textcolor{red}}
 
 
@@ -77,7 +79,7 @@ Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
 
 
 
-\title{Some constructions on {\huge$\omega$}-groupoids}
+\title{Some constructions on {\huge$\omega$}-groupoids \titlenote{This work is supported by Natural Science Foundation of China (Grant No. : 61070023) and Ningbo Natural Science Programme by Ningbo S\&T bureau (Grant No. : 2010A610104).}}
 
 \numberofauthors{3}
 \author{
@@ -106,7 +108,6 @@ Ond\v{r}ej Ryp\'a\v{c}ek\\
 \newcommand{\oxr}[1]{\marginpar{\footnotesize oxr:#1}}
 
 \maketitle
-
 
 \AgdaHide{
 \begin{code}

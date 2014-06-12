@@ -5,7 +5,9 @@ Type theory is usually used to refer to a formal systems in which every term alw
 
 In this chapter we will introduce type theory, especially \itt, from history to rules. We will also introduce one of the implementation of intensional type theory -- Agda briefly. We will also discuss the topic of extensional concepts which are missing from \itt as a prerequisite for the topic of our thesis -- quotient types.
 
-\section{Set Theory v.s. Type Theory}
+
+
+\section{From set theory to type theory}
 
 The concept of \emph{sets} has been used since thounsands of years ago. However mathematician have not study the theory of sets until 1870s when George Cantor and Richard Dedekind founded set theory as a branch of mathematical logic. Since then set theory is used as a language to describe definitions of most mathematical objects, namely it is a foundational system for mathematics.
 
@@ -19,7 +21,6 @@ $R = \{x ~| ~x \not\in  x\}$
 Then we got a cotradiction
 $R \in R \iff R \not\in R$
 \end{example}
-
 
 To avoid this paradox, Russell
 proposed the theory of types \cite{rus:1903} as an alternative to
@@ -52,15 +53,17 @@ introduced as a foundation of mathematics. An important change is that functions
 various fields especially computer science. Some languages are extentions of lambda calculus, for example Haskell. Haskell belongs to one of the variants of lambda calculus called System F, although it has evolved into System FC recently. There are also other refinements of lambda calculus which is illustrated by the $\lambda$-cube \cite{barendregt1991introduction}.
 
 
+
 \subsection{Per Martin-L\"{o}f's Type Theory}
 
 In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. His 1971's formulation which is impredicative was proved to be inconsistent because of Girard's paradox \cite{hurkens1995simplification}. The impredicativty means that for a universe $\mathsf{U}$, there is an axiom $\mathsf{U} \in \mathsf{U}$. The later version is predicative and is more widely used.
 
+
 It serves as a foundation of constructive mathematics \cite{martin1984intuitionistic}. Different to set theory whose axioms are based on first-order logic, \mltt provides a means of implementing intuitionistic logic. This is achieved by the Curry-Howard
 isomorphism\emph{``propositions can be interpreted as types and their
-  proofs are inhabitants of these types''}.It relates computer programs with mathematical proofs. Technically, a proposition can be encoded as a type, and then a proof of it can be given by constructing a program (or term) of it.
-Started from these, implications are functions, conjunctions are products, negations are functions into empty types, modus ponens is function application etc. This makes it a programming makes it a programming languages in which we can certify programs within the same language.
-
+  proofs are inhabitants of these types''}. It relates computer programs with mathematical proofs. Technically, a proposition can be encoded as a type, and then a proof of it can be given by constructing a program (or term) of it. It internalises the  Brouwer–Heyting–Kolmogorov (BHK) interpretation of intuitionistic logic, for example a proof of $P \wedge Q$ is a pair of $p : P$ and $q : Q$.
+Started from these, implications are functions, negations are functions into empty types, modus ponens is function application etc. This makes it a programming makes it a programming languages in which we can certify programs within the same language.
+Compared to set theory, type theory has less axioms and gives us the possiblity of construct mathematics in computers so that we can do theorem proving and verification with the help of computers.
 
 Another important feature of \mltt is dependent types. The type systems of simply lambda calculus like Haskell are not expressive enough to encode predicate logic without dependent types.
 
@@ -287,18 +290,48 @@ Whenever we give an argument $\mathsf{a}$,  its type $\mathsf{A}$ must be infera
 With these helpful features, Agda is a very powerful proof assisstant. It does not magically prove theorems for people, but it really helps mathematicians and computer scientists to do formalised reasoning with verification by high-performance computers. 
 
 
-\subsection{basic syntax}
-\todo{to help the reader understand the Agda code in text}
+\subsection{Basic syntax}
 
-To understand the code in this thesis, I will introduce some basic types and syntax of Agda.
+Agda is a functional programming language and at the same time a theorem prover for mathematician. Its syntax has some similarities with Haskell but there are also many differences. In the other perspective, even though it is an implementation of \mltt, it adopts a syntax more closely to functional programming languages.
 
-First of all, like other languages, we use "$\AgdaSymbol{=}$" for function definition rather than propositional equality type former which is  "$\AgdaDatatype{≡}$". This is inconsistent with our conventional choices of symbols in articles, but it follows the conventions in Haskell and other programming languages that "$\AgdaSymbol{=}$" is used for definition.
+\begin{itemize}
+\item Since Agda has a type checker, the programmer use typing judngement more often, so the designer decide to use single colon $\AgdaSymbol{:}$ for typing judgement, for example $\AgdaFunction{a} \AgdaSymbol{:} \AgdaDatatype{A}$ means that $\AgdaFunction{a}$ is of type $\AgdaDatatype{A}$, while double colons $::$ for the definition of the \emph{cons} constructor for list.
 
-Different to Haskell, we use single colon $\AgdaSymbol{:}$ for typing judgement, for example $\AgdaFunction{a} \AgdaSymbol{:} \AgdaDatatype{A}$ means that $\AgdaFunction{a}$ is of type $\AgdaDatatype{A}$. 
+\item  The symbols for different equalities are contrary to the conventions in text. Like in some other programming languages e.g.\ Java Haskell, the equality symbol "$\AgdaSymbol{=}$" is reserved for function definition. Instead the cogruence symbol "$\AgdaDatatype{≡}$ is chosen for identity type which internalise propositional equality. 
+% This is inconsistent with our conventional choices of symbols in articles, but it follows the conventions in Haskell and other programming languages that "$\AgdaSymbol{=}$" is used for definition.
 
-We have universe levels parameters in a lot of definitions which makes code looks unnecessarily cumbersome. We will follow the \textbf{typical ambiguity} in this thesis which says that we write $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ for $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}$ and $\AgdaPrimitiveType{Set} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ which stands for $\AgdaPrimitiveType{Set}\AgdaBound{i} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaBound{(i+1)}$.
+\item Agda provides a more flexible way to define mixfix operators. With the unicode support, it is possible to define infix plus operator $\_+\_$, where the underscore marks the spaces for the explicit arguments in non-prefix operators. Underscores in expressions like $f ~ x ~ \_ z$ represent wildcards in function application for unnecessary  arguments (namely if can be inferred by type checker).
 
-The underscore marks the spaces for the explicit arguments in non-prefix operators.
+\item We use \textbf{data} to define constructors for inductive and coinductive datatypes. 
+
+\item We have universe levels parameters in a lot of definitions which makes code looks unnecessarily cumbersome. 
+The universe of small types is encoded as $\Set_{0}$ or $\Set$ rather than $\Type$, even though it is not a set in set-theoretical sense.
+We will follow the \textbf{typical ambiguity} in this thesis which says that we write $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ for $\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}$ and $\AgdaPrimitiveType{Set} \AgdaSymbol{:} \AgdaPrimitiveType{Set}$ which stands for $\AgdaPrimitiveType{Set}\AgdaBound{i} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaBound{(i+1)}$.
+The universe of propositions $\Prop$ ($\Prop \subset \Set$) does not exists in Agda because there is no proof-irrelevance in \itt as we will see later \ref{extensionality}. For ease of reading, we will use $\Set$ in replace of $\Prop$ in Agda code. Only necessary, we will explicitly add the proof-irrelevance property for a given proposition $P : \Set$, i.e.\ for all $p~ q : P$, $p = q$.
+
+
+\item Agda has a more liberal way to define $\Pi$-types. They are often written as special cases of function types, for example $\Pi x : A. B$ can be written as $(x : A) \to B$. $\Sigma$-types are defined in Agda standard library. There is also a generalised $\Sigma$-types called \emph{dependent record type} which can be defined by keyword \textbf{record}.
+
+\item For coinductive types and more generally mixed inductive/coinductive types \cite{txa:mpc2010g}, we adopt a set of operators which are defined in module \textbf{Coinduction}. A infinite list (or stream) can be defined as:
+
+\begin{code}
+\>\AgdaKeyword{data} \AgdaDatatype{Stream} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{\_∷\_} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{∞} \AgdaSymbol{(}\AgdaDatatype{Stream} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Stream} \AgdaBound{A}\<%
+\end{code}
+
+The delay operator $\infty$ denotes an coinductive argument. Given $a:A$, the expression with a delay function $\sharp~a$ is a element of type $\infty~A$. $\beta~x$ will force computation in $x : \infty~A$.
+
+\item If type checker can infer the type for some arguments, we can use implicit arguments which are indicated by curly brackets.
+For example a function $f:\{x:A\} \to B$ allows us to omit unnecessary argument which makes the code more readable.
+
+
+
+
+\end{itemize}
+
+
 
 \subsection{Identity Type}
 
@@ -335,6 +368,7 @@ It is stronger and it provides the eliminator J.
 \end{code}
 
 \subsection{Extensionality}
+\label{extensionality}
 
 In regular mathematics, equality does not only exists between intensionally equal terms. Objects are also equal if they have the same extensional external properties, like functions and propositions. 
 
@@ -388,36 +422,25 @@ I will not explain this topic in detail here, but in \autoref{HITs}
 we give a more detailed introduction to it.
 
 
-\section{Some conventions}
 
-\todo{What conventions we will follow in this thesis and some commonly
-used symbols and function}
+ % Something without a type makes no sense to us because we are not sure what it stands for and how do we use it. The type definition describe the syntax so that some symbol makes sense and the semantic meaning may be revealed from the construction.
 
-The universe of small types is encoded as $\Set_{0}$ or $\Set$ rather than $\Type$, even though it is not a set in set-theoretical sense.
-
-The universe of propositions $\Prop$ which is $\Prop \subset \Set$ does not exists in Agda
+% There is another question, whether mathematics is a collection of patterns and laws which is observed, or it is a system created and built by people to explain the patterns and laws in the world. I think people prefer the second answer usually accept the type theory more easily, although most people (probably 99.9 percent) prefer the first one. When we learn what is natural numbers, we learn it as "numbers like 1, 2, 3 ,4 and perhaps 0", the commutative law, associate law are axioms because there is no way to prove it if we introduce it in this manner. We are convinced by some examples like "2 + 3 = 3 + 2" and we find it works for most of the cases then we accept it by observations. It is some methods physicians used a lot -- to conclude some laws from a number of facts. It is a proper method for physicians because what they research on is world can only be observed. However for mathematics, even though it is applied to the real world, it is a system completely created by people. People used their fingers to count, wrote symbols for results, even though it was very shallow it is obviously a aritificial system. People extend 
 
 
-\subsection{Why do we use type theory?}
-
-It is always debatable to choose set theory or type theory. First of all, it depends on whether do you think in a constructive way: does any proposition can be claimed true only if we have witness? It the answer is yes, then type theory is a better choice. From a computer scientist's point of view, it is more natural to think in a constructive way. Something without a type makes no sense to us because we are not sure what it stands for and how do we use it. The type definition describe the syntax so that some symbol makes sense and the semantic meaning may be revealed from the construction.
-
-There is another question, whether mathematics is a collection of patterns and laws which is observed, or it is a system created and built by people to explain the patterns and laws in the world. I think people prefer the second answer usually accept the type theory more easily, although most people (probably 99.9 percent) prefer the first one. When we learn what is natural numbers, we learn it as "numbers like 1, 2, 3 ,4 and perhaps 0", the commutative law, associate law are axioms because there is no way to prove it if we introduce it in this manner. We are convinced by some examples like "2 + 3 = 3 + 2" and we find it works for most of the cases then we accept it by observations. It is some methods physicians used a lot -- to conclude some laws from a number of facts. It is a proper method for physicians because what they research on is world can only be observed. However for mathematics, even though it is applied to the real world, it is a system completely created by people. People used their fingers to count, wrote symbols for results, even though it was very shallow it is obviously a aritificial system. People extend 
+% Type theory is strongly connected with computation theory.
+% Set
 
 
-Type theory is strongly connected with computation theory.
-Set
+% Type theory has fewer axioms, simpler model than set theory which has mutual foudations: logic and axioms.
+
+\section{Summary}
 
 
-Type theory has fewer axioms, simpler model than set theory which has mutual foudations: logic and axioms.
+In mathematics, set theory is still a more popular choice over type theory. However in computer science, instuitionistic type theory is worth more studying. It is more close to program construction and from a computer scientist's point of view, it is very natural to accept intuitionistic logic. 
+
+It provides a foundation of mathematics which can be implemented as a programming language so that proving is just programming and verification is just type checking. The aid of computers saves a lot of work from mathematicians and reduces the chance of making mistakes, although the absence of \emph{principle of excluded middle} in intuitionistic logic makes some mathematicians hard to accept. There is a very good talk given by Andrej Bauer in IAS called "Five Stages of Accepting Constructive Mathematics'' online \footnote{available on Youtube}.
 
 
 
-\subsection{Category Theory}
 
-Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and trasformations.
-A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are callled categorical laws to obey. 
-
-The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
-
-Category theory abstracts a lot of similar concepts in different fields and provides a concise language for mathematics for mathematicians.

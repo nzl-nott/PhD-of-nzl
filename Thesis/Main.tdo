@@ -3,27 +3,25 @@
 \contentsline {todo}{mention the definable quotient is very useful}{3}{section*.18}
 \contentsline {todo}{write more sufficient introduction and explain where do we need category theory in my thesis}{4}{section*.21}
 \contentsline {todo}{Write where we use Agda and how}{5}{section*.23}
-\contentsline {todo}{fill this part}{5}{section*.25}
-\contentsline {todo}{compact, comprehensive Overview: \\Add overview of each part, as much as you can, and compact}{5}{section*.27}
-\contentsline {todo}{following paragraph needs to be rewritten or added with code}{12}{section*.43}
-\contentsline {todo}{to help the reader understand the Agda code in text}{15}{section*.45}
-\contentsline {todo}{What conventions we will follow in this thesis and some commonly used symbols and function}{18}{section*.53}
-\contentsline {todo}{one page explanation of why type theory is useful}{18}{section*.56}
-\contentsline {todo}{moving the categorical intuition earlier, because it essentially generalises the quotients in different topics of mathematics. Quotient sets, quotient groups are just instances and quotient types should also de derviable from that, and it is much easiler to understand. (and ask Paulo about it?)}{21}{section*.61}
-\contentsline {todo}{question of where shall we apply pe}{25}{section*.79}
-\contentsline {todo}{$\equiv $ or $=$}{27}{section*.82}
-\contentsline {todo}{depends on the choice above}{27}{section*.83}
-\contentsline {todo}{or set?}{27}{section*.85}
-\contentsline {todo}{here}{30}{section*.89}
-\contentsline {todo}{1. Distributivity 2. Rational numbers 3. other definable quotients}{33}{section*.92}
-\contentsline {todo}{add this paragraph:}{41}{section*.106}
-\contentsline {todo}{P(T) -> Connected (T) -> Contractible(T), $\mathbb {R}/ \sim $ is connected but not contractible?}{51}{section*.154}
-\contentsline {todo}{expand Cauchy completeness of Cauchy reals: it should rely on the axiom of countable choice}{52}{section*.156}
-\contentsline {todo}{decidable order -> of course definable, A-> N definable, give a explicit proof}{52}{section*.159}
-\contentsline {todo}{definable -> split quotient because definable is too general}{53}{section*.160}
-\contentsline {todo}{Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mhe/agda/FailureOfTotalSeparatedness.html} should be considered and discussed here, couterexample of Connected -> contractible(?)}{54}{section*.163}
-\contentsline {todo}{the Setoid Model}{55}{section*.165}
-\contentsline {todo}{write why this model is not lccc explicitly. refer to Nicolais's result}{56}{section*.169}
-\contentsline {todo}{}{80}{section*.188}
-\contentsline {todo}{more explanation of face maps and degeneracy maps}{81}{section*.193}
-\contentsline {todo}{show an example graph}{81}{section*.194}
+\contentsline {todo}{to complete this part}{5}{section*.26}
+\contentsline {todo}{fill this part}{5}{section*.28}
+\contentsline {todo}{compact, comprehensive Overview: \\Add overview of each part, as much as you can, and compact}{5}{section*.30}
+\contentsline {todo}{following paragraph needs to be rewritten or added with code}{12}{section*.46}
+\contentsline {todo}{moving the categorical intuition earlier, because it essentially generalises the quotients in different topics of mathematics. Quotient sets, quotient groups are just instances and quotient types should also de derviable from that, and it is much easiler to understand. (and ask Paulo about it?)}{21}{section*.58}
+\contentsline {todo}{question of where shall we apply pe}{25}{section*.76}
+\contentsline {todo}{$\equiv $ or $=$}{27}{section*.79}
+\contentsline {todo}{depends on the choice above}{27}{section*.80}
+\contentsline {todo}{or set?}{27}{section*.82}
+\contentsline {todo}{here}{30}{section*.86}
+\contentsline {todo}{1. Distributivity 2. Rational numbers 3. other definable quotients}{33}{section*.89}
+\contentsline {todo}{add this paragraph:}{41}{section*.103}
+\contentsline {todo}{P(T) -> Connected (T) -> Contractible(T), $\mathbb {R}/ \sim $ is connected but not contractible?}{51}{section*.151}
+\contentsline {todo}{expand Cauchy completeness of Cauchy reals: it should rely on the axiom of countable choice}{52}{section*.153}
+\contentsline {todo}{decidable order -> of course definable, A-> N definable, give a explicit proof}{52}{section*.156}
+\contentsline {todo}{definable -> split quotient because definable is too general}{53}{section*.157}
+\contentsline {todo}{Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mhe/agda/FailureOfTotalSeparatedness.html} should be considered and discussed here, couterexample of Connected -> contractible(?)}{54}{section*.160}
+\contentsline {todo}{the Setoid Model}{55}{section*.162}
+\contentsline {todo}{write why this model is not lccc explicitly. refer to Nicolais's result}{56}{section*.166}
+\contentsline {todo}{}{80}{section*.185}
+\contentsline {todo}{more explanation of face maps and degeneracy maps}{81}{section*.190}
+\contentsline {todo}{show an example graph}{81}{section*.191}

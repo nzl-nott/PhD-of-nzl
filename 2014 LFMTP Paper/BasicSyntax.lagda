@@ -212,7 +212,7 @@ Type Theory (e.g.\ from reading the introductory chapters of
 \cite{hott}) should find it easy to read the Agda code presented
 in this paper. Some hints: $\Pi$-types are written in a generalized
 arrow notation $(x : A) → B$ for $\Pi x:A.B$, implicit arguments are
-indicated by curly brackets, eg. $\{x : A\} → B$, in this case the Agda
+indicated by curly brackets, e.g.\ $\{x : A\} → B$, in this case the Agda
 will try to generate the argument automatically and we do not supply it
 to make the code more readable. If we do not want to supply $A$ because
 it can be inferred we write $\forall x$ or $\forall\{x\}$.
@@ -226,7 +226,7 @@ types (this generalizes $\Sigma$-types). The representation of
 coinductive types and more generally mixed inductive/coinductive types
 \cite{txa:mpc2010g}
 uses the type constructor $\infty$ whose elements are computations of type
-$A$ which are written as $\sharp a$ where $a$ is an expression which can be
+$A$ which are written as $\sharp ~a$ where $a$ is an expression which can be
 evaluated to an element of type $A$.
 
 \section*{Acknowledgements}

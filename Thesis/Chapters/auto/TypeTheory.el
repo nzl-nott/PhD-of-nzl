@@ -6,5 +6,6 @@
      "reflection"
      "fun-ext"
      "functional extensionality is available in ett"
+     "extensionality"
      "UIP")))
 

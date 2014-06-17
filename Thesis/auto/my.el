@@ -1,6 +1,7 @@
 (TeX-add-style-hook "my"
  (lambda ()
     (LaTeX-add-bibitems
+     "sep-type-theory"
      "bove2009brief"
      "kleene1935inconsistency"
      "van2011types"

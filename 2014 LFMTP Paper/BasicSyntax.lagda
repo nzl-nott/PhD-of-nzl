@@ -65,17 +65,17 @@
 
 
 % Permission Statement
-\permission{\new{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from Permissions@acm.org.}}
+\permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from Permissions@acm.org.}
 
 
 % Conference Information
 \conferenceinfo{LFMTP '14,}{July 17 2014, Vienna, Austria\\
 Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
 \CopyrightYear{2014}
-\crdata{\new{978-1-4503-2817-3/14/07}}
+\crdata{978-1-4503-2817-3/14/07}
 
 % DOI
-\doi{\new{http://dx.doi.org/10.1145/2631172.2631179}}
+\doi{http://dx.doi.org/10.1145/2631172.2631176}
 
 
 

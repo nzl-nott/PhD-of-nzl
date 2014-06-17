@@ -45,7 +45,8 @@ refl*-Tm : Tm {x:*} (var v0 =h var v0)
 refl*-Tm = Coh-Contr c*
 \end{code}
 \noindent  \textbf{Symmetry} (inverse) It is defined similarly. Note that the intricate names of contexts, as in \AgdaDatatype{Ty} \AgdaFunction{x:*,y:*,α:x=y} indicate their definitions which have been hidden. Recall that Agda treats all sequences of characters uninterrupted by whitespace as identifiers. For instance \AgdaFunction{x:*,y:*,α:x=y} is a name of a context for which we are assuming the definition:
-\AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}.
+
+$\AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaInductiveConstructor{ε} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{*} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}$.
 
 
 \begin{code}
@@ -194,14 +195,14 @@ Tm-right-inverse* : Tm {x:*,y:*,α:x=y}
          (trans*-Tm [ (IdS , vX) , sym*-Tm ]tm =h reflX)
 Tm-right-inverse* = Coh-Contr (ext c* v0)
 
-
-
 Tm-left-inverse* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ ((• , vY) , vX , sym*-Tm , vY) , vα ]tm =h reflY)
+         (trans*-Tm [ ((• , vY) , vX , sym*-Tm , vY) , vα ]tm 
+           =h reflY)
 Tm-left-inverse* = Coh-Contr (ext c* v0)
 
 Tm-G-assoc* : Tm Ty-G-assoc*
-Tm-G-assoc* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) (vS v0))
+Tm-G-assoc* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) 
+                         (vS v0))
 \end{code}
 \noindent Their general versions are defined using replacement. For instance, for associativity, we define:
 

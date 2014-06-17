@@ -132,12 +132,11 @@ The equivalence proof of the relation consists of reflexivity, symmetry and tran
 However in \hott{}, we reject the principle of uniqueness of identity proofs (UIP). 
 Instead we accept the univalence axiom which says that equality of types is weakly equivalent to weak equivalence. 
 Weak equivalence can be seen as a refinement of isomorphism without UIP \cite{txa:csl}. 
-In the higher-categorical setting, weak equivalence can be thought of as arising from isomorphisms by systematically replacing equalities by higher cells.  
 For example, a weak equivalence 
 between two objects $A$ and $B$ in a 2-category is a morphism $f : A \rightarrow B$ which has a
 corresponding inverse morphism $ g : B \rightarrow A$, but instead of the
-equalities $f ∘ g = 1_B$ and $g ∘ f = 1_A$ we have 2-cell isomorphisms $f ∘ g ≅ 1_B$ and $g ∘ f ≅ 1_A$. In an $\omega$-category, these later isomorphisms are weak equivalences again. As all equivalences in this paper are weak equivalences in this sense, from now on we say just equivalence.
-
+proofs of isomorphism $f ∘ g = 1_B$ and  $g ∘ f = 1_A$ we have two
+2-cell isomorphisms  $f ∘ g ≅ 1_B$ and  $g ∘ f ≅ 1_A$. 
 
 Voevodsky proposed the univalence axiom which basically says that
 isomorphic types are equal. This can be viewed as a strong
@@ -167,26 +166,8 @@ also require the equalities to be non-strict, in other words, they are
 not definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
 There are several approaches to formalise {\wog} in Type Theory, for instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
-This paper builds on the syntactic approach of
-\cite{txa:csl} but simplifies it greatly following Brunerie's proposal
-\cite{gb:wog} by replacing the distinct constants for each of the
-higher coherence cells by a single constant $\mathsf{coh}$. Everything
-is formalised in Agda which is a theorem prover based on intensional
-{\mltt}. This is the first attempt to formalise this approach in a
-dependently typed language like Agda or Coq. In more detail, we
-specify when a globular set is a {\wogs} by first defining a type
-theory called {\tig} to describe the internal language of Grothendieck
-{\wog}, then interpret it with a globular set and a dependent
-function. All coherence laws of the {\wog} are derivable from the
-syntax, we will present some basic ones, for example reflexivity. One
-of the main contributions of this paper is to use heterogeneous
-equality for terms to overcome some difficult problems encountered
-when using the usual homogeneous one. We present the formalisation but
-omit some complicated and less important programs, namely the
-proofs of some lemmas or definitions of some auxiliary functions. It
-is still possible for the reader who is interested in the details to
-check the code online at \url{github.com/nzl-nott}.  
-%\footnote{The source code is available on %\url{github.com/nzl-nott}.}.
+This paper explains an implementation of {\wog} following Brunerie's approach in Agda which is a \new{popular} theorem prover and also a variant of intensional {\mltt}. This is the first attempt to formalise this approach in a dependently typed language like Agda or Coq. The approach is to specify when a globular set is a {\wogs} by first defining a type theory called {\tig} to describe the internal language of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} are derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contributions of this paper is to use heterogeneous equality for terms to overcome some difficult problems we encountering when using the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or definitions of some auxiliary functions. It is still possible for the reader who is interested in the details to check the code online%
+\footnote{The source code is available on \url{github.com/nzl-nott}.}.
 
 \subsection*{Agda}\label{Agda}
 

@@ -1,20 +1,4 @@
-\documentclass{sig-alternate}
-
-% TeXSupport
-\makeatletter
-\def\doi#1{\gdef\@doi{#1}}\def\@doi{}
-\toappear{\the\boilerplate\par{\confname{\the\conf}} \the\confinfo\par \the\copyrightetc.\ifx\@doi\@empty\else\par\@doi.\fi}
-%\global\copyrightetc{Copyright \the\copyrtyr\ ACM \the\acmcopyr\ ...\$15.00}
-\global\copyrightetc{ACM \the\acmcopyr\ ...\$15.00}
-
-%% Below definition reduced the font size
-%% of permission/copyright statement.  
-%
-\newfont{\mycrnotice}{ptmr8t at 7pt}
-\newfont{\myconfname}{ptmri8t at 7pt}
-\let\crnotice\mycrnotice%
-\let\confname\myconfname%
-\makeatother
+\documentclass{acm_proc_article-sp}
 
 \PassOptionsToPackage{utf8x}{inputenc}
 
@@ -51,35 +35,14 @@
 
 \usepackage{url}
 
-\usepackage[stable]{footmisc}
-
 \newcommand{\new}{\textcolor{red}}
 
-
-
-\hyphenation{group-oid}
-
+%\let\oldcode\code
+%\def\code{\oldcode\tiny}
 
 \begin{document}
-%\pagenumbering{gobble}
-
-
-% Permission Statement
-\permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from Permissions@acm.org.}
-
-
-% Conference Information
-\conferenceinfo{LFMTP '14,}{July 17 2014, Vienna, Austria\\
-Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
-\CopyrightYear{2014}
-\crdata{978-1-4503-2817-3/14/07}
-
-% DOI
-\doi{http://dx.doi.org/10.1145/2631172.2631176}
-
-
-
-\title{Some constructions on {\huge$\omega$}-groupoids \titlenote{This work is partially supported by Natural Science Foundation of China (Grant No. : 61070023) and Ningbo Natural Science Programme by Ningbo S\&T bureau (Grant No. : 2010A610104).}}
+\pagenumbering{gobble}
+\title{Some constructions on {\huge$\omega$}-groupoids}
 
 \numberofauthors{3}
 \author{
@@ -108,6 +71,7 @@ Ond\v{r}ej Ryp\'a\v{c}ek\\
 \newcommand{\oxr}[1]{\marginpar{\footnotesize oxr:#1}}
 
 \maketitle
+
 
 \AgdaHide{
 \begin{code}
@@ -203,7 +167,6 @@ also require the equalities to be non-strict, in other words, they are
 not definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
 There are several approaches to formalise {\wog} in Type Theory, for instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
-
 This paper builds on the syntactic approach of
 \cite{txa:csl} but simplifies it greatly following Brunerie's proposal
 \cite{gb:wog} by replacing the distinct constants for each of the
@@ -233,7 +196,7 @@ Type Theory (e.g.\ from reading the introductory chapters of
 \cite{hott}) should find it easy to read the Agda code presented
 in this paper. Some hints: $\Pi$-types are written in a generalized
 arrow notation $(x : A) → B$ for $\Pi x:A.B$, implicit arguments are
-indicated by curly brackets, e.g.\ $\{x : A\} → B$, in this case the Agda
+indicated by curly brackets, eg. $\{x : A\} → B$, in this case the Agda
 will try to generate the argument automatically and we do not supply it
 to make the code more readable. If we do not want to supply $A$ because
 it can be inferred we write $\forall x$ or $\forall\{x\}$.
@@ -247,7 +210,7 @@ types (this generalizes $\Sigma$-types). The representation of
 coinductive types and more generally mixed inductive/coinductive types
 \cite{txa:mpc2010g}
 uses the type constructor $\infty$ whose elements are computations of type
-$A$ which are written as $\sharp ~a$ where $a$ is an expression which can be
+$A$ which are written as $\sharp a$ where $a$ is an expression which can be
 evaluated to an element of type $A$.
 
 \section*{Acknowledgements}
@@ -265,8 +228,8 @@ Brunerie's proposal which made this work possible.
 \section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}
 
 We develop the type theory of $\omega$-groupoids formally, following
-\cite{gb:wog}. This is a type theory with only one type former which
-we can view as equality type and interpret as the homset of the
+\cite{gb:wog}. This is a Type Theory with only one type former which
+we can view as \new{equality type} and interpret as the \new{homset} of the
 $\omega$-groupoid. There are no definitional equalities, this
 corresponds to the fact that we consider weak $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e.\ definitional) but all are witnessed by
 terms. Compared to \cite{txa:csl} the definition is very much
@@ -513,7 +476,7 @@ coh-eq refl = refl _
 With variables defined, it is possible to formalise another core part of the syntactic framework, \emph{contractible
 contexts}. Intuitively speaking, a context is contractible if its geometric
 realization is contractible to a point. It either contains one variable of the 0-cell $*$ which is the base case, or we can extend a contractible context with a
-variable of an existing type and an $n$-cell, namely a morphism, between the new variable and some existing variable.
+variable of an existing type and an $n$-cell, namely a morphism, between the new variable and some existing variable. The graph can be drawn like branching trees. \new{TODO : delete the sentence "The graph can be drawn like branching trees." ?}
 
 \begin{code}
 data isContr where
@@ -843,11 +806,11 @@ vβ = var v0
 
 \section{Conclusion}
 
-In this paper, we presented an implementation of \wog{} following Brunerie's suggestion. Briefly speaking, we defined the syntax of the type theory \tig, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we used heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We constructed the identity morphisms and verified some groupoid laws in the syntactic framework. The suspensions for all sorts of objects were also defined for other later constructions.
+In this paper, we presented an implementation of \wog{} following Brunerie's work. Briefly speaking, we defined the syntax of the type theory \tig{}, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we used heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We constructed the identity morphisms and verified some groupoid laws in the syntactic framework. The suspensions for all sorts of objects were also defined for other later constructions.
 
-There is still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a type theory with equality types and $J$ eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the $J$ eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
+There is still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a Type Theory with equality types and J eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the J eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
-We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$ eliminator are equivalent. Finally, to model the type theory with \wog and to eliminate the univalence axiom would be the most challenging task in the future. 
+We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$-\new{eliminator} are equivalent. Finally, to model the Type Theory with \wog{} and to eliminate the univalence axiom would be the most challenging task in the future. 
 
 \bibliography{latex/my.bib}
 

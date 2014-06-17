@@ -102,7 +102,7 @@
 \newcommand{\AgdaOperator}    [1]{\textcolor{AgdaOperator}{#1}}
 
 % NameKind commands.
-\newcommand{\AgdaBound}    [1]{\AgdaBoundFontStyle{\textcolor{AgdaBound}{#1}}}
+\newcommand{\AgdaBound}    [1]{\AgdaFontStyle{\textcolor{AgdaBound}{#1}}}
 \newcommand{\AgdaInductiveConstructor}[1]
     {\AgdaFontStyle{\textcolor{AgdaInductiveConstructor}{#1}}}
 \newcommand{\AgdaCoinductiveConstructor}[1]
@@ -144,9 +144,14 @@
 \fi
 
 \newenvironment{code}%
-{\vspace{-0.3cm}\small\noindent\ignorespaces\advance\leftskip1em\AgdaCodeStyle\pboxed}%
-{\endpboxed\vspace{-0.4cm}\par\noindent%
+{\small\noindent\ignorespaces\advance\leftskip1em\AgdaCodeStyle\pboxed}%
+{\endpboxed\par\noindent%
 \ignorespacesafterend}
+
+%\newenvironment{code}%
+%{\vspace{-0.3cm}\small\noindent\ignorespaces\advance\leftskip1em\AgdaCodeStyle\pboxed}%
+%{\endpboxed\vspace{-0.4cm}\par\noindent%
+%\ignorespacesafterend}
 %\mathindent - was between "\leftskip" and "\AgdaCodeStyle"
 % Default column for polytable.
 \defaultcolumn{l}

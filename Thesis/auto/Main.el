@@ -55,5 +55,6 @@
      "Chapters/HITs"
      "Chapters/OGModel"
      "Chapters/Summary"
-     "Appendices/AppendixA")))
+     "Appendices/AppendixA"
+     "Appendices/Codes/latex/GroupoidQuotient")))
 

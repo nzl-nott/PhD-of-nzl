@@ -1,3 +1,5 @@
+
+
 \begin{code}
 
 module GroupoidQuotient where
@@ -7,8 +9,11 @@ open import Relation.Binary.PropositionalEquality as PE
 open import Quotient
 open import Data.Product
 open ≡-Reasoning
+\end{code}
 
--- here Set in " _~_     : A → A → Set" is h-Set
+The equivalence relation is not propositional but h-set.
+
+\begin{code}
 
 record Groupoid : Set₁ where
   infix 4 _~_
@@ -90,16 +95,16 @@ module UAImpEff
     where
   open pre-GQuotient PGQ
   open GQuotient GQu
+\end{code}
 
--- Because on 1-level, it is set rather than prop, so there are more strucutures defined by _~_
--- an equivalence _~₁_ on 1-level (higher levels are trivial)
+There is also an equivalence on the arrow level $\_\sim_{1}\_$ derived from $\_\sim\_$ (higher levels are trivial)
 
+\begin{code}
   _~₁_ : ∀{a a' b b'} → a ~ a' → b ~ b' → (a ~ b → a' ~ b')
   _~₁_ p q r = p ⁻¹ * r * q
 
   _~₁I_ : ∀{a a' b b'} → a ~ a' → b ~ b' → (a' ~ b' → a ~ b)
   _~₁I_ p q r = p * r * q ⁻¹
-
 
   ~₁-equiv₁ : ∀{a a' b b'}(p : a ~ a')(q : b ~ b')(r : a ~ b)
            → (p ~₁I q) ((p ~₁ q) r) ≡ r
@@ -123,9 +128,11 @@ module UAImpEff
 
   ~₁-sound : ∀{a a' b b'} → a ~ a' → b ~ b' → (a ~ b) ≡ (a' ~ b')
   ~₁-sound p q = UA ((p ~₁ q) , (p ~₁I q))
-  
--- it is functorial
+\end{code}
 
+Functorial property
+
+\begin{code}
   _~₁_-id : ∀ {a}(r : a ~ a) → (id ~₁ id) r ≡ r
   _~₁_-id r = begin
           id ⁻¹ * r * id ≡⟨ id₂ ⟩
@@ -148,27 +155,21 @@ module UAImpEff
     lift₁ : { B : Set₁} 
             (f : A → B)
             (f-resp : f respects _~_)
---            (f' : ∀{a b} → (a ~ b) → f a ≡ f b)
---            (fid : ∀{a} → f' (id {a}) ≡ refl)
---            (fcomp : ∀ {a b c}{p : a ~ b}{q : b ~ c} → f' (p * q) ≡ trans (f' p) (f' q))
           → Q → B
 
   postulate
     lift-β₁ : ∀ {B a f}
               {f-resp : f respects _~_}
---              {f' : ∀{a b} → (a ~ b) → f a ≡ f b}
---              {fid : ∀{a} → f' (id {a}) ≡ refl}
---              {fcomp : ∀ {a b c}{p : a ~ b}{q : b ~ c} → f' (p * q) ≡ trans (f' p) (f' q)} 
             → lift₁ {B} f f-resp [ a ]  ≡ f a
 
   exact : ∀ {a a'} → [ a ] ≡ [ a' ] → a ~ a'
-  exact {a} {a'} eq = {!isInv₁!} -- coerce P^-β (id {a})
+  exact {a} {a'} eq = coerce P^-β (id {a})
         where
           P : A → Set
           P x = a ~ x
-
--- functorial
-
+\end{code}
+Functorial
+\begin{code}
           P₁ : ∀{b c} → b ~ c → (P b → P c)
           P₁ bc ab = ab * bc
 
@@ -176,13 +177,14 @@ module UAImpEff
           P₁-id = id₂
 
           P₁-comp : ∀{b c d}{p : b ~ c}{q : c ~ d}{r : P b} → P₁ (p * q) r ≡ P₁ q (P₁ p r)
+
           P₁-comp = sym assoc
+\end{code}
 
 
--- We didn't write the equivalence proof explicitly, namely isEquivalence (P₁ x)
+We didn't write the equivalence proof explicitly i.e.\ isEquivalence (P₁ x).
 
--- using propositional univalence here (it only needs propositional because P b and P b' are supposed to be propositional)
-
+\begin{code}
           P-resp : P respects _~_
           P-resp {b} {b'} bb' = UA (P₁ bb' , P₁ (bb' ⁻¹))
 
@@ -191,11 +193,13 @@ module UAImpEff
 
           P^-β : P a ≡ P a'
           P^-β = trans (sym lift-β₁) (trans (cong P^ eq) lift-β₁)
--- coerce (trans (sym lift-β₁) (trans (cong (lift₁ P P-resp) [ p ]⁼) lift-β₁)) (id {a}) ≡ p
-  isInv₁ : ∀{a b}{p : a ~ b} → exact [ p ]⁼ ≡ p
-  isInv₁ {p = p} = {!!}
 
---    isInv₂ : ∀{a b}{p : [ a ] ≡ [ b ]} → [ exact p ]⁼ ≡ p
+
+-- coerce (trans (sym lift-β₁) (trans (cong (lift₁ P P-resp) [ p ]⁼) lift-β₁)) (id {a}) ≡ p
+--  isInv₁ : ∀{a b}{p : a ~ b} → exact [ p ]⁼ ≡ p
+--  isInv₁ {p = p} = {!!}
+
+--  isInv₂ : ∀{a b}{p : [ a ] ≡ [ b ]} → [ exact p ]⁼ ≡ p
 
 
 \end{code}

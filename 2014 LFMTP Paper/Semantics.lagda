@@ -33,11 +33,11 @@ Given a globular type $G$, we can interpret the syntactic objects.
 \begin{code}
 record Semantic (G : Glob) : Set₁ where
   field
-    ⟦_⟧C  : Con → Set
-    ⟦_⟧T  : ∀{Γ} → Ty Γ → ⟦ Γ ⟧C → Glob
-    ⟦_⟧tm : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
-    ⟦_⟧S : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
-    π     : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
+    ⟦_⟧C   : Con → Set
+    ⟦_⟧T   : ∀{Γ} → Ty Γ → ⟦ Γ ⟧C → Glob
+    ⟦_⟧tm  : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
+    ⟦_⟧S   : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
+    π      : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
 \end{code}
 $\AgdaField{π}$ provides the projection of the semantic variable out of a semantic context.
 

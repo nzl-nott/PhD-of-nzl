@@ -1,6 +1,6 @@
+\chapter{Set Quotients and Groupoid Quotients}
 
 \begin{code}
---without-K
 
 module Quotient where
 
@@ -45,20 +45,21 @@ subIrr2 refl = refl
 
 \begin{code}
 
+
 record pre-Quotient (S : Setoid) : Set₁ where
-  open RB.Setoid S renaming (Carrier to A; _≈_ to _~_ ; refl to ~refl; sym to ~sym; trans to ~trans)
+  open RB.Setoid S renaming (Carrier to A; _≈_ to _~_ ; refl to ~-refl; sym to ~-sym; trans to ~-trans)
   field
     Q   : Set
     [_] : A → Q
     [_]⁼ : [_] respects _~_
     QisSet : isSet Q
 
-  open RB.Setoid S public renaming (Carrier to A; _≈_ to _~_ ; refl to ~refl; sym to ~sym; trans to ~trans)
+  open RB.Setoid S public renaming (Carrier to A; _≈_ to _~_ ; refl to ~-refl; sym to ~-sym; trans to ~-trans)
 \end{code}
 
 \emph{Quotients as prequotients with a non-dependent eliminator (lift).}
 
-\emph{(As in Hofmann's PhD dissertation.)}
+\emph{As in Hofmann's PhD dissertation.}
 
 \begin{code}
 
@@ -73,16 +74,14 @@ record Hof-Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
     lift-β : ∀ {B a f}(resp : f respects _~_) 
            → lift {B} f resp [ a ] ≡ f a
 
-    qind 　: (P : Q → Set)  
-           → (∀ {x} → isProp (P x))
-           → (∀ a → P [ a ]) 
+    qind   : ∀ (P : Q → Set)
+           → (∀{x} → isProp (P x))
+           → (∀ a → P [ a ])
            → (∀ x → P x)
- 
 
 \end{code}
 
 \emph{Quotients as prequotients with a dependent eliminator.}
-colimit
 
 
 \begin{code}
@@ -99,7 +98,8 @@ record Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
 
 \end{code}
 
-\emph{Exact quotients (Effective?)}
+\emph{Exact} quotients
+
 \begin{code}
 
 
@@ -126,7 +126,7 @@ record def-Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
     stable   : ∀ q → [ emb q ] ≡ q
 
   exact : ∀{a b} → [ a ] ≡ [ b ] → a ~ b
-  exact {a} {b} p = ~trans (~sym (complete a)) (~trans (subst (λ x → emb [ a ] ~ emb x) p ~refl) (complete b))
+  exact {a} {b} p = ~-trans (~-sym (complete a)) (~-trans (subst (λ x → emb [ a ] ~ emb x) p ~-refl) (complete b))
 \end{code}
 
 \emph{Relations between types of quotients:}
@@ -288,18 +288,24 @@ _⇔_ : (A B : Prp) → Prp
 A ⇔ B = (A → B) × (B → A)
 
 module PuImpEff
--- propositional univalence
   (PropUni₁ : ∀ {p q : Prp} → (p ⇔ q) → p ≡ q)
+
   {S : Setoid}
+
   {PQ : pre-Quotient S}
+
   (QuH : Hof-Quotient PQ)
+
     where
 
   open pre-Quotient PQ
   open Hof-Quotient QuH
 
--- since the level is not taken into account when defining quotient lifting, we have to postulate extra functions
-  
+\end{code}
+
+since the level is not taken into account when defining quotient lifting, we have to postulate extra functions
+
+\begin{code}  
   postulate 
     lift₁ : { B : Set₁}  → 
             (f : A → B) → 
@@ -310,15 +316,13 @@ module PuImpEff
     lift-β₁ : ∀ {B a f}{resp : (f respects _~_)} → lift₁ {B} f resp [ a ]  ≡ f a
 
   exact : ∀ a a' → [ a ] ≡ [ a' ] → a ~ a'
-  exact a a' p = coerce P^-β (~refl {a})
+  exact a a' p = coerce P^-β (~-refl {a})
         where
           P : A → Prp
           P x = a ~ x
 
--- using propositional univalence here (it only needs propositional because P b and P b' are supposed to be propositional)
-
           P-resp : P respects _~_
-          P-resp {b} {b'} bb' = PropUni₁ ((λ ab → ~trans ab bb') , (λ ab' → ~trans ab' (~sym bb')))
+          P-resp {b} {b'} bb' = PropUni₁ ((λ ab → ~-trans ab bb') , (λ ab' → ~-trans ab' (~-sym bb')))
 
           P^ : Q → Prp
           P^ = lift₁ P P-resp

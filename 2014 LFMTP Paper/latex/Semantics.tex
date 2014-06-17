@@ -63,22 +63,24 @@ Given a globular type $G$, we can interpret the syntactic objects.
 \>[2]\AgdaKeyword{field}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧C} \<[10]%
-\>[10]\AgdaSymbol{:} \AgdaDatatype{Con} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\>[4]\AgdaField{⟦\_⟧C} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaDatatype{Con} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧T} \<[10]%
-\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Ty} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaRecord{Glob}\<%
+\>[4]\AgdaField{⟦\_⟧T} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Ty} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaRecord{Glob}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧tm} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
+\>[4]\AgdaField{⟦\_⟧tm} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{⟦\_⟧S} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Δ} \AgdaBound{⟧C}\<%
+\>[4]\AgdaField{⟦\_⟧S} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C} \AgdaSymbol{→} \AgdaBound{⟦} \AgdaBound{Δ} \AgdaBound{⟧C}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaField{π} \<[10]%
-\>[10]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
+\>[4]\AgdaField{π} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaBound{⟦} \AgdaBound{Γ} \AgdaBound{⟧C}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{⟦} \AgdaBound{A} \AgdaBound{⟧T} \AgdaBound{γ} \AgdaFunction{∣}\<%
 \\
 \>\<\end{code}
 $\AgdaField{π}$ provides the projection of the semantic variable out of a semantic context.

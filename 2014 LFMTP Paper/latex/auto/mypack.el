@@ -12,5 +12,15 @@
      "itt"
      "ett"
      "mltt"
-     "textminus")))
+     "textminus"
+     "wig"
+     "og"
+     "wog"
+     "wogs"
+     "hott"
+     "ott"
+     "tig"
+     "new")
+    (TeX-run-style-hooks
+     "xspace")))
 

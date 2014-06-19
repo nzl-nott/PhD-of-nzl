@@ -41,25 +41,11 @@
 
 \usepackage{mypack}
 
-\newcommand{\wig}{weak $\infty$-groupoids}
-\newcommand{\og}{$\omega$-groupoids}
-\newcommand{\wog}{weak $\omega$-groupoids}
-\newcommand{\wogs}{weak $\omega$-groupoid} % s for singular
-\newcommand{\hott}{Homotopy Type Theory}
-\newcommand{\ott}{Observational Type Theory}
-\newcommand{\tig}{$\mathcal{T}_{\infty-groupoid}$}
-
 \usepackage{url}
 
 \usepackage[stable]{footmisc}
 
 \usepackage[shortcuts]{extdash}
-
-\newcommand{\new}{\textcolor{red}}
-
-
-
-\hyphenation{group-oid group-oids}
 
 
 \begin{document}
@@ -400,13 +386,13 @@ The idea of heterogenous equality (or JM equality) due to McBride
 \cite{mcbride:elimination} used to resolve this issue is to define
 equality for terms of different types, but its inhabitants only for
 terms of definitionally equal types. However, the corresponding
-elimination principle relies on UIP.  In \itt{}, UIP is not provable
+elimination principle relies on UIP.  In \itt, UIP is not provable
 in general, namely not all types are h-sets (homotopy
 0-types). However every type with decidable equality is an h-set.
 Inductive types with finitary constructors have decidable equality. In
 our case, the types which stand for syntactic objects (contexts,
 types, terms) are all inductive-inductive types with finitary
-constructors. It follwos by Hedberg's Theorem \cite{hed:98} that any
+constructors. It follows by Hedberg's Theorem \cite{hed:98} that any
 type with decidable equality satisfies UIP and it therefore follows
 that the syntax staisfies UIP. Because, the equality of syntactic
 types is unique is safe to use heterogeneous equality and proceed
@@ -710,7 +696,6 @@ which will be introduced later. Indeed it encodes the fact that any type in a co
 }
 
 \subsection{Contractible contexts}
-
 With variables defined, it is possible to formalise another core part of the syntactic framework, \emph{contractible
 contexts}. Intuitively speaking, a context is contractible if its geometric
 realization is contractible to a point. It either contains one

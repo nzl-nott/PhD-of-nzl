@@ -39,7 +39,51 @@
 \usepackage[utf8x]{inputenc}
 \usepackage{diagxy}
 
-\usepackage{mypack}
+
+
+\newcommand{\todo}[1]{\textcolor{red}{TO~DO:~#1}}
+
+\newcommand{\ed}[1]{\textcolor{blue}{#1}}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+
+\newcommand{\bigslant}[2]{{\raisebox{.2em}{$#1$}\left/\raisebox{-.2em}{$#2$}\right.}}
+
+%unicode symbols
+
+\DeclareUnicodeCharacter{955}{$\lambda$}
+\DeclareUnicodeCharacter{8988}{$\ulcorner$}
+\DeclareUnicodeCharacter{8990}{$\llcorner$}
+\DeclareUnicodeCharacter{8989}{$\urcorner$}
+\DeclareUnicodeCharacter{8991}{$\lrcorner$}
+\DeclareUnicodeCharacter{946}{$\beta$}
+\DeclareUnicodeCharacter{8760}{$\dot{-}$}
+
+% Shorthand
+\usepackage{xspace}
+
+\newcommand{\itt}{Intensional Type Theory\xspace}
+\newcommand{\ett}{Extensional Type Theory\xspace}
+\newcommand{\mltt}{Martin-L\"{o}f type theory\xspace}
+\newcommand{\textminus}{\text{-}}
+\newcommand{\wig}{weak $\infty$-groupoids\xspace}
+\newcommand{\og}{$\omega$-groupoids\xspace}
+\newcommand{\wog}{weak $\omega$-groupoids\xspace}
+\newcommand{\wogs}{weak $\omega$-groupoid\xspace} % s for singular
+\newcommand{\hott}{Homotopy Type Theory\xspace}
+\newcommand{\ott}{Observational Type Theory\xspace}
+\newcommand{\tig}{$\mathcal{T}_{\infty-\text{groupoid}}$\xspace}
+
+
+\newcommand{\new}{\textcolor{red}}
+
+
+
+\hyphenation{group-oid group-oids}
 
 \usepackage{url}
 
@@ -150,8 +194,6 @@ Ond\v{r}ej Ryp\'a\v{c}ek\\
   forms a groupoid and we outline how to derive higher dimensional
   composition. We present a possible semantics using globular sets and
   discuss the issues which arise when using globular types instead.
-
-% In \hott{}, a variant of \mltt{}, we reject proof-irrelevance so that the common interpretation of types as setoids has to be generalised. With the univalence axiom, we treat equivalence as equality and interpret types as \og{}. Inspired by Altenkirch's work \cite{txa:csl} and Brunerie's notes \cite{gb:wog}, we study and implement a syntactic definition of Grothendieck \wog{} in Agda which is a popular variant of \mltt{} and a famous theorem prover. It is the first step to model type theory with \wog{} so that we could eliminate the univalence axiom.
 
 \end{abstract}
 
@@ -4014,6 +4056,89 @@ discussion topics related to the work presented in this
 paper. Especially we all would like to acknowledge Guillaume
 Brunerie's proposal which made this work possible. The second author would like to thank Ambrus Kaposi, Fredrik Nordvall Forsberg and Nicolai Kraus for helpful discussions.
 
-\bibliography{latex/my.bib}
+\begin{thebibliography}{10}
+
+\bibitem{alti:lics99}
+Thorsten Altenkirch.
+\newblock Extensional {E}quality in {I}ntensional {T}ype {T}heory.
+\newblock In {\em 14th Annual IEEE Symposium on Logic in Computer Science},
+  pages 412--420. IEEE Computer Society, 1999.
+
+\bibitem{alti:ott-conf}
+Thorsten Altenkirch, Conor McBride, and Wouter Swierstra.
+\newblock Observational equality, now!
+\newblock In {\em Proceedings of the ACM Workshop Programming Languages meets
+  Program Verification, PLPV 2007}, pages 57--68. ACM, 2007.
+
+\bibitem{txa:csl}
+Thorsten Altenkirch and Ondrej Rypacek.
+\newblock A syntactical {A}pproach to {W}eak $\omega$-{G}roupoids.
+\newblock In {\em Computer Science Logic (CSL'12) - 26th International 
+  Workshop/21st Annual Conference of the EACSL,  \balancecolumns  CSL 2012}, volume~16 of {\em
+  LIPIcs}, pages 16--30. Schloss Dagstuhl - Leibniz-Zentrum fuer Informatik,
+  2012.
+
+\bibitem{ara:wog}
+Dimitri Ara.
+\newblock On the homotopy theory of {G}rothendieck $\infty$-groupoids.
+\newblock {\em Journal of Pure and Applied Algebra}, 217(7):1237--1278, 2013.
+
+\bibitem{uafe}
+Andrej Bauer and Peter~LeFanu Lumsdaine.
+\newblock A {C}oq proof that {U}nivalence {A}xioms implies {F}unctional
+  {E}xtensionality.
+\newblock 2013.
+
+\bibitem{gb:wog}
+Guillaume Brunerie.
+\newblock Syntactic {G}rothendieck weak {$\infty$}-groupoids, 2013.
+
+\bibitem{txa:mpc2010g}
+Nils~Anders Danielsson and Thorsten Altenkirch.
+\newblock Subtyping, {D}eclaratively.
+\newblock In {\em Proceedings of Mathematics of Program Construction, 10th
+  International Conference, MPC 2010}, volume 6120 of {\em Lecture Notes in
+  Computer Science}, pages 100--118. Springer, 2010.
+
+\bibitem{gro:ps}
+Alexander Grothendieck.
+\newblock Pursuing {S}tacks.
+\newblock 1983.
+\newblock Manuscript.
+
+\bibitem{hed:98}
+Michael Hedberg.
+\newblock A {C}oherence {T}heorem for {M}artin-{L}{\"o}f's {T}ype {T}heory.
+\newblock {\em J. Funct. Program.}, 8(4):413--436, 1998.
+
+\bibitem{lfmtp-github}
+Nuo Li.
+\newblock Some constructions on $\omega$-groupoids.
+\newblock \url{https://github.com/nzl-nott/2014-LFMTP-Paper}, 2014.
+
+\bibitem{mal:gwog}
+G.~{Maltsiniotis}.
+\newblock {Grothendieck $\infty$-groupoids, and still another definition of
+  $\infty$-categories}.
+\newblock {\em ArXiv e-prints}, September 2010.
+
+\bibitem{mcbride:elimination}
+Conor McBride.
+\newblock Elimination with a motive.
+\newblock In {\em Types for Proofs and Programs, International Workshop, TYPES
+  2000}, volume 2277 of {\em Lecture Notes in Computer Science}, pages
+  197--216. Springer, 2000.
+
+\bibitem{hott}
+The Univalent~Foundations Program.
+\newblock {\em Homotopy type theory: Univalent foundations of mathematics}.
+\newblock 2013.
+
+\bibitem{agdawiki:main}
+The~Agda Wiki.
+\newblock Main page, 2014.
+\newblock [Online; accessed 15-June-2014].
+
+\end{thebibliography}
 
 \end{document}

@@ -91,10 +91,10 @@ The semantic weakening properties should actually be deriavable since weakening 
              → ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ 
              ⟦ A ⟧T γ
   
+
     semWk-S  : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}
              → (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧S 
              (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧S γ
-
 
     semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
              → (a : Tm A) → subst ∣_∣ (semWk-T γ v) 

@@ -237,16 +237,6 @@ uses the type constructor $\infty$ whose elements are computations of type
 $A$ which are written as $\sharp ~a$ where $a$ is an expression which can be
 evaluated to an element of type $A$.
 
-\section*{Acknowledgements}
-
-The first and second author would like to thank the organizers and
-other participants of the special year on homotopy type theory at the
-Institute for Advanced Study where they had many interesting
-discussion topics related to the work presented in this
-paper. Especially we all would like to acknowledge Guillaume
-Brunerie's proposal which made this work possible. The second author would like to thank Ambrus Kaposi and Fredrik Nordvall Forsberg and Nicolai Kraus for helpful discussions.
-
-
 \section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}
 %
 We develop the type theory of $\omega$-groupoids formally, following
@@ -848,6 +838,15 @@ In this paper, we presented an implementation of \wog{} following Brunerie's sug
 There is still a lot of work to do within the syntactic framework. For instance, we would like to investigate the relation between the \tig{} and a type theory with equality types and $J$ eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the $J$ eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
 We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$ eliminator are equivalent. Finally, to model the type theory with \wog and to eliminate the univalence axiom would be the most challenging task in the future. 
+
+\section{Acknowledgements}
+
+The first and second author would like to thank the organizers and
+other participants of the special year on homotopy type theory at the
+Institute for Advanced Study where they had many interesting
+discussion topics related to the work presented in this
+paper. Especially we all would like to acknowledge Guillaume
+Brunerie's proposal which made this work possible. The second author would like to thank Ambrus Kaposi and Fredrik Nordvall Forsberg and Nicolai Kraus for helpful discussions.
 
 \bibliography{latex/my.bib}
 

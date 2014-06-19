@@ -411,7 +411,7 @@ an important role later in the definition of composition.
 \label{sec:replacement}
 
 After we have suspended a context by inserting an appropriate number of
-variables, we may proceed to a substitution which fills the stalk for
+variables, we may proceed to a substitution which, so to speak, fills the stalk for
 $A$ with $A$. The context morphism representing this substitution is
 called $\AgdaFunction{filter}$. In the final step we combine it with
 $\Gamma$, the context of $A$.  The new context contains two parts, the
@@ -421,10 +421,8 @@ the stalk of $A$ becuse it already exists in $\Gamma$.
 
 This operation is called \emph{replacement} because we can interpret it as replacing $*$ in $\Delta$ by
 $A$.
-Geometrically speaking, the resulting context is a new context which corresponds to the pasting of
-$\Delta$ to $\Gamma$ at $A$.
 
-As always, we define replacement for contexts, types and terms:
+As always, we define replacement for contexts, types and terms simultaneously:
 
 \begin{code}
 rpl-C   : ∀{Γ}(A : Ty Γ) → Con → Con

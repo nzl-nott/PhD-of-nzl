@@ -336,7 +336,7 @@ the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas
 about lemmas, lemmas about lemmas about lemmas, etc. For example, we
-have to prove using $\mathit{subst}$ consecutively with two equalities
+have to prove that using $\mathit{subst}$ consecutively with two equalities
 of types is propositionally equal to using $\mathit{subst}$ with the
 composition of these two equalities. As the complexity of the proofs
 grows more lemmas are needed. The resulting
@@ -348,24 +348,25 @@ formulation of {\wog}. Moreover, the complexity brings the
 Agda type checker to its limits and correctness into question.
 
 The idea of heterogenous equality (or JM equality) due to McBride
-\cite{mcbride:elimination}, which we use to resolve this issue, is
-that one can define equality for terms of different types, but its
+\cite{mcbride:elimination} used to resolve this issue is
+to define equality for terms of different types, but its
 inhabitants only for terms of definitionally equal types. However, the
 corresponding elimination principle relies on UIP.  In \itt{}, UIP is
 not provable in general, namely not all types are h-sets (homotopy
 0-types). However every type with decidable equality is an h-set.
-From Hedberg's Theorem \cite{hed:98} we know that inductive types with
+It is easy to show that inductive types with
 finitary constructors have decidable equality. In our case, the types
 which stand for syntactic objects (contexts, types, terms) are all
-inductive-inductive types with finitary constructors and it is
-therefore safe to assume that UIP holds for them.  In summary, the
-equality of syntactic types is unique, so it is safe to use
+inductive-inductive types with finitary constructors. It follwos by
+Hedberg's Theorem \cite{hed:98} that any type with decidable equality satisfies UIP and it 
+therefore follows that the syntax staisfies UIP. Because, the
+equality of syntactic types is unique is safe to use
 heterogeneous equality and proceed without using substitution lemmas
 which would otherwise be necessary to match terms of different
 types. From a computational perspective, it means that every equality
 of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$
 to construct terms is proof-irrelevant, which is expressed in the
-definition of heterogeneous equality for terms.
+following definition of heterogeneous equality for terms.
 
 
 \begin{code}
@@ -523,8 +524,11 @@ coh-eq refl = refl _
 
 With variables defined, it is possible to formalise another core part of the syntactic framework, \emph{contractible
 contexts}. Intuitively speaking, a context is contractible if its geometric
-realization is contractible to a point. It either contains one variable of the 0-cell $*$ which is the base case, or we can extend a contractible context with a
-variable of an existing type and an $n$-cell, namely a morphism, between the new variable and some existing variable.
+realization is contractible to a point. It either contains one
+variable of the type $*$ which is the base case, or we can extend a contractible context with a
+variable of an existing type and an $n$-cell, namely a morphism,
+between the new variable and some existing variable. Contractibility
+of contexts is defined as follows:
 
 \begin{code}
 data isContr where
@@ -557,7 +561,8 @@ S-eq refl (refl _) = refl
 
 Since contexts, types, variables and
 terms are all mutually defined, most of their properties have to
-be proved simultaneously.
+be proved simultaneously. Note that we are free to define all the
+types first and all the definitions (not shown) later. 
 
 The following lemmas are essential for the constructions and theorem
 proving later.  The first set of lemmas states that to substitute a

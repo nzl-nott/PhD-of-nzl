@@ -209,7 +209,7 @@ when using the usual homogeneous one. We present the formalisation but
 omit some complicated and less important programs, namely the
 proofs of some lemmas or definitions of some auxiliary functions. It
 is still possible for the reader who is interested in the details to
-check the code online at \url{github.com/nzl-nott}.  
+check the code online \cite{lfmtp-github}.  
 %\footnote{The source code is available on %\url{github.com/nzl-nott}.}.
 
 \subsection*{Agda}\label{Agda}
@@ -237,7 +237,7 @@ uses the type constructor $\infty$ whose elements are computations of type
 $A$ which are written as $\sharp ~a$ where $a$ is an expression which can be
 evaluated to an element of type~$A$.
 
-\section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}
+\section{Syntax of weak {\LARGE$\omega$}-groupoids}\label{sec:syntax}
 %
 We develop the type theory of $\omega$-groupoids formally, following
 \cite{gb:wog}. This is a type theory with only one type former which

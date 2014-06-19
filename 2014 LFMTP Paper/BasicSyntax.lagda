@@ -327,8 +327,8 @@ data Ty Γ where
 
 One of the big challenges we encountered at first is the difficulty to
 formalise and reason about the equalities of terms, which is
-essential when defining substitution. \new{We use homogeneous equality, for example $a \equiv b$, to encode most of the equalities, whose only inhabitant $refl$ appears when $a$ and $b$ are computationally the same.} When the usual homogeneous identity types
-are used, one has to use substitution to unify
+essential when defining substitution. When the usual homogeneous identity types
+are used one has to use substitution to unify
 the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas

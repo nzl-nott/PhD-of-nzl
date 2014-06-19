@@ -388,10 +388,19 @@ Assume the set of real numbers is definable, we have a type $A$ and
 its embedding in $\mathsf{TT} + \mathsf{Q}$  is $\tometa A$. It also
 gives us a normalisation function and a representative function
 between $\tometa \R_0$ and $\tometa A$.
+\end{proof}
 
-\todo{P(T) -> Connected (T) -> Contractible(T), $\R/ \sim$ is connected but
-  not contractible?}
-
+\begin{proposition}
+It is not true that given type $T$, if $T$ is connected then $T$ is contractible.
+\end{proposition}
+\todo{verify whether this is correct.}
+\begin{proof}
+As we have seen $ \R_0 / \sim$ is connected. However, it is not
+contractible.
+Assume it is contractible then there exists $x : \R_0 / \sim$, for
+all $y : \R_0 / \sim$, we know $x = y$. Given two uniform sequences
+$\bar{0} , \bar{1} : \R_0 / \sim$, we have $\bar{0}  = x = \bar{1}$
+which negates $\bar{0} \ne \bar{1}$.
 \end{proof}
 
 \subsection{Cauchy completeness of the Cauchy reals}
@@ -399,15 +408,30 @@ between $\tometa \R_0$ and $\tometa A$.
 \todo{expand Cauchy completeness of Cauchy reals: it should rely on
   the axiom of countable choice}
 
-Whether our definition of Cauchy sequence is Cauchy complete? In other
+Is our definition of cauchy reals $\R_0$ Cauchy complete? In other
 words, is there a representative Cauchy sequence as a limit for every
 equivalence class? The answer is no.
+
+In classical logic, the real number is defined to be the limits. The
+limit can be built via a kind of diagonalization
+\cite{DBLP:journals/entcs/Lubarsky07}.
+While in a constructive setting like type theory here, it fails since
+we cannot find a canonical representative for each equivalence
+class. Intuitively speaking it is easy to find a canonical choice for
+any rational number but it is impossible to find one for any
+irrational number. It has been proved by Robert S. Lubarsky in
+\cite{DBLP:journals/entcs/Lubarsky07}.
+
+Given the axiom of Countable Choice ($AC_{\omega}$), it is easy to see that we can
+find the limit for each equivalence class, namely the Cauchy reals 
+are Cauchy complete. However $AC_{\omega}$ is an classical result
+which is stronger than the premise "in classical logic''.
 
 In the HoTT book \cite{hott}, an alternative definition is used
 instead which is called cauchy approximation. Because every
 approximation has been proven to have a limit, it is Cauchy complete.
 The definition uses the higher inductive types which will be discussed
-in later Chapter \ref{HITs}.
+in chapter \ref{HITs}.
 
 \section{Multisets}
 

@@ -15,13 +15,13 @@
 \contentsline {todo}{here}{30}{section*.86}
 \contentsline {todo}{1. Distributivity 2. Rational numbers 3. other definable quotients}{33}{section*.89}
 \contentsline {todo}{add this paragraph:}{41}{section*.103}
-\contentsline {todo}{P(T) -> Connected (T) -> Contractible(T), $\mathbb {R}/ \sim $ is connected but not contractible?}{51}{section*.151}
-\contentsline {todo}{expand Cauchy completeness of Cauchy reals: it should rely on the axiom of countable choice}{52}{section*.153}
-\contentsline {todo}{decidable order -> of course definable, A-> N definable, give a explicit proof}{52}{section*.156}
-\contentsline {todo}{definable -> split quotient because definable is too general}{53}{section*.157}
-\contentsline {todo}{Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mhe/agda/FailureOfTotalSeparatedness.html} should be considered and discussed here, couterexample of Connected -> contractible(?)}{54}{section*.160}
-\contentsline {todo}{the Setoid Model}{55}{section*.162}
-\contentsline {todo}{write why this model is not lccc explicitly. refer to Nicolais's result}{56}{section*.166}
-\contentsline {todo}{}{80}{section*.185}
-\contentsline {todo}{more explanation of face maps and degeneracy maps}{81}{section*.190}
-\contentsline {todo}{show an example graph}{81}{section*.191}
+\contentsline {todo}{verify whether this is correct.}{52}{section*.152}
+\contentsline {todo}{expand Cauchy completeness of Cauchy reals: it should rely on the axiom of countable choice}{52}{section*.154}
+\contentsline {todo}{decidable order -> of course definable, A-> N definable, give a explicit proof}{53}{section*.157}
+\contentsline {todo}{definable -> split quotient because definable is too general}{53}{section*.158}
+\contentsline {todo}{Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mhe/agda/FailureOfTotalSeparatedness.html} should be considered and discussed here, couterexample of Connected -> contractible(?)}{54}{section*.161}
+\contentsline {todo}{the Setoid Model}{57}{section*.163}
+\contentsline {todo}{write why this model is not lccc explicitly. refer to Nicolais's result}{58}{section*.167}
+\contentsline {todo}{}{82}{section*.186}
+\contentsline {todo}{more explanation of face maps and degeneracy maps}{83}{section*.191}
+\contentsline {todo}{show an example graph}{83}{section*.192}

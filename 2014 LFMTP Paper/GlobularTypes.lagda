@@ -28,7 +28,7 @@ record Glob : Set₁ where
 open Glob public
 \end{code}
 }
-If all the object types ($\AgdaField{∣\_∣}$) are indeed sets, i.e.\ uniqueness of identity types holds, we call this a globular set.
+If all the object types ($\AgdaField{∣\_∣}$) are indeed sets, i.e.\ uniqueness of identity types (UIP) holds, we call this a globular set.
 
 %Indeed, we should assume the 0-level object to be an h-set, namely the equality of any two terms of it should be unique. 
 
@@ -38,7 +38,7 @@ As an example, we could construct the identity globular type called $\AgdaFuncti
 Idω    : (A : Set) → Glob
 Idω A  = A ∣∣ (λ a b → ♯ Idω (a ≡ b))
 \end{code}
-Note that this is usually not a globular set, \new{because its equality is not propositional.}
+Note that this is usually not a globular set, because UIP does not necessary for object types on each level, i.e.\ $\AgdaBound{A}$, $\AgdaBound{a}\AgdaDatatype{≡}\AgdaBound{b}$ and so on.
 
 \AgdaHide{
 \begin{code}

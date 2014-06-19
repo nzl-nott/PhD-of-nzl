@@ -81,5 +81,6 @@
      "DBLP:conf/csl/2012"
      "txa:mpc2010g"
      "DBLP:conf/mpc/2010"
-     "hed:98")))
+     "hed:98"
+     "DBLP:journals/entcs/Lubarsky07")))
 

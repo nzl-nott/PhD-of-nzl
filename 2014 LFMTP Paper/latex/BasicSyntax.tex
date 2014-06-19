@@ -303,7 +303,7 @@ statement of the coherence constants. However, defining these
 constants requires us to prove a number of substitution laws which
 with the usual definition of identity types take a very
 complex mutually recursive form (see \cite{txa:csl}). We address this
-issue by using heterogeneous equality \cite{}. Although 
+issue by using heterogeneous equality \cite{mcbride:elimination}. Although 
 it exploits UIP, our approach is sound because UIP holds for the
 syntax. See Section \ref{sec:het} for a more details.
 
@@ -376,36 +376,44 @@ type $A$ is an $n$-cell then we call its equality type an $(n+1)$-cell.
 
 \subsection{Heterogeneous Equality for Terms}\label{sec:het}
 
-One of the big challenges we encountered at first is the difficulty to
+One of the big challenges we encountered was the difficulty to
 formalise and reason about the equalities of terms, which is
 essential when defining substitution. When the usual homogeneous identity types
 are used one has to use substitution to unify
 the types on both sides of equality types. This results in
 $\mathit{subst}$ to appear in terms, about which one has to state
 substitution lemmas. This further pollutes syntax requiring lemmas
-about lemmas, lemmas about lemmas about lemmas, etc. For example, we have to prove using $\mathit{subst}$ consecutively with two equalities of types is propositionally equal to using $\mathit{subst}$ with the composition of these two equalities. There are more and more lemmas needed as the complexity of the proofs grows. The resulting
-recurring pattern has been identified and implemented in
+about lemmas, lemmas about lemmas about lemmas, etc. For example, we
+have to prove using $\mathit{subst}$ consecutively with two equalities
+of types is propositionally equal to using $\mathit{subst}$ with the
+composition of these two equalities. As the complexity of the proofs
+grows more lemmas are needed. The resulting
+recurrence pattern has been identified and implemented in
 \cite{txa:csl} for the special cases of coherence cells for
 associativity, units and interchange. However it is not clear how that
 approach could be adapted to the present, much more economical
 formulation of {\wog}. Moreover, the complexity brings the
 Agda type checker to its limits and correctness into question.
 
-The idea of heterogenous equality (or JM equality), which we use to resolve this issue,
-is that one can define equality for terms of different types, but its
+The idea of heterogenous equality (or JM equality) due to McBride
+\cite{mcbride:elimination}, which we use to resolve this issue, is
+that one can define equality for terms of different types, but its
 inhabitants only for terms of definitionally equal types. However, the
-corresponding elimination principle relies on UIP. 
-In \itt{}, UIP is not provable in general,
-  namely not all types are h-sets (homotopy 0-types). However every type with decidable equality is an h-set.
-  From Hedberg's Theorem \cite{hed:98} we know that inductive
-  types with finitary constructors have decidable equality. In our
-  case, the types which stand for syntactic objects (contexts, types, terms)
-  are all inductive-inductive types with finitary constructors and it is
-  therefore safe to assume that UIP holds for them.
-In summary, the equality of
-syntactic types is unique, so it is safe to use heterogeneous equality
-and proceed without using substitution lemmas which would otherwise be
-necessary to match terms of different types. From a computational perspective, it means that every equality of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$ to construct terms is proof-irrelevant, which is expressed in the definition of heterogeneous equality for terms.
+corresponding elimination principle relies on UIP.  In \itt{}, UIP is
+not provable in general, namely not all types are h-sets (homotopy
+0-types). However every type with decidable equality is an h-set.
+From Hedberg's Theorem \cite{hed:98} we know that inductive types with
+finitary constructors have decidable equality. In our case, the types
+which stand for syntactic objects (contexts, types, terms) are all
+inductive-inductive types with finitary constructors and it is
+therefore safe to assume that UIP holds for them.  In summary, the
+equality of syntactic types is unique, so it is safe to use
+heterogeneous equality and proceed without using substitution lemmas
+which would otherwise be necessary to match terms of different
+types. From a computational perspective, it means that every equality
+of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$
+to construct terms is proof-irrelevant, which is expressed in the
+definition of heterogeneous equality for terms.
 
 
 \begin{code}\>\<%

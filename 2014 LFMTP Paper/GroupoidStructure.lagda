@@ -72,11 +72,11 @@ refl-Tm    : {Γ : Con}(A : Ty Γ)
            → Tm (rpl-T {Δ = x:*} A (var v0 =h var v0))
 refl-Tm A  = rpl-tm A refl*-Tm
 
-sym-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
-sym-Tm A = rpl-tm A sym*-Tm
+sym-Tm    : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A sym*-Ty)
+sym-Tm A  = rpl-tm A sym*-Tm
 
-trans-Tm : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
-trans-Tm A = rpl-tm A trans*-Tm
+trans-Tm    : ∀ {Γ}(A : Ty Γ) → Tm (rpl-T A trans*-Ty)
+trans-Tm A  = rpl-tm A trans*-Tm
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -182,32 +182,35 @@ Ty-G-assoc* = (trans*-Tm [ ((((• , vM) , vP) ,
 }
 
 \begin{code}
-Tm-right-identity* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ IdS , vY , reflY ]tm =h vα)
+Tm-right-identity* : 
+  Tm {x:*,y:*,α:x=y} (trans*-Tm [ IdS , vY , reflY ]tm 
+  =h vα)
 Tm-right-identity* = Coh-Contr (ext c* v0)
 
-Tm-left-identity* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ ((IdS ⊚ pr1 ⊚ pr1) , vX) ,
-          reflX , vY , vα ]tm =h vα)
+Tm-left-identity* : 
+  Tm {x:*,y:*,α:x=y} (trans*-Tm [ ((IdS ⊚ pr1 ⊚ pr1) , vX) ,
+  reflX , vY , vα ]tm =h vα)
 Tm-left-identity* = Coh-Contr (ext c* v0)
 
-Tm-right-inverse* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ (IdS , vX) , sym*-Tm ]tm =h reflX)
+Tm-right-inverse* : 
+  Tm {x:*,y:*,α:x=y} (trans*-Tm [ (IdS , vX) , sym*-Tm ]tm 
+  =h reflX)
 Tm-right-inverse* = Coh-Contr (ext c* v0)
 
-Tm-left-inverse* : Tm {x:*,y:*,α:x=y}
-         (trans*-Tm [ ((• , vY) , vX , sym*-Tm , vY) , vα ]tm 
-           =h reflY)
+Tm-left-inverse* : 
+  Tm {x:*,y:*,α:x=y} (trans*-Tm [ ((• , vY) , vX , sym*-Tm ,
+  vY) , vα ]tm =h reflY)
 Tm-left-inverse* = Coh-Contr (ext c* v0)
 
-Tm-G-assoc* : Tm Ty-G-assoc*
-Tm-G-assoc* = Coh-Contr (ext (ext (ext c* v0) (vS v0)) 
-                         (vS v0))
+Tm-G-assoc*  : Tm Ty-G-assoc*
+Tm-G-assoc*  = Coh-Contr (ext (ext (ext c* v0) (vS v0)) 
+             (vS v0))
 \end{code}
 \noindent Their general versions are defined using replacement. For instance, for associativity, we define:
 
 \begin{code}
-Tm-G-assoc    : ∀{Γ}(A : Ty Γ) → Tm (rpl-T A Ty-G-assoc*)
+Tm-G-assoc    : ∀{Γ}(A : Ty Γ) 
+              → Tm (rpl-T A Ty-G-assoc*)
 Tm-G-assoc A  = rpl-tm A Tm-G-assoc* 
 \end{code}
 Following the same pattern, the $n$-level groupoid laws can be obtained as the coherence constants as well.

@@ -35,9 +35,11 @@ record Semantic (G : Glob) : Set₁ where
   field
     ⟦_⟧C   : Con → Set
     ⟦_⟧T   : ∀{Γ} → Ty Γ → ⟦ Γ ⟧C → Glob
-    ⟦_⟧tm  : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
+    ⟦_⟧tm  : ∀{Γ A} → Tm A → (γ : ⟦ Γ ⟧C) 
+           → ∣ ⟦ A ⟧T γ ∣
     ⟦_⟧S   : ∀{Γ Δ} → Γ ⇒ Δ → ⟦ Γ ⟧C → ⟦ Δ ⟧C
-    π      : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) → ∣ ⟦ A ⟧T γ ∣
+    π      : ∀{Γ A} → Var A → (γ : ⟦ Γ ⟧C) 
+           → ∣ ⟦ A ⟧T γ ∣
 \end{code}
 $\AgdaField{π}$ provides the projection of the semantic variable out of a semantic context.
 
@@ -46,27 +48,27 @@ Following are the computation laws for the interpretations of contexts and types
 \begin{code}
     ⟦_⟧C-β1  : ⟦ ε ⟧C ≡ ⊤
     ⟦_⟧C-β2  : ∀ {Γ A} → ⟦ Γ , A ⟧C ≡ 
-                         Σ ⟦ Γ ⟧C (λ γ  → ∣ ⟦ A ⟧T γ ∣)
+             Σ ⟦ Γ ⟧C (λ γ  → ∣ ⟦ A ⟧T γ ∣)
     
     ⟦_⟧T-β1  : ∀{Γ}{γ : ⟦ Γ ⟧C} → ⟦ * ⟧T γ ≡ G
     ⟦_⟧T-β2  : ∀{Γ A u v}{γ : ⟦ Γ ⟧C}
              → ⟦ u =h v ⟧T γ ≡
-               ♭ (hom (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
+             ♭ (hom (⟦ A ⟧T γ) (⟦ u ⟧tm γ) (⟦ v ⟧tm γ))
 \end{code}
 Semantic substitution and semantic weakening laws are also required.
 The semantic substitution properties are essential for dealing with substitutions inside interpretation,
 
 \begin{code}
-    semSb-T  : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
-             → ⟦ A [ δ ]T ⟧T γ ≡ ⟦ A ⟧T (⟦ δ ⟧S γ)
+    semSb-T   : ∀ {Γ Δ}(A : Ty Δ)(δ : Γ ⇒ Δ)(γ : ⟦ Γ ⟧C)
+              → ⟦ A [ δ ]T ⟧T γ ≡ ⟦ A ⟧T (⟦ δ ⟧S γ)
 
-    semSb-tm : ∀{Γ Δ}{A : Ty Δ}(a : Tm A)(δ : Γ ⇒ Δ)
-               (γ : ⟦ Γ ⟧C)
-             → subst ∣_∣ (semSb-T A δ γ) (⟦ a [ δ ]tm ⟧tm γ)
-                ≡ ⟦ a ⟧tm (⟦ δ ⟧S γ)
+    semSb-tm  : ∀{Γ Δ}{A : Ty Δ}(a : Tm A)(δ : Γ ⇒ Δ)
+              (γ : ⟦ Γ ⟧C) → subst ∣_∣ (semSb-T A δ γ) 
+              (⟦ a [ δ ]tm ⟧tm γ) ≡ ⟦ a ⟧tm (⟦ δ ⟧S γ)
 
-    semSb-S : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)(θ : Δ ⇒ Θ)
-             → ⟦ θ ⊚ δ ⟧S γ ≡ ⟦ θ ⟧S (⟦ δ ⟧S γ)
+    semSb-S   : ∀ {Γ Δ Θ}(γ : ⟦ Γ ⟧C)(δ : Γ ⇒ Δ)
+              (θ : Δ ⇒ Θ) → ⟦ θ ⊚ δ ⟧S γ ≡ 
+              ⟦ θ ⟧S (⟦ δ ⟧S γ)
 \end{code}
 Since the computation laws for the interpretations of terms and context morphisms are well typed up to these properties.
 
@@ -78,20 +80,20 @@ Since the computation laws for the interpretations of terms and context morphism
              → ⟦ • ⟧S γ ≡ coerce ⟦_⟧C-β1 tt
 
     ⟦_⟧S-β2  : ∀{Γ Δ}{A : Ty Δ}{δ : Γ ⇒ Δ}{γ : ⟦ Γ ⟧C}
-                {a : Tm (A [ δ ]T)} → ⟦ δ , a ⟧S γ 
-              ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧S γ) ,
-                subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
+             {a : Tm (A [ δ ]T)} → ⟦ δ , a ⟧S γ 
+             ≡ coerce ⟦_⟧C-β2 ((⟦ δ ⟧S γ) ,
+             subst ∣_∣ (semSb-T A δ γ) (⟦ a ⟧tm γ))
 \end{code}
 The semantic weakening properties should actually be deriavable since weakening is equivalent to projection substitution.
 
 \begin{code}
     semWk-T  : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)
              → ⟦ A +T B ⟧T (coerce ⟦_⟧C-β2 (γ , v)) ≡ 
-               ⟦ A ⟧T γ
+             ⟦ A ⟧T γ
   
     semWk-S  : ∀ {Γ Δ B}{γ : ⟦ Γ ⟧C}{v : ∣ ⟦ B ⟧T γ ∣}
-              → (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧S 
-                (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧S γ
+             → (δ : Γ ⇒ Δ) → ⟦ δ +S B ⟧S 
+             (coerce ⟦_⟧C-β2 (γ , v)) ≡ ⟦ δ ⟧S γ
 
 
     semWk-tm : ∀ {Γ A B}(γ : ⟦ Γ ⟧C)(v : ∣ ⟦ B ⟧T γ ∣)

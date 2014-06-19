@@ -119,15 +119,19 @@ $\AgdaFunction{x:*,y:*,α:x=y} \AgdaSymbol{=} \AgdaInductiveConstructor{ε} \Agd
 \\
 %
 \\
-\>\AgdaFunction{sym-Tm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{sym*-Ty}\AgdaSymbol{)}\<%
+\>\AgdaFunction{sym-Tm} \<[10]%
+\>[10]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{sym*-Ty}\AgdaSymbol{)}\<%
 \\
-\>\AgdaFunction{sym-Tm} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{sym*-Tm}\<%
+\>\AgdaFunction{sym-Tm} \AgdaBound{A} \<[10]%
+\>[10]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{sym*-Tm}\<%
 \\
 %
 \\
-\>\AgdaFunction{trans-Tm} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{trans*-Ty}\AgdaSymbol{)}\<%
+\>\AgdaFunction{trans-Tm} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{trans*-Ty}\AgdaSymbol{)}\<%
 \\
-\>\AgdaFunction{trans-Tm} \AgdaBound{A} \AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{trans*-Tm}\<%
+\>\AgdaFunction{trans-Tm} \AgdaBound{A} \<[12]%
+\>[12]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{trans*-Tm}\<%
 \\
 \>\<\end{code}
 \AgdaHide{
@@ -391,56 +395,69 @@ For each of reflexivity, symmetry and transitivity we can construct appropriate 
 
 \begin{code}\>\<%
 \\
-\>\AgdaFunction{Tm-right-identity*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\>\AgdaFunction{Tm-right-identity*} \AgdaSymbol{:} \<[21]%
+\>[21]\<%
 \\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaFunction{IdS} \AgdaInductiveConstructor{,} \AgdaFunction{vY} \AgdaInductiveConstructor{,} \AgdaFunction{reflY} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{vα}\AgdaSymbol{)}\<%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaFunction{IdS} \AgdaInductiveConstructor{,} \AgdaFunction{vY} \AgdaInductiveConstructor{,} \AgdaFunction{reflY} \AgdaFunction{]tm} \<[55]%
+\>[55]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{=h} \AgdaFunction{vα}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{Tm-right-identity*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
 \\
 %
 \\
-\>\AgdaFunction{Tm-left-identity*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\>\AgdaFunction{Tm-left-identity*} \AgdaSymbol{:} \<[20]%
+\>[20]\<%
 \\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((}\AgdaFunction{IdS} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((}\AgdaFunction{IdS} \AgdaFunction{⊚} \AgdaFunction{pr1} \AgdaFunction{⊚} \AgdaFunction{pr1}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
 \\
-\>[9]\AgdaIndent{10}{}\<[10]%
-\>[10]\AgdaFunction{reflX} \AgdaInductiveConstructor{,} \AgdaFunction{vY} \AgdaInductiveConstructor{,} \AgdaFunction{vα} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{vα}\AgdaSymbol{)}\<%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{reflX} \AgdaInductiveConstructor{,} \AgdaFunction{vY} \AgdaInductiveConstructor{,} \AgdaFunction{vα} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{vα}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{Tm-left-identity*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
 \\
 %
 \\
-\>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{:} \<[20]%
+\>[20]\<%
 \\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{(}\AgdaFunction{IdS} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{reflX}\AgdaSymbol{)}\<%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{(}\AgdaFunction{IdS} \AgdaInductiveConstructor{,} \AgdaFunction{vX}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaFunction{]tm} \<[59]%
+\>[59]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{=h} \AgdaFunction{reflX}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{Tm-right-inverse*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
 \\
 %
 \\
-\>\AgdaFunction{Tm-left-inverse*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}}\<%
+\>\AgdaFunction{Tm-left-inverse*} \AgdaSymbol{:} \<[19]%
+\>[19]\<%
 \\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((}\AgdaInductiveConstructor{•} \AgdaInductiveConstructor{,} \AgdaFunction{vY}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vX} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaInductiveConstructor{,} \AgdaFunction{vY}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vα} \AgdaFunction{]tm} \<[62]%
-\>[62]\<%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*,y:*,α:x=y}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{trans*-Tm} \AgdaFunction{[} \AgdaSymbol{((}\AgdaInductiveConstructor{•} \AgdaInductiveConstructor{,} \AgdaFunction{vY}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vX} \AgdaInductiveConstructor{,} \AgdaFunction{sym*-Tm} \AgdaInductiveConstructor{,}\<%
 \\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaInductiveConstructor{=h} \AgdaFunction{reflY}\AgdaSymbol{)}\<%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{vY}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{vα} \AgdaFunction{]tm} \AgdaInductiveConstructor{=h} \AgdaFunction{reflY}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{Tm-left-inverse*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
 \\
 %
 \\
-\>\AgdaFunction{Tm-G-assoc*} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaFunction{Ty-G-assoc*}\<%
+\>\AgdaFunction{Tm-G-assoc*} \<[13]%
+\>[13]\AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaFunction{Ty-G-assoc*}\<%
 \\
-\>\AgdaFunction{Tm-G-assoc*} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))} \<[55]%
-\>[55]\<%
+\>\AgdaFunction{Tm-G-assoc*} \<[13]%
+\>[13]\AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaSymbol{(}\AgdaInductiveConstructor{ext} \AgdaInductiveConstructor{c*} \AgdaInductiveConstructor{v0}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))} \<[56]%
+\>[56]\<%
 \\
-\>[11]\AgdaIndent{25}{}\<[25]%
-\>[25]\AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\>[2]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{(}\AgdaInductiveConstructor{vS} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
 \\
 \>\<\end{code}
 \noindent Their general versions are defined using replacement. For instance, for associativity, we define:
@@ -448,7 +465,11 @@ For each of reflexivity, symmetry and transitivity we can construct appropriate 
 \begin{code}\>\<%
 \\
 \>\AgdaFunction{Tm-G-assoc} \<[14]%
-\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{Ty-G-assoc*}\AgdaSymbol{)}\<%
+\>[14]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[31]%
+\>[31]\<%
+\\
+\>[13]\AgdaIndent{14}{}\<[14]%
+\>[14]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaBound{A} \AgdaFunction{Ty-G-assoc*}\AgdaSymbol{)}\<%
 \\
 \>\AgdaFunction{Tm-G-assoc} \AgdaBound{A} \<[14]%
 \>[14]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{Tm-G-assoc*} \<[37]%

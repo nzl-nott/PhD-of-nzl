@@ -53,15 +53,16 @@
 
 \usepackage[stable]{footmisc}
 
+\usepackage[shortcuts]{extdash}
+
 \newcommand{\new}{\textcolor{red}}
 
 
 
-\hyphenation{group-oid}
+\hyphenation{group-oid group-oids}
 
 
 \begin{document}
-%\pagenumbering{gobble}
 
 
 % Permission Statement

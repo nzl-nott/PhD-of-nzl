@@ -184,7 +184,7 @@ equalities $f ∘ g = 1_B$ and $g ∘ f = 1_A$ we have 2-cell isomorphisms $f �
 Voevodsky proposed the univalence axiom which basically says that
 isomorphic types are equal. This can be viewed as a strong
 extensionality axiom and it does imply functional extensionality.  %(a
-coq proof of this can be found in \cite{uafe}) However, adding
+A coq proof of this can be found in \cite{uafe}) However, adding
 univalence as an axiom destroys canonicity, i.e.\ that every closed
 term of type $\mathbb{N}$ is reducible to a numeral. In the special
 case of extensionality and assuming a strong version of UIP the first
@@ -200,13 +200,13 @@ The generalised notion is called {\wogs} and was proposed by
 Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
 category, a setoid is a category where every morphism between
 any two objects is unique. A groupoid is more generalised, every morphism is
-isomorphism but the proof of isomorphism is unique, namely the
+an isomorphism but the proof of isomorphism is unique, namely the
 composition of a morphism with its inverse is equal to the identity. Similarly, an
 $n$-groupoid is an $n$-category in which morphisms on all levels are
 equivalences. {\wogs} (also called $\infty$-groupoid) is an
 infinite version of $n$-groupoid. To model Type Theory without UIP we
-also require the equalities to be non-strict, in other words, they are
-not definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
+also allow the equalities to be non-strict, in other words, they are
+propositional but not necessarily definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
 There are several approaches to formalise {\wog} in Type Theory, for instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
 
@@ -254,7 +254,7 @@ coinductive types and more generally mixed inductive/coinductive types
 \cite{txa:mpc2010g}
 uses the type constructor $\infty$ whose elements are computations of type
 $A$ which are written as $\sharp ~a$ where $a$ is an expression which can be
-evaluated to an element of type $A$.
+evaluated to an element of type~$A$.
 
 \section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}
 %
@@ -383,7 +383,7 @@ types, terms) are all inductive-inductive types with finitary
 constructors. It follows by Hedberg's Theorem \cite{hed:98} that any
 type with decidable equality satisfies UIP and it therefore follows
 that the syntax staisfies UIP. Because, the equality of syntactic
-types is unique is safe to use heterogeneous equality and proceed
+types is unique, it is safe to use heterogeneous equality and proceed
 without using substitution lemmas which would otherwise be necessary
 to match terms of different types. From a computational perspective,
 it means that every equality of types can be reduced to
@@ -1419,7 +1419,7 @@ other participants of the special year on homotopy type theory at the
 Institute for Advanced Study where they had many interesting
 discussion topics related to the work presented in this
 paper. Especially we all would like to acknowledge Guillaume
-Brunerie's proposal which made this work possible. The second author would like to thank Ambrus Kaposi and Fredrik Nordvall Forsberg and Nicolai Kraus for helpful discussions.
+Brunerie's proposal which made this work possible. The second author would like to thank Ambrus Kaposi, Fredrik Nordvall Forsberg and Nicolai Kraus for helpful discussions.
 
 \bibliography{latex/my.bib}
 

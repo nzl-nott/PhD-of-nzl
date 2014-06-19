@@ -56,7 +56,14 @@ various fields especially computer science. Some languages are extentions of lam
 
 \subsection{Per Martin-L\"{o}f's Type Theory}
 
-In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. His 1971's formulation which is impredicative was proved to be inconsistent because of Girard's paradox \cite{hurkens1995simplification}. The impredicativty means that for a universe $\mathsf{U}$, there is an axiom $\mathsf{U} \in \mathsf{U}$. The later version is predicative and is more widely used.
+In 1970s, Per Martin-L\"{o}f \cite{per:71,per:82}  developed his profound intuitionistic type theory. 
+
+
+\textbf{Universe and impredicativity} The notion of a \emph{universe of types}  was first used by Martin-L\"{o}f \cite{Martin-Lof-1973} to describe the type of all types. 
+His 1971's formulation has an impredicative universe i.e.\ for the universe $\mathsf{U}$, there is an axiom $\mathsf{U} : \mathsf{U}$. 
+It was later proved to be inconsistent due to Girard's paradox \cite{hurkens1995simplification}.
+In his later versions, a predicative hierarchy of universes are adopted and is more widely used. Briefly speaking, it starts from a universe of small types called $U_0$ and for each $n : \N$ we have $U_n : U_{n+1}$ which forms a cumulative hierarchy of universe. There is a more detailed introduction to the notion of universe written by Erik Palmgren \cite{Palmgren98onuniverses}.
+
 
 
 It serves as a foundation of constructive mathematics \cite{martin1984intuitionistic}. Different to set theory whose axioms are based on first-order logic, \mltt provides a means of implementing intuitionistic logic. This is achieved by the Curry-Howard

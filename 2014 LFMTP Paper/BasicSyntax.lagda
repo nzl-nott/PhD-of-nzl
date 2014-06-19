@@ -237,7 +237,7 @@ uses the type constructor $\infty$ whose elements are computations of type
 $A$ which are written as $\sharp ~a$ where $a$ is an expression which can be
 evaluated to an element of type~$A$.
 
-\section{Syntax of weak {\LARGE$\omega$}-groupoids}\label{sec:syntax}
+\section{Syntax of weak {\Large$\omega$}-groupoids}\label{sec:syntax}
 %
 We develop the type theory of $\omega$-groupoids formally, following
 \cite{gb:wog}. This is a type theory with only one type former which

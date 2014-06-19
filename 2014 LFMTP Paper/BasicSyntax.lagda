@@ -348,25 +348,25 @@ formulation of {\wog}. Moreover, the complexity brings the
 Agda type checker to its limits and correctness into question.
 
 The idea of heterogenous equality (or JM equality) due to McBride
-\cite{mcbride:elimination} used to resolve this issue is
-to define equality for terms of different types, but its
-inhabitants only for terms of definitionally equal types. However, the
-corresponding elimination principle relies on UIP.  In \itt{}, UIP is
-not provable in general, namely not all types are h-sets (homotopy
+\cite{mcbride:elimination} used to resolve this issue is to define
+equality for terms of different types, but its inhabitants only for
+terms of definitionally equal types. However, the corresponding
+elimination principle relies on UIP.  In \itt{}, UIP is not provable
+in general, namely not all types are h-sets (homotopy
 0-types). However every type with decidable equality is an h-set.
-It is easy to show that inductive types with
-finitary constructors have decidable equality. In our case, the types
-which stand for syntactic objects (contexts, types, terms) are all
-inductive-inductive types with finitary constructors. It follwos by
-Hedberg's Theorem \cite{hed:98} that any type with decidable equality satisfies UIP and it 
-therefore follows that the syntax staisfies UIP. Because, the
-equality of syntactic types is unique is safe to use
-heterogeneous equality and proceed without using substitution lemmas
-which would otherwise be necessary to match terms of different
-types. From a computational perspective, it means that every equality
-of types can be reduced to $\mathit{refl}$ and using $\mathit{subst}$
-to construct terms is proof-irrelevant, which is expressed in the
-following definition of heterogeneous equality for terms.
+Inductive types with finitary constructors have decidable equality. In
+our case, the types which stand for syntactic objects (contexts,
+types, terms) are all inductive-inductive types with finitary
+constructors. It follwos by Hedberg's Theorem \cite{hed:98} that any
+type with decidable equality satisfies UIP and it therefore follows
+that the syntax staisfies UIP. Because, the equality of syntactic
+types is unique is safe to use heterogeneous equality and proceed
+without using substitution lemmas which would otherwise be necessary
+to match terms of different types. From a computational perspective,
+it means that every equality of types can be reduced to
+$\mathit{refl}$ and using $\mathit{subst}$ to construct terms is
+proof-irrelevant, which is expressed in the following definition of
+heterogeneous equality for terms.
 
 
 \begin{code}

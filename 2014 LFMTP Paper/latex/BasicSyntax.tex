@@ -196,28 +196,28 @@ equalities $f ∘ g = 1_B$ and $g ∘ f = 1_A$ we have 2-cell isomorphisms $f �
 
 Voevodsky proposed the univalence axiom which basically says that
 isomorphic types are equal. This can be viewed as a strong
-extensionality axiom and it does imply functional extensionality.
-%(a coq proof of this can be found in \cite{uafe})
-However, adding
+extensionality axiom and it does imply functional extensionality.  %(a
+coq proof of this can be found in \cite{uafe}) However, adding
 univalence as an axiom destroys canonicity, i.e.\ that every closed
-term of type $\mathbb{N}$ is reducible to a numeral. In the special case of
-extensionality and assuming a strong version of UIP we were able to
-eliminate this issue \cite{alti:lics99,alti:ott-conf} using
-setoids. However, it is not clear how to generalize this in the
-absence of UIP to
-univalence which is incompatible with UIP. To solve the problem we
-should generalise the notion of setoids, namely to enrich the
-structure of the identity proofs.
+term of type $\mathbb{N}$ is reducible to a numeral. In the special
+case of extensionality and assuming a strong version of UIP the first
+author and coauthors were able to eliminate this issue
+\cite{alti:lics99,alti:ott-conf} using setoids. However, it is not
+clear how to generalize this in the absence of UIP to univalence which
+is incompatible with UIP. To solve the problem we should generalise
+the notion of setoids, namely to enrich the structure of the identity
+proofs.
 
 
-The generalised notion is called {\wog} and was proposed by
+The generalised notion is called {\wogs} and was proposed by
 Grothendieck 1983 in a famous manuscript \emph{Pursuing Stacks} \cite{gro:ps}. Maltsiniotis continued his work and suggested a simplification of the original definition which can be found in \cite{mal:gwog}. Later Ara also presents a slight variation of the simplication of {\wog} in \cite{ara:wog}. Categorically speaking an $\omega$-groupoid is an $\omega$-category in which morphisms on all levels are equivalences. As we know that a set can be seen as a discrete
-category, a setoid is a category where every morphism is unique between
-two objects. A groupoid is more generalised, every morphism is
-isomorphism but the proof of isomorphism is unique, namely the composition of a morphism with its inverse is equal to an identity morphism. Similarly, an
+category, a setoid is a category where every morphism between
+any two objects is unique. A groupoid is more generalised, every morphism is
+isomorphism but the proof of isomorphism is unique, namely the
+composition of a morphism with its inverse is equal to the identity. Similarly, an
 $n$-groupoid is an $n$-category in which morphisms on all levels are
-equivalence. {\og} which are also called $\infty$-groupoids is an
-infinite version of $n$-groupoids. To model Type Theory without UIP we
+equivalences. {\wogs} (also called $\infty$-groupoid) is an
+infinite version of $n$-groupoid. To model Type Theory without UIP we
 also require the equalities to be non-strict, in other words, they are
 not definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
 
@@ -226,17 +226,17 @@ There are several approaches to formalise {\wog} in Type Theory, for instance, A
 This paper builds on the syntactic approach of
 \cite{txa:csl} but simplifies it greatly following Brunerie's proposal
 \cite{gb:wog} by replacing the distinct constants for each of the
-higher coherence cells by a single constant $\mathsf{coh}$. Everything
-is formalised in Agda which is a theorem prover based on intensional
-{\mltt}. This is the first attempt to formalise this approach in a
-dependently typed language like Agda or Coq. In more detail, we
+higher coherence cells by a single constant $\mathsf{coh}$. In more detail, we
 specify when a globular set is a {\wogs} by first defining a type
 theory called {\tig} to describe the internal language of Grothendieck
 {\wog}, then interpret it with a globular set and a dependent
-function. All coherence laws of the {\wog} are derivable from the
-syntax, we will present some basic ones, for example reflexivity. One
+function to it. All coherence laws of {\wog} are derivable from the
+syntax, we will present some basic ones, for example reflexivity. Everything
+is formalised in Agda, a theorem prover based on intensional
+{\mltt}. This is the first attempt to formalise this approach in a
+dependently typed language like Agda or Coq. One
 of the main contributions of this paper is to use heterogeneous
-equality for terms to overcome some difficult problems encountered
+equality for terms to overcome difficult problems encountered
 when using the usual homogeneous one. We present the formalisation but
 omit some complicated and less important programs, namely the
 proofs of some lemmas or definitions of some auxiliary functions. It
@@ -252,15 +252,15 @@ Type Theory (e.g.\ from reading the introductory chapters of
 \cite{hott}) should find it easy to read the Agda code presented
 in this paper. Some hints: $\Pi$-types are written in a generalized
 arrow notation $(x : A) → B$ for $\Pi x:A.B$, implicit arguments are
-indicated by curly brackets, e.g.\ $\{x : A\} → B$, in this case the Agda
+indicated by curly brackets, e.g.\ $\{x : A\} → B$, in this case Agda
 will try to generate the argument automatically and we do not supply it
 to make the code more readable. If we do not want to supply $A$ because
 it can be inferred we write $\forall x$ or $\forall\{x\}$.
 Agda uses a flexible mixfix notation
-where the position of arguments are indicated by underline characters.
-e.g.\ $\_⇒\_$ is one identifier which can be applied to two arguments as
-in $A ⇒ B$. The underlined characters can also be used as wildcards, if something can be automatically inferred by Agda.
-We use data \textbf{data} to define constructor based datatypes (both
+where the positions of arguments are indicated by underscores.
+E.g.\ $\_⇒\_$ is one identifier which can be applied to two arguments as
+in $A ⇒ B$. Underscore can also be used as wildcards, if some arguments can be automatically inferred by Agda.
+The keyword \textbf{data} is used to define constructor based datatypes (both
 inductive and coinductive) and \textbf{record} to define dependent record
 types (this generalizes $\Sigma$-types). The representation of
 coinductive types and more generally mixed inductive/coinductive types
@@ -282,13 +282,13 @@ Brunerie's proposal which made this work possible.
 
 
 \section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}
-
+%
 We develop the type theory of $\omega$-groupoids formally, following
 \cite{gb:wog}. This is a type theory with only one type former which
 we can view as equality type and interpret as the homset of the
 $\omega$-groupoid. There are no definitional equalities, this
-corresponds to the fact that we consider weak $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e.\ definitional) but all are witnessed by
-terms. Compared to \cite{txa:csl} the definition is very much
+corresponds to the fact that we consider \emph{weak} $\omega$-groupoids. None of the groupoid laws on any levels are strict (i.e.\ definitional) but all are witnessed by
+terms. Compared to \cite{txa:csl} the definition is greatly
 simplified by the observation that all laws of a weak $\omega$-groupoid follow from the existence of coherence constants for
 any contractible context.
 
@@ -299,12 +299,15 @@ former but give its definition later.
 
 Since we are avoiding definitional equalities we have to define a
 syntactic substitution operation which we need for the general
-statement of the coherence constants. However, defining this constant
-requires us to prove a number of substitution laws at the same
-time. We address this issue by using a heterogeneous equality which
-exploits UIP. Note that UIP holds for
-the syntax because all components defined here
-are sets in the sense of Homotopy Type Theory.
+statement of the coherence constants. However, defining these
+constants requires us to prove a number of substitution laws which
+with the usual definition of identity types take a very
+complex mutually recursive form (see \cite{txa:csl}). We address this
+issue by using heterogeneous equality \cite{}. Although 
+it exploits UIP, our approach is sound because UIP holds for the
+syntax. See Section \ref{sec:het} for a more details.
+
+
 
 % Since the definitions of contexts, types and terms involve each others, we adopt a more liberal way to do mutual definition in Agda which is a feature available since version 2.2.10. Something declared is free to use even it has not been completely defined.
 
@@ -312,7 +315,7 @@ are sets in the sense of Homotopy Type Theory.
 \subsection{Basic Objects}
 
 We first declare the syntax of our type theory which is
-called \tig{} namely the internal language of \wog. Since the definitions of syntactic objects involve each others, it is essential to define them in a inductive-inductive way. Agda allows us to state the types and constructors separately for involved inductive-inductive definitions. The following declarations in order are contexts as sets,
+called \tig{} namely the internal language of \wog. Since the definitions of syntactic objects involve each other, it is essential to define them in a inductive-inductive way. Agda allows us to state the types and constructors separately for involved inductive-inductive definitions. The following declarations in order are contexts as sets,
 types are sets dependent on contexts, terms and variables are sets
 dependent on types, context morphisms and contractible contexts.
 
@@ -371,7 +374,7 @@ type $A$ is an $n$-cell then we call its equality type an $(n+1)$-cell.
 \\
 \>\<\end{code}
 
-\subsection{Heterogeneous Equality for Terms}
+\subsection{Heterogeneous Equality for Terms}\label{sec:het}
 
 One of the big challenges we encountered at first is the difficulty to
 formalise and reason about the equalities of terms, which is

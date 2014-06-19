@@ -244,9 +244,7 @@ other participants of the special year on homotopy type theory at the
 Institute for Advanced Study where they had many interesting
 discussion topics related to the work presented in this
 paper. Especially we all would like to acknowledge Guillaume
-Brunerie's proposal which made this work possible. 
-
-
+Brunerie's proposal which made this work possible. The second author would like to thank Ambrus Kaposi and Fredrik Nordvall Forsberg and Nicolai Kraus for helpful discussions.
 
 
 \section{Syntax of weak $\omega$-groupoids}\label{sec:syntax}

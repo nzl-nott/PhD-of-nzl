@@ -20,7 +20,6 @@
      "diagxy"
      "proof"
      "booktabs"
-     "xspace"
      "inputenc"
      "utf8x"
      "textgreek"

@@ -29,5 +29,7 @@
      "abs"
      "norm"
      "set"
-     "slash")))
+     "slash")
+    (TeX-run-style-hooks
+     "xspace")))
 

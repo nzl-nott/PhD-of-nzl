@@ -1,8 +1,8 @@
 (TeX-add-style-hook "my"
  (lambda ()
     (LaTeX-add-bibitems
-     "Palmgren98onuniverses"
      "OXG36"
+     "Palmgren98onuniverses"
      "Martin-Lof-1973"
      "sep-type-theory"
      "bove2009brief"

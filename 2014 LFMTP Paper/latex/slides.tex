@@ -234,6 +234,9 @@ School of Computer Science \\  University of Nottingham, UK \and %
 
 \begin{itemize}
 
+\item Equality on each levels:
+
+
 \item Setoid: 
 \begin{equation*}
 \begin{array}[b]{l} 
@@ -254,9 +257,24 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \kappa' : p \circ p^{-1} = id
  \end{array}
 \end{equation*}
-\item In \wog, we have more higher coherence laws which are weak (up
-  to higher equivalences)
-\item How can we describe all these coherence constants?
+\item In \wog, additionally we have more provable equalities on higher
+  dimensions which are all weak (up to higher equivalences)
+  e.g. horizontal composition, interchange law, coherence laws
+
+ \item  \textbf{Coherence laws} usually state that various
+   compostions of elementary morphisms are equal. Example: There are
+   two ways to show $(f \circ id) \circ g = f \circ g$
+
+\hspace{1cm}
+\xymatrix{
+(f \circ id) \circ g \ar[rr]^{\alpha} \ar[drr]_{\rho \cdot id} && f \circ
+(id \circ g) \ar[d]^{id \cdot \lambda} \\
+&& f \circ g
+}
+
+\item For higher dimensions things becomes much more complicated
+
+\item Infinitely many coherence constants
 \end{itemize}
 
 \end{frame}
@@ -268,13 +286,25 @@ School of Computer Science \\  University of Nottingham, UK \and %
 
 \begin{itemize}
 
-\item Definition of a \textbf{contractible contexts}:
+\item All coherence constants are derivable from $J$-eliminator of
+  equality
+
+\item A analogous construction in \tig: \textbf{contractible contexts}
 \begin{itemize}
 \item $\epsilon, * $
 \item $\epsilon,x : *, y : *, \alpha : x = y$
 \item ... $\Gamma, y: A , \alpha : x = y$ (Given $\Gamma \vdash A$ and
   $\Gamma \vdash x : A$)
 \end{itemize}
+
+\item Anything in a contractible context is a coherence constant:
+  intuitively the extension of contractible context internalise the
+  $J$-eliminator
+
+Example: Assume $\epsilon,x : * \vdash x = x$ (weakening)
+$\Rightarrow \epsilon,x : *, x : *, \alpha : x = x \vdash x =
+x$ (J-eliminator)
+$\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 
 
 \item Contexts for 0-level coherences in minimum contractible contexts:
@@ -294,7 +324,8 @@ School of Computer Science \\  University of Nottingham, UK \and %
   \beta : y = z \vdash x = z$ ($\_\circ\_$)
 \end{itemize}
 
-\item Indeed any coherence constant exists in a context which we can
+\item Indeed
+ any coherence constant exists in a context which we can
   substitute into a contractible context
 
 \small{
@@ -316,14 +347,6 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \\
 \>\<\end{code}
 }
-
-\item Anything in a contractible context is a coherence constant:
-  intuitively $J$ helps us derive everything in contractible contexts
-
-Example: Assume $\epsilon,x : * \vdash x = x$ (weakening)
-$\Rightarrow \epsilon,x : *, x : *, \alpha : x = x \vdash x =
-x$ (J-eliminator)
-$\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 
 \end{itemize}
 

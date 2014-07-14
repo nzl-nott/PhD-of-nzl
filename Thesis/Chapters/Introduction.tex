@@ -10,8 +10,14 @@ quotient space, quotient category etc. Move to type theory, it is
 expected to have \emph{Quotient types} to construct similar objects in
 mathematics. However in current setting of \itt, it is not
 available. Motivated by this fact, I start to extend type theory with
-quotient types. This thesis \todo{fill in the missing part}
-
+quotient types. This thesis first
+introduce backgroud knowledges about type theory , Agda and specially
+quotient types, then discuss about definable quotients which are
+quotients definable without using quotient types, other models of type
+theory to implement quotient types and homotopy type theory which has
+a stronger notion called higher inductive types. The author further
+extend the setoid models and study an approach to implement \wog model
+in \itt for \hott where quotient types are available.
 
 
 
@@ -122,42 +128,58 @@ quotient types.
 If each type comes with its own equality, it looks like it naturally
 encodes quotient types.
 
-\todo{short explanation of models or leave it for later discusssion.}
+Martin Hofmann and Thorsten Altenkirch have studied several models to
+accomadate extensional quotient types:
+
+There are several existing intensional models for extensional
+concepts. The first one we are going to work with is Altenkirch's
+setoid model. To introduce an extensional propositional equality in \itt{}, 
+Altenkirch \cite{alti:lics99} proposes an intensional setoid model
+with a proof-irrelevant universe of propositions \textbf{Prop}.
+
+1. Altenkirch's setoid model. Altenkirch \cite{alti:lics99} proposed an intensional setoid model
+with a proof-irrelevant universe of propositions \textbf{Prop} which
+is closed under $\Pi$ and $\Sigma$. It interprets types as setoids
+such that quotient types are just setoids whose equality is replaced
+by given equivalence relation.
+
+1. Hofmann's setoid model. Hofmann \cite{hofmann1995interpretation}  introduced a setoid model as an
+E-category which is a category equipped with an equivalence relation
+for homsets.
+
+2. Hofmann and Streicher's groupoid model. They give a model in which
+types are interpreted as groupoids. In this model, propositional
+equality is interpreted as isomorphism and K eliminator for equality
+types is unavailable. 
+
+3. Homotopy type theory and \wog model. It can be seen as a
+generalisation of the groupoid model above. Types are interpreted as
+higher groupoids. It will be discussed in detail in the chapter of \hott.
 
 
-
-
-\subsection{Applications}
-
-\todo{mention the definable quotient is very useful}
-
-Quotients are very useful in general. The definable quotient structure
-which can be implemented without any extension already provide some
-good mechanisms. In a definable quotient structure, the ``quotient''
-is defined separately as a self-cotained type and what benefits us are
-the lifting functions. In some cases, for example, to use a pair of
-natural number to represent an integer, it helps us prove properties
-on the setoids then lift them to the ones on the ``quotient'' type. To
-be more precise, it provides a bridge between the types which we know
-a lot (have plenty of theorems and functions) and the new
-``quotient'' types.
-
-
-In a type theory with quotient type, real numbers can be encoded as
-the cauchy sequences with an equivalence relation.
 
 
 \section{Basic category theoretical notions}
 
-Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and trasformations.
-A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are callled categorical laws to obey. 
+A category has a collection of objects and one collection of arrows
+for each pair of objects. 
+A simple finite category can be visualised as a directed diagram
+ but there are also a set of conditions which are called categorical laws to obey. 
+The most accessible example is the category of sets. Objects are sets,
+arrows are functions and all categorical conditions fulfilled. It is
+also very helpful to formulate type theoretical concepts in a
+categorical way. 
 
-The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
+Category theory abstracts a lot of similar concepts in different
+fields and provides a concise language for mathematics for
+mathematicians.
+Type theory and category theory are closely related,
+especially Homotopy type theory
+\footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
+Category theory is very useful in giving the type theoretical
+notions, particularly the ones involving functions, relations and some
+properties.
 
-Category theory abstracts a lot of similar concepts in different fields and provides a concise language for mathematics for mathematicians.
-
-\todo{write more sufficient introduction and explain where do we need
-  category theory in my thesis}
 
 \section{Programming in Agda}
 
@@ -203,10 +225,36 @@ mathematicians.
 
 \todo{fill this part}
 
+
+\section{Applications}
+
+
+Quotients are very useful in applications. First it is essential in some
+mathematics formalisation. 
+In a type theory with quotient type, real numbers can be encoded as
+the cauchy sequences with an equivalence relation.
+From programming perspective,  it also provides more algebraic
+datatypes and enable us to reason about inifite types and
+semantics-based verification of concurrent programs \cite{hof:phd}.
+
+For quotients which are definable without quotient types, it is
+possible to relate them with setoid representation within some
+algebraic structures. 
+These structures of definable quotients can facilitate the
+manipulation of some complicated types which
+are semantically quotients of some other setoids. It can be seen as a
+simulation of quotient types in a pure \itt. Even though it does not
+automatically provide some constructions, it is still helpful because
+of the comparatively ease of reasoning about setoids and flexible
+conversion between the setoids and sets.
+
+
+
+
 \section{Overview}
 
 
-\todo{compact, comprehensive Overview: \\Add overview of each part, as much as you can, and compact}
+%compact, comprehensive Overview: Add overview of each part, as much as you can, and compact
 
 
 
@@ -250,3 +298,13 @@ In \autoref{HITs}, we will discuss the new area between mathematics and
 computer science -- \hott. We will talk about the higher inductive
 types and also the \wog-model which is used to interpret
 homotopy types in \itt. Quotient types can be encoded \hott simply.
+
+
+Finally, in \autoref{wog}, we
+
+\todo{to finish this.}
+
+
+In Appendix, we present the code of some important constructions in
+Agda which are too long to present in text.
+\todo{maybe glossary}

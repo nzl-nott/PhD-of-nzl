@@ -1,0 +1,1060 @@
+\documentclass{article}
+
+%agda literal file
+\usepackage{agda}
+
+\usepackage{dsfont}
+\usepackage{amsthm}
+\usepackage{relsize}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{autofe}
+\usepackage{stmaryrd}
+\usepackage{textgreek}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{xypic}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\usepackage{mypack}
+
+
+\begin{document}
+\pagenumbering{gobble}
+
+\title{Definable quotients in \itt}
+
+\author{Li Nuo}
+
+\maketitle
+
+\begin{abstract}
+In \mltt, given a setoid i.e. a set with an equivalence relation on
+it, a corresponding quotient set is expected. However since quotient
+types is not available in \itt, it is not derivable straightforwardly
+. In this paper, we
+consider the case of quotient sets which are \emph{definable} via a
+normalisation function.
+We define a number of algebraic structure of quotients which
+corresponds to coequalizer in category theory. In some cases,
+e.g. the definable quotients of integers
+and rational numbers, the setoid representation is simpler to reason
+about but the set one is better for display. The conversions between
+them provide us a flexible approach to utilize the quotients such that
+we can benefit from both representations.
+\end{abstract}
+
+
+\section{Introduction}
+
+In intensional type theory~\cite{nor:90}, quotient
+types are unavailable and we use setoids~\cite{bar:03}
+instead. Setoids are just sets together with an equivalence
+relation. However, the disadvantage of using setoids is that we have
+to define the same operations and types again on setoids e.g.\ we need lists as
+an operation on setoids, and it will also result in a lot of
+non-canonical problems. Moreover, setoids are not safe in the sense
+that any consumer of a setoid may access the underlying
+representation. Actually in many cases the quotient sets are
+themselves definable, and can be related with setoids via a
+normalisation function. This paper mainly investigates these cases with an emphasis
+on the application of quotients.
+
+Given a setoid, a corresponding quotient set is not necessarily formed by quotient
+types. An example is the set of integers. It can be seen as a quotient set on
+the setoid given by pairs of natural numbers
+$\Z_0=\N\times\N$, where the equivalence relation identifies pairs
+representing the same difference, that is  $(a,b)\sim(c,d)$ if{f}
+$a+d=c+b$.
+However a setoid is unnecessary, if we interpret it as a natural
+number with a sign and a set can be defined inductively.
+We can now define operations like
+addition and multiplication and show algebraic properties,
+such as verifying that the structure is a ring. However, this is
+quite complicated and uses many unnecessary case
+distinctions. E.g. the proving of distributivity within this setting
+is not satisfactory since too many cases has to be proved from
+scratch. We found it is often easier to define the operations on the
+setoid and the required algebraic properties are direct consequences
+of the semiring structure of the natural numbers.
+Another common example is the set of rational numbers. It makes more
+sense to treat a rational number as an equivalence class of fractions
+which can be reduced to the same one. The benefits of being a quotient
+is more clear. The coprimarity has to been kept and it complicates
+defining operations and proving properties.
+In these cases, the property of being a quotient is not revealed in the
+definition.
+
+In such a situation, both the set interpretation and the setoid one
+have some nice features.
+Hence we propose to use both the setoid
+and the associated set, but to use the setoid structure to define
+operations on the quotient set and to reason about it.
+In the present paper we introduce the formal framework to define the
+the quotients via normalisation function in Type Theory.
+It can be seen a ``manual construction'' of quotient types, in other words,
+instead of creating a type immediately given a setoid, we
+prove another given type \emph{is} the quotient.
+The quotient structure provides conversions between base types and
+''definable quotient types''. For example functions which respect
+the equivalence relation can be lifted. It can alleviate repetitive work on
+definable quotient types, because the base types usually have a
+list of available functions and properties to use. In some cases the
+base types are simpler to manipulate, which give us a shortcut to
+handle the quotient types. 
+In the present paper we also give a categorical interpretation
+of our definitions. We also exhibit the advantages of applying definable
+  quotients using the examples of integers and rational numbers.
+
+\subsection{Related Work}
+\label{sec:related-work}
+
+Quotient types were introduced by Mendler in
+\cite{men:90} and subsequently investigated in Hofmann's
+PhD dissertation~\cite{hof:phd}. An extensive investigation of setoids
+can be found in~\cite{bar:03}. Maietti considers extensions
+of both intensional and extensional type theory by quotient types
+\cite{maietti1999effective}. Courtieu considers an extension of CIC
+(an intensional type theory) by \emph{normalized types} corresponding
+to our definable quotients~\cite{cou:01}. Nogin describes a
+modular implementation of quotient types in NuPRL (an extensional type
+theory)~\cite{nog:02}.
+
+\section{Quotients}
+
+We define several algebraic structures for quotients based on setoids.
+ A \emph{prequotient} gives a basic ingredients for later
+constructions. We give two equivalent definitions of \emph{quotients},
+one has a dependent eliminator and the other given by Hofmann added
+ a non-dependent eliminator  and an induction principle.
+A quotient is \emph{exact}~\footnote{Exact quotient is just \emph{effective
+  quotient} in \cite{maietti1999effective}} if exactly one element of
+quotient set represents one equivalence class. We also prove that as
+long as we have propositional univalence, all
+\emph{quotients} are \emph{exact}.
+Given an embedding function which selects canonical choice for each
+equivalence class, a prequotient becomes a \emph{definable quotient}
+which is even stronger
+than the notion exact quotient.
+These concepts and some equivalences and conversions among them has
+been implemented in Agda, and presented in appendix.
+
+
+We start from the definition of \emph{setoid} which provides the setoid
+interpretation of the "quotient''.
+
+
+\begin{definition}
+Setoid.
+\noindent A setoid is formed by
+\begin{enumerate}
+\item a set $A$,
+\item a relation $\sim : A \to A \to \Prop$, and
+\item it is an equivalence, i.e. it is reflexive, symmetric and transitive.
+\end{enumerate}
+\end{definition}
+
+Given a setoid and a function respects this equivalence (note: not necessary to be
+a normalisation function) we obtain a \emph{prequotient}.
+
+\begin{definition}
+Prequotient.
+\noindent
+Given a setoid $(A,\sim)$,  a \emph{prequotient} $(Q,[\_],\sound)$ over that setoid consists in
+\begin{enumerate}
+\item \label{enum:Q} a set $Q$,
+\item \label{enum:box}a function $[\_]: A \rightarrow Q$,
+\item \label{enum:sound} a proof \emph{sound} that  the function $[\_]$ is compatible with the relation $\sim$,
+that is \[\sound\colon (a,b : A) \rightarrow a\sim b \rightarrow [a] = [b],\]
+\end{enumerate}
+\end{definition}
+
+Roughly speaking, \ref{enum:Q} corresponds to the formation rule,
+\ref{enum:box} and \ref{enum:sound} correspond to the introduction
+rule. The function $[\_]$ is intended to be the \emph{normalisation}
+function with respect to the equivalence relation, however it is not
+enough to determine it now. It is observable that given any non-empty set $Q$ with any
+constant function fit in this definition. 
+
+To complete a \emph{quotient}, we also need the elimination
+rule and computation rule.
+
+\begin{definition} 
+Quotient.
+\noindent
+A prequotient $(Q,[\_],\sound)$ is a quotient if we also have
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item \label{enum:elim}
+for any $B: Q\rightarrow\Set$, an eliminator
+ \begin{align*}
+ \qelim_B\,\,:\,\,\,&(f\colon (a:A) \rightarrow B\,\class a) \\
+        {\rightarrow}\, &((p:a\sim b) \rightarrow f\,a \simeq_{\sound\,p}f\,b)\\
+        {\rightarrow}\, &((q:Q) \rightarrow B\,q)
+ \end{align*}
+such that $\qelimbeta : \qelim_B\,f \,p\,\class a\equiv f\,a$.
+\end{enumerate}
+\end{definition}
+
+This eliminator is also called the dependent lifting function, since 
+it lifts a function well-defined on $(A,\sim)$ to a
+function defined on $Q$.
+ 
+An alternative equivalent definition given by Martin Hofmann has a
+non-dependent eliminator and an induction principle.
+
+\begin{definition} 
+Quotient (Hofmann's).
+\noindent
+A prequotient $(Q,[\_],\sound)$ is a quotient (Hofmann's) if we also have
+
+\[\lift : (f : A \to B) \to (\forall a,b \to a\sim b \to f~a
+\equiv f~b) \to (Q \to B)\]
+
+together with an induction principle.
+Suppose $B$ is a predicate, 
+\[\qind \colon((a: A)\rightarrow B \,\class a)\rightarrow ((q : Q)\rightarrow B\,q)\]
+\end{definition}
+
+Finally, such a quotient is exact if additionally we have the exact
+property.
+
+\begin{definition}
+Exact quotient.
+\noindent
+A quotient is \emph{exact} (or effective) if exactly one equivalence class corresponds to
+an element of $Q$, i.e.\ given $a,b : A$, if they are ``normalised'' to the
+same element of $Q$ ($ \class a \equiv \class b$), they must be in the
+same equivalence class.
+
+$exact :(\forall a,b : A) \rightarrow  \class a \equiv \class b \rightarrow a \sim b$
+\end{definition}
+
+\begin{remark}
+This is indeed provable if we have univalence axiom for
+propositions. The proof can be found in \ref{PUEF}.
+\end{remark}
+
+Finally we have a strongest definition \emph{Definable quotient} which is more practical and
+give rise to an exact quotient.
+
+\begin{definition} Definable quotient.
+\noindent
+Given a setoid $(A,\sim)$, a \emph{definable quotient} is a
+prequotient $(Q, [\_], \sound)$ with 
+\begin{align*}
+\emb &: Q \rightarrow A\\
+\complete &: (a : A) \rightarrow \emb {\class a} \sim a\\
+\stable &: (q:Q) \rightarrow \class{\emb\,q} \equiv q.
+\end{align*}
+\end{definition}
+
+Intuitively speaking, if we regard $Q$ as the set of the equivalence
+classes, then the embedding function $\emb$ actually selects one
+representative in $A$ for each equivalent class. 
+
+A definable quotient proves to be \emph{exact} ~\ref{DQisExact}.
+
+Compared to the two definitions of quotients above,
+the definable quotient structure provides a more
+flexible way to eliminate quotients via conversions $[\_]$ and $\emb$,
+hence it is more useful. But it only applies to the setoids which have
+canonical a choice for each
+equivalence class. Luckily, in many cases we have such a choice function. For
+instance, the setoid integers and setoid rational numbers as we
+will discuss below.
+
+\begin{remark} 
+In fact, the embedding function can be seen as the lifted version of
+the real normalisation function with respect to the equivalence relation $\sim$,
+\begin{align*}
+\text{emb}_0 &: A \rightarrow A\\
+\text{embsound} &: (a : A) \to emb a \sim a\\
+\text{oneForEach} &: (a,b : A) \to a \sim b \to \emb a = \emb b
+\end{align*}
+In the other way around, $\text{emb}_0$ can also be obtained by
+composing$[\_]$ with $\emb$.
+\end{remark}
+
+
+\subsection{Coequalizer -- quotients in category theory}
+Categorically speaking, quotients corresponds to
+coequalizers.
+
+
+\begin{definition}\label{def:coequalizer}
+Coequalizer.
+\noindent
+Given two morphisms $g,h : S\to A$, a \emph{coequalizer} of $g$ and $h$ is a morphism $[\_]:A\to Q$ such that for any $f:A\to X$ satisfying $f \circ g = f \circ h$, there exists a unique $\dlift f$ such that
+\[\xymatrix{
+S\ar@<0.5ex>[r]^g\ar@<-0.5ex>[r]_h& A\ar[r]^{[\_]}\ar[dr]_{f} & Q\ar@{-->}[d]^{\dlift f}\\
+&&X
+}\]
+\end{definition}
+
+Indeed a prequotient corresponds to a diagram of morphisms
+\[\xymatrix{
+R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
+& Q
+}\]
+and eliminator corresponds to the universal property which makes it
+the colimit i.e. coequalizer.
+
+A coequalizer is \emph{\text{effective}} (or exact) if
+\[\xymatrix{
+S\pullbackcorner\ar[r]^g\ar[d]_h & A\ar[d]^{[\_]} \\
+A\ar[r]_{[\_]} & Q
+}\]
+and it is \emph{split} if the morphism $[\_]$ is a split epi, that is
+if it has a right inverse $\emb : Q \to A$. That is to say, the definable quotient
+just corresponds to the notion \emph{split coequalizer}.
+
+
+
+
+
+\section{The set of integers}
+
+Usually we can describe an integer as a natural number with a positive
+or negative sign in front: 
+
+\begin{code}
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{+\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{-\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\end{code}
+
+However this gives two different constructors for 0 which is
+considered harmful. We lose canonicity and it will lead to unnecessary troubles.
+
+A better representation provides a separate symbol for 0 but $+suc~
+0$ for 1, $-suc ~0$ for $- 1$. This does not sacrifice canonicity,
+although the denotations are not natural.
+
+\begin{code}
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{+suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{zero} \<[8]%
+\>[8]\AgdaSymbol{:} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{-suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\<\end{code}
+
+Take into account the embedding of natural numbers into integers, it
+makes sense to combine the positive's integers with zeros. Actually it is
+better pragmatically. In principle, definition with less
+cases is preferable because pattern matching grows with exponentially
+with the number of cases.
+
+\begin{code}
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{+\_} \<[8]%
+\>[8]\AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{-suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\<\end{code}
+
+Although it is not symmetric, it is simple and canonical and it is our
+final choice.
+
+\subsection{The setoid of Integers}
+
+The introduction of negative numbers is believed to denote the results
+of subtraction of a larger number from a smaller one. Generalising this interpretation,
+integers is used to represent the results of subtraction of any
+natural number from another. 
+Therefore integers can be represented by pairs of natural numbers
+
+$$\Z_0=\N \times \N$$
+
+for example, from the equation $1 - 4 = - 3$, we learn that $(1,4)$ gives rise to $- 3$.
+
+Also different pairs can result in the same integer.
+For any two pairs of natural
+numbers $(n_1, n_2)$ and $(n_3, n_4)$, we know they represent the same
+integer if
+
+$$ n_1 - n_2 = n_3 - n_4$$
+
+but technically this does not work because the ``subtraction'' defined for natural
+numbers only returns zero if the pair is for negative number. We only
+need to modify the equation a bit,
+
+$$ n_1 + n_4 = n_3 + n_2$$
+
+This gives rise to an equivalence relation (reflexive, symmetric and
+transitive needs to prove separately). Combined with the carrier
+$\Z_0$, it forms a setoid interpretation of integers.
+
+\begin{code}
+\\
+\>\AgdaFunction{ℤ-Setoid} \AgdaSymbol{:} \AgdaRecord{Setoid}\<%
+\\
+\>\AgdaFunction{ℤ-Setoid} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaSymbol{\{} \AgdaField{Carrier} \<[19]%
+\>[19]\AgdaSymbol{=} \AgdaFunction{ℤ₀}\<%
+\\
+\>[2]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaSymbol{;} \AgdaField{\_≈\_} \<[19]%
+\>[19]\AgdaSymbol{=} \AgdaPostulate{\_∼\_}\<%
+\\
+\>[2]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaSymbol{;} \AgdaField{isEquivalence} \AgdaSymbol{=} \AgdaPostulate{\_∼\_isEquivalence}\<%
+\\
+\>[2]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+\subsection{The definable quotient of integers}
+
+The basic ingredients for the definable quotient of integers have been
+given. One essential component of the quotient structure which relates
+the base type and quotient type is a normalisation
+function which can be recursively defined as follows:
+ 
+\begin{code}
+\>\AgdaFunction{[\_]} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{0} \AgdaFunction{]} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaBound{m}\<%
+\\
+\>\AgdaFunction{[} \AgdaInductiveConstructor{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{-suc} \AgdaBound{n}\<%
+\\
+\>\AgdaFunction{[} \AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaBound{n} \AgdaFunction{]}\<%
+\end{code}
+
+In this case, we choose to define the embedding function before
+proving the soundness property.
+
+
+It is plausible to find a canonical choice in each equivalence classes. 
+In fact the definition of $\AgdaFunction{[\_]}$ already gives the
+answer in the first two cases.
+
+
+\begin{code}
+\\
+\>\AgdaFunction{⌜\_⌝} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaInductiveConstructor{+} \AgdaBound{n} \AgdaFunction{⌝} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaBound{n} \AgdaInductiveConstructor{,} \AgdaNumber{0}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaInductiveConstructor{-suc} \AgdaBound{n} \AgdaFunction{⌝} \AgdaSymbol{=} \AgdaNumber{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n}\<%
+\\
+\end{code}
+
+To complete the definition of definable quotient, there are several
+properties to prove including sound, complete, stable and exact.
+
+Because we have shown that exact quotient is equivalent to definable
+quotient, the lifting functions (dependent and non-dependent) are also derivable.
+
+\subsection{The application of definable quotients}
+
+Usually the definable quotient structure is useful when the base type (or carrier) is easier to handle, in other
+words, it is more convenient to use the setoid interpretation in
+defining operations and proving properties.
+In the case of integers, Since there is one case for he setoid
+representation, it generates less cases. Although for simple
+operations it does not simply too much, it makes a big different in
+proving complicated theorems like distributivity.
+
+We will introduce the way we apply definable quotient in practical use.
+
+\paragraph{Operations}
+
+With two functions converting the two encodings, it is enough to lift
+all functions. It is possible to lift operations uniformly by mixing the
+normalisation and embedding functions. For example, given an unary
+operator 
+
+\begin{code}
+\\
+\>\AgdaFunction{lift₁} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{op} \AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaFunction{lift₁} \AgdaBound{op} \AgdaSymbol{=} \AgdaFunction{[\_]} \AgdaFunction{∘} \AgdaBound{op} \AgdaFunction{∘} \AgdaFunction{⌜\_⌝}\<%
+\\
+\end{code}
+
+This can be generalised to n-ary operators.
+
+As long as we implement an operation of integers, it is safe to lift
+the setoid version. However it is clear that not all operations on the
+base types should be lifted and they do not make sense. Hence it is
+better to verify if the operation is well-defined on the setoid:
+
+$$a \sim b → op~a \sim op~b$$
+
+
+
+Most of the operations for setoid integers can be concluded from
+expression rewriting equations. For example to define addition, 
+we only need to transform the expression  
+$(a_1 - b_1) + (a_2 - b_2) = (a_1 + a_2) - (b_1) - (b_2)$
+so that we only do valid
+operations on natural numbers ($+$ or $*$) and minus is going to be
+replaced by pairing operation.
+
+The addition of integers can be defined in one line
+
+\begin{code}
+\\
+\>\AgdaFunction{\_+\_} \AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\<%
+\\
+\>\AgdaSymbol{(}\AgdaBound{x+} \AgdaInductiveConstructor{,} \AgdaBound{x-}\AgdaSymbol{)} \AgdaFunction{+} \AgdaSymbol{(}\AgdaBound{y+} \AgdaInductiveConstructor{,} \AgdaBound{y-}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{x+} \AgdaFunction{ℕ+} \AgdaBound{y+}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaBound{x-} \AgdaFunction{ℕ+} \AgdaBound{y-}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+We can easily verify it well-defined but it is not necessary because
+it has been implied in the mathematical reasoning before implementing it.
+
+
+
+\paragraph{Properties}
+
+Following axioms and theorems we learnt about integers, we can prove
+the plus, multiplication is commutative and associative, minus is
+inverse of plus etc. All these properties about plus, minus and
+multiplication forms a commutative ring of integers \footnote{can cite
+somewhere else http://www.millersville.edu/~bikenaga/number-theory/ring-of-integers/ring-of-integers.html}.
+Like for natural numbers, axioms in classic mathematics are theorems
+to prove in constructive mathematics. The only axioms for integers are
+contained in the definition.
+
+One of the important motivations of using setoid integers is that
+the setoid definition reduces the complexity as we have shown in the
+previous part, but it
+will be much more evident when proving properties of the ring of integers.
+
+In practice, for the set definition of integers, most of basic operations and simple theorems are not unbearably
+complicated to deal with. However, as we mentioned before, the number of
+cases grows exponentially when case splitting is unavoidable.
+Although it is
+possible to prove lemmas which covers several cases and reduce number
+of cases, it often does not reduce complexity in total.
+ An important case which is extremely difficult to conduct in practice is the proving of distributivity.
+
+\paragraph{An efficient utilization of quotient structure: the
+  proving of distributivity}
+
+At first when we attempted to define the ring of integers, we were
+stuck in proving the the distributivity of $*$ over $+$. As an example
+we will show the attempt of left
+distributivity $ x \times (y + z) = x \times y + x \times z$.
+
+To simplify it, we define the multiplication in an arithmetic way
+instead of pattern matching.
+
+\begin{code}
+\\
+\>\AgdaFunction{\_ℤ*\_} \AgdaSymbol{:} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaBound{i} \AgdaFunction{ℤ*} \AgdaBound{j} \AgdaSymbol{=}
+\AgdaFunction{sign} \AgdaBound{i} \AgdaFunction{S*}
+\AgdaFunction{sign} \AgdaBound{j} \AgdaFunction{◃} \AgdaFunction{∣}
+\AgdaBound{i} \AgdaFunction{∣} \AgdaPrimitive{ℕ*} \AgdaFunction{∣}
+\AgdaBound{j} \AgdaFunction{∣}\<%
+\\
+\end{code}
+
+Of course it is not rational to split cases into $2 * 2 * 2$. 
+The first idea is to apply the left distributivity law of natural
+numbers when they are non-negative. To utilize the it more, 
+it can be generalised to the cases when all three variables have the same
+signs. Moreover when only $y$ and $z$ have the
+same symbol, it is still plausible. 
+The following is a partial definition (Note: $\AgdaFunction{DistributesOverˡ}$ means
+that the distributivity of the first operators over the second one)  and three lemmas are given after it
+
+\begin{code}
+\\
+\>\AgdaFunction{distˡ} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaFunction{\_ℤ*\_} \AgdaFunction{DistributesOverˡ} \AgdaFunction{\_ℤ+\_}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaKeyword{with} \AgdaFunction{sign} \AgdaBound{y} \AgdaFunction{S≟} \AgdaFunction{sign} \AgdaBound{z}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \<[15]%
+\>[15]\AgdaSymbol{|} \AgdaInductiveConstructor{yes} \AgdaBound{p} \<[23]%
+\>[23]\<%
+\\
+\>[4]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaKeyword{rewrite} \AgdaBound{p} \<[16]%
+\>[16]\<%
+\\
+\>[6]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{|} \AgdaFunction{lem1} \AgdaBound{y} \AgdaBound{z} \AgdaBound{p} \<[25]%
+\>[25]\<%
+\\
+\>[6]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{|} \AgdaFunction{lem2} \AgdaBound{y} \AgdaBound{z} \AgdaBound{p} \AgdaSymbol{=} \<[27]%
+\>[27]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{cong} \AgdaSymbol{(λ} \AgdaBound{n} \AgdaSymbol{→} \AgdaFunction{sign} \AgdaBound{x} \AgdaFunction{S*} \AgdaFunction{sign} \AgdaBound{z} \AgdaFunction{◃} \AgdaBound{n}\AgdaSymbol{)} \<[47]%
+\>[47]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaFunction{ℕdistˡ} \AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaFunction{∣} \AgdaBound{y} \AgdaFunction{∣} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{z} \AgdaFunction{∣}\AgdaSymbol{)))} \<[36]%
+\>[36]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaFunction{lem3} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaPrimitive{ℕ*} \AgdaFunction{∣} \AgdaBound{y} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaPrimitive{ℕ*} \AgdaFunction{∣} \AgdaBound{z} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{\_)}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{|} \AgdaInductiveConstructor{no} \AgdaBound{¬p} \AgdaSymbol{=} \AgdaBound{...}\<%
+\\
+\end{code}
+ 
+To prove these simpler cases we need three lemmas,
+
+\begin{code}
+\\
+\>\AgdaFunction{lem1} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{sign} \AgdaBound{x} \AgdaDatatype{≡} \AgdaFunction{sign} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{ℤ+} \AgdaBound{y} \AgdaFunction{∣} \AgdaDatatype{≡} \AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaPrimitive{ℕ+} \AgdaFunction{∣} \AgdaBound{y} \AgdaFunction{∣} \<[61]%
+\>[61]\<%
+\\
+\>\AgdaFunction{lem1} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaBound{e} \AgdaSymbol{=} \AgdaFunction{cong} \AgdaInductiveConstructor{suc} \AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{m+1+n≡1+m+n} \AgdaBound{x} \AgdaBound{y}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{lem1} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{()}\<%
+\\
+\>\AgdaFunction{lem1} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{()}\<%
+\\
+\>\AgdaFunction{lem1} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{y}\AgdaSymbol{)} \AgdaBound{e} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{lem2} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{sign} \AgdaBound{x} \AgdaDatatype{≡} \AgdaFunction{sign} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{sign} \AgdaSymbol{(}\AgdaBound{x} \AgdaFunction{ℤ+} \AgdaBound{y}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaFunction{sign} \AgdaBound{y}\<%
+\\
+\>\AgdaFunction{lem2} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(} \AgdaInductiveConstructor{-suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaBound{e} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\AgdaFunction{lem2} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{()}\<%
+\\
+\>\AgdaFunction{lem2} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{()}\<%
+\\
+\>\AgdaFunction{lem2} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{y}\AgdaSymbol{)} \AgdaBound{e} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{lem3} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{x} \AgdaBound{y} \AgdaBound{s} \AgdaSymbol{→} \AgdaBound{s} \AgdaFunction{◃} \AgdaSymbol{(}\AgdaBound{x} \AgdaPrimitive{ℕ+} \AgdaBound{y}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{ℤ+} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaBound{y}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{lem3} \AgdaInductiveConstructor{0} \AgdaInductiveConstructor{0} \AgdaBound{s} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\AgdaFunction{lem3} \AgdaInductiveConstructor{0} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaBound{s} \AgdaSymbol{=} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{ℤ-id-l} \AgdaSymbol{\_)}\<%
+\\
+\>\AgdaFunction{lem3} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaBound{y} \AgdaBound{s} \AgdaSymbol{=} \AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{h} \AgdaBound{s} \AgdaSymbol{(}\AgdaBound{x} \AgdaPrimitive{ℕ+} \AgdaBound{y}\AgdaSymbol{))} \AgdaSymbol{(}\<%
+\\
+\>[4]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{cong} \AgdaSymbol{(λ} \AgdaBound{n} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaInductiveConstructor{suc} \AgdaNumber{0}\AgdaSymbol{)} \AgdaFunction{ℤ+} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{lem3} \AgdaBound{x} \AgdaBound{y} \AgdaBound{s}\AgdaSymbol{))} \AgdaSymbol{(}\<%
+\\
+\>[4]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaPostulate{ℤ-+-assoc} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaInductiveConstructor{suc} \AgdaNumber{0}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaBound{y}\AgdaSymbol{)))} \AgdaSymbol{(}\<%
+\\
+\>[4]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{cong} \AgdaSymbol{(λ} \AgdaBound{n} \AgdaSymbol{→} \AgdaBound{n} \AgdaFunction{ℤ+} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaBound{y}\AgdaSymbol{))} \AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{h} \AgdaBound{s} \AgdaBound{x}\AgdaSymbol{)))))}\<%
+\\
+\>[13]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{h} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{s} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{s} \AgdaFunction{◃} \AgdaInductiveConstructor{suc} \AgdaBound{y} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaNumber{0}\AgdaSymbol{))} \AgdaFunction{ℤ+} \AgdaSymbol{(}\AgdaBound{s} \AgdaFunction{◃} \AgdaBound{y}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{h} \AgdaBound{s} \AgdaInductiveConstructor{0} \AgdaSymbol{=} \AgdaFunction{sym} \AgdaSymbol{(}\AgdaPostulate{ℤ-id-r} \AgdaSymbol{\_)}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{h} \AgdaInductiveConstructor{Sign.-} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{h} \AgdaInductiveConstructor{Sign.+} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\end{code}
+
+In the second category of cases, if $y$ and $z$ have different
+signs, it is impossible to apply the left distributivity law for
+natural numbers. Intuitively speaking, there is no rule to turn expressions like $x *
+(y  - z)$ into expression which only contains natural numbers,
+therefore we have to prove it from scratch.
+Although it is possible to prove finally, it is not the best solution
+we want. 
+
+It is much simpler to prove the distributivity for setoid
+representations. In fact with the help of ring solver, it can be
+proved automatically.
+All these definitions of operators only involves operators for natural
+numbers which forms a commutative semiring for natural numbers.
+This implies that these expressions of setoid integers which only
+involves plus, minus and multiplication, can be turned into equation of natural numbers.
+The theorems are also simply equations of natural numbers which are
+automatically solvable.
+
+
+\begin{remark}
+A \emph{ring solver} is an automatic equation checker for rings e.g.\ the
+ring of integers. It is implemented based on the theory described in
+"Proving Equalities in a Commutative Ring Done Right in Coq" by
+Grégoire and Mahboubi \cite{gregoire2005proving}.
+\end{remark}
+
+
+Therefore to prove the distributivity, the
+simplest way is to use semiring
+solver for natural numbers. 
+
+
+\begin{code}
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{:} \<[9]%
+\>[9]\AgdaFunction{\_*\_} \AgdaFunction{DistributesOverˡ} \AgdaFunction{\_+\_}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{c} \AgdaInductiveConstructor{,} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{e} \AgdaInductiveConstructor{,} \AgdaBound{f}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaFunction{solve} \AgdaNumber{6} \<[40]%
+\>[40]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{c} \AgdaFunction{:+} \AgdaBound{e}\AgdaSymbol{)} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{d} \AgdaFunction{:+} \AgdaBound{f}\AgdaSymbol{)} \AgdaFunction{:+}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{d} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{c} \AgdaFunction{:+} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{f} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{e}\AgdaSymbol{))}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaFunction{:=}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{c} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{d} \AgdaFunction{:+} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{e} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{f}\AgdaSymbol{)} \AgdaFunction{:+}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{d} \AgdaFunction{:+} \AgdaBound{f}\AgdaSymbol{)} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{c} \AgdaFunction{:+} \AgdaBound{e}\AgdaSymbol{)))} \AgdaInductiveConstructor{refl} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f}\<%
+\\
+\end{code}
+
+It is not the simplest way to use ring solver since we have to feed
+the type (i.e.\ the equation) to the solver which can be automatically
+figured out by "reflection". It helps us quote the type of the goal so
+that we can define a function that automatically do it without
+explicitly providing the equations. There is already some work
+done by van der Walt \cite{van2012reflection}. It can be seen as an
+analogy of the "ring" tactic from Coq.
+
+
+Use the ring solver for natural numbers we can prove all theorems
+required for ring solver for integers. However the process of proof
+terms generation and type checking take very long time in practice. It may heavily slow the type
+checking although the optimization of Agda already shows a big
+improvement in this technical efficiency issue. As
+these theorems are going to be used quite often, it is reasonable to
+manually construct the proof terms to improve efficiency of library
+code, sacrificing some conveniences.
+
+Luckily it is still much simpler than the ones for the set of integers $\Z$.
+First there is only one case of integer and as we know the equations is
+indeed equations of natural numbers which can be proved using only the
+properties in the commutative semiring of natural numbers. There is no
+need to prove some properties for $\Z$ from scratch like in the
+proving of distributivity.
+
+\begin{code}
+\\
+\>\AgdaFunction{dist-lemˡ} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f} \AgdaSymbol{→} \<[28]%
+\>[28]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaSymbol{(}\AgdaBound{c} \AgdaPrimitive{ℕ+} \AgdaBound{e}\AgdaSymbol{)} \AgdaPrimitive{ℕ+} \AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaSymbol{(}\AgdaBound{d} \AgdaPrimitive{ℕ+} \AgdaBound{f}\AgdaSymbol{)} \AgdaDatatype{≡}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{c} \AgdaPrimitive{ℕ+} \AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{d}\AgdaSymbol{)} \AgdaPrimitive{ℕ+} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{e} \AgdaPrimitive{ℕ+} \AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{f}\AgdaSymbol{)} \<[43]%
+\>[43]\<%
+\\
+\>\AgdaFunction{dist-lemˡ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f} \AgdaSymbol{=} \AgdaFunction{trans}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaFunction{cong₂} \AgdaPrimitive{\_ℕ+\_} \AgdaSymbol{(}\AgdaFunction{ℕdistˡ} \AgdaBound{a} \AgdaBound{c} \AgdaBound{e}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{ℕdistˡ} \AgdaBound{b} \AgdaBound{d} \AgdaBound{f}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaPostulate{swap23} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{c}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{e}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{f}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{:} \AgdaFunction{\_ℤ₀*\_} \AgdaFunction{DistributesOverˡ} \AgdaFunction{\_ℤ₀+\_}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{c} \AgdaInductiveConstructor{,} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{e} \AgdaInductiveConstructor{,} \AgdaBound{f}\AgdaSymbol{)} \AgdaSymbol{=} \<[32]%
+\>[32]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{cong₂} \AgdaPrimitive{\_ℕ+\_} \AgdaSymbol{(}\AgdaFunction{dist-lemˡ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{dist-lemˡ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{d} \AgdaBound{c} \AgdaBound{f} \AgdaBound{e}\AgdaSymbol{))}\<%
+\\
+\end{code}
+
+It only needs one special lemma which can be proved by applying distributivity
+laws for natural numbers. The $\AgdaFunction{swap23}$ is a commonly
+used equation rewriting lemma
+
+$(m + n) + (p + q) = (m + p) + (n + q)$
+
+After all, the application of quotient structure in the integer case
+provides us a general approach to define functions and prove theorems
+when the base types are simpler to deal with.
+Adopting this approach, both the appearance -- the set representation of integers
+and the underlying -- the convenience of manipulating setoid
+representation of integers, are maintained.
+In the case of rational numbers, the base type is also simpler to deal with.
+
+
+\section{Rational numbers}
+
+In Agda standard library, the set of rational numbers is defined
+as fractions whose numerator and denominator are coprime. It ensures
+the canonicity of representations, but it complicates the manipulation
+of rational numbers since the coprimarity has to be kept for each
+intermediate step of calculations. From experience of calculating
+fractions in arithmetic, we usually do not reduce fractions until we are going to
+show a simplified answer, and all the calculation can be carried out correctly
+without reducing. Actually from  a discussion on Agda mailing list
+\footnote{http://comments.gmane.org/gmane.comp.lang.agda/6372}, a better way to manipulate the
+rational numbers is required. A flexibility way to choose from unreduced fractions or reduced ones in
+operations can be fulfilled by a definable quotient of
+rational numbers. The unreduced fractions are mainly used for underlying calculations and
+property proving because it ignores a lot of reducing steps and
+coprimarity checking, and the reduced fractions are accessible when
+displaying rational numbers. 
+It simplifies defining functions and proving properties related to rational
+numbers. Moreover, we believe the efficiency of programs involving rational
+numbers calculation is improved due to the removal of reducing , even
+though some people claim that the unreduced numbers are too
+large to make it efficient.
+
+
+\subsection{The setoid of rational numbers: unreduced fractions}
+
+The setoid representation of rational numbers -- unreduced fractions
+are more common in mathematics.
+Usually a fraction denoted as $\frac{m}{n}$ consists of an integers
+$m$ called \emph{numerator} and a non-zero integer $n$ called
+\emph{denominator}.
+In type theory, since the data types have different
+complexity, we have a decision to make in the choice of best
+definition like what we did for integers.
+Alternatively keeping the numerator integer, the denominator can be a
+positive natural number such that the sign of rational number is kept
+in the numerator solely and there is no need to add a restriction to
+exclude $0$ which is not so easy for the set of integer.
+
+$$\Q_0 = \Z \times \N$$
+
+Technically there is no need to define a new type for positive
+natural numbers $\N^{+}$, so we use $\N$ which we can name it as
+\emph{denominator-1} or implement it as follows
+
+\begin{code}
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℚ₀} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[-1]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{\_/suc\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{n} \AgdaSymbol{:} \AgdaDatatype{ℤ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{d} \AgdaSymbol{:} \AgdaDatatype{ℕ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{ℚ₀}\<%
+\\
+\end{code}
+
+such that $2 /suc 2$ stands for $\frac{2}{3}$.
+
+
+\begin{remark}
+It is also reasonable to define it with a pair of natural numbers with
+a sign defined separately. However this also complicates calculation somehow.
+\end{remark}
+
+
+
+The rational number represented by a fraction $\frac{m}{n}$ is indeed the result of
+division $m \div n$. Therefore two different fractions can represent
+the same rational numbers.
+In mathematics, to judge the equality of two fractions, it is easier to conduct the following conversion,
+
+$$ \frac{a}{b} = \frac{c}{d} \iff a \times d = c \times b $$
+
+
+Hence the equivalence relation can be defined as,
+
+\begin{code}
+\\
+\>\AgdaFunction{\_*\_} \AgdaSymbol{:} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{*} \AgdaBound{d} \AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaSymbol{(}\AgdaBound{x} \AgdaPrimitive{ℕ*} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{*} \AgdaInductiveConstructor{0} \AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaNumber{0}\<%
+\\
+\>\AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{*} \AgdaInductiveConstructor{suc} \AgdaBound{d} \AgdaSymbol{=} \AgdaInductiveConstructor{-suc} \AgdaSymbol{(}\AgdaBound{x} \AgdaPrimitive{ℕ+} \AgdaInductiveConstructor{suc} \AgdaBound{x} \AgdaPrimitive{ℕ*} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{\_∼\_} \<[35]%
+\>[35]\AgdaSymbol{:} \AgdaFunction{Rel} \AgdaDatatype{ℚ₀} \AgdaSymbol{\_}\<%
+\\
+\>\AgdaSymbol{(}\AgdaBound{n1} \AgdaInductiveConstructor{/suc} \AgdaBound{d1}\AgdaSymbol{)} \AgdaFunction{∼} \AgdaSymbol{(}\AgdaBound{n2} \AgdaInductiveConstructor{/suc} \AgdaBound{d2}\AgdaSymbol{)} \AgdaSymbol{=} \<[31]%
+\>[31]\AgdaBound{n1} \AgdaFunction{*} \AgdaInductiveConstructor{suc} \AgdaBound{d2} \AgdaDatatype{≡} \AgdaBound{n2} \AgdaFunction{*} \AgdaInductiveConstructor{suc} \AgdaBound{d1}\<%
+\\
+\end{code}
+
+
+\subsection{The set definition of rational numbers: reduced fractions}
+
+The reduced fractions are canonical representations of rational
+numbers. It is a subset of fractions, so we only need to add a
+restriction that the numerator and denominator is coprime,
+
+% The normal form of rational numbers, namely the quotient type in this quotient is the set of irreducible fractions. We only need to add a restriction that the numerator and denominator is coprime,
+
+$$\Q = \Sigma ((n , d) : \Z \times \N)). \mathsf{coprime} ~n ~(d +1)$$
+
+It is implemented as follows (also available in standard library),
+
+\begin{code}
+\\
+\>\AgdaKeyword{record} \AgdaRecord{ℚ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{numerator} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaDatatype{ℤ}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{denominator-1} \AgdaSymbol{:} \AgdaDatatype{ℕ}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{isCoprime} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaFunction{True} \AgdaSymbol{(}\AgdaFunction{C.coprime?} \AgdaFunction{∣} \AgdaBound{numerator} \AgdaFunction{∣} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{denominator-1}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{denominator} \AgdaSymbol{:} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{denominator} \AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaInductiveConstructor{suc} \AgdaFunction{denominator-1}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{coprime} \AgdaSymbol{:} \AgdaFunction{Coprime} \AgdaFunction{numerator} \AgdaFunction{denominator}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{coprime} \AgdaSymbol{=} \AgdaFunction{toWitness} \AgdaFunction{isCoprime}\<%
+\\
+\end{code}
+
+\subsection{The definable quotient of rational numbers}
+
+From the definition, we already have a setoid which contains unreduced
+fractions $\Q_0$ as
+base type and an equivalence relation on it. Compare with the set
+definition, it is clear that normalisation from $\Q_0 \to \Q$ is just
+reducing functions.
+
+To implement reducing process, we can utilize the library code about
+\emph{great common divisor (gcd)}. The function $\AgdaFunction{gcd}$
+calculates the divisor and a data type $\AgdaDatatype{GCD}$ containing
+information from calculating the
+greatest common divisor which can be converted to another data type $\AgdaDatatype{GCD′}$
+\footnote{http://www.cse.chalmers.se/~nad/repos/lib/src/Data/Nat/Coprimality.agda}
+which contains the three essential results we need, i.e.\ the new numerator, new denominator and the
+proof term that they are coprime. Combing the library functions and
+types with a self-defined function
+$\AgdaFunction{GCD′→ℚ}$
+%\footnote{see Appendix}
+which constructs the reduced fraction we need, the normalisation function is
+implemented as follows,
+
+\begin{code}
+\\
+\>\AgdaFunction{[\_]} \AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaRecord{ℚ}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{0}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaSymbol{=} \AgdaInductiveConstructor{ℤ.+\_} \AgdaNumber{0} \AgdaFunction{÷} \AgdaNumber{1}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{))} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaKeyword{with} \AgdaFunction{gcd} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaSymbol{|} \AgdaBound{di} \AgdaInductiveConstructor{,} \AgdaBound{g} \AgdaSymbol{=} \AgdaFunction{GCD′→ℚ} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaBound{di} \AgdaSymbol{(λ} \AgdaSymbol{())} \AgdaSymbol{(}\AgdaFunction{C.gcd-gcd′} \AgdaBound{g}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaKeyword{with} \AgdaFunction{gcd} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaSymbol{...} \AgdaSymbol{|} \AgdaBound{di} \AgdaInductiveConstructor{,} \AgdaBound{g} \AgdaSymbol{=} \AgdaFunction{-} \AgdaFunction{GCD′→ℚ} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaBound{di} \AgdaSymbol{(λ} \AgdaSymbol{())} \AgdaSymbol{(}\AgdaFunction{C.gcd-gcd′} \AgdaBound{g}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+and the embedding function is trivial, because we only need to forget
+the coprime proof in the normal form,
+
+\begin{code}
+\\
+\>\AgdaFunction{⌜\_⌝} \AgdaSymbol{:} \AgdaRecord{ℚ} \AgdaSymbol{→} \AgdaDatatype{ℚ₀}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaBound{x} \AgdaFunction{⌝} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{ℤcon} \AgdaSymbol{(}\AgdaFunction{ℚ.numerator} \AgdaBound{x}\AgdaSymbol{))} \AgdaInductiveConstructor{/suc} \AgdaSymbol{(}\AgdaFunction{ℚ.denominator-1} \AgdaBound{x}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+Similar to the case of integers, complete the definable quotient, we
+also need to prove the sound, complete, stable and exact
+properties. There is no need to show the proof of them since the
+normalisation function is implemented using an approach which has been
+tested in mathematics.
+Also we can apply the definable quotient structures in helping form
+the field of rational numbers. After embedding the natural numbers
+into integers, any theorems using only the operations in the field
+$\Q$, are turned out to be propositions of integers which can be
+solved using ring solver or theorems proven for integers.
+
+
+
+\section{Conclusion}
+
+In this paper, we have shown that there are some quotients definable
+via a normalsation function. We present some
+quotient structures and prove some equivalences and conversions among
+the them. In fact they provide us conversions between base types and
+quotient types such that we can usually benefit from the ease from
+base types while still keeping the canonicity and a better display from the
+quotient types. To show the application of definable quotients, we
+used two examples, the set of integers and the set of rational
+numbers. Some concrete cases are also presented to show how to
+uniformly lift operations and theorems from base types, and how can we
+benefit from the utilization of definable quotient structures.
+
+
+\bibliography{my}
+\bibliographystyle{plain}
+
+\appendix
+
+\include{Quotient}
+
+
+\end{document}

@@ -38,3 +38,10 @@ one : $(TEXFILE)
 
 show : 
 	open $(TEXFILE:.tex=.pdf)
+
+fast : 
+	pdflatex $(TEXFILE:.tex=.tex)
+
+slow : 
+	clean
+	pdf

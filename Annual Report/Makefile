@@ -1,17 +1,23 @@
-# a.bbl b.aux c.tex d.pdf a = b , b = c , d = c
+ifeq ($(AGDA_LIB),)
+	AGDA_LIB=~/Agda/lib/src
+endif
 
-%.tex : %.lagda
-	lhs2TeX --agda $< -o $@
+DEPS = latex/Report.tex latex/Appendix.tex
 
-%.aux : %.tex
-	latex $<
+all : pdf
 
-%.bbl : %.aux %.tex
-	bibtex $<
+latex/%.tex : %.lagda
+	agda $(AGDA_ARGS) --latex  -i . -i $(AGDA_LIB) $<
 
-%.pdf : %.tex %.bbl
-	latex $<
-	pdflatex $<
+latex/BasicSyntax.aux : $(DEPS)
+	cd latex ; pdflatex BasicSyntax.tex ;	cd .. 
 
-clean:
-	rm *.toc *.aux *.pdf *.ps *.eps *.log *.lof *.bbl *.blg *.dvi
+latex/BasicSyntax.bbl : latex/my.bib latex/BasicSyntax.aux
+	bibtex latex/BasicSyntax
+
+pdf : $(DEPS)
+	cd latex ; pdflatex BasicSyntax.tex ;	pdflatex BasicSyntax.tex ; cd .. 
+
+
+clean :
+	rm -f latex/*.{aux,bbl,blg,log,out,ptb,ptbx,vtc}

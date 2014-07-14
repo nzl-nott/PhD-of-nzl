@@ -147,11 +147,6 @@ record Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
 \emph{Exact quotients}
 \begin{code}
 
-
-
--- the older definition which depend on Qu is also wrong
-
-
 record ExactQuotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
   open pre-Quotient PQ
   field

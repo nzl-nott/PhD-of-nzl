@@ -1,0 +1,519 @@
+\documentclass[12pt, mathserif,handout]{beamer}
+
+%\documentclass[12pt, mathserif]{beamer}
+
+\usepackage{etex}
+
+
+\usepackage{agda}
+
+\usepackage{mypack}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+
+\usepackage{relsize}
+\usepackage{autofe}
+\usepackage{textgreek}
+
+\setbeamertemplate{navigation symbols}{}
+
+
+\usetheme{Madrid}
+\setbeamercovered{highly dynamic} 
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{multimedia}
+\usepackage{animate}
+\usepackage[all]{xy}
+\usepackage{booktabs}
+\usepackage[nobibnewpage,notocbib]{apacite}
+\usepackage[absolute,overlay,quiet]{textpos}
+
+\definecolor{blueish}{rgb}{0.2, 0.2, 0.7}
+
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage{fancybox}
+
+\usepackage[inference]{semantic}
+
+% Background Color
+
+\definecolor{rice}{RGB}{245,245,220}
+\setbeamercolor{background canvas}{bg=rice}
+
+\setbeamercolor{yellow}{fg=black,bg=yellow}
+\setbeamercolor{lightyellow}{fg=black,bg=yellow!40}
+\setbeamercolor{orange}{fg=black,bg=orange}
+\setbeamercolor{lightorange}{fg=black,bg=orange!40}
+\setbeamercolor{green}{fg=black,bg=green}
+\setbeamercolor{lightgreen}{fg=black,bg=green!40}
+\setbeamercolor{blue}{fg=black,bg=blue}
+\setbeamercolor{lightblue}{fg=black,bg=blue!40}
+\setbeamercolor{red}{fg=black,bg=red}
+\setbeamercolor{lightred}{fg=black,bg=red!40}
+\setbeamercolor{lightpink}{fg=black,bg=pink!40}
+
+
+%\setbeamercolor{frametitle}{fg=white,bg=orange}
+%\setbeamercolor{title}{fg=white,bg=orange}
+
+\setbeamercovered{invisible}
+
+%\begin{colorblock}{orange}{lightyellow}{\center{Heterogeneous equality for Tm}}
+
+
+\newenvironment{colorblock}[2]
+{\setbeamercolor{item}{fg=#1,bg=#1}\begin{beamerboxesrounded}[upper=#1,lower=#2,shadow=true]}
+{\end{beamerboxesrounded}}
+
+
+
+% shorthands
+
+
+\author{Thorsten Altenkirch \& Nuo Li \& Ond\v{r}ej Ryp\'a\v{c}ek}
+
+\author[Thorsten Altenkirch \& Nuo Li \& Ond\v{r}ej
+Ryp\'a\v{c}ek]{Thorsten Altenkirch \inst{1} \and Nuo Li \inst{1} \and
+  Ond\v{r}ej Ryp\'a\v{c}ek \inst{2}}
+\institute[shortinst]{\inst{1} 
+School of Computer Science \\  University of Nottingham, UK \and %
+                      \inst{2} University of Oxford, UK}
+
+
+
+
+
+
+\date[17/07/14]{17/07/14}
+\title{Some constructions on $\omega$-groupoids}
+\subtitle[LFMTP 2014]{}
+
+
+\addtobeamertemplate{sidebar right}{}{\vspace{-2cm}}
+\addtobeamertemplate{footline}{}{\vspace{-1cm}\hskip2pt(\insertframenumber/\inserttotalframenumber) \insertshortsubtitle{} -- \insertshortdate\vskip2.2pt}
+\setbeamercolor{footline}{fg=purple}
+
+
+\begin{document}
+
+% 1
+\frame{\titlepage}
+
+
+% 2
+
+\begin{frame}{Outline}
+\begin{itemize}
+\item Introduction to \wog
+\item Basic syntax of \tig (describing the structure of \wog)
+\item Heterogeneous equality for syntactic terms
+\item Suspension and replacement
+\item Coherences constructions
+\item Semantic interpretation
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[allowframebreaks,t]{Introduction to \wog}
+
+\begin{itemize}
+\item To internalize equality in types : setoids, groupoids
+
+\item A new interpreted of types : \wog (In \hott)
+\begin{itemize}
+\item \wogs: A higher dimensional category ($\omega$-category) where every
+  morphism is an weak equivalence (equivalence for short)
+\item Equivalence: invertible morphism up to all higher
+  equivalence (generalization of isomorphism)
+\item Weak: equality in coherence laws are up to equivalence (not
+    strictly equal) e.g. $(f \circ g) \circ h \to f \circ (g \circ h)$
+
+
+% \begin{center}
+% \xymatrix{ 
+% a
+% \ar@/_4pc/[ddd]^p="p" 
+% \\
+% \\
+% \\
+% b 
+% \ar@/_4pc/[uuu]^{p^{-1}}="p^{-1}"" 
+% \only<2->{\ar@2{->} @/^2pc/ "p";"p^{-1}" _{H}="H"}
+% \only<3->{\ar@2{<-} @/_2pc/ "p";"p^{-1}" ^{H ^{-1}}="H^{-1}"}
+% \only<4->{\ar@3{->} @/^1pc/ "H";"H^{-1}"_{...}="A"}
+% \only<5->{\ar@3{<-}@/_1pc/  "H";"H^{-1}"^{...}="A"}
+% }
+% \end{center}
+
+\end{itemize}
+
+\item How can we formalize \wog in type theory?
+\begin{itemize}
+ \item Warren's \emph{strict} $\omega$-groupoid model
+\item Altenkirch and Rypacek's syntactic approach
+\item Brunerie's syntactic approach: \tig
+
+\end{itemize}
+% \item Altenkirch and Rypacek's syntactic approach
+% \item Brunerie's syntactic approach to describe the internal structure
+%   of \wog using a type theory called \tig
+
+% \item In 1983, Grothendieck's definition of \wog
+% \item Maltsiniotis and Ara's simplified versions
+
+% \item Related work: ($\omega$-)groupoid model of type theory
+% \begin{itemize}
+% \item Hofmann and Streicher's groupoid model
+% \item Warren's \emph{strict} $\omega$-groupoid model
+% \item Altenkirch and Rypacek's syntactic approach
+% \item Brunerie's syntactic approach to describe the internal structure
+%   of \wog using a type theory called \tig
+%\end{itemize}
+
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks,t]{Basic syntax of \tig}
+
+
+
+
+\begin{itemize}
+
+\item We use \tig to describe the internal structure of a \wogs
+
+\begin{code}\>\<
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{Con} \<[19]%
+\>[19]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{)} \<[19]%
+\>[19]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{Tm} \<[19]%
+\>[19]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\>\<\end{code}
+
+\item The structure is inductively defined as
+\small{
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{Ty} \AgdaBound{Γ} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{*} \<[6]%
+\>[6]\AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{\_=h\_} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Ty} \AgdaBound{Γ}\<%
+\\
+\end{code}
+}
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[allowframebreaks,t]{Structure of \wog}
+
+\begin{itemize}
+
+\item Setoid: 
+\begin{equation*}
+\begin{array}[b]{l} 
+\text{id} : x = x \\
+\_^{-1} : x= y \to y  = x \\
+\_ \circ\_ : y = z \to x = y \to x = z
+ \end{array}
+\end{equation*}
+
+\item Groupoid: 
+
+\begin{equation*}
+\begin{array}[b]{l}
+\lambda : id \circ p = p \\
+\rho : p \circ id = p \\
+\alpha : p \circ (q \circ r) = (p \circ q) \circ r \\
+\kappa : p^{-1}\circ p = id \\
+\kappa' : p \circ p^{-1} = id
+ \end{array}
+\end{equation*}
+\item In \wog, we have more higher coherence laws which are weak (up
+  to higher equivalences)
+\item How can we describe all these coherence constants?
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}[allowframebreaks,t]{Contractible Contexts and Coherences}
+
+\begin{itemize}
+
+\item Definition of a \textbf{contractible contexts}:
+\begin{itemize}
+\item $\epsilon, * $
+\item $\epsilon,x : *, y : *, \alpha : x = y$
+\item ... $\Gamma, y: A , \alpha : x = y$ (Given $\Gamma \vdash A$ and
+  $\Gamma \vdash x : A$)
+\end{itemize}
+
+
+\item Contexts for 0-level coherences in minimum contractible contexts:
+\begin{itemize}
+\item $\epsilon,x : * \vdash x = x$ ($id^{*}$)
+\item $\epsilon,x : *, y : *, \alpha : x = y \vdash y = x$ ($\_^{-1*}$)
+\item $\epsilon,x : *, y : *, \alpha : x = y, z: A,
+  \beta : y = z \vdash x = z$ ($\_\circ^{*}\_$)
+\end{itemize}
+
+\item If we ``replace'' $\epsilon$ by arbitrary context $\Gamma$, and
+  $*$ by arbitrary $A$, we obtain contexts for general 0-level coherences:
+\begin{itemize}
+\item $\Gamma,x : A \vdash x = x$ (id)
+\item $\Gamma,x : A, y : A, \alpha : x = y \vdash y = x$ ($\_^{-1}$)
+\item $\Gamma,x : A, y : A, \alpha : x = y, z: A,
+  \beta : y = z \vdash x = z$ ($\_\circ\_$)
+\end{itemize}
+
+\item Indeed any coherence constant exists in a context which we can
+  substitute into a contractible context
+
+\small{
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{Tm} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{var} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{coh} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)} \<[42]%
+\>[42]\<%
+\\
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+}
+
+\item Anything in a contractible context is a coherence constant:
+  intuitively $J$ helps us derive everything in contractible contexts
+
+Example: Assume $\epsilon,x : * \vdash x = x$ (weakening)
+$\Rightarrow \epsilon,x : *, x : *, \alpha : x = x \vdash x =
+x$ (J-eliminator)
+$\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Reasoning about syntactic terms}
+\begin{itemize}
+\item Using homogeneous equality to reason about syntactic terms, we
+  have to deal with \textbf{subst} e.g.\ $\text{subst}~ p~ x = y$, $\text{subst} ~p
+  (\text{subst} ~p^{-1}~ x) = x$
+\item Heterogeneous equality for Tm
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{\_≅\_} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \<[29]%
+\>[29]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{B} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{b} \AgdaDatatype{≅} \AgdaBound{b}\<%
+\\
+\>\<\end{code}
+
+\item Justification: The equality of inductively defined types are
+  decidable, hence from Hedberg's Theorem they have UIP
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[allowframebreaks,t]{Construction of coherences}
+
+\begin{itemize}
+\item To obtain a coherence term for arbitrary context $\Gamma$ in two steps:
+\begin{enumerate}
+\item a coherence term in a contractible context $\Delta$
+\item a substitution $\Gamma \Rightarrow \Delta$
+\end{enumerate}
+
+\item To do the second step: \emph{replacement} and suspension
+
+\item \textbf{Replacement}: Given an arbitrary type $A$ in arbitrary context
+  $\Gamma$, we can replace $*$ in a contractible context $\Delta$ by
+  $A$ and paste it onto $A$ in $\Gamma$, such that we can obtain coherence $B$ in $\Delta$ for type $A$
+
+\begin{equation*}
+\infer{\Gamma, \Delta^{A} \vdash B^{A}}
+{\Gamma \vdash A & \vdash \Delta~ \text{contractible} & \Delta \vdash B} 
+\end{equation*}
+
+An example of $\Gamma, \Delta^{A}$: $\Gamma, y : A, \alpha : x = y$
+
+\item Intuitively, we can filter out variables in $\Gamma$ which are
+  unrelated to $A$. However it is very difficult to do that. Instead
+  we build a new context using 
+
+\item \textbf{Suspension}: build a minimum contractible context for type
+  $A$ of level $n$:
+
+\begin{itemize}
+\item $(x_0: *)$ (the one-variable context) for $n=0$; 
+\item $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1)$ for
+$n=1$; 
+\item $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
+x_0\,=_{\mathsf{h}}\,x_1, x_4 : x_2\,=_\mathsf{h}\,x_3)$ for $n=2$,
+etc. 
+\end{itemize}
+
+with $\Delta$ whose $*$ is replaced by $A$
+
+\begin{equation*}
+\infer{\Sigma A, \Delta^{A} \vdash B^{A}}
+{\Gamma \vdash A &  \vdash \Delta ~\text{contractible} & \Delta \vdash B} 
+\end{equation*}
+
+
+\item Thus we can define a substitution from a \emph{replaced context} to a
+  \emph{suspended context} called \textbf{filter}
+
+$$\Gamma, \Delta^{A} \Rightarrow \Sigma A , \Delta^{A}$$
+
+Note: The suspended context is contractible because one-step
+suspension proves to preserve contractibility.
+
+\framebreak
+
+\item Case: \textbf{Reflexivity}
+
+\begin{itemize}
+
+\item 1st step: reflexivity in a minimum contractible context
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{refl*-Tm} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{refl*-Tm} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaInductiveConstructor{c*}\<%
+\\
+\>\<\end{code}
+
+\item 2nd step: reflexivity for arbitrary type $A$ in arbitrary
+  context $\Gamma$
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{refl-Tm} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[33]%
+\>[33]\<%
+\\
+\>[9]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{refl-Tm} \AgdaBound{A} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{refl*-Tm}\<%
+\\
+\>\<\end{code}
+
+\end{itemize}
+
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Semantics}
+
+\begin{itemize}
+
+\item A syntactic Grothendieck \wog is a globular set with an
+  interpretation of syntactic coherence terms (coh)
+
+\item A globular set $A$ consists coinductively of:
+\begin{itemize}
+\item A set obj$_{A}$
+\item For every $x,y : \text{obj}_{A}$, a globular set Hom$_{A}(x, y)$
+\end{itemize}
+
+\item  Example: the identity globular set $Id^{\omega} A$
+\begin{itemize}
+\item obj$_{Id^{\omega} A} = A$
+\item Hom$_{Id^{\omega} A}(a, b) = Id^{\omega} A (a = b)$
+\end{itemize}
+
+\item The interpretation of contexts, types and terms
+
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Conclusion}
+
+
+\begin{itemize}
+
+\item Types bear the structure of weak $\omega$-groupoids: the tower
+  of iterated identity types
+
+\item An implementation of syntactic \wog in Agda
+  \begin{itemize}
+  \item {Basic syntax of the type theory \tig}
+  \item Heterogeneous equality for terms
+  \item Constructions of coherences
+  \item Semantic interpretation with globular sets
+  \end{itemize}
+
+\item To complete a \wogs model of type theory
+\item A computational interpretation of univalent axiom in \itt
+
+\end{itemize}
+
+
+
+
+\end{frame}
+
+
+
+
+\end{document}

@@ -1,0 +1,381 @@
+\documentclass[12pt,pdflatex,hyperref={pdfstartview=Fit,bookmarks=true,bookmarksopen=true,pdfpagemode=None,colorlinks=true,linkcolor=unserblau,urlcolor=unserblau},notes=hide,t,handout]{beamer}
+
+\usepackage{etex}
+
+\usepackage[latin1]{inputenc}
+%\usepackage{beamerthemelined}
+
+\usetheme[width=0cm]{Boadilla}
+%\usetheme[width=0cm]{CamebridgeUS}
+
+\usecolortheme{sidebartab}
+\setbeamercovered{highly dynamic} 
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{color}
+%\usepackage[usenames,dvipsnames]{color}
+
+\usepackage[english]{babel}
+%\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{multimedia}
+
+\usepackage[all]{xy}
+\usepackage{proof}
+
+\definecolor{unserblau}{rgb}{0.21, 0.21, 0.70}
+
+\usepackage{booktabs}
+\usepackage[nobibnewpage,notocbib]{apacite}
+\usepackage[absolute,overlay,quiet]{textpos}
+%\usepackage{ngerman}
+
+
+\pagestyle{empty}
+
+\author[Nicolai Kraus]{Nicolai Kraus}
+
+\institute{Functional Programming Laboratory Away Day}
+\date[2011-06-8]{8th July 2011}
+\title{Homotopy Type Theory}
+\subtitle[FP Away Day 2011]{}
+
+% \pgfdeclareimage[width=2cm]{logo}{hulogo} \logo{\pgfuseimage{logo}}
+
+
+\addtobeamertemplate{sidebar right}{}{\vspace{-2cm}}
+\addtobeamertemplate{footline}{}{\vspace{-1cm}\hskip2pt(\insertframenumber/\inserttotalframenumber) \insertshortsubtitle{} -- \insertshortdate\vskip2.2pt}
+\setbeamercolor{footline}{fg=unserblau}
+%\setbeamercolor*{alerted text}{fg=unserblau}
+
+%\includeonlyframes{current}
+
+\begin{document}
+\frame{\titlepage}
+
+% \section*{Overview}
+% \[squeeze]{\frametitle{Overview}\tableofcontents}
+
+
+
+\section{Introduction}
+
+\begin{frame}
+
+\frametitle{What is it all about?}
+\begin{center}{A connection...}\end{center}
+\begin{columns}[u] % the "c" option specifies center vertical alignment 
+
+\column{.5\textwidth} 
+
+\vspace{3pt}
+
+\begin{block}{} \Large \begin{center}
+\textcolor{red}{\bf Type Theory}
+\end{center}
+\end{block}
+\only<2->{related to logic}
+
+\column{.5\textwidth} 
+
+\vspace{3pt}
+\begin{block}{} \Large \begin{center}
+\textcolor{red}{\bf Topology}
+\end{center}
+\end{block}
+\only<3->{related to
+\begin{itemize}
+\item Algebra
+\item Analysis
+\item Geometry
+\item \ldots
+\end{itemize}}
+%not related to:
+%\begin{itemize}
+%\item logic
+%\end{itemize}
+
+\end{columns}
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{So, what is Topology actually?}
+
+\only<2->{\center{A major area of mathematics that examines continuity!}}
+
+\vspace{0.8cm}
+
+\only<3->{Sets often have a natural notion of \textcolor{red}{\emph {open}} subsets, e.g. in $\mathbb R$: 
+\vspace{0.8cm}
+
+$(1,2) := \{x \ | \ 1<x<2 \}$ is open, but $[1,2] := \{x \ | \ 1 \leq x \leq 2 \}$ is not.}
+\vspace{0.8cm}
+
+\only<4->{\begin{block}{Definition (Continuity of $f : X \rightarrow Y$):} $f$ is continuous iff inverse images of open sets are open, i.e. if $V \subset Y$ is open, so is $f^{-1}(V)$.
+\end{block}}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Remark}
+The word "Continuity" is used a lot:
+\begin{itemize}
+\only<2->{\item functions $\mathbb R \rightarrow \mathbb R$. "Definition": $\forall x, \epsilon > 0 . \exists \delta > 0 . |x-x_0| < \delta \Rightarrow |f(x) - f(x_0)| < \epsilon$}
+\only<3->{\item complete partial orders: $f ( \textit{sup } D) = \textit{sup }f(D)$ for every directed $D$}
+\only<4->{\item "Computable functions are continuous."}
+\only<4->{\item \ldots}
+\end{itemize}
+
+\only<5->{
+all notions can be broken down to:
+
+\begin{block}{} \center{\bf{Inverse images of open sets are open.}}
+\end{block}
+}
+
+\end{frame}
+
+
+\section{Identity Types}
+
+\begin{frame}
+
+\frametitle{Identity Types without UIP - a Reminder}
+
+\begin{columns}[c] % the "c" option specifies center vertical alignment 
+
+\column{.5\textwidth} 
+
+\vspace{30pt}
+
+\[
+\infer{a \equiv b \quad \mbox{Type}}{a, b : A}
+\]
+
+\vspace{30pt}
+
+\[
+\infer{\mbox{refl}_a : a \equiv a}{}
+\]
+
+
+\column{.5\textwidth} 
+
+\vspace{30pt}
+
+\[
+\begin{array}{c@{ \ : \ }l}
+\noalign{\medskip}
+p & a \equiv b \\
+\noalign{\medskip}
+
+p^{-1} & b \equiv a \\
+\noalign{\medskip}
+
+q & b \equiv c \\
+\noalign{\medskip}
+
+q \circ p & a \equiv c \\
+\end{array}
+\]
+
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Identity Types without UIP - a Reminder}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Back to Topology}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\only<1-7,9-11,13->{\frametitle{A disc}}
+\only<8>{\frametitle{Another set}}
+\only<12>{\frametitle{A ring}}
+\begin{columns}[c]
+
+\column{.3\textwidth} 
+
+\begin{itemize}
+\only<1>{\item[] a type - we call it $X$}
+\only<2>{\item[] two terms}
+\only<3>{\item[] ?}
+\only<4>{\item[] $a, b \, : \, X$ \item[] $p \, : \, a \equiv b$}
+\only<5>{\item[] $p^{-1} \, : \, b \equiv a$}
+\only<6>{\item[] $p \, : \, a \equiv b$ \item[] $q \, : \, b \equiv c$}
+\only<7>{\item[] $q \circ p \, : \, a \equiv c$}
+\only<8>{\item[] $a \equiv c$ not inhabited}
+\only<9>{\item[] $p, p' \, : \, a \equiv b$}
+\only<10,11,13,16>{\item[] $H \, : \, p \equiv p'$}
+\only<14>{\item[] $H' \, : \, p \equiv p'$}
+\only<15>{\item[] $K \, : \, H' \equiv H$}
+\end{itemize}
+
+\column{.4\textwidth}
+
+\includegraphics<1>[width=\textwidth]{pictures/1circle}
+\includegraphics<2>[width=\textwidth]{pictures/2circle_points}
+\includegraphics<3>[width=\textwidth]{pictures/3circle_line}
+\includegraphics<4>[width=\textwidth]{pictures/4circle_named}
+\includegraphics<5>[width=\textwidth]{pictures/5circle_named_inversed}
+\includegraphics<6>[width=\textwidth]{pictures/6circle_three}
+\includegraphics<7>[width=\textwidth]{pictures/7circle_threetwo}
+\includegraphics<8>[width=\textwidth]{pictures/8not_connected}
+\includegraphics<9>[width=\textwidth]{pictures/9circle2paths}
+\includegraphics<10,11,13,16>[width=\textwidth]{pictures/10circleHomAlt}
+\includegraphics<12>[width=\textwidth]{pictures/11ring}
+%\includegraphics<12>[scale=0.3]{pictures/10circleHomAlt}
+\includegraphics<14>[width=\textwidth]{pictures/12circleHom2}
+\includegraphics<15>[width=\textwidth]{pictures/13circleHomhom}
+
+
+\column{.35\textwidth} 
+\begin{itemize}
+\only<1>{\item[] a topological space - we call it $X$}
+\only<2>{\item[] two points}
+\only<3>{\item[] a path}
+\only<4>{\item[] $a, b \, \in \, X$ \noalign{\medskip} \item[] $p \, : \, [0,1] \rightarrow X$ \item[] $p (0) = a$ \item[] $p (1) = b$}
+\only<5>{\item[]  \item[] $p^{-1} \, : \, [0,1] \rightarrow X$ \item[] $p^{-1} (t) = p(1-t)$}
+\only<6>{\item[] $a, b \, \in \, X$ \noalign{\medskip} \item[] $p \, : \, [0,1] \rightarrow X$ \item[] $p  (0) = a$ \item[] $p (1) = b$ \noalign{\medskip} \item[] $q \, : \, [0,1] \rightarrow X$ \item[] $q (0) = b$ \item[] $q (1) = c$}
+%\only<6>{\item[] $a, b \, \in \, X$ \item[] $p \, : \, [0,1] \rightarrow X$ \item[] $p \, 0 = a$ \item[] $p \, 1 = b$ \item[] $q \, : \, [0,1] \rightarrow X$ \item[] $q \, 0 = b$ \item[] $q \, 1 = c$}
+\only<7>{\item[] $q \circ p \, : \,$ \item[] $ \ [0,1] \rightarrow X$  \item[] $x \mapsto \begin{cases} p(2x), x < 0.5 \\ q(2x-1), \mbox{else} \end{cases}$}
+\only<8>{\item[] not path-connected}
+\only<9>{\item[] $p, p' \, : \, [0,1] \rightarrow X$}
+\only<10,11,13,16>{\item[] $H \, : \, [0,1]^2 \rightarrow X$ \item[] $H(0,\cdot) = p$ \item[] $H(1,\cdot) = p'$ \item[] $H(t,0) = a$ \item[] $H(t,1) = b$}
+\only<11>{\vspace{1cm} \item[] $p \, : \, [0,1]^1 \rightarrow X$ \item[] $a \, : \, [0,1]^0 \rightarrow X$}
+\only<14>{\item[] $H' \, : \, [0,1]^2 \rightarrow X$ \item[] $H'(0,\cdot) = p$ \item[] $H'(1,\cdot) = p'$ \item[] $H'(t,0) = a$ \item[] $H'(t,1) = b$}
+\only<15>{\item[] $K \, : \, [0,1]^3 \rightarrow X$ \item[] $K(0,\cdot, \cdot) = H'$ \item[] \ldots}
+\end{itemize}
+
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Putting it together}
+
+\begin{columns}[c] % the "c" option specifies center vertical alignment 
+
+\column{.5\textwidth} 
+\begin{center}
+\xymatrix{ 
+a 
+\ar@/_4pc/[ddd]^p="p" 
+\ar@/^4pc/[ddd]_{p'}="p'" 
+\\
+\\
+\\
+b
+\ar@2{->} @/^2pc/ "p";"p'" _{H}="H"
+\ar@2{->} @/_2pc/ "p";"p'" ^{H'}="H'"
+{\ar@3{<-} "H";"H'"_{K}}
+}
+\end{center}
+
+\column{.5\textwidth} 
+
+\includegraphics[scale=0.3]{pictures/13circleHomhom}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{So, which types can we get?}
+
+\vspace{1.5cm}
+
+\begin{columns}[c] % the "c" option specifies center vertical alignment 
+\column{.25\textwidth} 
+\includegraphics[width=\textwidth]{pictures/1circle}
+
+\column{.25\textwidth} 
+\includegraphics[width=\textwidth]{pictures/11ringb}
+
+\column{.25\textwidth} 
+\includegraphics[width=\textwidth]{pictures/wikisphere}
+
+\column{.25\textwidth} 
+\includegraphics[width=\textwidth]{pictures/wikitorus}
+
+\end{columns}
+
+\center{any CW complex?}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Where is it going?}
+
+\begin{center} All has been done in abstract homotopy theory. \end{center}
+
+\vspace{1pt}
+
+\only<2->{What I (at the moment) hope:
+\vspace{1pt}
+
+\begin{itemize}
+\item Creating a simple model
+\item that is complete
+\item and easy to understand and to use
+\end{itemize}
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Where is it going?}
+\vspace{1pt}
+
+e.g. for this problem (Thorsten): 
+\vspace{1pt}
+
+\begin{itemize}
+\item subst-refl P (subst P (refl x) p)
+\item[] and
+\item cong (subst P (refl x)) (subst-refl P p)
+
+%\only<2->{
+\item[] both prove
+\item subst P (refl x) (subst P (refl x) p) $\equiv$ subst P (refl x) p
+\item[] But are they equal?
+%}
+\end{itemize}
+\end{frame}
+
+
+%
+%\begin{frame}
+%\begin{block}{Definition (Topological space):} A set $X$ together with $\mathfrak T \subset P(X)$ that satisfies $ \emptyset, X \in \mathfrak T$, and $\mathfrak T$ is closed under arbitrary union and finite intersection.
+%\end{block}
+%examples: basically any set, especially $\mathbb R^n$, $\mathbb C^n$, sets of functions between those, ordinals, any complete partial order, \ldots
+%
+%\begin{block}{Definition (Continuity of $f : X \rightarrow Y$):} Inverse images of open sets are open, i.e. if $V \subset Y$ is open, so is $f^{-1}(V)$.
+%\end{block}
+%\end{frame}
+
+
+\end{document}

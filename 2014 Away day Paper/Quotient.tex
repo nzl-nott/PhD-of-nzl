@@ -1,0 +1,941 @@
+\section{Appendix}
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{Quotient} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Function}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Level} \AgdaKeyword{using} \AgdaSymbol{(}\_⊔\_\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{import} \AgdaModule{Relation.Binary} \AgdaSymbol{as} \AgdaModule{RB}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat} \AgdaKeyword{hiding} \AgdaSymbol{(}\_⊔\_\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{Setoid} \AgdaSymbol{=} \AgdaRecord{RB.Setoid} \AgdaPrimitive{Level.zero} \AgdaPrimitive{Level.zero}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality} \AgdaSymbol{as} \AgdaModule{PE}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{hiding} \AgdaSymbol{(}[\_]\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{ThomasProperties}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{\_respects\_} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{α} \AgdaBound{β}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{α}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{β}\AgdaSymbol{\}(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \<[53]%
+\>[53]\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{\_\textasciitilde\_} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaBound{α}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaSymbol{(}\AgdaBound{α} \AgdaPrimitive{⊔} \AgdaBound{β}\AgdaSymbol{)}\<%
+\\
+\>\AgdaBound{f} \AgdaFunction{respects} \AgdaBound{\_\textasciitilde\_} \AgdaSymbol{=} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{a} \AgdaBound{\textasciitilde} \AgdaBound{a'} \AgdaSymbol{→} \AgdaBound{f} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a'}\<%
+\\
+%
+\\
+\>\AgdaFunction{isProp} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaFunction{isProp} \AgdaBound{P} \AgdaSymbol{=} \<[12]%
+\>[12]\AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{p'} \AgdaSymbol{:} \AgdaBound{P}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{p'}\<%
+\\
+%
+\\
+\>\AgdaFunction{isSet} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{S} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaFunction{isSet} \AgdaBound{S} \AgdaSymbol{=} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaBound{S}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{isProp} \AgdaSymbol{(}\AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaFunction{subIrr} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}(}\AgdaBound{isS} \AgdaSymbol{:} \AgdaFunction{isSet} \AgdaBound{S}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaBound{S} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaBound{S}\AgdaSymbol{\}(}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{)\{}\AgdaBound{m} \AgdaSymbol{:} \AgdaBound{A} \AgdaBound{a}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaBound{A} \AgdaBound{p} \AgdaBound{m} \AgdaDatatype{≡} \AgdaFunction{subst} \AgdaBound{A} \AgdaBound{q} \AgdaBound{m}\<%
+\\
+\>\AgdaFunction{subIrr} \AgdaBound{isS} \AgdaBound{p} \AgdaBound{q} \AgdaSymbol{=} \AgdaFunction{cong} \AgdaSymbol{(λ} \AgdaBound{p'} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaSymbol{\_} \AgdaBound{p'} \AgdaSymbol{\_)} \AgdaSymbol{(}\AgdaBound{isS} \AgdaSymbol{\{}p \AgdaSymbol{=} \AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}p' \AgdaSymbol{=} \AgdaBound{q}\AgdaSymbol{\})}\<%
+\\
+%
+\\
+\>\AgdaFunction{subIrr2} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaBound{S}\AgdaSymbol{\}(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{)\{}\AgdaBound{m} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{A}\AgdaSymbol{)} \AgdaBound{p} \AgdaBound{m} \AgdaDatatype{≡} \AgdaBound{m}\<%
+\\
+\>\AgdaFunction{subIrr2} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+\textbf{Prequotient}
+
+Given a setoid, we can turn it into a pre-quotient, corresponds to 
+fork (or cofork) in category theory.
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{pre-Quotient} \AgdaSymbol{(}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>\<\end{code}
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{RB.}\AgdaModule{Setoid} \AgdaBound{S} \AgdaKeyword{renaming} \AgdaSymbol{(}Carrier \AgdaSymbol{to} A\AgdaSymbol{;}
+       \_≈\_ \AgdaSymbol{to} \_\textasciitilde\_ \AgdaSymbol{;} refl \AgdaSymbol{to} \textasciitilde-refl\AgdaSymbol{;} 
+       sym \AgdaSymbol{to} \textasciitilde-sym\AgdaSymbol{;}
+       trans \AgdaSymbol{to} \textasciitilde-trans\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+}
+\begin{code}\>\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Q} \<[8]%
+\>[8]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{[\_]} \AgdaSymbol{:} \AgdaFunction{A} \AgdaSymbol{→} \AgdaBound{Q}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{[\_]⁼} \AgdaSymbol{:} \AgdaBound{[\_]} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{QisSet} \AgdaSymbol{:} \AgdaFunction{isSet} \AgdaBound{Q}\<%
+\\
+\>\<\end{code}
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{RB.}\AgdaModule{Setoid} \AgdaBound{S} \AgdaKeyword{public} \AgdaKeyword{renaming} \<[35]%
+\>[35]\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{(}Carrier \AgdaSymbol{to} A\AgdaSymbol{;} \_≈\_ \AgdaSymbol{to} \_\textasciitilde\_ 
+       \AgdaSymbol{;} refl \AgdaSymbol{to} \textasciitilde-refl\AgdaSymbol{;} sym \AgdaSymbol{to} \textasciitilde-sym\AgdaSymbol{;}
+       trans \AgdaSymbol{to} \textasciitilde-trans\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+}
+
+\textbf{Quotient}
+
+A prequotient with a dependent eliminator.
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Quotient} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}(}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{qelim} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{a'}\AgdaSymbol{)} \<[39]%
+\>[39]\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaBound{B} \AgdaFunction{[} \AgdaBound{p} \AgdaFunction{]⁼} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a'}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{Q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{q}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{qelim-β} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{B} \AgdaBound{a} \AgdaBound{f}\AgdaSymbol{\}(}\AgdaBound{resp} \AgdaSymbol{:} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{a'}\AgdaSymbol{)} \<[56]%
+\>[56]\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaBound{B} \AgdaFunction{[} \AgdaBound{p} \AgdaFunction{]⁼} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a'}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaBound{qelim} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{resp} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+\>\<\end{code}
+
+\textbf{Quotient (Hofmann's)}
+
+A prequotient with a non-dependent eliminator (lifting).
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Hof-Quotient} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{(}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{lift} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaFunction{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaBound{f} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaBound{B}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{lift-β} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{B} \AgdaBound{a} \AgdaBound{f}\AgdaSymbol{\}(}\AgdaBound{resp} \AgdaSymbol{:} \AgdaBound{f} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\AgdaSymbol{)} \<[46]%
+\>[46]\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaBound{lift} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{resp} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{qind} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{P} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(∀\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{isProp} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{P} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+\textbf{Exact quotient}
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{exact-Quotient} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{(}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Qu} \<[10]%
+\>[10]\AgdaSymbol{:} \AgdaRecord{Quotient} \AgdaBound{PQ}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{exact} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaFunction{[} \AgdaBound{b} \AgdaFunction{]} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{b}\<%
+\\
+\>\<\end{code}
+
+
+\textbf{Definable quotient}
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{def-Quotient} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{(}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[1]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{emb} \<[13]%
+\>[13]\AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaFunction{A}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{complete} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{emb} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaFunction{\textasciitilde} \AgdaBound{a}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{stable} \<[13]%
+\>[13]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{q} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{emb} \AgdaBound{q} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaBound{q}\<%
+\\
+\>\<\end{code}
+
+\textbf{Proof :}\label{DQisExact} Definable quotients are exact.
+
+\begin{code}\>\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{exact} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaFunction{[} \AgdaBound{b} \AgdaFunction{]} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{b}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{exact} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaBound{p} \AgdaSymbol{=} \<[20]%
+\>[20]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{\textasciitilde-trans} \AgdaSymbol{(}\AgdaFunction{\textasciitilde-sym} \AgdaSymbol{(}\AgdaFunction{complete} \AgdaBound{a}\AgdaSymbol{))} \<[33]%
+\>[33]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{(}\AgdaFunction{\textasciitilde-trans} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \<[27]%
+\>[27]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{emb} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaFunction{\textasciitilde} \AgdaFunction{emb} \AgdaBound{x}\AgdaSymbol{)} \<[23]%
+\>[23]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaBound{p} \AgdaFunction{\textasciitilde-refl}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{complete} \AgdaBound{b}\AgdaSymbol{))}\<%
+\\
+\>\<\end{code}
+
+
+\textbf{Equivalences and conversions among the quotient structures}
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Σeq} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{a'} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}\{}\AgdaBound{b} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{a}\AgdaSymbol{\}\{}\AgdaBound{b'} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{a'}\AgdaSymbol{\}(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{a'}\AgdaSymbol{)} \<[71]%
+\>[71]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaBound{B} \AgdaBound{p} \AgdaBound{b} \AgdaDatatype{≡} \AgdaBound{b'} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{a'} \AgdaInductiveConstructor{,} \AgdaBound{b'}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Σeq} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{ind2dep} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Q} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{Q} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{Q} \AgdaSymbol{→} \AgdaRecord{Σ} \AgdaBound{Q} \AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{q} \AgdaSymbol{→} \AgdaFunction{proj₁} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{q}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{q}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{q} \AgdaSymbol{:} \AgdaBound{Q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{q}\<%
+\\
+\>\AgdaFunction{ind2dep} \AgdaSymbol{\{}\AgdaBound{Q}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{id'} \AgdaBound{q} \AgdaSymbol{=} \AgdaFunction{subst} \AgdaBound{B} \AgdaSymbol{(}\AgdaBound{id'} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{proj₂} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{q}\AgdaSymbol{))}\<%
+\\
+\>\<\end{code}
+}
+
+\emph{Hofmann's quotient} is equivalent to $Quotient$.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Hof-Quotient→Quotient} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[-3]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Hof-Quotient} \AgdaBound{PQ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Quotient} \AgdaBound{PQ}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Hof-Quotient→Quotient} \AgdaSymbol{\{}\AgdaBound{S}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{PQ}\AgdaSymbol{\}} \AgdaBound{QuH} \AgdaSymbol{=} \<[37]%
+\>[37]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{record} \<[9]%
+\>[9]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\{} \AgdaField{qelim} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{resp} \<[29]%
+\>[29]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{→} \AgdaFunction{proj₁} \AgdaSymbol{(}\AgdaFunction{qelim'} \AgdaBound{f} \AgdaBound{resp}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{qelim-β} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{f}\AgdaSymbol{\}} \AgdaBound{resp} \<[35]%
+\>[35]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{→} \AgdaFunction{proj₂} \AgdaSymbol{(}\AgdaFunction{qelim'} \AgdaBound{f} \AgdaBound{resp}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{Hof-Quotient} \AgdaBound{QuH}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{qelim'} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{a'}\AgdaSymbol{)} \<[38]%
+\>[38]\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaBound{B} \AgdaFunction{[} \AgdaBound{p} \AgdaFunction{]⁼} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a'}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaRecord{Σ[} \AgdaBound{f\textasciicircum} \AgdaRecord{∶} \AgdaSymbol{((}\AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{Q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{q}\AgdaSymbol{)} \AgdaRecord{]} \<[39]%
+\>[39]\<%
+\\
+\>[11]\AgdaIndent{14}{}\<[14]%
+\>[14]\AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{f\textasciicircum} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)}\<%
+\\
+\>[-1]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{qelim'} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{resp} \AgdaSymbol{=} \<[25]%
+\>[25]\AgdaFunction{f\textasciicircum} \AgdaInductiveConstructor{,} \AgdaFunction{f\textasciicircum-β}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaKeyword{where}\<%
+\\
+\>\<\end{code}
+
+The dependent lifting is defined to be the second projection of a non-dependent lifting functions as follows:
+ 
+\begin{code}\>\<%
+\\
+\>[10]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f₀} \AgdaSymbol{:} \AgdaFunction{A} \AgdaSymbol{→} \AgdaRecord{Σ} \AgdaFunction{Q} \AgdaBound{B}\<%
+\\
+\>[10]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f₀} \AgdaBound{a} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaInductiveConstructor{,} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+\>[-3]\AgdaIndent{4}{}\<[4]%
+\>[4]\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{resp₀} \AgdaSymbol{:} \AgdaFunction{f₀} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{resp₀} \AgdaBound{p} \AgdaSymbol{=} \AgdaFunction{Σeq} \AgdaFunction{[} \AgdaBound{p} \AgdaFunction{]⁼} \AgdaSymbol{(}\AgdaBound{resp} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaRecord{Σ} \AgdaFunction{Q} \AgdaBound{B}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'} \AgdaSymbol{=} \AgdaFunction{lift} \AgdaFunction{f₀} \AgdaFunction{resp₀}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{id'} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaFunction{Q}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{id'} \AgdaSymbol{=} \AgdaFunction{proj₁} \AgdaFunction{∘} \AgdaFunction{f'}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{P} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{P} \AgdaBound{q} \AgdaSymbol{=} \AgdaFunction{id'} \AgdaBound{q} \AgdaDatatype{≡} \AgdaBound{q}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-β} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{f'} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaInductiveConstructor{,} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-β} \AgdaSymbol{=} \AgdaFunction{lift-β} \AgdaSymbol{\_}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-sound} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{id'} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-sound} \AgdaSymbol{=} \AgdaFunction{cong} \AgdaFunction{proj₁} \AgdaFunction{f'-β}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-sound'} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{id'} \AgdaBound{q} \AgdaDatatype{≡} \AgdaBound{q}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-sound'} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaFunction{qind} \AgdaFunction{P} \AgdaFunction{QisSet} \<[41]%
+\>[41]\<%
+\\
+\>[11]\AgdaIndent{27}{}\<[27]%
+\>[27]\AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{f'-sound}\AgdaSymbol{)} \AgdaBound{q}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-sound2} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \<[31]%
+\>[31]\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{subst} \AgdaBound{B} \AgdaFunction{f'-sound} \AgdaSymbol{(}\AgdaFunction{proj₂} \AgdaSymbol{(}\AgdaFunction{f'} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]}\AgdaSymbol{))} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f'-sound2} \AgdaSymbol{=} \AgdaFunction{cong-proj₂} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaFunction{f'-β}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f\textasciicircum} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{Q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{q}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f\textasciicircum} \AgdaBound{q} \AgdaSymbol{=} \AgdaFunction{subst} \AgdaBound{B} \AgdaSymbol{(}\AgdaFunction{f'-sound'}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{proj₂} \AgdaSymbol{(}\AgdaFunction{f'} \AgdaBound{q}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f\textasciicircum-β} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{f\textasciicircum} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{f\textasciicircum-β} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{subIrr} \AgdaFunction{QisSet} \<[43]%
+\>[43]\<%
+\\
+\>[11]\AgdaIndent{22}{}\<[22]%
+\>[22]\AgdaFunction{f'-sound'} \AgdaFunction{f'-sound}\AgdaSymbol{)} \AgdaFunction{f'-sound2}\<%
+\\
+\>\<\end{code}
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Quotient→Hof-Quotient} \AgdaSymbol{:} \<[24]%
+\>[24]\<%
+\\
+\>[9]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Quotient} \AgdaBound{PQ}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Hof-Quotient} \AgdaBound{PQ}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{Quotient→Hof-Quotient} \AgdaSymbol{\{}\AgdaBound{S}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{PQ}\AgdaSymbol{\}} \AgdaBound{QU} \AgdaSymbol{=}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{} \AgdaField{lift} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{resp} \<[22]%
+\>[22]\<%
+\\
+\>[2]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{→} \AgdaFunction{qelim} \AgdaBound{f} \AgdaSymbol{(}\AgdaFunction{resp'} \AgdaBound{resp}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{lift-β} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{resp} \<[20]%
+\>[20]\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{→} \AgdaFunction{qelim-β} \AgdaSymbol{(}\AgdaFunction{resp'} \AgdaBound{resp}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{qind} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{P} \AgdaBound{isP} \AgdaBound{f} \<[21]%
+\>[21]\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{→} \AgdaFunction{qelim} \AgdaSymbol{\{}\AgdaBound{P}\AgdaSymbol{\}} \AgdaBound{f} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{isP}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{Quotient} \AgdaBound{QU}\<%
+\\
+%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{resp'} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{a'} \AgdaSymbol{:} \AgdaFunction{A}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\{}\AgdaBound{f} \AgdaSymbol{:} \AgdaFunction{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{(}\AgdaBound{resp} \AgdaSymbol{:} \AgdaBound{f} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{a'}\AgdaSymbol{)}\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{→} \AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \AgdaFunction{[} \AgdaBound{p} \AgdaFunction{]⁼} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \<[41]%
+\>[41]\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a'}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{resp'} \AgdaBound{resp} \AgdaBound{p} \AgdaSymbol{=} \<[19]%
+\>[19]\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{subIrr2} \AgdaFunction{[} \AgdaBound{p} \AgdaFunction{]⁼}\AgdaSymbol{)} \<[33]%
+\>[33]\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{(}\AgdaBound{resp} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+\emph{Definable quotients} is the strongest and gives rise to a \emph{Quotient} (and ineed it is an \emph{Exact quotients}).
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{def-Quotient→Quotient} \AgdaSymbol{:} \<[24]%
+\>[24]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{def-Quotient} \AgdaBound{PQ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Quotient} \AgdaBound{PQ}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{def-Quotient→Quotient} \AgdaSymbol{\{}\AgdaBound{S}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{PQ}\AgdaSymbol{\}} \AgdaBound{QuD} \AgdaSymbol{=} \<[37]%
+\>[37]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{qelim} \AgdaSymbol{=} \<[19]%
+\>[19]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{resp} \AgdaBound{q} \AgdaSymbol{→} \AgdaFunction{subst} \AgdaBound{B} \AgdaSymbol{(}\AgdaFunction{stable} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{(}\AgdaFunction{emb} \AgdaBound{q}\AgdaSymbol{))}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{qelim-β} \AgdaSymbol{=} \<[21]%
+\>[21]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{f}\AgdaSymbol{\}} \AgdaBound{resp} \AgdaSymbol{→} \<[30]%
+\>[30]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{subIrr} \AgdaFunction{QisSet} \AgdaSymbol{(}\AgdaFunction{stable} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]}\AgdaSymbol{)} \<[45]%
+\>[45]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaFunction{[} \AgdaFunction{complete} \AgdaBound{a} \AgdaFunction{]⁼}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{resp} \AgdaSymbol{(}\AgdaFunction{complete} \AgdaBound{a}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{def-Quotient} \AgdaBound{QuD}\<%
+\\
+\>\<\end{code}
+
+Remember that we have proven \emph{Definable quotients} are exact.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{def-Quotient→exact-Quotient} \AgdaSymbol{:} \<[30]%
+\>[30]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaRecord{def-Quotient} \AgdaBound{PQ} \AgdaSymbol{→} \AgdaRecord{exact-Quotient} \AgdaBound{PQ}\<%
+\\
+\>\AgdaFunction{def-Quotient→exact-Quotient} \AgdaSymbol{\{}\AgdaBound{S}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{PQ}\AgdaSymbol{\}} \AgdaBound{QuD} \AgdaSymbol{=}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{Qu} \AgdaSymbol{=} \AgdaFunction{def-Quotient→Quotient} \AgdaBound{QuD}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{exact} \AgdaSymbol{=} \AgdaFunction{exact}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{def-Quotient} \AgdaBound{QuD}\<%
+\\
+\>\<\end{code}
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{def-Quotient→Hof-Quotient} \<[26]%
+\>[26]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}} \<[17]%
+\>[17]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{def-Quotient} \AgdaBound{PQ}\AgdaSymbol{)} \<[22]%
+\>[22]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Hof-Quotient} \AgdaBound{PQ}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{def-Quotient→Hof-Quotient} \AgdaSymbol{\{}\AgdaBound{S}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{PQ}\AgdaSymbol{\}} \AgdaBound{QuD} \AgdaSymbol{=}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{record} \<[9]%
+\>[9]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{} \AgdaField{lift} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{f} \AgdaFunction{∘} \AgdaFunction{emb}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{lift-β} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{resp} \AgdaSymbol{→} \AgdaBound{resp} \AgdaSymbol{(}\AgdaFunction{complete} \AgdaSymbol{\_)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{qind} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{P} \AgdaBound{\_} \AgdaBound{f} \AgdaBound{\_} \AgdaSymbol{→} \<[25]%
+\>[25]\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{subst} \AgdaBound{P} \AgdaSymbol{(}\AgdaFunction{stable} \AgdaSymbol{\_)} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{(}\AgdaFunction{emb} \AgdaSymbol{\_))}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{where}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{open} \AgdaModule{def-Quotient} \AgdaBound{QuD}\<%
+\\
+\>\<\end{code}
+
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{def-Quotient→Hof-Quotient'} \AgdaSymbol{:} \<[29]%
+\>[29]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{def-Quotient} \AgdaBound{PQ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Hof-Quotient} \AgdaBound{PQ}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{def-Quotient→Hof-Quotient'} \AgdaSymbol{=} \<[29]%
+\>[29]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{Quotient→Hof-Quotient} \AgdaFunction{∘} \AgdaFunction{def-Quotient→Quotient}\<%
+\\
+\>\<\end{code}
+}
+
+\textbf{The propositional univalence implies a quotient is always exact}\label{PUEF}
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{Prp} \AgdaSymbol{=} \AgdaPrimitiveType{Set}\<%
+\\
+%
+\\
+\>\AgdaFunction{\_⇔\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaFunction{Prp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{Prp}\<%
+\\
+\>\AgdaBound{A} \AgdaFunction{⇔} \AgdaBound{B} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \AgdaFunction{×} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{→} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{module} \AgdaModule{PuImpEff}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+Assume we have the propositional univalence (the other part is trivial),
+
+\begin{code}\>\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaBound{PropUni₁} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{Prp}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaFunction{⇔} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+and a quotient (Note that we postulate the lifting function for $B : Set_1$ because for convenience we did not take into account the universe levels, but it is required in the proof here)
+
+\begin{code}\>\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{S} \AgdaSymbol{:} \AgdaFunction{Setoid}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{}\AgdaBound{PQ} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaBound{S}\AgdaSymbol{\}}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{pre-Quotient} \AgdaBound{PQ}\<%
+\\
+\>\<\end{code}
+\begin{code}\>\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{postulate} \<[12]%
+\>[12]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaPostulate{lift₁} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁}\AgdaSymbol{\}} \<[24]%
+\>[24]\AgdaSymbol{→} \<[26]%
+\>[26]\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaFunction{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \<[26]%
+\>[26]\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(}\AgdaBound{f} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\AgdaSymbol{)} \AgdaSymbol{→} \<[31]%
+\>[31]\<%
+\\
+\>[12]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{Q} \AgdaSymbol{→} \AgdaBound{B}\<%
+\\
+%
+\\
+\>[-1]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{postulate}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaPostulate{lift-β₁} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{B} \AgdaBound{a} \AgdaBound{f}\AgdaSymbol{\}\{}\AgdaBound{resp} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{f} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\AgdaSymbol{)\}} \<[49]%
+\>[49]\<%
+\\
+\>[4]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaPostulate{lift₁} \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}} \AgdaBound{f} \AgdaBound{resp} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \<[38]%
+\>[38]\AgdaDatatype{≡} \AgdaBound{f} \AgdaBound{a}\<%
+\\
+%
+\\
+\>[6]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{coerce} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{A} \AgdaDatatype{≡} \AgdaBound{B} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{B}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{coerce} \AgdaInductiveConstructor{refl} \AgdaBound{m} \AgdaSymbol{=} \AgdaBound{m}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{exact} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{a} \AgdaBound{a'} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{a} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaFunction{[} \AgdaBound{a'} \AgdaFunction{]} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{a'}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{exact} \AgdaBound{a} \AgdaBound{a'} \AgdaBound{p} \AgdaSymbol{=} \AgdaFunction{coerce} \AgdaFunction{P\textasciicircum-β} \AgdaSymbol{(}\AgdaFunction{\textasciitilde-refl} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\})}\<%
+\\
+\>[2]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaKeyword{where}\<%
+\\
+\>[8]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P} \AgdaSymbol{:} \AgdaFunction{A} \AgdaSymbol{→} \AgdaFunction{Prp}\<%
+\\
+\>[8]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P} \AgdaBound{x} \AgdaSymbol{=} \AgdaBound{a} \AgdaFunction{\textasciitilde} \AgdaBound{x}\<%
+\\
+%
+\\
+\>[8]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P-resp} \AgdaSymbol{:} \AgdaFunction{P} \AgdaFunction{respects} \AgdaFunction{\_\textasciitilde\_}\<%
+\\
+\>[8]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P-resp} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b'}\AgdaSymbol{\}} \AgdaBound{bb'} \AgdaSymbol{=} \<[32]%
+\>[32]\<%
+\\
+\>[10]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaBound{PropUni₁} \AgdaSymbol{((λ} \AgdaBound{ab} \AgdaSymbol{→} \AgdaFunction{\textasciitilde-trans} \AgdaBound{ab} \AgdaBound{bb'}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \<[48]%
+\>[48]\<%
+\\
+\>[10]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{(λ} \AgdaBound{ab'} \AgdaSymbol{→} \AgdaFunction{\textasciitilde-trans} \AgdaBound{ab'} \AgdaSymbol{(}\AgdaFunction{\textasciitilde-sym} \AgdaBound{bb'}\AgdaSymbol{)))}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P\textasciicircum} \AgdaSymbol{:} \AgdaFunction{Q} \AgdaSymbol{→} \AgdaFunction{Prp}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P\textasciicircum} \AgdaSymbol{=} \AgdaPostulate{lift₁} \AgdaFunction{P} \AgdaFunction{P-resp}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P\textasciicircum-β} \AgdaSymbol{:} \AgdaFunction{P} \AgdaBound{a} \AgdaDatatype{≡} \AgdaFunction{P} \AgdaBound{a'}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{P\textasciicircum-β} \AgdaSymbol{=} \AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{sym} \AgdaPostulate{lift-β₁}\AgdaSymbol{)} \<[37]%
+\>[37]\<%
+\\
+\>[10]\AgdaIndent{17}{}\<[17]%
+\>[17]\AgdaSymbol{(}\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{cong} \AgdaFunction{P\textasciicircum} \AgdaBound{p}\AgdaSymbol{)} \AgdaPostulate{lift-β₁}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}

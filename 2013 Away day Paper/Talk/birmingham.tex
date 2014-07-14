@@ -1,0 +1,547 @@
+\documentclass[12pt, mathserif]{beamer} 
+\usepackage{etex}
+
+\usecolortheme{lily}
+
+\usepackage[latin1]{inputenc}
+\usetheme{AnnArbor} 
+\usecolortheme{sidebartab}
+\setbeamercovered{highly dynamic} 
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+%\usepackage{proof}
+\usepackage{multimedia}
+\usepackage{animate}
+\usepackage[all]{xy}
+\usepackage{booktabs}
+\usepackage[nobibnewpage,notocbib]{apacite}
+\usepackage[absolute,overlay,quiet]{textpos}
+
+\definecolor{blueish}{rgb}{0.2, 0.2, 0.7}
+
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage{fancybox}
+
+\usepackage[inference]{semantic}
+
+
+%\definecolor{orangecol}{RGB}{70,30,30}
+
+
+\setbeamercolor{yellow}{fg=black,bg=yellow}
+\setbeamercolor{lightyellow}{fg=black,bg=yellow!40}
+\setbeamercolor{orange}{fg=black,bg=orange}
+\setbeamercolor{lightorange}{fg=black,bg=orange!40}
+\setbeamercolor{green}{fg=black,bg=green}
+\setbeamercolor{lightgreen}{fg=black,bg=green!40}
+\setbeamercolor{blue}{fg=black,bg=blue}
+\setbeamercolor{lightblue}{fg=black,bg=blue!40}
+\setbeamercolor{red}{fg=black,bg=red}
+\setbeamercolor{lightred}{fg=black,bg=red!40}
+
+\setbeamercovered{invisible}
+
+
+\newenvironment{colorblock}[2]
+{\setbeamercolor{item}{fg=#1,bg=#1}\begin{beamerboxesrounded}[upper=#1,lower=#2,shadow=true]}
+{\end{beamerboxesrounded}}
+
+\newcommand{\type}{\textit{ : type}}
+\newcommand{\set}{\textit{Set}}
+\newcommand{\ruleType}[2]{#1 \vdash #2 \, \type}
+\newcommand{\ruleTerm}[3]{#1 \vdash #2 \, : \, #3}
+\newcommand{\ruleTypeE}[1]{\vdash #1 \, \type}
+\newcommand{\ruleTermE}[2]{\vdash #1 \, : \, #2}
+\newcommand{\refl}[1]{\textit{refl}_#1}
+\newcommand{\judgeTerm}[2]{#1 \, : \, #2}
+\newcommand{\judgeType}[1]{#1 \, : \, \textit{type}}
+
+%\addtolength{\itemsep}{0.5\baselineskip}
+
+\author{
+Nicolai Kraus
+}
+
+%\institute{
+%School of Computer Science \\  University of Nottingham, UK
+%}
+
+
+
+
+
+
+\date[16/11/12]{16/11/12}
+\title{Homotopy Type Theory and Hedberg's Theorem}
+\subtitle[Birmingham]{}
+
+
+\addtobeamertemplate{sidebar right}{}{\vspace{-2cm}}
+\addtobeamertemplate{footline}{}{\vspace{-1cm}\hskip2pt(\insertframenumber/\inserttotalframenumber) \insertshortsubtitle{} -- \insertshortdate\vskip2.2pt}
+\setbeamercolor{footline}{fg=blueish}
+
+%\includeonlyframes{current}
+
+
+\begin{document}
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Reminder: Type Theory}
+% \pause{
+\begin{colorblock}{green}{lightyellow}{\center{Intensional Type Theory}}
+\center{
+\pause {a formal system} \\
+\pause {\ldots and a possible foundation of (constructive) mathematics} \\
+\pause{\ldots for proof assistants and (dependently typed) programming} \\
+\pause{\ldots as used for Coq and Agda}
+}
+\end{colorblock}
+%}
+
+\vspace{15pt}
+
+\pause{\center e.g.\\
+\qquad \qquad $\lambda f \, \to \, \lambda a \, \to \, f \, a \, a \: : \: (A \to A \to B) \to A \to B$
+}
+
+
+\end{frame}
+
+
+\section{Equality}
+
+\begin{frame}
+\frametitle{Reminder: Equality}
+% \pause{
+\begin{colorblock}{green}{lightyellow}{\center{Definitional Equality}
+}
+\center{
+Decidable equality for typechecking \& computation; e.\,g. $(\lambda a . b) x =_\beta b[x/a]$}
+\end{colorblock}
+%}
+
+\vspace{15pt}
+
+\pause{
+\begin{colorblock}{green}{lightyellow}{\center{Propositional Equality}}
+\center{Equality needing a proof, i.\,e. a term of the identity type }
+\end{colorblock}
+}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Reminder: Identity Types}
+
+
+
+\begin{colorblock}{green}{lightyellow}{\center{Propositional equality}}
+\center
+\ldots is just an inductive type
+\end{colorblock}
+
+
+\begin{columns}
+\begin{column}{.4\textwidth}
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{Formation}}
+\center
+$\inference
+{\judgeTerm {a, b} A}{\judgeType {a \equiv b}}$ 
+\end{colorblock}
+\end{pause} 
+
+
+
+\vspace{22pt} % ???
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{Introduction}}
+\center
+$\inference
+{\judgeTerm a A}{\judgeTerm {\refl a} {a \equiv a}}$ 
+\end{colorblock}
+\end{pause}
+
+
+
+\end{column}
+\hfill
+\begin{column}{.55\textwidth}
+
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{Elimination ($J$)}}
+\center
+\begin{equation*}
+  \inference{ 
+      \judgeTerm P {(a, b : A) \to a\equiv b \to \set} \\
+      m : \forall a . P(a, a, \refl a)
+  }
+  { \judgeTerm {J_{(a, b, q)}} {P(a, b, q)} }
+\end{equation*}
+\end{colorblock}
+\end{pause}
+
+\vspace{18pt}
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{Computation ($\beta$)}}
+\center
+$J_{(a, a, \refl a)} =_\beta m a$
+\end{colorblock}
+\end{pause}
+
+\end{column}%
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Uniqueness of Identity Proofs (UIP)}
+\center {
+Given $a : \, A$ and $p : \, a \equiv a$, 
+can we prove $p \equiv \refl{a}$?\\
+}
+\vspace{18pt}
+
+
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{Axiom UIP}}
+\center
+\begin{equation*}
+  \inference{ 
+      \judgeTerm {p, \, q} {a \equiv b} 
+  }
+  { \judgeTerm {\textit{uip}} \, p \equiv q}
+\end{equation*}
+\end{colorblock}
+\end{pause}
+
+\vspace{12pt}
+
+\begin{columns}
+\begin{column}{.4\textwidth}
+
+
+\begin{pause}
+\begin{colorblock}{green}{lightyellow}{\center{Advantages}}
+\center
+Simple, \\
+Good computational properties
+\end{colorblock}
+\end{pause}
+
+
+\end{column}
+\hfill
+\begin{column}{.5\textwidth}
+\begin{pause}
+\begin{colorblock}{green}{lightyellow}{\center{Disadvantages}}
+\center
+Intuitively wrong, \\
+impossible to express statements about equality, \\
+isomorphic sets cannot be equal
+\end{colorblock}
+\end{pause}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Homotopic Model - technical details}
+
+\center
+
+
+\begin{itemize}
+\item[] Voevodsky (and Awodey, independently, and others): \\
+\vspace{8pt}
+
+\item[] Without UIP: new model of Type Theory 
+\item[] \qquad \qquad (types as weak $\omega$-groupoids)
+\vspace{8pt}
+
+\item[] \begin{itemize}
+         \item \pause{best expressible in Simplicial Sets \emph{SSets} (the topos $\textit{Sets}^{\Delta^{\textit{op}}}$)}
+	 \item \pause{realization functor $R : \, \textit{SSets} \, \to \, \textit{Top}$}
+	 \item \pause{$R$ is a \emph{Quillen equivalence} of model categories}
+	 \item \pause{$\Rightarrow$ (more or less) a model that uses topological spaces as types}
+        \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+% \begin{frame}
+% \frametitle{$J$ versus $K$ revisited}
+% \center 
+% 
+% Fix $a : A$.
+% 
+% \vspace{12pt}
+% 
+% \begin{colorblock}{orange}{lightyellow}{\center{$J$ (variant of Paulin-Mohring)}}
+% \center
+% To show $\forall (b, q)_{: \Sigma (b : A).a \equiv b} \, . \, P(b,q)$, just prove $P(a, \refl a)$.
+% \end{colorblock}
+% 
+% \vspace{12pt}
+% 
+% 
+% \begin{colorblock}{orange}{lightyellow}{\center{$K$ (reformulated)}}
+% \center
+% $\forall q_{: a \equiv a} \, . \, q \equiv \refl a$
+% \end{colorblock}
+% \end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Hedberg's theorem}
+\center
+Fix a type $A$.
+\vspace{8pt}
+
+\center 
+\begin{colorblock}{orange}{lightyellow}{\center{Decidable Equality}}
+\center
+$\textit{DecidableEquality} \: := \: \forall \, a \, b \, \to \left(a \equiv b \: + \: \neg \, a \equiv b\right)$
+\end{colorblock}
+\vspace{12pt}
+
+\begin{colorblock}{orange}{lightyellow}{\center{Hedberg's theorem}}
+\center
+$\textit{DecidableEquality} \: \longrightarrow \: \textit{UIP}$
+\end{colorblock}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Hedberg's theorem}
+\center
+
+
+\begin{colorblock}{orange}{lightyellow}{\center{Constant Function}}
+\center
+$\textit{const} (f) \: := \: \forall \, a \, b \, \to \, fa \equiv fb$
+\end{colorblock}
+\vspace{12pt}
+
+\begin{colorblock}{orange}{lightyellow}{\center{Constant Endofunction on Path Spaces}}
+\center
+$g \: : \: \forall \, a \, b \, \to \, a \equiv b \, \to \, a \equiv b$ \\
+$\textit{path-const} (g) \, := \, \forall \, a \, b \, \to \textit{const} \, g_{ab}$
+\end{colorblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Hedberg's theorem}
+
+\begin{colorblock}{lightred}{lightyellow}{\center{Lemma 1}}
+\center
+$\textit{DecidableEquality} \: \longrightarrow \: \Sigma_{g} \, . \,  \textit{path-const} (g)$
+\end{colorblock}
+
+\pause 
+\emph{Proof. }
+\begin{itemize}
+\item Given ${\color{red}\textit{dec}} : \, \forall \, a \, b \, \to \left(a \equiv b \: + \: \neg \, a \equiv b\right)$.
+\pause \item Given {\color{red}$a, b$}, we want: ${\color{red}g_{ab}} : \, a\equiv b \, \to \, a \equiv b$.
+\vspace*{4pt}
+
+\pause \item If ${\color{red}\textit{dec} \, a \, b = \textit{inr} \, \_ } \: $, then nothing to do
+\pause \item If ${\color{red}\textit{dec} \, a \, b = \textit{inl} \, p } \: $, then ${\color{red}g_{ab} (\_) \, = \, p }$
+\qquad $\qed$
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Hedberg's theorem}
+
+\begin{colorblock}{lightred}{lightyellow}{\center{Lemma 2}}
+\center
+$\Sigma_{g} \, . \,  \textit{path-const} (g) \: \longrightarrow \: \textit{UIP}$
+\end{colorblock}
+
+\pause
+\emph{Proof. }
+\begin{itemize}
+\item Given ${\color{red}\textit{g}} \: : \: \forall \, a \, b \, \to \, a \equiv b \, \to \, a \equiv b$ which is constant
+\pause \item Given any {\color{red}$a, b$} $\, : \, A$ and {\color{red}$p, q$}$\,  : \, a \equiv b$.
+\vspace*{4pt}
+
+\pause \item Claim: ${\color{red}p \equiv \, (g_{aa}\refl a)^{-1} \circ g_{ab}(p)}$
+\pause \item Proof with $J$: Just do it for ${\color{red}(a, a, \refl a)}$. That's true!
+\vspace*{4pt}
+\pause \item Same for $q$. But $g_{aa}$ and $g_{ab}$ are constant.\qquad $\qed$
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Generalizations of Hedberg's theorem}
+\center
+We have seen 
+\vspace*{2pt}
+
+\begin{colorblock}{lightred}{lightyellow}{\center{Lemma 1}}
+\center
+$\textit{DecidableEquality} \: \longrightarrow \: \Sigma_{g} \, . \,  \textit{path-const} (g)$
+\end{colorblock}
+\vspace*{4pt}
+
+$\textit{DecidableEquality}$ is a very strong property. How about something weaker? 
+\pause For example:
+\vspace*{4pt}
+
+\begin{colorblock}{orange}{lightyellow}{\center{Separated}}
+\center
+$\forall \, a \, b \, \to \, \neg\neg(a \equiv b) \, \to \, a \equiv b$
+\end{colorblock}
+\vspace*{4pt}
+
+
+\begin{colorblock}{orange}{lightyellow}{\center{``general''}}
+\center
+$\forall \, a \, b \, \to \, \textit{[propositional evidence for } a\equiv b\textit{]} \, \to \, a \equiv b$
+\end{colorblock}
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Propositions}
+\center
+So, what is ``propositional evidence''?
+\vspace*{4pt}
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{Type $A$ is a Proposition if}}
+\center
+$\textit{prop}_A \, = \, \forall \, a \, b \, \to \, a\equiv b$
+\end{colorblock}
+\vspace*{4pt}
+
+``at most one inhabitant''
+\vspace*{4pt}
+\end{pause}
+
+\pause{Write \textbf{Prop} for this ``subset'' of \textbf{Type}}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{H-Propositional Reflection}
+\center
+$A$ some type. We want a way to say that $A$ is inhabited without giving away a specific inhabitant.
+\vspace*{4pt}
+
+\begin{pause}
+\begin{colorblock}{orange}{lightyellow}{\center{H-propositional reflection}}
+\center
+$\,^* \, : \, \textbf{Type} \, \to \, \textbf{Prop}$ \\
+is defined to be the left adjoint of $\textit{emb: }\textbf{Prop} \, \hookrightarrow \, \textbf{Type}$
+\end{colorblock}
+\end{pause}
+\vspace*{4pt}
+
+\begin{pause}
+ This means: \\
+ \vspace*{4pt}
+
+ \center
+ \begin{itemize}
+  \item $A^*$ is in \textbf{Prop}\\
+  \item $\eta \, : \, A \, \to \, A^*$
+  \item if $P$ is a proposition and $A \, \to \, P$, then $A^* \, \to \, P$
+ \end{itemize}
+
+\end{pause}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Generalizations of Hedberg's Theorem}
+\center
+``Propositional evidence for $a \equiv b$'' is now just [an inhabitant of] $(a \equiv b)^*$.
+ \vspace*{4pt}
+
+\begin{colorblock}{orange}{lightyellow}{\center{H-Separated}}
+\center
+$\forall \, a \, b \, \to \, (a \equiv b)^* \, \to \, a \equiv b$
+\end{colorblock}
+\vspace*{12pt}
+
+\pause
+\begin{colorblock}{lightred}{lightyellow}{\center{Theorem}}
+\center
+$\textit{h-separated}_A \, \longleftrightarrow \Sigma_{g} \, . \,  \textit{path-const} (g) \, \longleftrightarrow \, \textit{UIP}_A$
+\end{colorblock}
+\vspace*{4pt}
+
+ 
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}
+\frametitle{Nearly uncountable many things to be done \ldots}
+\begin{itemize}
+\item Higher Inductive Types (see Mike Shulman's work)
+\item Model construction with modern abstract (not point-set) homotopy theory
+\item Constructive Simplicial Sets (the combinatorial version of what I have shown; see Thierry Coquand's / Simon Huber's work)
+\item Univalent foundations / Univalence (``alternative'' to $K$) in general (see Voevodsky)
+\item \ldots and possible computational properties (Thorsten?)
+%\item Combine canonicity, strong normalization, extensionality?
+\end{itemize}
+
+\begin{center}
+THANK YOU!
+\end{center}
+\end{frame}
+
+
+
+
+
+
+
+
+\end{document}

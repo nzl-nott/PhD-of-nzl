@@ -11,6 +11,15 @@ the partiality monad and also the proofs that
 the undefinablity of them will be disccussed in detail.
 
 
+\section{Definability}
+
+
+\todo{decidable order -> of course definable, A-> N definable, give a
+  explicit proof}
+
+\todo{definable -> split quotient because definable is too general}
+
+
 \section{Real numbers}
 
 We have several choices to represent real numbers. We choose Cauchy
@@ -393,7 +402,6 @@ between $\tometa \R_0$ and $\tometa A$.
 \begin{proposition}
 It is not true that given type $T$, if $T$ is connected then $T$ is contractible.
 \end{proposition}
-\todo{verify whether this is correct.}
 \begin{proof}
 As we have seen $ \R_0 / \sim$ is connected. However, it is not
 contractible.
@@ -405,8 +413,6 @@ which negates $\bar{0} \ne \bar{1}$.
 
 \subsection{Cauchy completeness of the Cauchy reals}
 
-\todo{expand Cauchy completeness of Cauchy reals: it should rely on
-  the axiom of countable choice}
 
 Is our definition of cauchy reals $\R_0$ Cauchy complete? In other
 words, is there a representative Cauchy sequence as a limit for every
@@ -435,43 +441,34 @@ in chapter \ref{HITs}.
 
 \section{Multisets}
 
+In mathematics, a multiset (bag) can be seen as a generalised set which
+allows multiple occurence of same elements.
+
 \begin{definition}
-
-Multiset. A multiset (or bag) is a set without the constraint that there is no repetitive elements.
-
+Multiset. 
+A multiset (or bag) is a set without the constraint that there is no repetitive elements.
 \end{definition}
 
-A set is just a special case of multiset when the
-\emph{multiplicity}(the number of the occurences) of every element is one.
-Multisets (or bags) are believed to be used in ancient times, but it
-is only 
-studied by mathematicans from 20th century.
+In programming languages, a multiset can be seen as an unordered
+list. Two lists are bag equivalent \cite{DBLP:conf/itp/Danielsson12} if they are equal up to
+reordering. For example, $[1, 2 , 2, 5 ,1]$ is equivalent to
+$[2,2,1,1,5]$ since we can find a bijjective mapping between them.
+A simple equivalence relation can be defined as follows:
 
-In set theory, a multiset is defined as a pair of a set $A$ and a
-occurences counting function $m : A \rightarrow \N$.
+Given two length-$n$ lists (vector) of type $A$, $p \, q : \text{Vec} ~A~n$,
+they are equivalent if we have an bijection between them.
 
-However in type theory, the set-theoretical \emph{"set"} is not a
-primitive notion and we need to define multisets in a type-theoretic
-way. 
-In type theoretical language, a multiset can be seen as a unordered
-list. It can be encoded as lists which identifies
-permutations. To make it simpler we use length-explict list
-\emph{Vector} ("Vector A 3" stands for a list of type A of length 3).
+$$ p \sim q = \Sigma ~\phi : \text{Fin}\,n \to \text{Fin}\,n, \phi~\text{is a
+bijection} \wedge \forall x, p_x = q_{\phi(x)}$$
 
+This equivalence can give rise to a quotient which is just finite
+multiset. It is also not definable as a split quotient if it has no well-ordering.
 
-The equivalence relation required is as follows:
-
-Given two lists of type $A$ and has length n, $p \, q : Vector\,A\,n$,
-they are equivalent if we have an isomorphism between them.
-
-$$ p \sim q = \Sigma \phi : Fin\,n \rightarrow Fin\,n, \phi\,is\,a\,
-bijection \wedge \forall x, p_x = q_{\phi(x)}$$
-
-
-\todo{decidable order -> of course definable, A-> N definable, give a
-  explicit proof}
-
-\todo{definable -> split quotient because definable is too general}
+In fact a multiset can be defined as a pair of a set $A$ and a
+occurences counting function $m : A \to \N$. However from a practical
+perspective, it is not useful because we cannot count the cardinality
+of the multiset because $A$ is not necessary to be enumerable. But the
+unoroder list represent is countable.
 
 
 \section{Partiality monad}

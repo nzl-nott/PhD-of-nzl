@@ -12,7 +12,6 @@
      "itt"
      "ett"
      "mltt"
-     "textminus"
      "wig"
      "og"
      "wog"

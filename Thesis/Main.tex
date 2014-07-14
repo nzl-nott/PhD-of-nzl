@@ -34,7 +34,7 @@
 
 \usepackage{diagxy} % commutative diagram 
 
-\usepackage{booktabs}% nice tables
+\usepackage{bcprules}
 
 \usepackage[square, numbers, comma, sort&compress]{natbib} 
 % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
@@ -250,7 +250,10 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 % Uncomment the lines as you write the Appendices
 
 \input{Appendices/AppendixA}
-%\input{Appendices/Codes/latex/Quotient}
+
+\chapter{Set Quotients and Groupoid Quotients}
+
+\input{Appendices/Codes/latex/Quotient}
 \input{Appendices/Codes/latex/GroupoidQuotient}
 
 \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics

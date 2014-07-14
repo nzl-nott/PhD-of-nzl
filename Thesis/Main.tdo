@@ -1,27 +1,19 @@
-\contentsline {todo}{fill in the missing part}{1}{section*.11}
-\contentsline {todo}{short explanation of models or leave it for later discusssion.}{3}{section*.16}
-\contentsline {todo}{mention the definable quotient is very useful}{3}{section*.18}
-\contentsline {todo}{write more sufficient introduction and explain where do we need category theory in my thesis}{4}{section*.21}
-\contentsline {todo}{Write where we use Agda and how}{5}{section*.23}
-\contentsline {todo}{to complete this part}{5}{section*.26}
-\contentsline {todo}{fill this part}{5}{section*.28}
-\contentsline {todo}{compact, comprehensive Overview: \\Add overview of each part, as much as you can, and compact}{5}{section*.30}
-\contentsline {todo}{following paragraph needs to be rewritten or added with code}{12}{section*.46}
-\contentsline {todo}{moving the categorical intuition earlier, because it essentially generalises the quotients in different topics of mathematics. Quotient sets, quotient groups are just instances and quotient types should also de derviable from that, and it is much easiler to understand. (and ask Paulo about it?)}{21}{section*.58}
-\contentsline {todo}{question of where shall we apply pe}{25}{section*.76}
-\contentsline {todo}{$\equiv $ or $=$}{27}{section*.79}
-\contentsline {todo}{depends on the choice above}{27}{section*.80}
-\contentsline {todo}{or set?}{27}{section*.82}
-\contentsline {todo}{here}{30}{section*.86}
-\contentsline {todo}{1. Distributivity 2. Rational numbers 3. other definable quotients}{33}{section*.89}
-\contentsline {todo}{add this paragraph:}{41}{section*.103}
-\contentsline {todo}{verify whether this is correct.}{52}{section*.152}
-\contentsline {todo}{expand Cauchy completeness of Cauchy reals: it should rely on the axiom of countable choice}{52}{section*.154}
-\contentsline {todo}{decidable order -> of course definable, A-> N definable, give a explicit proof}{53}{section*.157}
-\contentsline {todo}{definable -> split quotient because definable is too general}{53}{section*.158}
-\contentsline {todo}{Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mhe/agda/FailureOfTotalSeparatedness.html} should be considered and discussed here, couterexample of Connected -> contractible(?)}{54}{section*.161}
-\contentsline {todo}{the Setoid Model}{57}{section*.163}
-\contentsline {todo}{write why this model is not lccc explicitly. refer to Nicolais's result}{58}{section*.167}
-\contentsline {todo}{}{82}{section*.186}
-\contentsline {todo}{more explanation of face maps and degeneracy maps}{83}{section*.191}
-\contentsline {todo}{show an example graph}{83}{section*.192}
+\contentsline {todo}{Write where we use Agda and how}{5}{section*.18}
+\contentsline {todo}{to complete this part}{5}{section*.21}
+\contentsline {todo}{fill this part}{5}{section*.23}
+\contentsline {todo}{to finish this.}{7}{section*.26}
+\contentsline {todo}{maybe glossary}{7}{section*.27}
+\contentsline {todo}{following paragraph needs to be rewritten or added with code}{14}{section*.43}
+\contentsline {todo}{here}{30}{section*.87}
+\contentsline {todo}{question of where shall we apply pe}{32}{section*.90}
+\contentsline {todo}{decidable order -> of course definable, A-> N definable, give a explicit proof}{53}{section*.127}
+\contentsline {todo}{definable -> split quotient because definable is too general}{53}{section*.128}
+\contentsline {todo}{Martin Escardo's \url {http://www.cs.bham.ac.uk/\nobreakspace {}mhe/agda/FailureOfTotalSeparatedness.html} should be considered and discussed here, couterexample of Connected -> contractible(?)}{62}{section*.178}
+\contentsline {todo}{the Setoid Model}{65}{section*.180}
+\contentsline {todo}{write why this model is not lccc explicitly. refer to Nicolais's result}{66}{section*.184}
+\contentsline {todo}{cite http://stackoverflow.com/questions/12525429/difference-between-ordered-and-unordered-rooted-trees}{89}{section*.202}
+\contentsline {todo}{}{90}{section*.204}
+\contentsline {todo}{more explanation of face maps and degeneracy maps}{91}{section*.209}
+\contentsline {todo}{show an example graph}{91}{section*.210}
+\contentsline {todo}{cite https://uf-ias-2012.wikispaces.com/Semi-simplicial+types}{91}{section*.212}
+\contentsline {todo}{define strict equality and weak....}{93}{section*.216}

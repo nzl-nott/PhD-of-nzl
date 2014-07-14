@@ -1,3 +1,5 @@
+\begin{code}
+
 module Data.Rational.Normal where
 
 open import Data.Rational as Rt
@@ -81,10 +83,11 @@ GCD′→ℚ .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) = reco
 [_] : ℚ₀ → ℚ
 [ (+ 0) /suc d ] = ℤ.+_ 0 ÷ 1
 [ (+ (suc n)) /suc d ] with gcd (suc n) (suc d)
-[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
-
+[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) 
+                              di (λ ()) (C.gcd-gcd′ g)
 [ (-suc n) /suc d ] with gcd (suc n) (suc d)
-... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
+... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) 
+             (C.gcd-gcd′ g)
 
 
 ℤcon : ℤ.ℤ → ℤ
@@ -118,3 +121,5 @@ data ℚ₀' : Set where
 [ (-suc n) /suc d ] with gcd (suc n) (suc d)
 ... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) (C.gcd-gcd′ g)
 -}
+
+\end{code}

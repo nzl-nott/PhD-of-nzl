@@ -2,5 +2,6 @@
  (lambda ()
     (LaTeX-add-labels
      "qt"
-     "thm-p-e")))
+     "thm-p-e"
+     "PUEF")))
 

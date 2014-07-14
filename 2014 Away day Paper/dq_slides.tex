@@ -1,0 +1,667 @@
+\documentclass[11pt, mathserif,handout]{beamer}
+\usepackage{etex}
+
+
+\usepackage{agda}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+
+\usepackage{relsize}
+\usepackage{autofe}
+\usepackage{textgreek}
+
+\setbeamertemplate{navigation symbols}{}
+
+
+\usetheme{AnnArbor}
+\setbeamercovered{highly dynamic} 
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+%\usepackage{proof}
+%\usepackage{multimedia}
+\usepackage{animate}
+\usepackage[all]{xy}
+\usepackage{booktabs}
+\usepackage[nobibnewpage,notocbib]{apacite}
+\usepackage[absolute,overlay,quiet]{textpos}
+
+%\definecolor{blueish}{rgb}{0.2, 0.2, 0.7}
+
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage{fancybox}
+
+\usepackage[inference]{semantic}
+
+
+\usepackage{mypack}
+
+% Background Color
+
+\definecolor{rice}{RGB}{250,245,193}
+\definecolor{navy}{RGB}{193,235,250}
+\definecolor{lpink}{RGB}{242,198,222}
+\definecolor{lgreen}{RGB}{218,250,193}
+
+\setbeamercolor{background canvas}{bg=white}
+
+\setbeamercolor{yellow}{fg=black,bg=yellow}
+\setbeamercolor{lightyellow}{fg=black,bg=yellow!40}
+\setbeamercolor{orange}{fg=black,bg=orange}
+\setbeamercolor{lightorange}{fg=black,bg=orange!40}
+\setbeamercolor{green}{fg=black,bg=green}
+\setbeamercolor{lightgreen}{fg=black,bg=green!40}
+\setbeamercolor{blue}{fg=black,bg=blue}
+\setbeamercolor{lightblue}{fg=black,bg=blue!40}
+\setbeamercolor{red}{fg=black,bg=red}
+\setbeamercolor{lightred}{fg=black,bg=red!40}
+\setbeamercolor{lightpink}{fg=black,bg=pink!40}
+
+
+\setbeamercolor{frametitle}{fg=black,bg=lgreen}
+\setbeamercolor{title}{fg=black,bg=lgreen}
+
+\setbeamercolor{boxtitle}{fg=black,bg=navy}
+\setbeamercolor{boxbg}{fg=black,bg=rice}
+\setbeamercolor{structure}{bg=black, fg=lgreen}
+
+
+
+\setbeamercolor{palette primary}{bg=rice, fg=lgreen} % changed this
+\setbeamercolor{palette secondary}{bg=navy, fg=lgreen} % changed this
+\setbeamercolor{palette tertiary}{bg=navy, fg=lgreen} % changed this
+
+\setbeamercovered{invisible}
+
+\newenvironment{colorblock}
+{\setbeamercolor{item}{fg=lpink,bg=lpink}\begin{beamerboxesrounded}[upper=boxtitle,lower=boxbg,shadow=true]}
+{\end{beamerboxesrounded}}
+
+
+\newenvironment{colorblock2}[2]
+{\setbeamercolor{item}{fg=#1,bg=#1}\begin{beamerboxesrounded}[upper=#1,lower=#2,shadow=true]}
+{\end{beamerboxesrounded}}
+
+
+\author{
+Nuo Li
+}
+
+\institute{
+School of Computer Science \\  University of Nottingham, UK
+}
+
+
+
+
+
+
+\date[04/07/14]{FP Away day, July 2014}
+\title{Definable quotients in \itt}
+\subtitle[FP Away day 2014]{}
+
+
+\addtobeamertemplate{sidebar right}{}{\vspace{-2cm}}
+\addtobeamertemplate{footline}{}{\vspace{-1cm}\hskip2pt(\insertframenumber/\inserttotalframenumber) \insertshortsubtitle{} -- \insertshortdate\vskip2.2pt}
+\setbeamercolor{footline}{fg=purple}
+
+
+\begin{document}
+
+% 1
+\frame{\titlepage}
+
+
+% 2
+
+
+\begin{frame}
+\frametitle{What is a quotient?}
+
+\begin{itemize}
+\item In arithmatics, 4 is the quotient of $8 \div 2$ (or $8/2$)
+\pause
+\item In set theory, given a set $A$ and an equivalence relation
+  $\sim$ on it, a quotient set $\qset{A}$ is the collection of equivalence
+  classes.
+
+\pause
+\item In type theory, a quotient type is a type $A$ whose equality
+  is redefined by an equivalence relation $\sim$ on it.
+\end{itemize}
+
+
+\end{frame}
+
+% 3
+
+\begin{frame}{Quotients in type theory}
+%\frametitle{Quotient types}
+
+\begin{itemize}
+\item \emph{Quotient type} is an extensional notion which is not available
+  in \itt.
+
+\pause
+
+\item \emph{Setoids} are sometimes used to represent quotients.
+A setoid consists of
+\begin{enumerate}
+\item a set $A$,
+\item a relation $\sim : A \to A \to \Prop$, and
+\item it is an equivalence, i.e. it is reflexive, symmetric and transitive.
+\end{enumerate}
+
+\pause
+
+\item Some quotients are definable inductively without using quotient type former,
+  e.g.\ the set of rational numbers $\Q$
+
+\pause
+
+\item Algebraic structures for these quotients in \itt:
+
+\begin{itemize}
+\item Prequotient
+\item Quotient (dependent eliminator)
+\item Quotent (Hofmann's version)
+\item Exact quotient
+\item Definable quotient 
+\end{itemize}
+
+\end{itemize}
+
+
+\end{frame}
+
+
+% 4
+\begin{frame}
+\frametitle{Prequotient}
+
+
+\begin{colorblock}{\center{Prequotient}}
+Given a setoid $(A,\sim)$,  a \emph{prequotient} $(Q,[\_],\sound)$ over that setoid consists of
+\begin{enumerate}
+\item \label{enum:Q} a set $Q$,
+\item \label{enum:box}a function $[\_]: A \rightarrow Q$,
+\item \label{enum:sound} a proof \emph{sound} that  the function $[\_]$ is compatible with the relation $\sim$,
+that is \[\sound\colon (a,b : A) \rightarrow a\sim b \rightarrow [a] = [b],\]
+\end{enumerate}
+
+\end{colorblock}
+
+\pause
+
+In category theory, prequotient corresponds to a commute diagram of
+morphisms -- \emph{(co)fork}
+
+\[\xymatrix{
+R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
+& Q
+}\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Quotient (Hofmann's version)}
+
+
+\begin{colorblock}{\center{Quotient (Hofmann's)}}
+A prequotient $(Q,[\_],\sound)$ is a quotient (Hofmann's) if we also have
+
+\[\lift : (f : A \to B) \to (\forall a,b \to a\sim b \to f~a
+\equiv f~b) \to (Q \to B)\]
+such that $\text{lift}-\beta : \lift ~f ~p \class a = f~a$,
+
+together with an induction principle.
+Suppose $B$ is a predicate, 
+\[\qind : ((a: A)\to B ~ [ a ] \to ((q : Q) \to B~q)\]
+\end{colorblock}
+
+
+
+In category theory, a quotient is just a coequalizer (a special fork)
+
+\begin{displaymath}
+    \xymatrix{R \ar@<0.5ex>[r]^{\pi_1} \ar@<-0.5ex>[r]_{\pi_2} & A \ar[r]^{ [\_]}
+      \ar[dr]_{f} & Q
+      \ar@{.>}[d]^{\hat{f}} \\
+& & Q' }
+\end{displaymath}
+
+\end{frame}
+
+
+\begin{frame}
+
+
+\frametitle{Quotient (dependent eliminator)}
+
+\begin{colorblock}{\center{Quotient(dependent eliminator)}}
+A prequotient $(Q,[\_],\sound)$ is a quotient if we also have
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item \label{enum:elim}
+for any $B: Q\rightarrow\Set$, an eliminator
+ \begin{align*}
+ \qelim_B\,\,:\,\,\,&(f\colon (a:A) \rightarrow B\,\class a) \\
+        {\rightarrow}\, &((p:a\sim b) \rightarrow f\,a \simeq_{\sound\,p}f\,b)\\
+        {\rightarrow}\, &((q:Q) \rightarrow B\,q)
+ \end{align*}
+such that $\text{qelim}-\beta : \qelim_B\,f \,p\,\class a\equiv f\,a$.
+\end{enumerate}
+\end{colorblock}
+
+They are equivalent.
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Exact quotient}
+
+\begin{itemize}
+\item A quotient is \emph{exact} (or effective) if
+
+$$exact :(\forall a,b : A) \rightarrow  \class a \equiv \class b \rightarrow a \sim b$$
+
+i.e.\ a coequalizer is exact if following diagram commutes (i.e.\ a pullback)
+
+\[\xymatrix{
+R\pullbackcorner\ar[r]^{\pi_1}\ar[d]_{\pi_2} & A\ar[d]^{[\_]} \\
+A\ar[r]_{[\_]} & Q
+}\]
+
+\item Propositional extensionality  (univalence
+  for propositions) $\implies$ every quotient is exact.
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Definable quotient}
+
+
+\begin{colorblock}{\center{Definable quotient}}
+Given a setoid $(A,\sim)$, a \emph{definable quotient} is a
+prequotient $(Q, [\_], \sound)$ with 
+\begin{align*}
+\emb &: Q \rightarrow A\\
+\complete &: (a : A) \rightarrow \emb {\class a} \sim a\\
+\stable &: (q:Q) \rightarrow \class{\emb\,q} \equiv q.
+\end{align*}
+\end{colorblock}
+
+It corresponds to a split coequalizer:
+
+
+\[\xymatrix{
+R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
+& Q
+}\]
+
+a fork with morphisms $\emb : Q \to A$ and $t : A \to R$ such that 
+$[\_] \circ emb = 1_C$ , $\emb \circ [\_]  = \pi_2 \circ t$ and $\pi_1
+\circ t = 1_B$. ($t ~ a = (\emb [ a ] , a) $)
+
+\end{frame}
+
+\begin{frame}
+
+\frametitle{Relations of these structures}
+
+\begin{itemize}
+
+\item Definable quotients give rise to exact quotients.
+
+\begin{enumerate}
+
+\item Quotient (dependent version) $\iff$  Quotient (Hofmann's version)
+
+\item Definable quotients $\to$ quotient
+
+\item Definable quotient is exact
+
+Proof:
+
+$[a] = [b]$ \\
+$\implies \emb ~[a] = emb~[b] $  (by congruence) \\
+$\implies a \sim \emb ~[a] =
+emb~[b] \sim b$  (by completeness) \\
+$\implies a \sim b$
+
+\end{enumerate}
+
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}[allowframebreaks,t]{Example : Integers $\Z$}
+
+\begin{itemize}
+\item setoid integer : 
+
+$$\Z_0 :=\N \times \N$$
+
+$$ (n_1, n_2) \sim (n_3 , n_4)  :=  n_1 + n_4 = n_3 + n_2$$
+
+An example of the operation defined on setoid integers: addition
+
+\begin{code}
+\\
+\>\AgdaFunction{\_+\_} \AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\<%
+\\
+\>\AgdaSymbol{(}\AgdaBound{x+} \AgdaInductiveConstructor{,} \AgdaBound{x-}\AgdaSymbol{)} \AgdaFunction{+} \AgdaSymbol{(}\AgdaBound{y+} \AgdaInductiveConstructor{,} \AgdaBound{y-}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{x+} \AgdaFunction{ℕ+} \AgdaBound{y+}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaBound{x-} \AgdaFunction{ℕ+} \AgdaBound{y-}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+\item set integer:
+
+\begin{code}
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{+\_} \<[8]%
+\>[8]\AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{-suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\<\end{code}
+
+\item Normalisaton function:
+
+\begin{code}
+\>\AgdaFunction{[\_]} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{0} \AgdaFunction{]} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaBound{m}\<%
+\\
+\>\AgdaFunction{[} \AgdaInductiveConstructor{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{-suc} \AgdaBound{n}\<%
+\\
+\>\AgdaFunction{[} \AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaBound{n} \AgdaFunction{]}\<%
+\end{code}
+
+\item To find a canonical choice for each equivalence
+  class, embedding function:
+
+\begin{code}
+\\
+\>\AgdaFunction{⌜\_⌝} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaInductiveConstructor{+} \AgdaBound{n} \AgdaFunction{⌝} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaBound{n} \AgdaInductiveConstructor{,} \AgdaNumber{0}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaInductiveConstructor{-suc} \AgdaBound{n} \AgdaFunction{⌝} \AgdaSymbol{=} \AgdaNumber{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n}\<%
+\\
+\end{code}
+
+
+\emph{sound} \emph{complete} \emph{stable} and \emph{exact}
+can be verified.
+
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[allowframebreaks,t]{Example : Rational numbers $\Q$}
+
+\begin{itemize}
+
+\item Setoid encoding : unreduced fractions $$\Q_0 = \Z \times \N$$
+
+Note: $1/2$ represents $\frac{1}{3}$
+
+Equivalence relation : $$ \frac{a}{b} = \frac{c}{d} := a \times d = c \times b $$
+
+
+\item Set encoding: reduced fractions 
+
+$$\Q = \Sigma ((n , d) : \Z \times \N)). \mathsf{coprime} ~n ~(d +1)$$
+
+\item Normalisation is essentially just fraction reducing
+
+\begin{code}
+\\
+\>\AgdaFunction{[\_]} \AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaRecord{ℚ}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{0}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaSymbol{=} \AgdaInductiveConstructor{ℤ.+\_} \AgdaNumber{0} \AgdaFunction{÷} \AgdaNumber{1}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{))} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaKeyword{with} \AgdaFunction{gcd} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaSymbol{|} \AgdaBound{di} \AgdaInductiveConstructor{,} \AgdaBound{g} \AgdaSymbol{=} \AgdaFunction{GCD′→ℚ} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \<[55]%
+\>[55]\<%
+\\
+\>[5]\AgdaIndent{30}{}\<[30]%
+\>[30]\AgdaBound{di} \AgdaSymbol{(λ} \AgdaSymbol{())} \AgdaSymbol{(}\AgdaFunction{C.gcd-gcd′} \AgdaBound{g}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaKeyword{with} \AgdaFunction{gcd} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaSymbol{...} \AgdaSymbol{|} \AgdaBound{di} \AgdaInductiveConstructor{,} \AgdaBound{g} \AgdaSymbol{=} \AgdaFunction{-} \AgdaFunction{GCD′→ℚ} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaBound{di} \AgdaSymbol{(λ} \AgdaSymbol{())} \<[50]%
+\>[50]\<%
+\\
+\>[12]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{(}\AgdaFunction{C.gcd-gcd′} \AgdaBound{g}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+\item Embedding is trivial -- forgetting proof of coprimarity
+
+\begin{code}
+\\
+\>\AgdaFunction{⌜\_⌝} \AgdaSymbol{:} \AgdaRecord{ℚ} \AgdaSymbol{→} \AgdaDatatype{ℚ₀}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaBound{x} \AgdaFunction{⌝} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{ℤcon} \AgdaSymbol{(}\AgdaFunction{ℚ.numerator} \AgdaBound{x}\AgdaSymbol{))} \AgdaInductiveConstructor{/suc} \AgdaSymbol{(}\AgdaFunction{ℚ.denominator-1} \AgdaBound{x}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks,t]{The application of definable quotients}
+
+\begin{itemize}
+\item As long as we have defined operations or have proved theorems
+  for the setoid representations, we can lift them by just mixing normalisation and embedding functions.  e.g.\
+
+In the case of Integers:
+
+\begin{code}
+\\
+\>\AgdaFunction{lift₁} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{op} \AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaFunction{lift₁} \AgdaBound{op} \AgdaSymbol{=} \AgdaFunction{[\_]} \AgdaFunction{∘} \AgdaBound{op} \AgdaFunction{∘} \AgdaFunction{⌜\_⌝}\<%
+\\
+\end{code}
+
+
+\end{itemize}
+
+Advantages of definable quotients:
+
+\begin{itemize}
+
+\item Setoid has simpler encoding, better manipulation
+
+\item More auxiliary functions
+
+\item Flexible in conversions of two representations
+
+\item Benefit from both
+
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks,t]{Case : The distributivity of
+    integers}
+
+\begin{itemize}
+
+\item For set encoding:
+
+\begin{code}
+\\
+\>\AgdaFunction{distˡ} \<[7]%
+\>[7]\AgdaSymbol{:} \AgdaFunction{\_ℤ*\_} \AgdaFunction{DistributesOverˡ} \AgdaFunction{\_ℤ+\_}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaKeyword{with} \AgdaFunction{sign} \AgdaBound{y} \AgdaFunction{S≟} \AgdaFunction{sign} \AgdaBound{z}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \<[15]%
+\>[15]\AgdaSymbol{|} \AgdaInductiveConstructor{yes} \AgdaBound{p} \<[23]%
+\>[23]\<%
+\\
+\>[4]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaKeyword{rewrite} \AgdaBound{p} \<[16]%
+\>[16]\<%
+\\
+\>[6]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{|} \AgdaFunction{lem1} \AgdaBound{y} \AgdaBound{z} \AgdaBound{p} \<[25]%
+\>[25]\<%
+\\
+\>[6]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{|} \AgdaFunction{lem2} \AgdaBound{y} \AgdaBound{z} \AgdaBound{p} \AgdaSymbol{=} \<[27]%
+\>[27]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaFunction{trans} \AgdaSymbol{(}\AgdaFunction{cong} \AgdaSymbol{(λ} \AgdaBound{n} \AgdaSymbol{→} \AgdaFunction{sign} \AgdaBound{x} \AgdaFunction{S*} \AgdaFunction{sign} \AgdaBound{z} \AgdaFunction{◃} \AgdaBound{n}\AgdaSymbol{)} \<[47]%
+\>[47]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaFunction{ℕdistˡ} \AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaFunction{∣} \AgdaBound{y} \AgdaFunction{∣} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{z} \AgdaFunction{∣}\AgdaSymbol{)))} \<[36]%
+\>[36]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaFunction{lem3} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaPrimitive{ℕ*} \AgdaFunction{∣} \AgdaBound{y} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaPrimitive{ℕ*} \AgdaFunction{∣} \AgdaBound{z} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{\_)}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{|} \AgdaInductiveConstructor{no} \AgdaBound{¬p} \AgdaSymbol{=} \AgdaBound{...}\<%
+\\
+\end{code}
+
+Three lemmas for first case, second case has to be proved from scratch.
+
+\item For setoid encoding:
+
+It can be done automatically
+
+
+\begin{code}
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{:} \<[9]%
+\>[9]\AgdaFunction{\_*\_} \AgdaFunction{DistributesOverˡ} \AgdaFunction{\_+\_}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{c} \AgdaInductiveConstructor{,} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{e} \AgdaInductiveConstructor{,} \AgdaBound{f}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaFunction{solve} \AgdaNumber{6} \<[40]%
+\>[40]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{c} \AgdaFunction{:+} \AgdaBound{e}\AgdaSymbol{)} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{d} \AgdaFunction{:+} \AgdaBound{f}\AgdaSymbol{)} \AgdaFunction{:+}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{d} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{c} \AgdaFunction{:+} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{f} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{e}\AgdaSymbol{))}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaFunction{:=}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{c} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{d} \AgdaFunction{:+} \AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaBound{e} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaBound{f}\AgdaSymbol{)} \AgdaFunction{:+}\<%
+\\
+\>[2]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaBound{a} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{d} \AgdaFunction{:+} \AgdaBound{f}\AgdaSymbol{)} \AgdaFunction{:+} \AgdaBound{b} \AgdaFunction{:*} \AgdaSymbol{(}\AgdaBound{c} \AgdaFunction{:+} \AgdaBound{e}\AgdaSymbol{)))} \AgdaInductiveConstructor{refl} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f}\<%
+\\
+\end{code}
+
+\item Combined with "Reflection'' technique, it can be done completely
+  automatic, like the \textbf{ring} tactic in Coq.
+
+\item It can be generalised to any properties which can be converted
+into equations of natural numbers.
+
+\item In practice, we manually construct the proof for efficiency,
+  which is still simpler.
+
+\begin{code}
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{:} \AgdaFunction{\_ℤ₀*\_} \AgdaFunction{DistributesOverˡ} \AgdaFunction{\_ℤ₀+\_}\<%
+\\
+\>\AgdaFunction{distˡ} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{c} \AgdaInductiveConstructor{,} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{e} \AgdaInductiveConstructor{,} \AgdaBound{f}\AgdaSymbol{)} \AgdaSymbol{=} \<[32]%
+\>[32]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{cong₂} \AgdaPrimitive{\_ℕ+\_} \AgdaSymbol{(}\AgdaFunction{dist-lemˡ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{dist-lemˡ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{d} \AgdaBound{c} \AgdaBound{f} \AgdaBound{e}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaFunction{dist-lemˡ} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f} \AgdaSymbol{→} \<[28]%
+\>[28]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaSymbol{(}\AgdaBound{c} \AgdaPrimitive{ℕ+} \AgdaBound{e}\AgdaSymbol{)} \AgdaPrimitive{ℕ+} \AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaSymbol{(}\AgdaBound{d} \AgdaPrimitive{ℕ+} \AgdaBound{f}\AgdaSymbol{)} \AgdaDatatype{≡}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{c} \AgdaPrimitive{ℕ+} \AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{d}\AgdaSymbol{)} \AgdaPrimitive{ℕ+} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{e} \AgdaPrimitive{ℕ+} \AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{f}\AgdaSymbol{)} \<[43]%
+\>[43]\<%
+\\
+\>\AgdaFunction{dist-lemˡ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c} \AgdaBound{d} \AgdaBound{e} \AgdaBound{f} \AgdaSymbol{=} \AgdaFunction{trans}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaFunction{cong₂} \AgdaPrimitive{\_ℕ+\_} \AgdaSymbol{(}\AgdaFunction{ℕdistˡ} \AgdaBound{a} \AgdaBound{c} \AgdaBound{e}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{ℕdistˡ} \AgdaBound{b} \AgdaBound{d} \AgdaBound{f}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{(}\AgdaPostulate{swap23} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{c}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{ℕ*} \AgdaBound{e}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{b} \AgdaPrimitive{ℕ*} \AgdaBound{f}\AgdaSymbol{))}\<%
+\\
+\end{code}
+
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summary}
+
+\begin{itemize}
+
+\item Quotients types are not available in \itt.
+
+\item Setoids are not good enough.
+
+\item Algebraic structures to encode quotient sets which are definable.
+
+\item The advantages of using definable quotient structures.
+
+\item \Large{Any Questions?}
+
+\end{itemize}
+
+\end{frame}
+
+
+\end{document}

@@ -1,6 +1,7 @@
 (TeX-add-style-hook "mypack"
  (lambda ()
     (TeX-add-symbols
+     '("eqtop" 1)
      '("dlift" 1)
      '("class" 1)
      '("ra" 1)

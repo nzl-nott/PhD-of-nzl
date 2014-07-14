@@ -17,6 +17,7 @@
      "numbers"
      "comma"
      "sort&compress"
+     "bcprules"
      "diagxy"
      "proof"
      "booktabs"
@@ -55,5 +56,6 @@
      "Chapters/OGModel"
      "Chapters/Summary"
      "Appendices/AppendixA"
+     "Appendices/Codes/latex/Quotient"
      "Appendices/Codes/latex/GroupoidQuotient")))
 

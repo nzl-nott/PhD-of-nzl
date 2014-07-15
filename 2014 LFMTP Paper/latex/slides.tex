@@ -117,7 +117,6 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \item Introduction to \wog
 \item Basic syntax of \tig (describing the structure of \wog)
 \item Heterogeneous equality for syntactic terms
-\item Suspension and replacement
 \item Coherences constructions
 \item Semantic interpretation
 \end{itemize}
@@ -126,46 +125,79 @@ School of Computer Science \\  University of Nottingham, UK \and %
 
 
 
-\begin{frame}[allowframebreaks,t]{Introduction to \wog}
+\begin{frame}[allowframebreaks,c]{Introduction to \wog}
 
+\textbf{What are \wog?}
+
+
+\begin{columns}[onlytextwidth]
+ 
+    \begin{column}{0.7\textwidth}
 \begin{itemize}
-\item To internalize equality in types : setoids, groupoids
+\item A higher dimensional category ($\omega$-category)
 
-\item A new interpreted of types : \wog (In \hott)
-\begin{itemize}
-\item \wogs: A higher dimensional category ($\omega$-category) where every
-  morphism is an weak equivalence (equivalence for short)
-\item Equivalence: invertible morphism up to all higher
-  equivalence (generalization of isomorphism)
-\item Weak: equality in coherence laws are up to equivalence (not
-    strictly equal) e.g. $(f \circ g) \circ h \to f \circ (g \circ h)$
+\item Infinite levels of morphisms 
 
-
-% \begin{center}
-% \xymatrix{ 
-% a
-% \ar@/_4pc/[ddd]^p="p" 
-% \\
-% \\
-% \\
-% b 
-% \ar@/_4pc/[uuu]^{p^{-1}}="p^{-1}"" 
-% \only<2->{\ar@2{->} @/^2pc/ "p";"p^{-1}" _{H}="H"}
-% \only<3->{\ar@2{<-} @/_2pc/ "p";"p^{-1}" ^{H ^{-1}}="H^{-1}"}
-% \only<4->{\ar@3{->} @/^1pc/ "H";"H^{-1}"_{...}="A"}
-% \only<5->{\ar@3{<-}@/_1pc/  "H";"H^{-1}"^{...}="A"}
-% }
-% \end{center}
+\item Generalization of setoids, groupoids
+\item Every morphism is an equivalence (generalization of isomorphism)
+\item Equalities are weak e.g. $(f \circ g) \circ h \to f \circ (g \circ h)$
 
 \end{itemize}
 
-\item How can we formalize \wog in type theory?
+
+    \end{column}
+   \begin{column}{0.5\textwidth}
+      \xymatrix{ 
+ a
+ \ar@/_4pc/[ddd]^p="p" 
+ \\
+ \\
+ \\
+ b
+ \ar@/_4pc/[uuu]^{p^{-1}}="p^{-1}" 
+ \only<2->{\ar@2{->} @/^2pc/ "p";"p^{-1}" _{H}="H"}
+ \only<3->{\ar@2{<-} @/_2pc/ "p";"p^{-1}" ^{H ^{-1}}="H^{-1}"}
+ \only<4->{\ar@3{->} @/^1pc/ "H";"H^{-1}"_{...}="A"}
+ \only<5->{\ar@3{<-}@/_1pc/  "H";"H^{-1}"^{...}="A"}
+}
+    \end{column}
+​  \end{columns}
+
+\framebreak
+
+
+\textbf{Why are we interested in \wog?}
 \begin{itemize}
- \item Warren's \emph{strict} $\omega$-groupoid model
+\item Interpretation of types in \hott
+\item Isomorphic types are equal
+\item Abstract datatype, abstract reansoning
+\item Extensional concepts
+\item Weak $\omega$-groupoid model
+\end{itemize}
+
+\framebreak
+
+\textbf{Formalizations of \wog in type theory}
+
+
+\begin{itemize}
+\item Warren's \emph{strict} $\omega$-groupoid model
 \item Altenkirch and Rypacek's syntactic approach
-\item Brunerie's syntactic approach: \tig
+\item Brunerie's syntactic approach: \tig (TIG)
 
+\item This paper:
+\begin{itemize}
+\item implement \tig in Agda
+\item develop constructions
 \end{itemize}
+\end{itemize}
+
+\textbf{Agda}
+\begin{itemize}
+\item Dependently typed programming languages, theorem prover
+\item An implementation of intensional \mltt
+\end{itemize}
+
 % \item Altenkirch and Rypacek's syntactic approach
 % \item Brunerie's syntactic approach to describe the internal structure
 %   of \wog using a type theory called \tig
@@ -182,21 +214,17 @@ School of Computer Science \\  University of Nottingham, UK \and %
 %   of \wog using a type theory called \tig
 %\end{itemize}
 
-\end{itemize}
 
 
 \end{frame}
 
 
-
-\begin{frame}[allowframebreaks,t]{Basic syntax of \tig}
-
-
+\begin{frame}[c]{Basic syntax of \tig}
 
 
 \begin{itemize}
 
-\item We use \tig to describe the internal structure of a \wogs
+\item Fundamental elements (in Agda code)
 
 \begin{code}\>\<
 \\
@@ -210,34 +238,45 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \>[19]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
 \>\<\end{code}
 
-\item The structure is inductively defined as
-\small{
-\begin{code}\>\<%
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{Ty} \AgdaBound{Γ} \AgdaKeyword{where}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{*} \<[6]%
-\>[6]\AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{\_=h\_} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Ty} \AgdaBound{Γ}\<%
-\\
-\end{code}
-}
+
+\item Types: basic objects, equality of objects, equality of equality...
+
+\begin{columns}[onlytextwidth]
+ 
+    \begin{column}{0.4\textwidth}
+
+
+\begin{equation*}
+\infer{\Gamma \vdash * ~ \text{type}}
+{} 
+\end{equation*}
+
+    \end{column}
+   \begin{column}{0.4\textwidth}
+
+\begin{equation*}
+\infer{\Gamma \vdash a =_{A} b ~\text{type}}
+{\Gamma \vdash a, b : A}
+\end{equation*}
+
+    \end{column}
+​  \end{columns}
+
+
 
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}[allowframebreaks,t]{Structure of \wog}
+\begin{frame}[allowframebreaks,c]{Operations and equalities}
 
 \begin{itemize}
 
-\item Equality on each levels:
+\item Operations and equality in
 
+\begin{itemize}
 
-\item Setoid: 
+\item \textbf{Setoid}: 
 \begin{equation*}
 \begin{array}[b]{l} 
 \text{id} : x = x \\
@@ -246,7 +285,7 @@ School of Computer Science \\  University of Nottingham, UK \and %
  \end{array}
 \end{equation*}
 
-\item Groupoid: 
+\item \textbf{Groupoid}: 
 
 \begin{equation*}
 \begin{array}[b]{l}
@@ -257,24 +296,43 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \kappa' : p \circ p^{-1} = id
  \end{array}
 \end{equation*}
-\item In \wog, additionally we have more provable equalities on higher
-  dimensions which are all weak (up to higher equivalences)
-  e.g. horizontal composition, interchange law, coherence laws
 
- \item  \textbf{Coherence laws} usually state that various
-   compostions of elementary morphisms are equal. Example: There are
+\item \textbf{\wogs} : we have much more operations e.g. vertical/horizontal composition, and provable equalities on higher
+  dimensions e.g. interchange law, coherence laws
+
+%\xy 
+%(-11.5,0)*+{\bullet}="1"; 
+%(0,0)*+{\bullet}="2"; 
+%{\ar@/^1.25pc/ "1";"2"}; 
+%{\ar@/_1.25pc/ "1";"2"}; 
+%{\ar "1";"2"}; 
+%{\ar@{=>} (-5.75,-1)*{};(-5.75,-4)*{}} ; 
+%{\ar@{=>} (-5.75,4)*{};(-5.75,1)*{}} ; 
+%(0,0)*+{\bullet}="1"; 
+%(11.5,0)*+{\bullet}="2"; 
+%{\ar "1";"2"}; 
+%{\ar@/^1.25pc/ "1";"2"}; 
+%{\ar@/_1.25pc/ "1";"2"}; 
+%{\ar@{=>} (5.75,-1)*{};(5.75,-4)*{}} ; 
+%{\ar@{=>} (5.75,4)*{};(5.75,1)*{}} ; 
+%\endxy
+
+Example: There are
    two ways to show $(f \circ id) \circ g = f \circ g$
 
 \hspace{1cm}
 \xymatrix{
-(f \circ id) \circ g \ar[rr]^{\alpha} \ar[drr]_{\rho \cdot id} && f \circ
-(id \circ g) \ar[d]^{id \cdot \lambda} \\
+(f \circ id) \circ g \ar[rr]^{\alpha} \ar[drr]_{\rho \cdot id}="0"  && f \circ
+(id \circ g)  \ar[d]^{id \cdot \lambda} \\
 && f \circ g
 }
+%\ar@{=>}"0"; {}
 
-\item For higher dimensions things becomes much more complicated
+\end{itemize}
 
-\item Infinitely many coherence constants
+\item In general we call them \textbf{coherence constants} (or \textbf{coherences})
+
+\item Infinitely many coherence constants, How can we encode them?
 \end{itemize}
 
 \end{frame}
@@ -282,71 +340,37 @@ School of Computer Science \\  University of Nottingham, UK \and %
 
 
 
-\begin{frame}[allowframebreaks,t]{Contractible Contexts and Coherences}
+\begin{frame}[allowframebreaks,t,c]{Contractible Contexts and Coherences}
 
 \begin{itemize}
 
-\item All coherence constants are derivable from $J$-eliminator of
-  equality
+\item Fact: All coherences arising automatically from induction principle for identity type (or J eliminator)
 
-\item A analogous construction in \tig: \textbf{contractible contexts}
+\item \textbf{contractible contexts}
 \begin{itemize}
 \item $\epsilon, * $
 \item $\epsilon,x : *, y : *, \alpha : x = y$
 \item ... $\Gamma, y: A , \alpha : x = y$ (Given $\Gamma \vdash A$ and
   $\Gamma \vdash x : A$)
+
 \end{itemize}
 
-\item Anything in a contractible context is a coherence constant:
-  intuitively the extension of contractible context internalise the
-  $J$-eliminator
 
-Example: Assume $\epsilon,x : * \vdash x = x$ (weakening)
+\item Assume $\epsilon,x : * \vdash x = x$ (weakening)
 $\Rightarrow \epsilon,x : *, x : *, \alpha : x = x \vdash x =
 x$ (J-eliminator)
 $\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 
+%\item All constructions in contractible contexts are coherences
 
-\item Contexts for 0-level coherences in minimum contractible contexts:
-\begin{itemize}
-\item $\epsilon,x : * \vdash x = x$ ($id^{*}$)
-\item $\epsilon,x : *, y : *, \alpha : x = y \vdash y = x$ ($\_^{-1*}$)
-\item $\epsilon,x : *, y : *, \alpha : x = y, z: A,
-  \beta : y = z \vdash x = z$ ($\_\circ^{*}\_$)
-\end{itemize}
+\item How about coherences in non-cont contexts?
 
-\item If we ``replace'' $\epsilon$ by arbitrary context $\Gamma$, and
-  $*$ by arbitrary $A$, we obtain contexts for general 0-level coherences:
-\begin{itemize}
-\item $\Gamma,x : A \vdash x = x$ (id)
-\item $\Gamma,x : A, y : A, \alpha : x = y \vdash y = x$ ($\_^{-1}$)
-\item $\Gamma,x : A, y : A, \alpha : x = y, z: A,
-  \beta : y = z \vdash x = z$ ($\_\circ\_$)
-\end{itemize}
+\item In general
 
-\item Indeed
- any coherence constant exists in a context which we can
-  substitute into a contractible context
-
-\small{
-\begin{code}\>\<%
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{Tm} \AgdaKeyword{where}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{var} \<[7]%
-\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Var} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaBound{A}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{coh} \<[7]%
-\>[7]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{isContr} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{δ} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaDatatype{⇒} \AgdaBound{Δ}\AgdaSymbol{)} \<[42]%
-\>[42]\<%
-\\
-\>[2]\AgdaIndent{7}{}\<[7]%
-\>[7]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{δ} \AgdaFunction{]T}\AgdaSymbol{)}\<%
-\\
-\>\<\end{code}
-}
+\begin{equation*}
+\infer{\Gamma \vdash \text{coh$_B$} : B [\delta]  }
+{\vdash \Delta~ \text{contractible} & \Delta \vdash B & \delta : \Gamma \to \Delta} 
+\end{equation*}
 
 \end{itemize}
 
@@ -358,9 +382,9 @@ $\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 \frametitle{Reasoning about syntactic terms}
 \begin{itemize}
 \item Using homogeneous equality to reason about syntactic terms, we
-  have to deal with \textbf{subst} e.g.\ $\text{subst}~ p~ x = y$, $\text{subst} ~p
+  have to eliminate \textbf{subst} in equalities like $\text{subst}~ p~ x = y$, $\text{subst} ~p
   (\text{subst} ~p^{-1}~ x) = x$
-\item Heterogeneous equality for Tm
+\item \textbf{Heterogeneous equality} (JM equality) for Tm
 
 \begin{code}\>\<%
 \\
@@ -376,99 +400,92 @@ $\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 \>\<\end{code}
 
 \item Justification: The equality of inductively defined types are
-  decidable, hence from Hedberg's Theorem they have UIP
+  decidable, From Hedberg's Theorem, it is safe to assert $\AgdaDatatype{Ty} ~\AgdaBound{Γ}$ are sets (in the sense of UIP)
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}[allowframebreaks,t]{Construction of coherences}
+\begin{frame}[allowframebreaks,c]{Construction of Coherences}
 
 \begin{itemize}
-\item To obtain a coherence term for arbitrary context $\Gamma$ in two steps:
+
+\item Now we can construct all these infinite number of coherences
+
+\item For each coherence, two versions:
 \begin{enumerate}
-\item a coherence term in a contractible context $\Delta$
-\item a substitution $\Gamma \Rightarrow \Delta$
+\item minimum version e.g.\
+  $\epsilon,x : *, y : *, \alpha : x = y, z: A,
+  \beta : y = z \vdash x = z$ ($\_\circ^{*}\_$)
+\item general version e.g.\
+  $\Gamma,x : A, y : A, \alpha : x = y, z: A,
+  \beta : y = z \vdash x = z$ ($\_\circ\_$)
 \end{enumerate}
 
-\item To do the second step: \emph{replacement} and suspension
+\item A minimum version is always in a contractible context and can be obtained by identity substitution 
 
-\item \textbf{Replacement}: Given an arbitrary type $A$ in arbitrary context
-  $\Gamma$, we can replace $*$ in a contractible context $\Delta$ by
-  $A$ and paste it onto $A$ in $\Gamma$, such that we can obtain coherence $B$ in $\Delta$ for type $A$
+\item General version is more complicated
+
+
+\item \textbf{Replacement}: to obtain the general version from minimum
 
 \begin{equation*}
-\infer{\Gamma, \Delta^{A} \vdash B^{A}}
-{\Gamma \vdash A & \vdash \Delta~ \text{contractible} & \Delta \vdash B} 
+\infer{\Gamma, \Delta^{A} \vdash \text{coh}_B^{A} : B^{A}}
+{\Gamma \vdash A & \vdash \Delta~ \text{contractible} & \Delta \vdash \text{coh}_B^{*} : B} 
 \end{equation*}
 
-An example of $\Gamma, \Delta^{A}$: $\Gamma, y : A, \alpha : x = y$
 
-\item Intuitively, we can filter out variables in $\Gamma$ which are
-  unrelated to $A$. However it is very difficult to do that. Instead
-  we build a new context using 
+\item There is no $\Gamma, \Delta^{A} \Rightarrow \Delta$
 
-\item \textbf{Suspension}: build a minimum contractible context for type
-  $A$ of level $n$:
+\item Solution: Filter out variables in $\Gamma, \Delta^{A}$ which are unnessary to build $A$
+\item Think reversely: build a "filtered" context using
 
-\begin{itemize}
-\item $(x_0: *)$ (the one-variable context) for $n=0$; 
-\item $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1)$ for
-$n=1$; 
-\item $(x_0 : *, x_1 : *, x_2 : x_0\,=_\mathsf{h}\,x_1, x_3 :
-x_0\,=_{\mathsf{h}}\,x_1, x_4 : x_2\,=_\mathsf{h}\,x_3)$ for $n=2$,
-etc. 
-\end{itemize}
-
-with $\Delta$ whose $*$ is replaced by $A$
+\item \textbf{Suspension}: Assume $A$ is of level $n$. suspend $\Delta$ $n$ times, i.e. add a \emph{stalk} in front of $\Delta$
 
 \begin{equation*}
-\infer{\Sigma A, \Delta^{A} \vdash B^{A}}
+\infer{\Sigma_A ~ \Delta \vdash \Sigma_A ~\text{coh}_B : \Sigma_A ~ B}
 {\Gamma \vdash A &  \vdash \Delta ~\text{contractible} & \Delta \vdash B} 
 \end{equation*}
 
+\framebreak
 
-\item Thus we can define a substitution from a \emph{replaced context} to a
-  \emph{suspended context} called \textbf{filter}
 
-$$\Gamma, \Delta^{A} \Rightarrow \Sigma A , \Delta^{A}$$
+\item and naturally we have a
+substitution called \textbf{filter}
 
-Note: The suspended context is contractible because one-step
-suspension proves to preserve contractibility.
+$$\text{filter}_A : \Gamma, \Delta^{A} \Rightarrow \Sigma_A ~ \Delta$$
+
+
+
+\item Case: Assume $\Delta = (x : *)$ , $B = (x = x)$
+and in $\Gamma = (a : *, b : *, c : *)$, $A = (a = b)$ (level $1$)
+
+$\Sigma_{A} ~ \Delta = (x_0 : *, x_1 : *, x : x_0 = x_1)$
+
+$\Gamma, \Delta^{A} = (a : *, b : *, c : *, x : a = b)$
+
+$x_0 \mapsto a , x_1 \mapsto b , x \mapsto x$
+
+\item Finally because suspension preserves contractibility, $\Sigma_{A} ~ \Delta$ is contractible
+
+\item In general, $\text{coh}_{B}^{A} := (\Sigma_A ~(\text{coh}_{B})) [ \text{filter}_A ]$ 
 
 \framebreak
 
-\item Case: \textbf{Reflexivity}
+\item Application: \textbf{Reflexivity}
 
 \begin{itemize}
 
-\item 1st step: reflexivity in a minimum contractible context
-\begin{code}\>\<%
-\\
-\>\AgdaFunction{refl*-Tm} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaSymbol{\{}\AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{)}\<%
-\\
-\>\AgdaFunction{refl*-Tm} \AgdaSymbol{=} \AgdaFunction{Coh-Contr} \AgdaInductiveConstructor{c*}\<%
-\\
-\>\<\end{code}
+\item 1st step: reflexivity (id) in a minimum contractible context
+
+$$x : * \vdash \text{coh}_{x=x} : x = x$$
 
 \item 2nd step: reflexivity for arbitrary type $A$ in arbitrary
   context $\Gamma$
 
-\begin{code}\>\<%
-\\
-\>\AgdaFunction{refl-Tm} \<[11]%
-\>[11]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[33]%
-\>[33]\<%
-\\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{→} \AgdaDatatype{Tm} \AgdaSymbol{(}\AgdaFunction{rpl-T} \AgdaSymbol{\{}Δ \AgdaSymbol{=} \AgdaFunction{x:*}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{(}\AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0} \AgdaInductiveConstructor{=h} \AgdaInductiveConstructor{var} \AgdaInductiveConstructor{v0}\AgdaSymbol{))}\<%
-\\
-\>\AgdaFunction{refl-Tm} \AgdaBound{A} \<[11]%
-\>[11]\AgdaSymbol{=} \AgdaFunction{rpl-tm} \AgdaBound{A} \AgdaFunction{refl*-Tm}\<%
-\\
-\>\<\end{code}
+By suspension: $$\Sigma_A ~(x:*) \vdash \Sigma_A ~(\text{coh}_{x=x}) : x = x$$
 
+Replacement defined using filter $$ \text{coh}_{x=x}^{A} := (\Sigma_A ~(\text{coh}_{x=x})) [ \text{filter}_A ]$$ 
 \end{itemize}
-
 
 \end{itemize}
 \end{frame}
@@ -529,13 +546,12 @@ suspension proves to preserve contractibility.
 \item To complete a \wogs model of type theory
 \item A computational interpretation of univalent axiom in \itt
 
+
+\item Question?
 \end{itemize}
 
 
-
-
 \end{frame}
-
 
 
 

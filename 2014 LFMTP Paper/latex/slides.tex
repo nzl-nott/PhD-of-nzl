@@ -83,7 +83,7 @@
 \author{Thorsten Altenkirch \& Nuo Li \& Ond\v{r}ej Ryp\'a\v{c}ek}
 
 \author[Thorsten Altenkirch \& Nuo Li \& Ond\v{r}ej
-Ryp\'a\v{c}ek]{Thorsten Altenkirch \inst{1} \and Nuo Li \inst{1} \and
+Ryp\'a\v{c}ek]{Thorsten Altenkirch \inst{1} \and \underline{Nuo Li} \inst{1} \and
   Ond\v{r}ej Ryp\'a\v{c}ek \inst{2}}
 \institute[shortinst]{\inst{1} 
 School of Computer Science \\  University of Nottingham, UK \and %
@@ -116,8 +116,8 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \begin{itemize}
 \item Introduction to \wog
 \item Basic syntax of \tig (describing the structure of \wog)
+\item Constructions of coherences 
 \item Heterogeneous equality for syntactic terms
-\item Coherences constructions
 \item Semantic interpretation
 \end{itemize}
 \end{frame}
@@ -134,13 +134,11 @@ School of Computer Science \\  University of Nottingham, UK \and %
  
     \begin{column}{0.7\textwidth}
 \begin{itemize}
-\item A higher dimensional category ($\omega$-category)
-
-\item Infinite levels of morphisms 
-
+\item A higher dimensional category, infinite levels of morphisms
 \item Generalization of setoids, groupoids
-\item Every morphism is an equivalence (generalization of isomorphism)
-\item Equalities are weak e.g. $(f \circ g) \circ h \to f \circ (g \circ h)$
+\item Every morphism is an equivalence $≅$
+\item generalization of isomorphism: $f ∘ g ≅ 1_B$ and $g ∘ f ≅ 1_A$
+\item Why is it weak? equalities are equivalence e.g. $(f \circ g) \circ h \to f \circ (g \circ h)$
 
 \end{itemize}
 
@@ -168,27 +166,28 @@ School of Computer Science \\  University of Nottingham, UK \and %
 
 \textbf{Why are we interested in \wog?}
 \begin{itemize}
-\item Interpretation of types in \hott
-\item Isomorphic types are equal
-\item Abstract datatype, abstract reansoning
+\item Main motivation : a weak $\omega$-groupoid model of \hott
+\item Interpretation of types
+\item Univalence: isomorphic types are equal
+\item To reason about types abstractly
 \item Extensional concepts
-\item Weak $\omega$-groupoid model
 \end{itemize}
 
 \framebreak
 
-\textbf{Formalizations of \wog in type theory}
+\textbf{How to define \wog in type theory?}
 
 
 \begin{itemize}
-\item Warren's \emph{strict} $\omega$-groupoid model
+\item Warren's \emph{strict} $\omega$-groupoid model (not univalent)
 \item Altenkirch and Rypacek's syntactic approach
-\item Brunerie's syntactic approach: \tig (TIG)
+\item Brunerie's syntactic approach \tig (TIG): A type theory to describe
+the \textbf{internal} structure of \wog
 
-\item This paper:
+\item In this paper we:
 \begin{itemize}
 \item implement \tig in Agda
-\item develop constructions
+\item develop some constructions
 \end{itemize}
 \end{itemize}
 
@@ -219,28 +218,43 @@ School of Computer Science \\  University of Nottingham, UK \and %
 \end{frame}
 
 
-\begin{frame}[c]{Basic syntax of \tig}
+\begin{frame}[c]{Formalizing \wog}
 
+\textbf{Basic syntax of \tig}
 
 \begin{itemize}
 
-\item Fundamental elements (in Agda code)
+\item Fundamental elements: 
+\begin{itemize}
+\item  Context: $\Gamma$ : Set
+\item  Type: $A$ : Ty $\Gamma$
+\item  Term: $t$ : Tm $A$
+\item Substitution: $\delta : \Gamma \Rightarrow \Delta$ , $A [\delta]$, $t [\delta]$
+\end{itemize}
 
-\begin{code}\>\<
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{Con} \<[19]%
-\>[19]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{)} \<[19]%
-\>[19]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{Tm} \<[19]%
-\>[19]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaDatatype{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaDatatype{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
-\>\<\end{code}
+\item Context
+\begin{columns}[onlytextwidth]
+ 
+    \begin{column}{0.4\textwidth}
 
 
-\item Types: basic objects, equality of objects, equality of equality...
+\begin{equation*}
+\infer{\epsilon ~ \text{context}}
+{} 
+\end{equation*}
 
+    \end{column}
+   \begin{column}{0.4\textwidth}
+
+\begin{equation*}
+\infer{\Gamma,A ~\text{context}}
+{\Gamma ~ \text{context} & \Gamma \vdash A ~\text{type}}
+\end{equation*}
+
+    \end{column}
+​  \end{columns}
+
+\item Type: basic objects, equality of objects, equality of equality...
 \begin{columns}[onlytextwidth]
  
     \begin{column}{0.4\textwidth}
@@ -265,14 +279,18 @@ School of Computer Science \\  University of Nottingham, UK \and %
 
 
 \end{itemize}
+
 \end{frame}
 
 
-\begin{frame}[allowframebreaks,c]{Operations and equalities}
+\begin{frame}[allowframebreaks,c]{Term}
 
 \begin{itemize}
 
-\item Operations and equality in
+\item Terms are either variables or constants like operations or laws 
+  in \wog
+
+\item Operations and equality (all weak in \wog) in
 
 \begin{itemize}
 
@@ -297,7 +315,7 @@ School of Computer Science \\  University of Nottingham, UK \and %
  \end{array}
 \end{equation*}
 
-\item \textbf{\wogs} : we have much more operations e.g. vertical/horizontal composition, and provable equalities on higher
+\item \textbf{\wogs} : we have many more operations e.g. vertical/horizontal composition, and provable equalities on higher
   dimensions e.g. interchange law, coherence laws
 
 %\xy 
@@ -333,37 +351,29 @@ Example: There are
 \item In general we call them \textbf{coherence constants} (or \textbf{coherences})
 
 \item Infinitely many coherence constants, How can we encode them?
-\end{itemize}
-
-\end{frame}
-
-
-
-
-\begin{frame}[allowframebreaks,t,c]{Contractible Contexts and Coherences}
-
-\begin{itemize}
 
 \item Fact: All coherences arising automatically from induction principle for identity type (or J eliminator)
 
+\framebreak
+
+\item A simulation of J using contractible context
+
 \item \textbf{contractible contexts}
 \begin{itemize}
-\item $\epsilon, * $
-\item $\epsilon,x : *, y : *, \alpha : x = y$
-\item ... $\Gamma, y: A , \alpha : x = y$ (Given $\Gamma \vdash A$ and
+\item $x:* ~~~~ x : *, y : *, \alpha : x = y$ ...
+\item $\Gamma, y: A , \alpha : x = y$ (Given $\Gamma \vdash A$ and
   $\Gamma \vdash x : A$)
 
 \end{itemize}
 
-
-\item Assume $\epsilon,x : * \vdash x = x$ (weakening)
+\item In $x:*$ we have id : $x = x$, id$^2$ : $id = id$...
+\item The extending process helps us build context for other coherences:
+Example: Assume $\epsilon,x : * \vdash x = x$ (weakening)
 $\Rightarrow \epsilon,x : *, x : *, \alpha : x = x \vdash x =
 x$ (J-eliminator)
 $\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 
-%\item All constructions in contractible contexts are coherences
-
-\item How about coherences in non-cont contexts?
+\item We can prove that all constructions in contractible contexts are coherences
 
 \item In general
 
@@ -375,6 +385,113 @@ $\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 \end{itemize}
 
 \end{frame}
+
+
+
+\begin{frame}[allowframebreaks,c]{Construction of Coherences}
+
+\begin{itemize}
+
+\item To prove we have all coherences by construction
+
+\item Our approach: for each kind of coherence e.g. composition
+\begin{enumerate}
+\item minimum version
+  $\epsilon,x : *, y : *, \alpha : x = y, z: *,
+  \beta : y = z \vdash x = z$
+\item general version
+  $\Gamma,x : A, y : A, \alpha : x = y, z: A,
+  \beta : y = z \vdash x = z$
+\end{enumerate}
+
+%\begin{columns}[onlytextwidth]
+%\begin{column}{0.5\textwidth}
+%\xymatrix{
+%x \ar[r]^{\alpha} \ar[dr]_{\beta \circ \alpha} & y \ar[d]^{\beta} \\
+%& z
+%}
+%\end{column}
+
+%\begin{column}{0.5\textwidth}
+%\xymatrix{
+%x \ar[r]^{\alpha} \ar[dr]_{\beta \circ \alpha} & y \ar[d]^{\beta} \\
+%& z
+%}
+%\end{column}
+
+%\end{columns}
+
+
+\item \textbf{Replacement}: to obtain the general version from minimum
+
+\begin{equation*}
+\infer{\Gamma, \Delta^{A} \vdash \text{coh}_B^{A} : B^{A}}
+{\Gamma \vdash A & \vdash \Delta~ \text{contractible} & \Delta \vdash \text{coh}_B^{*} : B} 
+\end{equation*}
+
+
+\item Unfortunately there is no $\Gamma, \Delta^{A} \Rightarrow \Delta$ (to define $\text{coh}_B^{A}$)
+
+\framebreak
+
+\item Solution: a contractible context where the expected coherence exists
+\item Ideally, filter out variables in $\Gamma, \Delta^{A}$ which are unnessary to build $A$
+\item Think inversely: why not build a "filtered" context?
+
+\item \textbf{Suspension}: Assume $A$ is of level $n$. suspend $\Delta$ $n$ times (lift $\Delta$ $n$ levels higher), i.e. build a \emph{stalk} in front of $\Delta$
+
+\begin{equation*}
+\infer{\Sigma_A ~ \Delta \vdash \Sigma_A ~\text{coh}_B : \Sigma_A ~ B}
+{\Gamma \vdash A &  \vdash \Delta ~\text{contractible} & \Delta \vdash B} 
+\end{equation*}
+
+\item A stalk is a context of $2n$ variables: $x : *, y : *, p : x= y, q : x= y...$ which contains minimum ingredients
+for $A$ and also $\Delta^{A}$ built upon $A$
+
+\item $\Sigma_A ~ \Delta$ can also be denoted as $\text{stalk}_A, \Delta^{A} $
+
+\framebreak
+
+
+\item Important: The suspension preserves contractibility, suspension of $\Delta$ is also contractible
+ 
+
+\item With the simple substitution called \textbf{filter}
+
+$$\text{filter}_A : \Gamma, \Delta^{A} \Rightarrow \Sigma_A ~ \Delta ~(\Gamma, \Delta^{A} \Rightarrow \text{stalk}_A, \Delta^{A} )$$
+
+\item Case: Assume $\Delta = (x : *)$ , $B = (x = x)$
+and in $\Gamma = (a : *, b : *, c : *)$, $A = (a = b)$ (level $1$)
+
+$\Sigma_{A} ~ \Delta = (x_0 : *, x_1 : *, x : x_0 = x_1)$
+
+$\Gamma, \Delta^{A} = (a : *, b : *, c : *, x : a = b)$
+
+$x_0 \mapsto a , x_1 \mapsto b , x \mapsto x$
+
+\item Finally,  $\text{coh}_{B}^{A} := (\Sigma_A ~(\text{coh}_{B})) [ \text{filter}_A ]$ 
+
+\framebreak
+
+\item Application: \textbf{Reflexivity}
+
+\begin{itemize}
+
+\item 1st step: reflexivity (id) in a minimum contractible context
+
+$$x : * \vdash \text{coh}_{x=x} : x = x$$
+
+\item 2nd step: reflexivity for arbitrary type $A$ in arbitrary
+  context $\Gamma$
+
+By suspension: $$\Sigma_A ~(x:*) \vdash \Sigma_A ~(\text{coh}_{x=x}) : x = x$$
+
+Replacement defined using filter $$ \text{coh}_{x=x}^{A} := (\Sigma_A ~(\text{coh}_{x=x})) [ \text{filter}_A ]$$ 
+\end{itemize}
+
+\end{itemize}
+\end{frame}
+
 
 
 \begin{frame}
@@ -405,92 +522,6 @@ $\Rightarrow \epsilon,x : *, y : *, \alpha : x = y \vdash y = x$
 \end{frame}
 
 
-\begin{frame}[allowframebreaks,c]{Construction of Coherences}
-
-\begin{itemize}
-
-\item Now we can construct all these infinite number of coherences
-
-\item For each coherence, two versions:
-\begin{enumerate}
-\item minimum version e.g.\
-  $\epsilon,x : *, y : *, \alpha : x = y, z: A,
-  \beta : y = z \vdash x = z$ ($\_\circ^{*}\_$)
-\item general version e.g.\
-  $\Gamma,x : A, y : A, \alpha : x = y, z: A,
-  \beta : y = z \vdash x = z$ ($\_\circ\_$)
-\end{enumerate}
-
-\item A minimum version is always in a contractible context and can be obtained by identity substitution 
-
-\item General version is more complicated
-
-
-\item \textbf{Replacement}: to obtain the general version from minimum
-
-\begin{equation*}
-\infer{\Gamma, \Delta^{A} \vdash \text{coh}_B^{A} : B^{A}}
-{\Gamma \vdash A & \vdash \Delta~ \text{contractible} & \Delta \vdash \text{coh}_B^{*} : B} 
-\end{equation*}
-
-
-\item There is no $\Gamma, \Delta^{A} \Rightarrow \Delta$
-
-\item Solution: Filter out variables in $\Gamma, \Delta^{A}$ which are unnessary to build $A$
-\item Think reversely: build a "filtered" context using
-
-\item \textbf{Suspension}: Assume $A$ is of level $n$. suspend $\Delta$ $n$ times, i.e. add a \emph{stalk} in front of $\Delta$
-
-\begin{equation*}
-\infer{\Sigma_A ~ \Delta \vdash \Sigma_A ~\text{coh}_B : \Sigma_A ~ B}
-{\Gamma \vdash A &  \vdash \Delta ~\text{contractible} & \Delta \vdash B} 
-\end{equation*}
-
-\framebreak
-
-
-\item and naturally we have a
-substitution called \textbf{filter}
-
-$$\text{filter}_A : \Gamma, \Delta^{A} \Rightarrow \Sigma_A ~ \Delta$$
-
-
-
-\item Case: Assume $\Delta = (x : *)$ , $B = (x = x)$
-and in $\Gamma = (a : *, b : *, c : *)$, $A = (a = b)$ (level $1$)
-
-$\Sigma_{A} ~ \Delta = (x_0 : *, x_1 : *, x : x_0 = x_1)$
-
-$\Gamma, \Delta^{A} = (a : *, b : *, c : *, x : a = b)$
-
-$x_0 \mapsto a , x_1 \mapsto b , x \mapsto x$
-
-\item Finally because suspension preserves contractibility, $\Sigma_{A} ~ \Delta$ is contractible
-
-\item In general, $\text{coh}_{B}^{A} := (\Sigma_A ~(\text{coh}_{B})) [ \text{filter}_A ]$ 
-
-\framebreak
-
-\item Application: \textbf{Reflexivity}
-
-\begin{itemize}
-
-\item 1st step: reflexivity (id) in a minimum contractible context
-
-$$x : * \vdash \text{coh}_{x=x} : x = x$$
-
-\item 2nd step: reflexivity for arbitrary type $A$ in arbitrary
-  context $\Gamma$
-
-By suspension: $$\Sigma_A ~(x:*) \vdash \Sigma_A ~(\text{coh}_{x=x}) : x = x$$
-
-Replacement defined using filter $$ \text{coh}_{x=x}^{A} := (\Sigma_A ~(\text{coh}_{x=x})) [ \text{filter}_A ]$$ 
-\end{itemize}
-
-\end{itemize}
-\end{frame}
-
-
 
 \begin{frame}{Semantics}
 
@@ -505,10 +536,10 @@ Replacement defined using filter $$ \text{coh}_{x=x}^{A} := (\Sigma_A ~(\text{co
 \item For every $x,y : \text{obj}_{A}$, a globular set Hom$_{A}(x, y)$
 \end{itemize}
 
-\item  Example: the identity globular set $Id^{\omega} A$
+\item  Example: the identity globular set Id$^{\omega} A$
 \begin{itemize}
-\item obj$_{Id^{\omega} A} = A$
-\item Hom$_{Id^{\omega} A}(a, b) = Id^{\omega} A (a = b)$
+\item obj$_{\text{Id}^{\omega} A} = A$
+\item Hom$_{\text{Id}^{\omega} A}(a, b) = \text{Id}^{\omega} A (a = b)$
 \end{itemize}
 
 \item The interpretation of contexts, types and terms

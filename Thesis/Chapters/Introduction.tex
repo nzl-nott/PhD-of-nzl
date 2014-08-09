@@ -11,7 +11,7 @@ expected to have \emph{Quotient types} to construct similar objects in
 mathematics. However in current setting of \itt, it is not
 available. Motivated by this fact, I start to extend type theory with
 quotient types. This thesis first
-introduce backgroud knowledges about type theory , Agda and specially
+introduce background knowledges about type theory , Agda and specially
 quotient types, then discuss about definable quotients which are
 quotients definable without using quotient types, other models of type
 theory to implement quotient types and homotopy type theory which has
@@ -24,13 +24,13 @@ in \itt for \hott where quotient types are available.
 
 
 
-Theories of dependent types have been proposed as a foundation of constructive mathematic and as a framework in which to construct certified programs and to extract programs from proofs. Using implementations of such type theories, substantial pieces of constructive mathematics have been formalised and medium scale program developments and verifications have been carried out.
+Theories of dependent types have been proposed as a foundation of constructive mathematics and as a framework in which to construct certified programs and to extract programs from proofs. Using implementations of such type theories, substantial pieces of constructive mathematics have been formalised and medium scale program developments and verifications have been carried out.
 
 Type theory is usually considered as an more rigorous foundation of
 constructive mathematics that set theory. Per Martin-L\"{o}f's developed several
 versions of type theory which we usually call them Martin-Löf's
 intuitionistic type theory (or in short Martin-Löf's type theory). A number of
-dependently typed functional programmming languages are developed upon
+dependently typed functional programming languages are developed upon
 one of his type theories, including NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
 The Curry-Howard correspondence (propositions corresponds to types and
 proofs corresponds to terms), and the notion of dependent types from
@@ -188,11 +188,11 @@ based on the intensional version of \mltt. It is mainly developed by
 Ulf Norell, Nils Anders Danielsson, and Andreas Abel.
 It is a functional language like Haskell, but has dependent types. It has dependent pattern
 matching, type checker, coverage checker and termination checker. It
-supports a bundle of scheme of defing data types such as inductive, inductive-recursive, mutually inductive,
+supports a bundle of scheme of defining data types such as inductive, inductive-recursive, mutually inductive,
 coinductive types. Its syntax is close to Haskell, in addition, it has
 unicode support and mixfix operators. All these features including
 type checker, unicode typing and interactive programming present in
-its emacs interface. It is quite popular in the field of mathematical reasoning and programs
+its Emacs interface. It is quite popular in the field of mathematical reasoning and programs
 verifications. Many researchers implement their work of type theory in
 Agda. It is also one of the popular languages in the community of the recently
 developed field \hott and the library of \hott is under construction.
@@ -211,8 +211,8 @@ several good tutorials to Agda for example Ulf Norell's
 
 \subsection{Category Theory}
 
-Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and trasformations.
-A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are callled categorical laws to obey. 
+Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and transformations.
+A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are called categorical laws to obey. 
 
 The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
 
@@ -232,9 +232,9 @@ mathematicians.
 Quotients are very useful in applications. First it is essential in some
 mathematics formalisation. 
 In a type theory with quotient type, real numbers can be encoded as
-the cauchy sequences with an equivalence relation.
+the Cauchy sequences with an equivalence relation.
 From programming perspective,  it also provides more algebraic
-datatypes and enable us to reason about inifite types and
+datatypes and enable us to reason about infinite types and
 semantics-based verification of concurrent programs \cite{hof:phd}.
 
 For quotients which are definable without quotient types, it is
@@ -258,7 +258,7 @@ conversion between the setoids and sets.
 
 
 
-In \autoref{bg}, we will discuss the backgroud of this research. Type theory is a popular topic in
+In \autoref{bg}, we will discuss the background of this research. Type theory is a popular topic in
 theoretical computer science. It is quite powerful not only a a theory
 but also as a programming language. We use a dependent functional
 programming language called Agda which is design based on \mltt. The

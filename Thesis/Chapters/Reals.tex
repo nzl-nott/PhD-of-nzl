@@ -1,29 +1,29 @@
-\chapter{Real numbers and other undefinable quotients}
+\chapter{Definability via normalisation}
 \label{rl}
 
-If you mean something specific, always write "the"
+%If you mean something specific, always write "the"
 
-In the previous chapter, only definable quotient types are
-investigated. But some other
-types are undefinable in \itt{} without quotients. In this chapter, the real numbers,
-the multisets and
-the partiality monad and also the proofs that
-the undefinablity of them will be disccussed in detail.
-
+In the previous chapter, we discussed quotients which are definable via normalisation.
+To encode them, quotient types are not necessary. However there are some quotients undefinable in the sense of normalisation, for example the set of real numbers, the multisets and the partiality monad. Intuitively they can be interpreted as setoids but there is no normalisation function which returns a canonical choice for each equivalence class, hence no normalisation function.
 
 \section{Definability}
 
-
-\todo{decidable order -> of course definable, A-> N definable, give a
-  explicit proof}
-
-\todo{definable -> split quotient because definable is too general}
+The definablity of quotients in \itt is more general than the notion of decidable quotients via normalisation, although we conjecture that it is enough to say a quotient is not definable in general by proving that there is no normalisation function.
 
 
-\section{Real numbers}
+%Given a setoid $(A,\sim)$, if there is no $[_]_0$ normalisation function then we say it is definable via normalisation.
 
-We have several choices to represent real numbers. We choose Cauchy
-sequences of rational numbers to represent real numbers \cite{bis:85}.
+
+%\todo{decidable order -> of course definable, A-> N definable, give a  explicit proof}
+
+%\todo{definable -> split quotient because definable is too general}
+
+\section{Real numbers as Cauchy sequences}
+To construction real numbers in Type Theory, there are several different approaches, for example auchy sequences, Dedekind cut, decimal representation, etc.
+%In \cite{hott} it has been proved that Cauchy reals and Dedekind reals are equivalent if excluded middle or countable choice holds.
+
+ Here we use Cauchy
+construction of real numbers as in \cite{bis:85}.
 
 $$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon
   :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to \vert  s_i -

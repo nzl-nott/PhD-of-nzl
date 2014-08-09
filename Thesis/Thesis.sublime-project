@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "file_exclude_patterns": [
+        "*.pdf", "*.aux", "*.dvi", "*.lis", "*.blg", "*.bbl", "*.toc",
+        "*.idx", "*.ind", "*.ilg", "*.thm", "*.out", "*.fdb_latexmk",
+        "*.fls", "*.synctex.gz", "*.nav", "*.snm", "_region_.*", "*.lof",
+        "*.log", "*.lot", "*.ptb", "*.tdo", "*.sublime-project", "*.sty",
+        "*.el", "*.agdai"
+        ]
+    }
+  ],
+  "settings": {
+    "TEXroot": "main.tex"
+  }
+}

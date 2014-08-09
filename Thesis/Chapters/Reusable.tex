@@ -1,369 +1,155 @@
-\chapter{Definable Quotients}
-\label{dq}
+% Reusable code
 
 
-%and sometimes we use setoids~\cite{bar:03} instead.
+\begin{corollary}
+We generalise the theorem \ref{PUEF}, assume we quotient a set with a groupoid relation, $\infixeqv: A \to A \to
+\Set$, and we have univalence, the quotient is also effective in the sense that the soundness $[\_]^{=}$ is an equivalence (or isomorphism).
+\end{corollary}
 
-In \itt ~\cite{nor:90}, given a setoid, a corresponding quotient set is not necessarily formed by quotient
-types.
+To quotient a set with a groupoid relation $\sim$, the result $\qset{A}$ is also a groupoid whose structure is given by 
 
-An example is the set of integers. It can be seen as a quotient set on
-the setoid given by pairs of natural numbers
-$\Z_0=\N\times\N$, where the equivalence relation identifies pairs
-representing the same difference, that is  $(a,b)\sim(c,d)$ if{f}
-$a+d=c+b$. 
-We can also encode integers as natural 
-numbers with a sign which is a set defined inductively.
-We can define operations on this set definition like
-addition and multiplication and prove algebraic properties,
-such as verifying that the structure is a ring. 
-However, this is quite complicated and uses many unnecessary case
-distinctions due to the cases in the set definition. E.g. the proving of distributivity within this setting
-is not satisfactory since too many cases has to be proved from
-scratch. 
-We found it is often easier to define the operations on the
-setoid and the required algebraic properties are direct consequences
-of the semiring structure of the natural numbers.
+$[\_]^{=} : a \sim b \to [a] = [b]$
 
-Another example is the set of rational numbers. In this case the setoid representation \emph{fraction} and set representation \emph{reduced fraction} are both commonly used in arithmetics. Following our conventions, it is more reansonable to compute with setoid representation and display with reduced fractions. If we define operations on reduced fractions, we have to prove coprimarity in every step which is too complicated and is also a burden for computers.
-In these cases, both the set interpretation and the setoid one
-have some nice features.
-Hence we propose to use both the setoid
-and the associated set, but to use the setoid structure to define
-operations on the quotient set and to reason about it. We can exploit the quotient properties by relating setoids for those quotients with their set definitions via a normalisation function.
+on the next level, we need
 
+$[\_]^{id}: [ \text{refl} ]^{=} = \text{refl}$ and
 
-In this chapter we introduce the formal framework to define the
-the quotients via normalisation function i.e.\ a few algebraic structures for quotients such as \emph{prequotient}, \emph{definable quotients} to encode these quotients along with application.
-The algebraic structures provide us some useful tools in manipulating the set definitions such as lifting, 
- conversions between two representations. In many cases the setoid representations are not only simpler but also have a few functions and properties to use. 
-It can be seen a ``manual construction'' of quotient types
-, in other words,
-instead of automatically creating a type given a setoid, we
-prove another given type \emph{is} the quotient. Therefore, the benefits can be repeated on quotient types in general.
+$[\_]^{comp}: [ p ; q ]^{=} =  [ p ]^{=} ; [ q ]^{=} $
 
-
-\section{Quotients via normalisation}
-
-
-We define several algebraic structures for quotients via normalisation corresponds to the rules of intensional quotient set introduced in last chapter.
-
-\begin{definition}
-\textbf{Prequotient}.
-\noindent
-Given a setoid $(A,\sim)$,  a \emph{prequotient} $(Q,[\_],\sound)$ over that setoid consists in
-\begin{enumerate}
-\item \label{enum:Q} a set $Q$,
-\item \label{enum:box}a function $[\_]: A \rightarrow Q$,
-\item \label{enum:sound} a proof \emph{sound} that the function $[\_]$ is compatible with the relation $\sim$,
-that is \[\sound\colon (a,b : A) \rightarrow a\sim b \rightarrow [a] = [b],\]
-\end{enumerate}
-\end{definition}
-
-Roughly speaking, \ref{enum:Q} corresponds to the formation rule,
-\ref{enum:box} corresponds to the introduction
-rule and \ref{enum:sound} corresponds to $Q$-\textbf{Ax}. The function $[\_]$ is intended to be the \emph{normalisation}
-function with respect to the equivalence relation, however it is not
-enough to determine it now. Categorically it is a fork (or cofork),
-
-\[\xymatrix{
-R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
-& Q
-}\]
-
-which is a commute diagram.
-
-To complete a \emph{quotient}, we also need the elimination
-rule and computation rule.
-
-\begin{definition} 
-\text{Quotient}	.
-\noindent
-A prequotient $(Q,[\_],\sound)$ is a quotient if we also have
-
-\begin{enumerate}
-\setcounter{enumi}{3}
-\item \label{enum:elim}
-for any $B: Q\rightarrow\Set$, an eliminator
- \begin{align*}
- \qelim_B\,\,:\,\,\,&(f\colon (a:A) \rightarrow B\,\class a) \\
-        {\rightarrow}\, &((p:a\sim b) \rightarrow f\,a \simeq_{\sound\,p}f\,b)\\
-        {\rightarrow}\, &((q:Q) \rightarrow B\,q)
- \end{align*}
-such that $\qelimbeta : \qelim_B\,f \,p\,\class a = f\,a$.
-\end{enumerate}
-\end{definition}
-
-This eliminator is also called \textbf{dependent} lifting function. This indeed makes $[\_]$ universal and turns the fork into a coequalizer.
-
-An alternative equivalent definition given by Martin Hofmann has a
-\textbf{non-dependent} eliminator and an induction principle.
-
-\begin{definition} 
-\textbf{Quotient (Hofmann's)}.
-\noindent
-A prequotient $(Q,[\_],\sound)$ is a quotient (Hofmann's) if we also have
-
-\[\lift : (f : A \to B) \to (\forall a,b \to a\sim b \to f~a
-\equiv f~b) \to (Q \to B)\]
-
-together with an induction principle.
-Suppose $B$ is a predicate, 
-\[\qind \colon((a: A)\rightarrow B \,\class a)\rightarrow ((q : Q)\rightarrow B\,q)\]
-\end{definition}
-
-Such a quotient is \emph{exact}~\footnote{Exact quotient is just \emph{effective
-  quotient} in \cite{maietti1999effective}} if exactly one element of
-quotient set represents one equivalence class. This property is captured by the following definition.
-
-\begin{definition}
-\textbf{Exact quotient}.
-\noindent
-A quotient is \emph{exact} (or effective) if exactly one equivalence class corresponds to
-an element of $Q$, i.e.\ given $a,b : A$, if they are ``normalised'' to the
-same element of $Q$ ($ \class a \equiv \class b$), they must be in the
-same equivalence class.
-
-$$exact :(\forall a,b : A) \rightarrow  \class a \equiv \class b \rightarrow a \sim b$$
-
-\end{definition}
-
-\begin{remark}
-This is indeed provable if we have propositional univalence. The proof can be found in \ref{PUEF}.
-\end{remark}
-
-
-
-Finally we have the most practical definition \emph{definable quotient}. Here we call them definable quotients in the sense of \textbf{definable via normalisation}, namely
-given a setoid $(A,\sim)$, there is a normalisation function $[\_]_0 : A \to A$ such that 
-
-\begin{align*}
-\text{sound} &: \forall a ~ b : A \to a \sim b \to [ a ]_0 = [ b ]_0\\
-\text{complete} &: \forall a : A \to [ a ]_0 \sim a\\
-\end{align*}
-
-It is not clear whether it is equivalent to definable in current setting of \itt.
-
-%The quotient set is given by
-
-%$$Q \defeq \Sigma a : A , [ a]_0 = a$$ 
-
-%and the mapping is
-
-%$[ a ] \defeq ([a]_0, \text{sound}~ [a]_0 ~ a ~ (\text{complete} a))$
-
-For a prequotient, to complete a definable quotient, an embedding function which selects one canonical choice for each equivalence class $q : Q$ is needed.
-
-\begin{definition} \textbf{Definable quotient}.
-\noindent
-Given a setoid $(A,\sim)$, a \emph{definable quotient} is a
-prequotient $(Q, [\_], \sound)$ with 
-\begin{align*}
-\emb &: Q \rightarrow A\\
-\complete &: (a : A) \rightarrow \emb {\class a} \sim a\\
-\stable &: (q:Q) \rightarrow \class{\emb\,q} \equiv q.
-\end{align*}
-\end{definition}
-
-We can easily define lifting functions with the flexible conversions $[\_]$ and $\emb$, but we can not extract $\emb$ function from other definitions. 
-
-This also means that it only applies to the setoids which have
-a canonical choice for each
-equivalence class. Luckily, in many cases we have such a choice function. For
-instance, the setoid integers and setoid rational numbers as we
-will discuss later.
-
-\begin{remark} 
-In fact, the embedding function can be seen as the lifted version of
-the real normalisation function $[\_]_0$. We can prove that $\emb = \widehat{[\_]_0}$ and $[\_]_0 = \emb \circ [\_]$.
-\end{remark}
-
-Categorically speaking, it forms a \emph{split coequalizer}.
-
-\[\xymatrix{
-R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
-& Q
-}\]
-
-A definable quotient is proved to be \emph{exact}.
 
 \begin{proof}
-Assume $[ a ] = [ b ]$ for given $a ~b : A$,
 
-by J we can prove that
+The predicate becomes $P_a : A \to \Set$
 
-$$\emb [ a ] = \emb [ b ]$$
+By univalence we can also prove it is compatible with $\sim$
 
-and by complete property, we can deduce that
 
-$$a \sim \emb [ a ] = \emb [ b ] \sim b$$
+Assume $p : x \sim y$, on the next level we have an equivalence on the arrows
+$P_a ~ p : P_a ~x  \to P_a ~ y$ which is given by $\lambda r \to r ; p$
 
-Hence $a \sim b$.
+\begin{displaymath}
+    \xymatrix{x \ar[r]^p & y \\
+      a \ar[u]^r \ar@{.>}[ur]_{r;p} & \\ }
+\end{displaymath}
+
+
+$P_a$ is functorial because
+
+$P_a ~ \text{refl} \equiv \lambda r \to r ; \text{refl} = \lambda q \to q \equiv \text{id} $
+
+$P_a ~ (p ; q) \equiv \lambda r \to r ; (p ; q) = \lambda r \to (r ; p) ; q \equiv (\lambda r \to (r ; p)) ; (\lambda r \to (r ; q)) \equiv P_a ~ p ; P_a ~ q$
+
+
+
+Hence we can also lift $P_a$ such that $a \sim b \equiv P_a ~ b \equiv \hat{P_a} ~ [ b ]$
+The inverse of soundness is then of type $[a]=[b] \to \hat{P_a} ~ [ b ]$ which can be defined as
+
+$[ p ]^{=-1} \defeq \transport ~p ~ \text{refl}$
+
+
+which is equivalent because
+
+$[ [p]^{=} ]^{=-1} = p$ can be proved by
+
+$\equiv \transport ~ [p]^{=} ~ \text{refl}$
+
+Since $\transport ~ [refl]^{=} ~ \text{refl} = \transport ~ refl ~ \text{refl} = refl$
+
+%First, let's prove that $\infixeqv$ is well-defined (functorial).
+
+%Given $p : a \sim a'$ and $q : b \sim b'$,  we can constuct an
+%equivalence $p \sim_1 q : a \sim b \to a' \sim b'$ which is defined as
+%$(p \sim_1 q)(r) \defeq p^{-1} ; r ; q$ (and vice versa)
+
+%\begin{displaymath}
+%    \xymatrix{a \ar[r]^r  \ar[d]_p & b \ar[d]^q \\
+%      a' \ar@{.>}[r] & b'\\ }
+%\end{displaymath}
+
+%From univalence axiom we can deduce that $a \sim b = a' \sim b'$.
+
+%On the next level, 
+
+%$(\trefl^{\sim} \sim_1 \trefl^{\sim})(r) \equiv \trefl^{\sim-1} ; r ; \trefl^{\sim} = r$ and
+
+%$((p;p') \sim_1 (q;q'))(r) \equiv (p;p')^{-1} ; r ; (q;q') =
+%p'^{-1};p^{-1};r;q;q' = p'^{-1}(p^{-1};r;q);q' \equiv (p' \sim_1
+%q')((p~q)(r))$
+
+%hence the equivalence relation is functorial and we can lift it as
+%well. Following condition must be satisfied,
+
+%$[a]~\hat{\sim}~[b] \equiv a \sim b$
+
+%By definition, $\trefl : a \sim a$ is also of type $[a]~\hat{\sim}~[a]$,
+%but to make it more clear we call it $\trefl_{\hat{\sim}}$.
+
+%The inverse of soundness, $[a]=[b] \to
+%[a]~\hat{\sim}~[b]$ can be defined as
+
+%$[\_]^{=-1} \defeq \lambda p \to \transport(p)(\trefl_{\hat{\sim}})$
+
+%To prove it is indeed an inverse of soundness,
+
+%$ [[p]^{=}]^{=-1} \equiv \transport ([p]^{=})(\trefl_{\hat{\sim}}) $
+
 \end{proof}
 
 
 
 
 
-\section{The set of integers}
-
-Usually we can describe an integer as a natural number with a positive
-or negative sign in front: 
-
-\begin{code}
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{+\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{-\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\end{code}
-
-However this gives two different constructors for 0 which is
-considered harmful. We lose canonicity and it will lead to unnecessary troubles.
-
-A better representation provides a separate symbol for 0 but $+suc~
-0$ for 1, $-suc ~0$ for $- 1$. This does not sacrifice canonicity,
-although the denotations are not natural.
-
-\begin{code}
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{+suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{zero} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaDatatype{ℤ}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{-suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\>\<\end{code}
-
-Take into account the embedding of natural numbers into integers, it
-makes sense to combine the positive's integers with zeros. Actually it is
-better pragmatically. In principle, definition with less
-cases is preferable because pattern matching grows with exponentially
-with the number of cases.
-
-\begin{code}
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{+\_} \<[8]%
-\>[8]\AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{-suc\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\>\<\end{code}
-
-Although it is not symmetric, it is simple and canonical and it is our
-final choice.
-
-\subsection{The setoid of Integers}
-
-The introduction of negative numbers is believed to denote the results
-of subtraction of a larger number from a smaller one. Generalising this interpretation,
-integers is used to represent the results of subtraction of any
-natural number from another. 
-Therefore integers can be represented by pairs of natural numbers
-
-$$\Z_0=\N \times \N$$
-
-for example, from the equation $1 - 4 = - 3$, we learn that $(1,4)$ gives rise to $- 3$.
-
-Also different pairs can result in the same integer.
-For any two pairs of natural
-numbers $(n_1, n_2)$ and $(n_3, n_4)$, we know they represent the same
-integer if
-
-$$ n_1 - n_2 = n_3 - n_4$$
-
-but technically this does not work because the ``subtraction'' defined for natural
-numbers only returns zero if the pair is for negative number. We only
-need to modify the equation a bit,
-
-$$ n_1 + n_4 = n_3 + n_2$$
-
-This gives rise to an equivalence relation (reflexive, symmetric and
-transitive needs to prove separately). Combined with the carrier
-$\Z_0$, it forms a setoid interpretation of integers.
-
-\begin{code}
-\\
-\>\AgdaFunction{ℤ-Setoid} \AgdaSymbol{:} \AgdaRecord{Setoid}\<%
-\\
-\>\AgdaFunction{ℤ-Setoid} \AgdaSymbol{=} \AgdaKeyword{record}\<%
-\\
-\>[2]\AgdaIndent{3}{}\<[3]%
-\>[3]\AgdaSymbol{\{} \AgdaField{Carrier} \<[19]%
-\>[19]\AgdaSymbol{=} \AgdaFunction{ℤ₀}\<%
-\\
-\>[2]\AgdaIndent{3}{}\<[3]%
-\>[3]\AgdaSymbol{;} \AgdaField{\_≈\_} \<[19]%
-\>[19]\AgdaSymbol{=} \AgdaPostulate{\_∼\_}\<%
-\\
-\>[2]\AgdaIndent{3}{}\<[3]%
-\>[3]\AgdaSymbol{;} \AgdaField{isEquivalence} \AgdaSymbol{=} \AgdaPostulate{\_∼\_isEquivalence}\<%
-\\
-\>[2]\AgdaIndent{3}{}\<[3]%
-\>[3]\AgdaSymbol{\}}\<%
-\\
-\end{code}
-
-\subsection{The definable quotient of integers}
-
-The basic ingredients for the definable quotient of integers have been
-given. One essential component of the quotient structure which relates
-the base type and quotient type is a normalisation
-function which can be recursively defined as follows:
- 
-\begin{code}
-\>\AgdaFunction{[\_]} \<[18]%
-\>[18]\AgdaSymbol{:} \AgdaFunction{ℤ₀} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
-\\
-\>\AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{0} \AgdaFunction{]} \<[18]%
-\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaBound{m}\<%
-\\
-\>\AgdaFunction{[} \AgdaInductiveConstructor{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \<[18]%
-\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{-suc} \AgdaBound{n}\<%
-\\
-\>\AgdaFunction{[} \AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaBound{n} \AgdaFunction{]}\<%
-\end{code}
-
-In this case, we choose to define the embedding function before
-proving the soundness property.
 
 
-It is plausible to find a canonical choice in each equivalence classes. 
-In fact the definition of $\AgdaFunction{[\_]}$ already gives the
-answer in the first two cases.
+ the set
+of integers and the set of rational numbers. We will also study the
+application of definable quotients to illustrate some advantages of
+using them.
 
 
-\begin{code}
-\\
-\>\AgdaFunction{⌜\_⌝} \<[11]%
-\>[11]\AgdaSymbol{:} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaFunction{ℤ₀}\<%
-\\
-\>\AgdaFunction{⌜} \AgdaInductiveConstructor{+} \AgdaBound{n} \AgdaFunction{⌝} \<[11]%
-\>[11]\AgdaSymbol{=} \AgdaBound{n} \AgdaInductiveConstructor{,} \AgdaNumber{0}\<%
-\\
-\>\AgdaFunction{⌜} \AgdaInductiveConstructor{-suc} \AgdaBound{n} \AgdaFunction{⌝} \AgdaSymbol{=} \AgdaNumber{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n}\<%
-\\
-\end{code}
+ can be related with setoids via a
+normalisation function. This paper mainly investigates these cases with an emphasis
+on the application of quotients.
 
-To complete the definition of definable quotient, there are several
-properties to prove including sound, complete, stable and exact.
 
-Because we have shown that exact quotient is equivalent to definable
-quotient, the lifting functions (dependent and non-dependent) are also derivable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Related Work}
+\label{sec:related-work}
+
+Quotient types were introduced by Mendler in
+\cite{men:90} and subsequently investigated in Hofmann's
+PhD dissertation~\cite{hof:phd}. An extensive investigation of setoids
+can be found in~\cite{bar:03}. Maietti considers extensions
+of both intensional and extensional type theory by quotient types
+\cite{maietti1999effective}. Courtieu considers an extension of CIC
+(an intensional type theory) by \emph{normalized types} corresponding
+to our definable quotients~\cite{cou:01}. Nogin describes a
+modular implementation of quotient types in NuPRL (an extensional type
+theory)~\cite{nog:02}.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -383,7 +169,7 @@ proving complicated theorems like distributivity.
 
 We will introduce the way we apply definable quotient in practical use.
 
-\paragraph{Operations}
+{\textbf{\large{Operations}}}
 
 With two functions converting the two encodings, it is enough to lift
 all functions. It is possible to lift operations uniformly by mixing the
@@ -432,7 +218,7 @@ it has been implied in the mathematical reasoning before implementing it.
 
 
 
-\paragraph{Properties}
+\textbf{\large{Properties}}
 
 Following axioms and theorems we learnt about integers, we can prove
 the plus, multiplication is commutative and associative, minus is
@@ -618,7 +404,6 @@ Grégoire and Mahboubi \cite{gregoire2005proving}.
 \end{remark}
 
 
-
 Therefore to prove the distributivity, the
 simplest way is to use semiring
 solver for natural numbers. 
@@ -726,7 +511,7 @@ In the case of rational numbers, the base type is also simpler to deal with.
 
 \section{Rational numbers}
 
-In Agda standard library, the set of rational numbers is defined
+In the Agda standard library, the set of rational numbers is defined
 as fractions whose numerator and denominator are coprime. It ensures
 the canonicity of representations, but it complicates the manipulation
 of rational numbers since the coprimarity has to be kept for each
@@ -783,7 +568,8 @@ such that $2 /suc 2$ stands for $\frac{2}{3}$.
 
 \begin{remark}
 It is also reasonable to define it with a pair of natural numbers with
-a sign defined separately. However this also complicates calculation somehow.
+a sign defined separately. However this also complicates calculation
+in some way.
 \end{remark}
 
 
@@ -884,9 +670,8 @@ greatest common divisor which can be converted to another data type $\AgdaDataty
 which contains the three essential results we need, i.e.\ the new numerator, new denominator and the
 proof term that they are coprime. Combing the library functions and
 types with a self-defined function
-$\AgdaFunction{GCD′→ℚ}$
-%\footnote{see Appendix}
-which constructs the reduced fraction we need, the normalisation function is
+$\AgdaFunction{GCD′→ℚ}$\footnote{see \autoref{rational-gcd}} which
+constructs the reduced fraction we need, the normalisation function is
 implemented as follows,
 
 \begin{code}
@@ -904,6 +689,7 @@ implemented as follows,
 \>\AgdaSymbol{...} \AgdaSymbol{|} \AgdaBound{di} \AgdaInductiveConstructor{,} \AgdaBound{g} \AgdaSymbol{=} \AgdaFunction{-} \AgdaFunction{GCD′→ℚ} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaBound{di} \AgdaSymbol{(λ} \AgdaSymbol{())} \AgdaSymbol{(}\AgdaFunction{C.gcd-gcd′} \AgdaBound{g}\AgdaSymbol{)}\<%
 \\
 \end{code}
+
 
 and the embedding function is trivial, because we only need to forget
 the coprime proof in the normal form,
@@ -926,30 +712,5 @@ the field of rational numbers. After embedding the natural numbers
 into integers, any theorems using only the operations in the field
 $\Q$, are turned out to be propositions of integers which can be
 solved using ring solver or theorems proven for integers.
-
-
-
-\section{Summary}
-
-In this chapter, we have shown that 
-although quotient
-types are unavailable, there are some quotients are
-themselves definable via a normalisation function without using quotient types. We introduce several
-algebraic structures for quotients which can be seen as ``manual construction'' of quotient types.
-A \emph{prequotient} gives a basic ingredients for later
-constructions. We give two equivalent definitions of \emph{quotients},
-one has a dependent eliminator and the other given by Hofmann added
- a non-dependent eliminator  and an induction principle.
-The strongest definition is called \emph{definable quotient} which includes an embedding function selecting canonical choice for each
-equivalence class. It provides us conversions between base types and
-quotient types such that we can usually benefit from convenience from base types without losing canonicity and nice display from the
-definable quotient types. To show the application of definable quotients, we
-used two examples, the set of integers and the set of rational
-numbers. Some concrete cases are also presented to show how to
-uniformly lift operations and theorems from base types, and how can we
-benefit from the utilization of definable quotient structures.
-
-
-
 
 

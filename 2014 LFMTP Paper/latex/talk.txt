@@ -1,0 +1,188 @@
+First of all, thank you for listening to my talk
+My name is Nuo Li and today we are going to show something we have done about wog in Agda
+
+
+1.
+
+Outline: In today’s talk I’d like to explain what a wog is and give an precise definition of it in a dependently typed programming language Agda.
+
+I will also prove we have all coherences by constructing concrete cases using our general approach and explain the reason of using heterogeneous equality for syntatic terms in our implementation
+
+Finally I will show you semantically what is a wog.
+
+2.
+
+Introduction: Let’s start by looking at what is a wog?
+It is a generalisation of groupoid which has infinte dimensions, in other words we have morphisms between objects, morphisms between morphisms and higher morphisms which are all equivalences. Equivalence is a refinement of isomorphism. Roughly speaking, they are "isomorphic" up to higher equivalences. It is weak in the sense that all equalities are weak equivalence for example, instead of strict associatvity law, we have an associate 2-morphism.
+
+3.
+
+But why are we interested in wog?
+
+The main motivation is to build a model for hott where types are interpreted as wog.
+
+In this model, univalence are internalised, in other words, isomorphic types are equal, then we can reason about types abstractly. Also extensional concepts like functional extensionality and quotient types exists in this model.	
+
+4.
+
+Ok, so how to define wog in type theory?
+There are several different definitions of wog, one is Warren's strict wog which is not univalent
+
+The second one is a different syntactic approach for weak version by the two other two authors
+
+The last is to define a type theory in type theory to describe the internal structure of wog
+
+In this papper we implement the type theory in Agda and develop some construction upon it.
+
+For someone who doesn't know what Agda, 
+
+it is a dependently typed funcitonal programming languages, and also a theorem prover
+which is widely used in mathematical constructions
+It is a variant of intensional \mltt
+
+5.
+
+OK, now let's move on the formalisation of wog.
+
+There are four kinds of basic syntactic objects, context for the whole wog, type for a collection
+of objects or morphisms, terms for specific object or morphism  and substitution for morphisms between
+og.
+
+a context is either empty or extended by a type of it
+
+Types describe the categories of objects on different dimensions, basic object is of type $*$, and inductively we have an equality type
+between any two given terms of existing types
+
+
+As usual, terms including variables. However there are more operations and equalities to hold in wog which we have to encode into the definition of terms.
+
+On setoid level, we have three basic operations	, identity, inverse and composition.
+
+On groupoid level, we have 5 groupoid laws including identity properties, associativity and inverse properties.
+
+On higher dimensions, we have many more operations like vertical composition and horizontal composition on 2-morphisms, 
+
+as well as many equalities to hold weakly for example, interchange law between vertical and horizontal composition and coherence laws
+
+which usually specify different composition of morphisms are equal.
+
+The diagram is an example of a coherence law to state that the two ways to prove the equality is equal, which is indeed a 3-morphism.
+
+It is possible to list all finite coherence laws and operations on low dimensions, but it becomes extremely difficult if we move to 
+higher dimensions and there are infinite levels,
+
+so how can we encode them in a finitary way?
+
+Luckily an amazing fact is that all coherences are arising automatically from induction principle for identity type or J eliminator
+
+
+Contractible Contexts and Coherences:
+
+In our type theory, to simulate J, we first introduce a notion called contractible contexts.
+
+A contractible context is context which is contractible to one point
+it is inductively defined as either a single object context or a contractible context extended with an term y
+of existing type A and an equality between an existing term x and y.
+
+In basic case we have identity, identity on identity and all higher identities.
+At the same the extending process helps us build the context of other coherences
+
+
+In fact we can prove that all types in a contractible context is inhabited and the terms are just coherences
+
+Cosidering the replicates of coherences in other non constractible contexts,
+in general a coherence should be a term of a type substituted by a context morphism into a contractible context. 
+
+
+
+Now we can constructively prove that we have all these infinite number of coherences.
+We construct each kind of coherences using a general approach:
+First it is simple to construct a minimum version namely a coherence in a minimum contractible context since we have all coherences
+in a contractible context
+
+Then we use a replacement operation to obtain a general version from minimum version. From the example above it is easily to see that if
+we replace epsilon with Gamma and basic type * with A and then we get the context for general version. This is why we name it as replacement
+
+For any type A in some context Gamma, we can get a higher level coherence of B on A by replacement operation.
+
+
+To define the replacement of terms, one may simply expect a  substitution from replaced context to original context \Delta. Unfortunately 
+it doesn't exist
+
+The solution could be to construct a contractible context where the expected coherence really exists.
+An ideal construction is to filter out variables in replacement context which are irrelevant to A such that we have a contractible context
+and then there is a trivial substitution into it
+
+To delete some variables in an existing context is too inefficient so we think it in the inversed direction:
+
+ why not just build a "filtered" context！
+
+We managed to do it by using an operation called suspension.
+To suspended a contractible context Delta with A, we just build a stalk in front of Delta.
+
+A stalk is a context which has 2n variables if A is level n, namely it contains the minimum required ingredients to build type A
+
+Indeed in the suspended context, the original basic type * has been lifted n levels higher, we can say it is also replaced by A
+
+We also prove that suspension presevers to generated and with the obvious substitution filter, we have complete the replacement operation on terms
+
+I would like to make the substitution more clear by the following case:
+
+assume the minimum coherence we have is the identity in a single object context
+
+We would like to generate the identity for type A which is a = b in Gamma and we have an redudant object c
+
+the suspension gives us the suspended context whose variables corresponds the ones in replaced context
+
+
+Finally Together with the filter substitution, we managed to define all coherences
+
+
+Let's look at a simple application of our approach, to construct the reflexivity namely id for any type in any context
+
+First we simple construct the minimum case from the fact that every type in a contractible context is inhabited
+
+Then for arbitrary type A in arbitrary context Gamma, we suspend the one elememt context with respect to the level of A
+and we get a suspended term because the suspended context is also contractible
+
+
+Finally the general construction is finished by replacement operation, just substitute the suspended term
+
+
+In our implementation in Agda, we first use homogeneous equality to reason about terms. However when
+reasoning about terms whose types are propositional equality but not definitionally equal, it becomes too heavy to
+deal with subst which generally does substitution on types to unify types on two sides of an equation
+
+To simplify it we use heterogeneous equality which is also called JM equality specially for terms
+
+One may question about the K should not exist. But here we did not use K for general purpose and it is safe to claim
+types have uniqueness of identity proof 
+because it is inductively defined types and has finte constructors such that its equality is decidable and from
+Hedberg's Theorem, it has UIP
+
+Because of that, we can define the heterogeneous equality which are proof irrelevant on equality of types A = B
+
+After talking about syntax, we briefly talk about the semantic part
+Semantically, a syntactic grothedieck wog is a globular set which consists a set of objects
+and coinductively a globular set between every pair of ojbects x y
+
+Also an interpretation of coherences has to be given.
+
+
+An example of globular set is Id omega of given type A whose first level object is A and higher levels are
+equality between objects of A, equality between equalities etc.
+
+To make it more precise, it is not a globular set because the collection of objects on each level does not necessary to be a set 
+
+
+To summarise, we first study the interpretation of types using wog and the important of using it
+
+And then we have shown the basic syntax of the type theory to describe the internal structure of wog which has been
+implemented by us in Agda
+We talked about how we encode all inifintely many coherences and gave a general approach to construct all coherences
+finally we briefly discussed semantically what is a wog.
+
+It is only a first step of building a wog model and we would like to have a model in type theory which univalence is provable
+
+
+OK, that's all, any question?

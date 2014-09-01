@@ -6,8 +6,21 @@
 
 
 
-Altenkirch investigates this issue and gives a solution in
-\cite{alti:lics99}. He proposes an extension of \itt by a universe of
+To introduce extensional concepts in \itt, there are several different models proposed, for example Martin Hofmann's setoid model, groupoid model and Altenkirch's setoid model \cite{alti:lics99}.
+
+In this chapter, we will introduce an implementation of Altenkirch's setoid model in Agda and discuss the definition of quotient types in this model.
+
+
+
+\section{Introduction to setoid model}
+
+In \cite{hof:phd}, Martin Hofmann proposes a setoid model where types are interpreted as a type with
+an equivalence relation, i.e.\ a setoid and terms are interpreted as terms with proofs that the relations are respected.
+
+ the introduction of extensionality in \itt 
+
+
+He proposes an extension of \itt by a universe of
 propositions $\Prop$ in which all proofs of same propositions are
 definitionally equal, namely the theory is proof irrelevant. At the same time,
 a setoid model where types are interpreted by a type and an equivalence relation acts as the metatheory and $\eta$-rules for
@@ -23,9 +36,6 @@ functional extensionality.
 
 
 
-
-
-\todo{the Setoid Model}
 
 Quotient types are one of the extensional concepts in Type Theory \cite{hof:phd}. There are several existing intensional models for extensional
 concepts. The first one we are going to work with is Altenkirch's

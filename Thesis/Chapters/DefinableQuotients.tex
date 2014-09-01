@@ -34,7 +34,7 @@ operations on the quotient set and to reason about it. We can exploit the quotie
 
 
 In this chapter we introduce the formal framework to define the
-the quotients via normalisation function i.e.\ a few algebraic structures for quotients such as \emph{prequotient}, \emph{definable quotients} to encode these quotients along with application.
+the quotients via a normalisation function i.e.\ a few algebraic structures for quotients such as \emph{prequotient}, \emph{definable quotients} to encode these quotients along with application.
 The algebraic structures provide us some useful tools in manipulating the set definitions such as lifting, 
  conversions between two representations. In many cases the setoid representations are not only simpler but also have a few functions and properties to use. 
 It can be seen a ``manual construction'' of quotient types
@@ -43,10 +43,10 @@ instead of automatically creating a type given a setoid, we
 prove another given type \emph{is} the quotient. Therefore, the benefits can be repeated on quotient types in general.
 
 
-\section{Quotients via normalisation}
+\section{Quotients via a normalisation}
 
 
-We define several algebraic structures for quotients via normalisation corresponds to the rules of intensional quotient set introduced in last chapter.
+We define several algebraic structures for quotients via a normalisation corresponds to the rules of intensional quotient set introduced in last chapter.
 
 \begin{definition}
 \textbf{Prequotient}.
@@ -134,25 +134,18 @@ This is indeed provable if we have propositional univalence. The proof can be fo
 
 
 
-Finally we have the most practical definition \emph{definable quotient}. Here we call them definable quotients in the sense of \textbf{definable via normalisation}, namely
-given a setoid $(A,\sim)$, there is a normalisation function $[\_]_0 : A \to A$ such that 
+Finally there are some quotients definable via normalisation.
 
+\begin{definition}[\textbf{Definable via normalisation}]\label{def:nor}
+Given a setoid $(A,\sim)$, $\qset{A}$ is definable via normalisation if there is a "real" normalisation function with two properties
 \begin{align*}
+[\_]_0 &: A \to A \\
 \text{sound} &: \forall a ~ b : A \to a \sim b \to [ a ]_0 = [ b ]_0\\
 \text{complete} &: \forall a : A \to [ a ]_0 \sim a\\
 \end{align*}
+\end{definition}
 
-It is not clear whether it is equivalent to definable in current setting of \itt.
-
-%The quotient set is given by
-
-%$$Q \defeq \Sigma a : A , [ a]_0 = a$$ 
-
-%and the mapping is
-
-%$[ a ] \defeq ([a]_0, \text{sound}~ [a]_0 ~ a ~ (\text{complete} a))$
-
-For a prequotient, to complete a definable quotient, an embedding function which selects one canonical choice for each equivalence class $q : Q$ is needed.
+For a prequotient where we use $Q$ to represent the set of equivalence classes, we gives an equivalent definition to complete a definable quotient.
 
 \begin{definition} \textbf{Definable quotient}.
 \noindent
@@ -165,20 +158,21 @@ prequotient $(Q, [\_], \sound)$ with
 \end{align*}
 \end{definition}
 
-We can easily define lifting functions with the flexible conversions $[\_]$ and $\emb$, but we can not extract $\emb$ function from other definitions. 
+It is equivalent to \ref{def:nor} because:
 
-This also means that it only applies to the setoids which have
-a canonical choice for each
-equivalence class. Luckily, in many cases we have such a choice function. For
-instance, the setoid integers and setoid rational numbers as we
-will discuss later.
+the normalisation function can be recovered as 
 
-\begin{remark} 
-In fact, the embedding function can be seen as the lifted version of
-the real normalisation function $[\_]_0$. We can prove that $\emb = \widehat{[\_]_0}$ and $[\_]_0 = \emb \circ [\_]$.
-\end{remark}
+$[\_]_0 \defeq emb \circ [\_]$. 
 
-Categorically speaking, it forms a \emph{split coequalizer}.
+In the other way around, $[\_]_0$ gives rise to a set 
+
+$Q \defeq \Sigma c : \R_0, [ c ]_0 = c$ with a function 
+
+$[ c ] \defeq [c]_0 , ~\sound ~ [[c]_0]_0 ~~ [c]_0~~ (\complete ~ c)$
+
+ and then the embedding function is just the first projection. The properties can be verified easily. It has to be notised that although we call $[\_]$ as a normsalition function, it is only true in a definable quotient structure.
+
+Categorically speaking, a definable quotient is a \emph{split coequalizer}.
 
 \[\xymatrix{
 R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
@@ -201,9 +195,7 @@ $$a \sim \emb [ a ] = \emb [ b ] \sim b$$
 Hence $a \sim b$.
 \end{proof}
 
-
-
-
+The lifting function can be recovered easily from the embedding function but it is impossible to extract an embedding functions from the other definitions, hence the definable quotient is stronger than the others. A proof has been encoded in Agda code (See Appendix). I will discuss the application of definable quotient structure with some cases.
 
 \section{The set of integers}
 

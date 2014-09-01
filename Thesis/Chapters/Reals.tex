@@ -1,121 +1,65 @@
-\chapter{Definability via normalisation}
+\chapter{Real numbers}
 \label{rl}
 
 %If you mean something specific, always write "the"
 
 In the previous chapter, we discussed quotients which are definable via normalisation.
-To encode them, quotient types are not necessary. However there are some quotients undefinable in the sense of normalisation, for example the set of real numbers, the multisets and the partiality monad. Intuitively they can be interpreted as setoids but there is no normalisation function which returns a canonical choice for each equivalence class, hence no normalisation function.
-
-\section{Definability}
-
-The definablity of quotients in \itt is more general than the notion of decidable quotients via normalisation, although we conjecture that it is enough to say a quotient is not definable in general by proving that there is no normalisation function.
-
-
-%Given a setoid $(A,\sim)$, if there is no $[_]_0$ normalisation function then we say it is definable via normalisation.
-
-
-%\todo{decidable order -> of course definable, A-> N definable, give a  explicit proof}
-
-%\todo{definable -> split quotient because definable is too general}
+To encode these types, quotient types are not necessary. However there are some quotients undefinable in the sense of normalisation, for example the set of real numbers, the multisets and the partiality monad. Intuitively they can be interpreted as setoids but there is no normalisation function which returns a canonical choice for each equivalence class, hence no normalisation function.
 
 \section{Real numbers as Cauchy sequences}
-To construction real numbers in Type Theory, there are several different approaches, for example auchy sequences, Dedekind cut, decimal representation, etc.
+To construction real numbers in Type Theory, there are several different approaches, for example auchy sequences, Dedekind cut, decimal representation, etc. Here we use Cauchy construction of real numbers as in \cite{bis:85}:
 %In \cite{hott} it has been proved that Cauchy reals and Dedekind reals are equivalent if excluded middle or countable choice holds.
 
- Here we use Cauchy
-construction of real numbers as in \cite{bis:85}.
-
 $$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon
-  :\Q,\varepsilon>0\to\exists m:\N, \forall i:\N, i>m\to \vert  s_i -
-  s_m \vert  <\varepsilon}$$
+  :\Q^{+}, \exists m:\N, \forall i:\N, i>m\to \vert  s_i -
+  s_m \vert  <\varepsilon}$$ \label{R01}
 
-It is implementable in Type Theory, but there is a problem of the
-choice of type of the second part of the cauchy sequence, namely the property
-that it is a cauchy sequence. Do we distinguish the same sequences
-with different proofs? Logically speaking we should not. It means that
-we need to truncate it to proposition but we will lose the important
-tool to guess what the real number is. To avoid this problem, we could
-use an alternative equivalent definition which is a subset of $\R_{0}$:
+This definition is equipped with a proof which can help us guess the real number if the existential quantifier is not truncated. However usually we would like the proof to be truncated so that the Cauchy sequences are proof-irrelevant. 
+
+To avoid this problem, we can use an alternative equivalent definition which is a subset of $\R_{0}$:
 
 $$\R_0' = \set{f: \N\to\Q \mid \forall k
-  :\N,\forall m , n > k, \to \vert  f_m -
-  f_n \vert  < \frac{1}{k}}$$
+  :\PN,\forall m , n > k, \to \vert  f_m -
+  f_n \vert  < \frac{1}{k}}$$ \label{R02}
 
-With the definition, the condition part is propositional and we can
-guess the number by applying any number k to the sequence and we know
-the interval where it should be located.
+The rate of convergence is fixed so that we can guess the number while the condition is propositional.
 
-Different cauchy sequences can represent the same number. Therefore an equivalence relation\footnote{
-The Agda version is in Appendix} is expected. In mathematics two Cauchy sequences $\R_0$ are said to be
-equal if their pointwise difference converges to zero,
 
-$$r \sim s = \forall\varepsilon :\Q,\varepsilon>0\to\exists m:\N,
+We can slightly modify the definition which is still equivalent,
+
+$$\R_0'' = \set{f: \PN\to\Q \mid \forall n ~m
+  :\PN, n > m \to \vert f_n -
+  f_m \vert  < \frac{1}{n}}$$ \label{R03}
+
+
+Cauchy sequences can be added and multiplied pointwisely and the result is still Cauchy sequences.
+
+If two the pointwise difference between two Cauchy sequences tends to zero, we say they are equivalent.
+
+$$r \sim s \defeq \forall\varepsilon :\Q^{+},\to\exists m:\N,
 \forall i:\N, i>m\to \vert  r_i - s_i \vert <\varepsilon$$
 
-\subsection{Non-normalizability of Cauchy Sequences}
+With this equivalence relation, we can define the set of real numbers as long as we have quotient types.
+But different to the set of integers and the set of rational numbers, it is not definable via normalisation, in other words we cannot define a normalisation function $[\_]_0: \R_0 \to R_0$ which returns a canonical choice for each equivalent class.
 
-To prove that it is impossible to give a full definable quotient
-structure of real numbers with the setoid of cauchy sequences, we
-could show it by proving that it is impossible to define a
-normalisation function for the cauchy sequences.
+\subsection{The set of real numbers is not definable via normalisation}
 
-\begin{definition}\label{def:nor}
-We say that a quotient structure $\qset{A}$ is definable via a
-normalisation, if we have a normalisation function
- \begin{equation}
-  nf : A \to A
- \end{equation}
- with the property that it respects $\sim$
-\begin{equation}
- p : \prd{c_1,c_2 : A} c_1 \sim c_2 \to nf(c_1) = nf(c_2).
-\end{equation}
-such that
- \begin{equation}
- q : \prd{c : A}  {nf(c)} \sim c.
- \end{equation}
-\end{definition}
+%\begin{definition}
+%\textbf{Discrete type}.
 
-It is equivalent to say that we have a definable quotient structure in
-the sense of \cite{aan}, because we can form the set of equivalence
-classes as
-
-\begin{equation*}
-Q \defeq \Sigma_{c : \R_0} nf(c) = c
-\end{equation*}
-
-where the second part is propositional, and the "normalisation''
-function can be defined as
-
-\begin{equation*}
-[c] \defeq nf(c) , p(q)
-\end{equation*}
-
-and the embedding function is just the first projection. The properties can be verified
-easily.
-
-In the other way around, the true normalisation function is just
-
-\begin{equation*}
-n \defeq emb \circ [\_]
-\end{equation*}
-
-and the properties hold as well.
+%A type $A$ is discrete if there exists a definable test $P : A \to \textbf{2}$ such that $\forall a~ b ∶ A, a \neq b \to P ~a \neq P~ b$.
+%\end{definition}
 
 
-We have made an attempt in the original version of our \cite{aan}
-draft, but there is something important problem pointed out by Martin Escardo. Laterly, Nicolai
-Kraus suggests to fix the proof by proving it as a meta-theoretical
-property. We will show an adaption of his proof here.
+
+%We have made an attempt in the original version of our \cite{aan} draft, but there is something important problem pointed out by Martin Escardo. Laterly, Nicolai Kraus suggests to fix the proof by proving it as a meta-theoretical property. We will show an adaption of his proof here.
 
 \textbf{Some preliminaries}
 
-In fact the proof is mainly conducted using topological tools. The
-following definitions are helpful for someone who are not so familiar
-with topological concepts.
-
+The proof is mainly conducted using topological tools. Following are some relevant topological concepts.
 
 \begin{definition}
-Metric space. In mathematics, a metric space is a set where a notion
+\textbf{Metric space}. In Mathematics, a metric space is a set where a notion
 of distance (called a metric) between elements of the set is defined.
 
 A metric space is an ordered pair $(M , d)$ where M is a set and d is a metric on M:
@@ -128,7 +72,7 @@ A metric space is an ordered pair $(M , d)$ where M is a set and d is a metric o
 \end{enumerate}
 \end{definition}
 
-We usually define a standard topological structure for discrete types.
+We usually use the \textbf{discrete spaces} for types like $\bool$, $\N$, $\Q$ etc.
 
 \begin{itemize}
 
@@ -164,27 +108,38 @@ $
 
 \end{itemize}
 
-We use a slightly different definition of cauchy sequences of rational
-numbers here:
+For Cauchy sequences, recall the third definition of $\R_0$ \ref{R03}:
 
 \begin{definition}
- We call a function $f : \PN \to \Q$\footnote{we
-   use $\PN$ instead of $\N$ because $n$ must be positive in $\frac 1 n$} a \emph{Cauchy Sequence} if it satisfies
+ We call a function $f : \PN \to \Q$ a \emph{Cauchy sequence} if it satisfies
  \begin{equation}
-  \iscauchy (f) \defeq \fa{n}{\PN} \fa{m} {\PN} m > n \to |f(n) - f(m)| < \frac 1 n. \label{eq:prop-property-short}
+  \iscauchy ~f \defeq \forall n~m : \PN, n < m \to |f_n - f_m| < \frac 1 n. \label{eq:prop-property-short}
  \end{equation}
- The type of Cauchy Sequences is thus
+ The type of Cauchy sequences is thus
  \begin{equation*}
-  \R_0 \defeq \sm{f : \PN \to \Q} \iscauchy (f).
+  \R_0 \defeq \Sigma f : \PN \to \Q, \iscauchy ~ f.
  \end{equation*}
 \end{definition}
 
-And the standard metric space for the sequences $\PN \rightarrow \Q $
-is defined by the distance function
+The canonical distance function for $\R_0$ is
 
 \begin{equation}
-g(f_1,f_2) = 2^{-\mathsf{inf}\{k \in \N \; | \; f_1(k) \not= f_2(k)\}}
+g(f_1,f_2) = 2^{-\mathsf{inf}\{k \in \PN \; | \; f_1(k) \not= f_2(k)\}}
 \end{equation}
+
+and the metric space is not discrete.
+
+Technically, if we define $\R_0$ as \ref{RO1}, there would be different proof terms for the same sequence which means the distance between two non-equal elements may be $0$, hence not metric space.
+
+
+\begin{definition}
+\textbf{Continous function.} Let $(X, d)$ and $(Y, e
+)$ be metric spaces. A function $f : X \to Y$ is called
+continuous if for every $x : X$ and $\epsilon > 0$ there exists a $\delta > 0$ such that
+
+$$\forall y : X, d(x,y) < \delta \Rightarrow e(f(x),f(y)) < \epsilon$$
+\end{definition}
+
 
 Among all these standard metric spaces, It is a folklore that all
 definable functions are continous.
@@ -193,53 +148,44 @@ definable functions are continous.
 All definable functions are continous.
 \end{theorem}
 
+
+
+
 Let us introduce the following auxiliary definition:
 \begin{definition}
- For a sequence $f : \N \to \Q$, we say that $f$ is \emph{Cauchy with
-   factor $k$}, written as $\iscauchy_k$, for some $k \in \Q$, $k > 0$, if
+ For a sequence $f : \PN \to \Q$, we say that $f$ is \emph{Cauchy with
+   factor $k$}, written as $\iscauchy_k$, for some $k \in \Q^+$, if
  \begin{equation}
-  \iscauchy_k(f) \; \defeq \; \fapairs{n}{m}{\N} m > n \to |f(n) - f(m)| < \frac 1 {k \cdot n}. \label{eq:cauchy-aux}
+  \iscauchy_k ~ f \; \defeq \; \forall n ~m : \PN, n < m \to |f_n - f_m| < \frac 1 {k \cdot n}. \label{eq:cauchy-aux}
  \end{equation}
  The usual Cauchy condition $\iscauchy$ is therefore ``Cauchy with factor $1$''.
 \end{definition}
 
-\begin{remark} If we claim a function $f$ is defined on $\R_0$ that
-  respects $\sim$, it means that we have a proof
-\begin{equation}
- p : \prd{c_1,c_2 : \R_0} c_1 \sim c_2 \to f(c_1) = f(c_2).
-\end{equation}
-
-\end{remark}
-
 Now we have enough tools to prove the following proposition.
 
 \begin{proposition} \label{prop:main}
- \textbf{"$\R_0 / \sim$" is connected.} It means that any continuous function $f$ 
+ \textbf{$\R_0 / \sim$ is connected.} It means that any continuous function
  \begin{equation}
   f : \R_0 \to \bool
- \end{equation} that respects $\sim$ is constant. We prove that it is impossible to find $c_1, c_2:
-\R_0$ such that $f(c_1) \not= f(c_2)$ meta-theoretically, instead of
-deriving a proof term of this in type theory.
-
-The definability of function implies that it is a continous function \ref{defcon}
-between the standard metric spaces for $\R_0$ and $\bool$\footnote{The
-  metric of $\R$ comes from the first component. Technically, if
-  $\R_0$ is defined by \ref{eq:usedbytxa}, this would not make it a
-  metric space (as the distance between non-equal elements could be
-  $0$); however, this would not matter, and for our definition, there
-  is no problem anyway.}.
-
+ \end{equation} that respects $\sim$ is constant.
 \end{proposition}
 
 
 
-\begin{proof}
+\begin{remark} If we claim a function $f$ is defined on $\R_0$ that
+  respects $\sim$, it means that we have a proof
+\begin{equation}
+ p : \forall c_1 ~ c_2 : \R_0  \to c_1 \sim c_2 \to f(c_1) = f(c_2).
+\end{equation}
 
-The general idea is to interpret our definition in classical mathematics,
-assume we have a non-constant function and deduce a
-contradiction.
- 
-Consider the ``naive'' set model (with ``classical standard mathematics'' as meta-theory). This clearly works if we are in a minimalisitic type theory with $\Pi$, $\Sigma$, $\mathsf{W}$, $=$, $\mathbb N$; however, if we restrict ourselves to the types in the lowest universe of homotopy type theory (which is enough), it also works for HoTT.
+\end{remark}
+
+
+\begin{proof}\label{realconnected}
+
+The general idea is to interpret our definition in classical Mathematics,
+assume we have a non-constant function and deduce a contradiction.
+Consider the ``naive'' set model (with ``classical standard Mathematics'' as meta-theory). This clearly works if we are in a minimalisitic type theory with $\Pi$, $\Sigma$, $\mathsf{W}$, $=$, $\mathbb N$; however, if we restrict ourselves to the types in the lowest universe of homotopy type theory (which is enough), it also works for HoTT.
  We use $\tometa \cdot$ as an interpreation function; 
  for example, we write $\R$ for the field of real numbers which can be defined as $\tometa {\R_0} / \tometa{\sim}$. 
  By abuse of notation, we write $\tometa {\R_0}$ for the set of Cauchy sequences in the model that fulfill the Cauchy condition, without the actual proof thereof. This is justified as this property is propositional. 
@@ -260,33 +206,32 @@ Thus, assume $\tometa f$ is non-constant,  there are $c_1, c_2 : \tometa {\R_0}$
   m_2 & \defeq \mathsf{sup} \{\clim d \in \R \; | \; d \in \tometa {\R_0}, \clim d \leq \mathsf{max}(\clim{c_1}, \clim{c_2}), \tometa f(d) = \tometa \bfalse \}
  \end{align}
  (note that one of these two necessarily has to be $\clim{c_1}$ or $\clim{c_2}$, whichever is bigger).
- Set $m \defeq \mathsf{min}(m_1,m_2)$, and we can observe that in
+ Set $m \defeq \mathsf{min}(m_1,m_2)$, because $m$ is a supremum, we can observe that in
  \emph{every} neighborhood $U$ of $m$, given any $t$,
 we can always find another point $x \in U$ such that $x = \clim e$
-(for some $e$) with $\tometa f(e) \not= \tometa f(t)$.
- 
- Let $c \in \tometa {\R_0}$ be a Cauchy sequence such that $\clim c$ is equal to $m$. 
+(for some $e$) with $\tometa f(e) \not= \tometa f(t)$. 
+
+
+ Let $c \in \tometa {\R_0}$ be a Cauchy sequence such that $\clim c = m$. 
  We may assume that $c$ satisfies the condition
- $\tometa{\iscauchy_5}$.\footnote{the factor 5 is chosen due to the
-   need of a later proof.} 
+ $\tometa{\iscauchy_5}$.
 %  The slight difference ($\frac 1 n$ is replaced by $\frac 1 {4n}$) will be important.
 %  Without loss of generality, assume $\tometa{f}(c) = \tometa \btrue$. % not needed.
  
- As $f$ (and thereby $\tometa f$) is continuous (remember the metric
- spaces), there exists $n_0 \in \tometa {\N}$ such that for any Cauchy
+ As $f$ is definable (and thereby $\tometa f$ is continous \ref{defcon}), for an arbitrary $\epsilon < 1$, there exists $n_0 \in \tometa {\N}$ such that for any Cauchy
  sequence $c' \in \tometa {\R_0}$, if the first $n_0$ sequence
  elements of $c'$ coincide with those of $c$ (namely the distance
  $g(c, c') = 2^{-\mathsf{inf}\{k \in \N \; | \; c(k) \not= c'(k)\}}
- \leq 2^{-{n_0}}$ ), then $\tometa f(c') = \tometa f(c)$. 
+ \leq 2^{-{n_0}}$ ), then $h (\tometa f(c), \tometa f(c'))< \epsilon < 1$, hence $\tometa f(c') = \tometa f(c)$. 
+
  Write $U \subset \tometa {\R_0}$ for the set of Cauchy sequences which fulfill this property, and $\clim U \defeq \{\clim d \; | \; d \in U\}$ for the set of reals that $U$ corresponds to.
- 
- We claim that $\clim U$ is a neighborhood of $m$. 
- More precisely, we prove: 
- The interval $I \defeq (m - \frac 1 {2n_0} , m+ \frac 1 {2n_0})$ is contained in $\clim U$.
- Let $x \in \R$ be in $I$. There is a sequence $t : \tometa {\N \to \Q}$ such that $\tometa {\iscauchy_{5n_0}}(t)$ and $\clim t = x$. 
+ We claim that $\clim U$ is a neighborhood of $m$ by proving an open inverval $I \defeq (m - \frac 1 {2n_0} , m+ \frac 1 {2n_0})$ is contained in $\clim U$, i.e.\ $m \in I \subset \clim U$.
+
+ Let $x \in I$, there is a Cauchy sequence $t : \tometa {\R_0}$ such that $\clim t = x$ and we may assume that $t$ saftisfies the condition $\tometa {\iscauchy_{5n_0}}$.
+
  Let us now ``concatenate'' the first $n_0$ elements of the sequence $c$ with $t$, that is, define
  \begin{align}
-  &g : \tometa{\N \to \Q} \\
+  &g : \tometa{\PN \to \Q} \\
   &g (n) = \begin{cases}
             c(n) & \text{if $n \leq n_0$} \\
             t(n-n_0) & \text{else}.
@@ -305,24 +250,25 @@ we can always find another point $x \in U$ such that $x = \clim e$
   \leq & \quad | c(n) - \clim c | + |\clim c - \clim t| + |\clim t - t(m - n_0)| \\
   \leq &  \quad  \frac{1}{5n}  + \frac{1}{2n_0} + \frac{1}{5n_0 \cdot (m-n_0)} \\
   \leq &  \quad  \frac{1}{5n}  + \frac{1}{2n} + \frac{1}{5n_0} \\
-  <  & \quad \frac 1 n.
+  <  & \quad \frac 1 n
  \end{align}
 
 From the continuity property of $f$ and the definition of
 $g$ we know that $\tometa f (g) = \tometa f(c)$. Clearly, $\clim g =
-\clim t = x \in I$. Therefore \emph{all}  $s \in \tometa {\R_0}$ with $\clim
+\clim t = x \in I$. 
+
+Therefore \emph{all} $s \in \tometa {\R_0}$ with $\clim
 s \in I$, we can use the "concatenation'' approach to find a $g$
 satisfies $s \, \tometa \sim \,  g$ (namely $\clim s = \clim g$), and by the condition that $f$ (and
 thereby $\tometa f$) repects $\sim$, we can conclude that $\tometa f
-(s) = \tometa f (g) = \tometa f(c)$.
- 
-%  It is easy to see that $g$ is a Cauchy sequence, i.e. $\tometa \iscauchy(g)$,\footnote{Of course, this is why we needed $\iscauchy_5$ instead of $\iscauchy$ earlier. The $5$ is somewhat arbitrary (todo: think about what is actually needed).} with $\clim g = x$. Further, the first $n_0$ elements of $g$ coincide with those of $c$, and thus, $\tometa f(g) = \tometa f(c)$.
- 
-However, as we have seen, in \emph{every} neighborhood of $m$, and thus in particular in $(m - \frac 1 {2n_0} , m+ \frac 1 {2n_0})$, there is an $x$ such that $x = \clim e$ (for some $e$) with $\tometa f(e) \not= \tometa f(c)$, in contradiction to the just established statement.
+(s) = \tometa f (g) = \tometa f(c)$, thus $\clim U$ is a neighorhood of $m$.
+However, as we have seen, in \emph{every} neighborhood of $m$, and thus in particular in $(m - \frac 1 {2n_0} , m+ \frac 1 {2n_0})$, we can always find an $x$ such that $x = \clim e$ (for some $e$) with $\tometa f(e) \not= \tometa f(c)$ which contradicts to the just established statement.
 \end{proof}
 
-The proposition that "$\R_0 / \sim$ is connected'' implies the
-following corollary:
+
+%  It is easy to see that $g$ is a Cauchy sequence, i.e. $\tometa \iscauchy(g)$,\footnote{Of course, this is why we needed $\iscauchy_5$ instead of $\iscauchy$ earlier. The $5$ is somewhat arbitrary (todo: think about what is actually needed).} with $\clim g = x$. Further, the first $n_0$ elements of $g$ coincide with those of $c$, and thus, $\tometa f(g) = \tometa f(c)$.
+
+We can easily generate similar proofs by replacing $\bool$ by any discrete type, hence the proposition "$\R_0 / \sim$ is connected'' implies that:
 
 \begin{corollary}\label{dis:con}
 Any continous function from $\R_0$ to any discrete type that respects $\sim$ is constant.
@@ -331,12 +277,9 @@ Any continous function from $\R_0$ to any discrete type that respects $\sim$ is 
 
 
 \begin{theorem}
-Any continuous endofunction $f$ on $\R_0$ that respects $\sim$ which means
- \begin{equation}
-  p : \prd{c_1,c_2 : \R_0} c_1 \sim c_2 \to f(c_1) = f(c_2).
- \end{equation}
- is constant (in the sense of corollary \ref{dis:con}).
+Any continuous endofunction $f$ on $\R_0$ that respects $\sim$ is constant
 \end{theorem}
+
 \begin{proof}
 
 Assume we have $f,p$ as required. 
@@ -355,8 +298,6 @@ $h_n : \tometa {\R_0} \to \tometa \Q$ as
 
 By corollary \ref{dis:con} we know that $h_n$ is constant, hence $f$
 is constant everywhere, it is enough to show that $f$ is constant.
-
-
 % By Proposition \ref{prop:main} we know it is a constant function and
 % we can observe that $h (\mathsf 0) = true$, can we infer that $\forall
 % c : \tometa {\R_0}, \tometa f c = \tometa f (\mathsf 0)$
@@ -376,105 +317,144 @@ is constant everywhere, it is enough to show that $f$ is constant.
 
 \begin{corollary}
  There is no definable normalisation function on $\R_0$ in the sense
- of \ref{def:nor}
-\end{corollary}
-
-\begin{corollary}
- $\R_0 / \sim$ is not definable in the sense of \cite{aan}.
+ of \ref{def:nor}, namely $\R_0 / \sim$ is not definable via normalisation.
 \end{corollary}
 
 
-However, it doesn't imply that we cannot define the set of real numbers in minimalisitic type theory with $\Pi, \Sigma, \mathsf{W}, =,
-\N$. The meaning of definability of real numbers is still not clear enough. To make it more precise, we define
-it as whether there is a type $A$ in $\mathsf{TT}$ (minimalisitic type
+
+
+\section{Definability in general}
+
+
+Even though we have proved that $\qset{\R_0}$ is not definable via normalisation, it does not imply that we cannot define the set of real numbers in minimalisitic type theory with $\Pi, \Sigma, \mathsf{W}, =,
+\N$. 
+
+The meaning of definability is not clear enough for real numbers. To make it more precise, we define
+it as whether there is a type $Q$ in $\mathsf{TT}$ (minimalisitic type
 theory) such that its embedding $\tometa A$ in $\mathsf{TT} + \mathsf{Q}$ (type theory
-extended with quotient types) is isomorphic to $\tometa \R_0
-/ \tometa \sim$ (where it is a valid type). We conjecture that it is still not
+extended with quotient types) is isomorphic to $\qset{A}$ (where it is a valid type). 
+
+
+
+We can easily prove that a definable quotient $(Q, [\_], emb)$ is isomorphic to $\qset{A}$ whose term is written as $[ a ]_{~}$ and a lifted function is written as $\hat{f}$.
+
+\begin{proof}
+We can establish the isomorphism with
+
+$\Phi ~q =  [ \emb ~q ]_{\sim}$ and 
+
+$\Psi ~ = \widehat{[\_]}$
+
+To verfify it $\Psi \circ \Phi = \text{id}_{Q}$ is given by
+
+$\widehat{[  [ \emb ~q ]_{\sim} ]} = [\emb ~ q] = q$
+
+and $\Phi \circ \Psi = \text{id}_{\qset{A}}$ namely,
+
+$[\emb~\widehat{[s]}]_{\sim} = s$
+
+can be proved using quotient induction principle and $Q-\textbf{Ax}$,
+
+$[\emb~\widehat{[ [a]_{~} ]}]_{\sim} = [\emb~[a]]_{\sim} = [a]_{\sim}$
+
+\end{proof}
+
+
+For $\tometa {\R_0}/ \tometa \sim$, we conjecture that it is still not
 definable.
 
 \begin{proof}
 Assume the set of real numbers is definable, we have a type $A$ and
-its embedding in $\mathsf{TT} + \mathsf{Q}$  is $\tometa A$. It also
-gives us a normalisation function and a representative function
-between $\tometa \R_0$ and $\tometa A$.
+its embedding in $\mathsf{TT} + \mathsf{Q}$  is $\tometa A \simeq \tometa {\R_0}/ \tometa \sim$. The isomorphism gives us a "normalisation" function $f : $ and a representative function
+between $\tometa {\R_0}$ and $\tometa A$.
 \end{proof}
 
-\begin{proposition}
-It is not true that given type $T$, if $T$ is connected then $T$ is contractible.
-\end{proposition}
-\begin{proof}
-As we have seen $ \R_0 / \sim$ is connected. However, it is not
-contractible.
-Assume it is contractible then there exists $x : \R_0 / \sim$, for
-all $y : \R_0 / \sim$, we know $x = y$. Given two uniform sequences
-$\bar{0} , \bar{1} : \R_0 / \sim$, we have $\bar{0}  = x = \bar{1}$
-which negates $\bar{0} \ne \bar{1}$.
-\end{proof}
-
-\subsection{Cauchy completeness of the Cauchy reals}
 
 
-Is our definition of cauchy reals $\R_0$ Cauchy complete? In other
+
+
+
+
+\begin{remark}[\textbf{$\R_0$ is not Cauchy complete}]
+
+Is our definition $\R_0$ Cauchy complete? In other
 words, is there a representative Cauchy sequence as a limit for every
-equivalence class? The answer is no.
+equivalence class (i.e.\ real number)? The answer is no. 
 
-In classical logic, the real number is defined to be the limits. The
+Recall that if for every Cauchy sequence of \textbf{real} numbers there is a real number as its limit, then we say it is Cauchy complete.
+
+In classic logic, the Cauchy reals are Cauchy complete because the
 limit can be built via a kind of diagonalization
-\cite{DBLP:journals/entcs/Lubarsky07}.
-While in a constructive setting like type theory here, it fails since
-we cannot find a canonical representative for each equivalence
+\cite{DBLP:journals/entcs/Lubarsky07}. Also classically Cauchy reals are equivalent to another definition called Dedekind Reals.
+However, in Intuitionistic Type Theory both of them fail.
+We cannot find a canonical representative for each equivalence
 class. Intuitively speaking it is easy to find a canonical choice for
 any rational number but it is impossible to find one for any
-irrational number. It has been proved by Robert S. Lubarsky in
-\cite{DBLP:journals/entcs/Lubarsky07}.
-
-Given the axiom of Countable Choice ($AC_{\omega}$), it is easy to see that we can
-find the limit for each equivalence class, namely the Cauchy reals 
-are Cauchy complete. However $AC_{\omega}$ is an classical result
+irrational number like $\pi$. It has been proved by Robert S. Lubarsky in
+\cite{DBLP:journals/entcs/Lubarsky07}. If we add the axiom of Countable Choice ($AC_{\omega}$) to Type Theory, Cauchy reals become Cauchy complete because it provides us a choice function for equivalence classes which helps us find a canonical choice. The $AC_{\omega}$ is an classical result
 which is stronger than the premise "in classical logic''.
 
-In the HoTT book \cite{hott}, an alternative definition is used
-instead which is called cauchy approximation. Because every
-approximation has been proven to have a limit, it is Cauchy complete.
-The definition uses the higher inductive types which will be discussed
-in chapter \ref{HITs}.
-
-\section{Multisets}
-
-In mathematics, a multiset (bag) can be seen as a generalised set which
-allows multiple occurence of same elements.
-
-\begin{definition}
-Multiset. 
-A multiset (or bag) is a set without the constraint that there is no repetitive elements.
-\end{definition}
-
-In programming languages, a multiset can be seen as an unordered
-list. Two lists are bag equivalent \cite{DBLP:conf/itp/Danielsson12} if they are equal up to
-reordering. For example, $[1, 2 , 2, 5 ,1]$ is equivalent to
-$[2,2,1,1,5]$ since we can find a bijjective mapping between them.
-A simple equivalence relation can be defined as follows:
-
-Given two length-$n$ lists (vector) of type $A$, $p \, q : \text{Vec} ~A~n$,
-they are equivalent if we have an bijection between them.
-
-$$ p \sim q = \Sigma ~\phi : \text{Fin}\,n \to \text{Fin}\,n, \phi~\text{is a
-bijection} \wedge \forall x, p_x = q_{\phi(x)}$$
-
-This equivalence can give rise to a quotient which is just finite
-multiset. It is also not definable as a split quotient if it has no well-ordering.
-
-In fact a multiset can be defined as a pair of a set $A$ and a
-occurences counting function $m : A \to \N$. However from a practical
-perspective, it is not useful because we cannot count the cardinality
-of the multiset because $A$ is not necessary to be enumerable. But the
-unoroder list represent is countable.
+In the HoTT book \cite{hott}, there is a higher inductive definition of Cauchy reals $\R_{C}$ using \textbf{Cauchy approximation}. Briefly speaking, it first embeds rational numbers, and then for each $s : \Q^{+} \to \R_{C}$ we have $lim(s) : R_{C}$ as a limit of Cauchy sequence of real numbers, hence it is Cauchy complete. Higher inductive type is a stronger notion than quotient type which allows us to define ``equaility'' of terms as constructors in inductive definitions, which will be discussed in \autoref{HITs}.
+\end{remark}
 
 
-\section{Partiality monad}
+\section{Other undefinable quotients}
 
-The partiality monad is a coninductive type which is available in the
-standard library of Agda. It is used to encode delayed computation.
+\subsection{Unordered pairs}
+
+In Set Theory, all sets are unordered, so unordered pairs are just sets of the form ${a, b}$ where $a$ is not equal to $b$.
+
+In Type Theory, given a set $A$, $(a, b) : A \times A$ is an ordered pair. Unordered pair can be generated from the setoid $(A \times A, \sim)$ where
+
+$$(a,b)\sim(b,a)$$
+
+and $\sim$ is reflexive.
+
+Intuitively, there is no canonical choice function unless the set $A$ is decidablely total ordered, hence the quotient $\qset{A \times A}$ is also undefinable via normalisation function.
+
+\subsection{Finite multisets}
+
+%\todo{decidable order -> of course definable, A-> N definable, give a  explicit proof}
+
+%\todo{definable -> split quotient because definable is too general}
+
+A multiset (bag) is a generalisation of set where multiple occurence is allowed.
+
+In Type Theory, given a set $A$, the finite multisets of elements in $A$ can be encoded as the setoid $(\text{List}~ A , \sim)$ where two lists are bag equivalent \cite{DBLP:conf/itp/Danielsson12} if they are equal up to reordering. For example, $[1, 2 , 2, 5 ,1]$ is equivalent to
+$[2,2,1,1,5]$ since we can find a bijective mapping between them. We can observe that two such lists are always have the same length so we use length-explicit lists (vectors) here.
+
+Given two lists of length $n$, $p ~ q : \text{Vec} ~A~n$,
+
+$$ p \sim q \defeq \exists ~\phi : \text{Fin}~n \to \text{Fin}~n, \text{Bijection}~ \phi~ \wedge \forall x : \text{Fin}~n, p_x = q_{\phi(x)}$$
+
+Finite multisets can be seen as unordered n-tuples which is a generalisation of unordered pairs. Therefore,
+the quotient $\qset{\text{List}~ A}$ (or more accurately $\text{Vec}~ A~n$) is also not definable via normalisaiton function if it has no decidable well-ordering.
+
+
+\subsection{Finite sets}
+
+Considering that the notion multiset is a generalisation of set, it is natural to define finite set by modifying the equivalence relation. Here the length of two equivalent lists is not necessarily equal.
+Given a set $A$ and two lists $l,m : \text{List}~ A$, $l$ is contained inside $m$ iff there is an injection from $l$ to $n$:
+
+
+$$l \subseteq m \defeq \exists ~\phi : \text{Fin}~(\text{length} ~ l) \to \text{Fin}~ (\text{length} ~ m), \forall n : \text{Fin}~(\text{length} ~ l), l_n = m_{\phi (n)}$$
+
+and two lists $l,m : \text{List}~ A$ are equivalent iff they cotained the same elements:
+
+$$l \sim m \defeq l \subseteq m \wedge m \subseteq l$$
+
+
+
+
+%In fact a multiset can be defined as a pair of a set $A$ and a occurences counting function $m : A \to \N$. However from a practical perspective, it is not useful because we cannot count the cardinality of the multiset because $A$ is not necessary to be enumerable. But the unoroder list represent is countable.
+
+
+\subsection{Partiality monad}
+
+
+Given a set $A$, the set of partial computations over $A$ is encoded by partiality monad $\AgdaDatatype{Delay} ~\AgdaBound{A}$ (or $A_{\bot}$) with a weak bisimilarity $\AgdaDatatype{\_≈\_}$ ignoring finite delays.
+
+The partiality monad is coninductively defined to encode delayed computation:
 
 \begin{code}
 \\
@@ -488,8 +468,7 @@ standard library of Agda. It is used to encode delayed computation.
 \\
 \end{code}
 
-A non-terminating program can be defined in a coinductive way.
-
+We can postpone computations forever by using the constructor $\AgdaInductiveConstructor{later}$:
 \begin{code}
 \\
 \>\AgdaFunction{never} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaDatatype{Delay} \AgdaBound{A}\<%
@@ -498,11 +477,11 @@ A non-terminating program can be defined in a coinductive way.
 \\
 \end{code}
 
-We have two equality for the Delay type: strong bisimilarity and weak
-bisimilarity. 
-Two computation are strongly bisimilar if they are the
+It is a non-terminating program.
+
+Two computations are strongly bisimilar if they are the
 same after the same number of steps delay (there can be infinite
-steps).
+steps):
 
 \begin{code}
 \\
@@ -518,8 +497,26 @@ steps).
 \\
 \end{code}
 
-We inductively define an operator which states that "x terminates with
-y" if we write $\AgdaBound{x}\AgdaSymbol{))} \AgdaDatatype{↓} \AgdaBound{y}$.
+If we ignore the number of steps a computation is postponed, we can define a weaker bisimilarity. 
+Two computation are weakly bisimilar if they terminates with the
+same value:
+
+\begin{code}
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{\_≈\_} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{:} \AgdaDatatype{Delay} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Delay} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaInductiveConstructor{now} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{x} \AgdaDatatype{↓} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{y} \AgdaDatatype{↓} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{x} \AgdaDatatype{≈} \AgdaBound{y}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaInductiveConstructor{later} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{x∼y} \AgdaSymbol{:} \AgdaDatatype{∞} \AgdaSymbol{((}\AgdaFunction{♭} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≈} \AgdaSymbol{(}\AgdaFunction{♭} \AgdaBound{y}\AgdaSymbol{)))} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaInductiveConstructor{later} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≈} \AgdaSymbol{(}\AgdaInductiveConstructor{later} \AgdaBound{y}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+
+where  $\AgdaBound{x} \AgdaDatatype{↓} \AgdaBound{y}$ means "x terminates with y":
 
 \begin{code}
 \\
@@ -538,54 +535,101 @@ y" if we write $\AgdaBound{x}\AgdaSymbol{))} \AgdaDatatype{↓} \AgdaBound{y}$.
 \\
 \end{code}
 
-And two computation are weakly bisimilar if they terminates with the
-same value.
-
-\begin{code}
-\\
-\>\AgdaKeyword{data} \AgdaDatatype{\_≈\_} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{:} \AgdaDatatype{Delay} \AgdaBound{A} \AgdaSymbol{→} \AgdaDatatype{Delay} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
-\\
-\>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaInductiveConstructor{now} \<[11]%
-\>[11]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{x} \AgdaDatatype{↓} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{y} \AgdaDatatype{↓} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{x} \AgdaDatatype{≈} \AgdaBound{y}\<%
-\\
-\>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaInductiveConstructor{later} \<[11]%
-\>[11]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{x∼y} \AgdaSymbol{:} \AgdaDatatype{∞} \AgdaSymbol{((}\AgdaFunction{♭} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≈} \AgdaSymbol{(}\AgdaFunction{♭} \AgdaBound{y}\AgdaSymbol{)))} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaInductiveConstructor{later} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≈} \AgdaSymbol{(}\AgdaInductiveConstructor{later} \AgdaBound{y}\AgdaSymbol{)}\<%
-\\
-\end{code}
-
-
-The quotient derived from the equivalent relation (weak bisimilarity) which represent
-the set of all computations can also be a good
-example of undefinable quotient.
-
 It is equivalent to another definition inductively on either left side
 or right side.
 
 
-\section{Not all connected type is contractible}
+Given the paritial monad and the weak bisimilarity, we obtain a quotient set representing
+the set of all computations which is also undefinable.
 
-Martin's example is that we can define a type which is proved
-different but we cannot find a function from it to \emph{2}.
+\begin{proof}
+Because there can be infinitely many  $\AgdaInductiveConstructor{later}$, we can not decide wehther an element $a : A_{\bot}$ is equal to $\AgdaFunction{never}$ or not.
 
-\todo{Martin Escardo's
-  \url{http://www.cs.bham.ac.uk/~mhe/agda/FailureOfTotalSeparatedness.html}
-should be considered and discussed here, couterexample of Connected ->
-contractible(?)}
+We can treat an element of $a : A_{\bot}$ as a sequence, for instance, set $a = \mathsf{later} ~ (\mathsf{later} ~ (\mathsf{now}~a))$, $a(1) =  \mathsf{later}$, $a(2) =  \mathsf{later}$, and $a(3) =  \mathsf{now}~a$. Then A standard metric space for $A_{\bot}$ can be given by
 
-conjecture: every quotient definable in pure type theory without
-quotient is split
+\begin{equation}
+g(a_1,a_2) = 2^{-\mathsf{inf}\{k \in \N \; | a_1(k) \not= a_2(k)\}}
+\end{equation}
 
-one way to prove it is any connected type is contractible.
+Similar to the proof in \ref{realconnnected}, we are going to prove $A_{\bot}/\approx$ is connected, i.e.\ any definable (continous) function $f : A_{\bot} \to \bool$ which respects $\approx$ is constant.
 
-the question is still open.
+Thus we $f$ is non-costant, there are $a_1 , a_2 : A_{\bot}$ with $f(a_1) \not= f(a_2)$.
+
+Assume $f(\mathsf{never}) = 1$, since $f$ is continous, there exists $n_0 : \N$ such that for all $a : A_{\bot}$, if there are at least $n_0$ $\mathsf{laters}$ in $a$ (the first $n_0$ elements of sequence of $a$ coincide with those of $\mathsf{never}$), then $f(a) = f(\mathsf{never}) = 1$.
+
+Because $f(a_1) \not= f(a_2)$, one of them must have $k < n_0$ $\mathsf{laters}$, assume it is $a_1$ and thus $f(a_1) = 0$. By adding $n_0 - k$  $\mathsf{laters}$, we obtain $a_{1}'$ such that $f(a_{1}') = f(a_1) = 0$ because $f$ respects $\approx$. However, $a_{1}'$ has $n_0$ $\mathsf{laters}$ such that $f(a_{1}') = f(\mathsf{never}) = 1$, contradicts to the just established statement.
+\end{proof}
 
 
-This will implies that reals are not only non-split but also
-undefianble in general.
+To summarize, for a possibly infinite sequences like Cauchy sequence or $A_0$, we have a property called local continuity.
+
+\begin{definition}
+\textbf{Local continuity}. given type $A$, Local continuity for type $\N \to A$ is the property that 
+
+Given a discrete metric space $(B, g)$,
+
+a definable function $f : (\N \to A) \to B$,
+
+a sequence $s : \N \to A$,
+
+there exists $n_0 : \N$ such that
+
+for all sequences $t : \N \to A$ sastifying that $\forall i < n_0, s_i = t_i$,
+
+we have that $f~s = f~t$
+
+\end{definition}
+
+And from the property that $f$ respects some equivalence relation, we can obtain a contradiction if $f$ is non-constant, which implies that there is no normalisation function for the setoid consisting of these kinds of sequences with given equivalence relations.
 
 
-1. why quotients simplifies reasoning. (writened up)
-2. Undefinablity
-3. omega-groupoids model
+
+\begin{remark}
+Our proof in \cite{aan} is wrong pointed out by Martin Escardo. He show an counterexample to prove that there can be no definable function into $\bool$ for two distinguishable terms \footnote{Agda proof can be found in online \cite{martinsproof}}.
+
+$\N_\infty : \Set$ is a decreasing sequence of $\bool$ which is called generic convergent sequence, where $11000\ldots$ represents $2$ and the sequence of $1$, namely $1111\ldots$ is $\infty$, thus it can be seen as $\N + \infty$. For simplicity, we write $s_k$ for the sequence whose first $k$ digits are $1$ and the rest digits are $0$.
+
+From continuity, we know that:
+
+given any definable function $f : \N_\infty \to \bool$, there exists $n : \N$ such that for all $s_k : \N_\infty$ ($k \geq n$) whose first $n$ digits coincide with $\infty$,  $f(s_k) = f(\infty)$.
+
+Set 
+$X \defeq \Sigma u : \N_\infty, u = \infty \to \bool$,
+
+$s^0_k \defeq (s_k, \lambda r \to 0)$ and 
+
+$s^1_k \defeq (s_k, \lambda r \to 1)$,
+
+there are two separable terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
+
+such that for all definable function $f : X \to \bool$, $f(\infty_0) = f(\infty_1)$.
+
+To prove it, assume $f(\infty_0) \not= f(\infty_1)$.
+We can prove that for all $k : N$ ($s_k \not= \infty$), $f(s^0_k) = f(s^1_k)$ because the second part is always the same due to the fact that $s_k \not= \infty$. From continuity, we can deduce that $f(\infty_0) =f(s^0_k) = f(s^1_k) = f(\infty_1)$, which contradicts to the premise.
+\end{remark}
+
+%conjecture: every quotient definable in pure type theory without quotient is split
+
+%one way to prove it is any connected type is contractible.
+
+%the question is still open.
+
+
+%This will implies that reals are not only non-split but also undefianble in general.
+
+
+
+\todo{This can be removed, may be not very important here}
+
+\begin{proposition}
+It is not true that given type $T$, if $T$ is connected then $T$ is contractible.
+\end{proposition}
+\begin{proof}
+As we have seen $ \R_0 / \sim$ is connected. However, it is not
+contractible.
+Assume it is contractible then there exists $x : \R_0 / \sim$, for
+all $y : \R_0 / \sim$, we know $x = y$. Given two uniform sequences
+$\bar{0} , \bar{1} : \R_0 / \sim$, we have $\bar{0}  = x = \bar{1}$
+which negates $\bar{0} \ne \bar{1}$.
+\end{proof}
+

@@ -68,7 +68,6 @@ Refl : {Γ : Con}(A : Ty Γ) → Tm (PropRel A) → Ty Γ
 Refl A rel = ?
 -}
 
-
 module Q (Γ : Con)(A : Ty Γ)(R : Tm (PropRel A)) where
   ⟦Q⟧ : Ty Γ
   ⟦Q⟧ = record 
@@ -81,7 +80,7 @@ module Q (Γ : Con)(A : Ty Γ)(R : Tm (PropRel A)) where
          ; trans = {!!} -- [ _ ]trans
          }
     ; substT = [ A ]subst
-    ; subst* = λ p x₁ → {![ A ]subst* p !}
+    ; subst* = λ p → {![ A ]subst* p !}
     ; refl* = {!!}
     ; trans* = {!!}
     }

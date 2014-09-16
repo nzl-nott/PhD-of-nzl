@@ -1,12 +1,12 @@
-\chapter{Introduction to Type Theory}
+\chapter{Type Theory}
 \label{bg}
 
-Type theory is usually used to refer to a formal systems in which every term always has its type. It is initially invented as a foundation of mathematics as an alternative to set theory, and later works well in computer science as programming languages which we can write certified programs with type system. There are a variety of type theories, like Russell's theory of types, simply typed calculus, Gödel's System T \cite{gdl:1931} etc. In this paper we mainly focus on Per Martin-L\"{o}f's intuitionistic type theory (N.B.\ we will use "Type Theory'' specially for it if not ambiguous). There are also different versions of \mltt and the intentional version (\itt for short) has better computational behavior and widely used in programming languages like Agda, Epigram etc. However several desirable extensional concepts such as functional extensionality and quotient types are not available in \itt. Many researches have been done to extend type theory with these concepts and new interpretations of type theory are popular and reasonable solutions. \hott is one of them and is also an variant of \mltt and connected with homotopy theory. 
+Type theory is usually used to refer to a formal systems in which every term always has its type. It was initially invented as a foundation of mathematics as an alternative to set theory, and later works well in computer science as programming languages which we can write certified programs with type system. There are a variety of type theories, like Russell's theory of types, simply typed calculus, Gödel's System T \cite{gdl:1931} etc. In this thesis we mainly focus on Per Martin-L\"{o}f's intuitionistic type theory (N.B.\ we will use "Type Theory'' specially for it if not ambiguous). There are also different versions of \mltt and the intentional version (\itt for short) has better computational behavior and widely used in programming languages like Agda, Epigram etc. However several desirable extensional concepts such as functional extensionality and quotient types are not available in \itt. Much research has been done to extend type theory with these concepts and new interpretations of type theory are popular and reasonable solutions. \hott is one of them and is also an variant of \mltt and connected with homotopy theory. 
 
 In this chapter we will first briefly introduce the original motivation and evolution of type theory. Then we mainly explain important notions in \mltt, and a list of extensional concepts will be presented. Finnally we will also introduce the main programming language Agda which is implementation of intensional version of \mltt.
 
 
-\section{A brief history of type theory}
+\section{A brief history of Type Theory}
 
 Type theory was firstly introduced as an refinement of set theory. 
 In the 1870s, George Cantor and Richard Dedekind founded set theory as a branch of mathematical logic and started to use set theory as a language to describe definitions of various mathematical objects.
@@ -110,8 +110,7 @@ Type are treated as spaces or higher groupoids, and terms are points of this spa
 The new interpretation clarifies the nature of equality in Type Theory.
 The central idea of \hott is \text{univalence} which can be understood as isomorphic types are equal.
 In regular Mathematics we usually do abstract reasoning on structures which applied to all isomorphic structures, because they can not be distinguished by other objects, hence isomorphic structures can be identitfied, Univalence can be seen as a formal acceptance of this idea in Type Theory. 
-The univalence enables us to do abstract reasoning about types, and many extensional concepts arise automatically from it. It also helps mathematicians to reason about homotopy theory in programming languages. 
-I will give a more detailed introduction to \hott in \autoref{HITs}.
+The univalence enables us to do abstract reasoning about types, and many extensional concepts arise automatically from it. It also helps mathematicians to reason about homotopy theory in programming languages.
 
 It is a crucial topic to build a model of dependent types theory where univalence has a computational interpretation so that the good computational properties of type theory is preserved \cite{bezem2013model}. There are different models based on simplicial sets, cubical sets and syntactic approach to define \wog in \itt which the author has done some work in this direction in chapter~\ref{wog}.
 
@@ -133,7 +132,7 @@ Following is a list of different versions of \mltt,
 
 
 
-\section{Formal System of Type Theory}
+\section{The Formal System of Type Theory}
 
 The formal type system of type theory is given by a list of judgments and a sequence of rules written as derivation of these judgments. Usually we have following judgments in this thesis:
 
@@ -161,6 +160,7 @@ First of all, a \textbf{context} is either empty (denoted as $()$) or extended b
 In practice, the empty context is usually left out, for example $\vdash \bot$.
 
 
+
 Rules for types are usually classified as formation rule, introduction rule, elimination rule, computation rule ($\beta$) or uniqueness rule ($\eta$). Here we will only show several fundamental types.
 
 The function type and product type are generalised as \textbf{$\Pi$-types} (dependent function type) and \textbf{$\Sigma$-types} (dependent product type).
@@ -181,7 +181,7 @@ $$(\lambda (x:A).b)(a) \equiv b[a/x]$$
 \columnbreak
 
 uniqueness rule ($\eta$)
-$$f \equiv \lambda x. f(x) $$
+$$f \equiv \lambda x. f(x) $$
 \end{multicols}
 
 In the expressions like $\lambda (x:A).b$, it binds free occurrences of $x$ in $b$.
@@ -228,7 +228,7 @@ Its computation rule is,
 $$J(t,a,a,r(a)) = t$$
 
 
-There is another eliminator K which is not accepted in general because it relies on the uniqueness of identity proof.
+There is another eliminator $K$ which is not accepted in general because it relies on the uniqueness of identity proof.
 
 \infrule[Id-K]{\Gamma \vdash a : A \andalso \Gamma, p : \text{Id}_{A}(a,a) \vdash C(a) \andalso \Gamma \vdash t : C(a)}{\Gamma, q: \text{Id}_A(a,a)	\vdash K(q)}
 
@@ -277,6 +277,26 @@ There is no term for empty type so there is no introudction rule.
 The notation of $\hat{A}$ indicates that it is a code for a type rather than a type.
 
 
+\textbf{Inductive types}
+
+Some systems of Type Theory provide an inductive way to define types.
+
+\begin{definition}\label{df:inductivetypes}
+\textbf{Inductive types}.
+
+Inductive types is a self-referential schema to define new types by specifying a collection of \emph{constructors} which can be constants and functions.
+\end{definition}
+
+The formation and introduction rules of a type is enough to build a type inductively. Examples like
+natural numbers can be defined as follows:
+
+\begin{itemize}
+\item $0 : \N$
+\item $\text{suc} : \N \rightarrow \N$
+\end{itemize}
+
+The terms are freely generated by a finite list of constructors, for instance, $\text{suc} (\text{suc} 0)$ is $2$. They are similar to data structures in programming languages, so most systems of Type Theory used as programming languages have inductive types along with structural recursion to eliminate or use them.
+
 \section{An implementation of \mltt: Agda}
 
 Agda is a dependently typed functional programming language which is designed based on intensional version
@@ -299,7 +319,6 @@ In Haskell and other Hindley-Milner style languages, types and values are clearl
 Some features of being a functional programming language features makes theorem proving easier,
 
 \begin{itemize}
-
 \item \textit{Pattern matching}. The mechanism for dependently typed pattern matching is very powerful \cite{alti:pisigma-new}. Pattern matching is a more intuitive way to use terms compared to the eliminators. For example, by pattern matching on a term of identity type, the two sides on the equation automatically becomes the same in the context so that we can simply prove the symmetry of identity as,
 
 \begin{code}
@@ -309,6 +328,7 @@ Some features of being a functional programming language features makes theorem 
 \>\AgdaFunction{symm} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
 \\
 \end{code}
+
 compared to the case of using eliminator J,
 
 \begin{code}\label{symmetry}
@@ -558,6 +578,222 @@ We would like to have these extensional principles in \itt so that we have more 
 
 %is worth more studying. It is more close to program construction and from a computer scientist's point of view, it is very natural to accept intuitionistic logic. 
 
+
+\section{Homotopy Type Theory}
+
+\hott is a new field developed between theoretical computer science
+and Mathematics.
+It arises from a new interpretation of intensional \mltt
+into homotopy theory where identity types are interpreted as paths in homotopy theory.
+It accepts Vladimir Voevodsky's \textbf{univalence axiom} which identifies isomorphic
+structures. The axiom implies many extensional concepts, for example functional extensionality and also quotient types. In fact it has a stronger notion which is \textbf{higher inductive types}.
+
+
+\subsection{Homotopic interpretation}
+
+Types are usually interpreted as sets in \mltt, but the identity type of types enforces a more sophisticated structure on types compared to the the one on sets due to the missing Axiom $\mathsf{K}$ for which asserts that all inhabitants equal to the only constructor $\mathsf{refl}$. 
+
+Inspired by the groupoid model of (intensional) Martin-Löf type theory due to Hofmann and Streicher, Awodey, Warren \cite{awodey-warren} and Voevodsky \cite{VV} develops \hott which is a homotopic interpretation of \mltt.
+
+In \hott, types are regarded as spaces (or higher groupoids) instead of sets, terms are "points" of types. A function $f : A \to B$ is a continous map between spaces $A$ and $B$.
+
+\begin{itemize}
+\item Types are interpreted as spaces. $a : A$ can be stated as $a$ is
+  a point of space $A$.
+\item Terms are continous functions, for example, $f : A \rightarrow B$ is a
+  continous function between spaces and it is equivalent to say $a$ is
+  a point of space or $a : 1 \rightarrow A$ is a continous function.
+\item Identity types are path spaces.
+\item Identity types of identity types are homotopies (if a path is considered as a continous function $p : [0,1] \rightarrow X$).
+\item There are also 3-homotopies and 4-homotopies and higher
+  levels which forms an infinite structure called \og (or $\infty$-groupoids) in higher category theories.
+\end{itemize}
+
+\begin{remark}
+It has to be emphasised that the notions like spaces are purely homotopically, in other words, there is no topological notions like open sets in \hott. Therefore it is more appropriate to interpret types as \og instead of spaces. 
+
+The notion of \og can be seen as a generalisation of groupoid which has infinite levels of "isomorphisms" corresponding to the infinite tower of iterated identity types, i.e.\ the identity type of identity type, the identity type of identity type of identity type ... 
+
+
+\begin{definition}
+\textbf{\ogs}.
+
+An $\omega$-groupoid is an $\omega$-category where all $k$-morphisms for all $k \in \N$ are equivalences. 
+\end{definition}
+
+\begin{definition}
+\textbf{Equivalence}.
+
+In higher category theory an equivalence is a morphism which is invertible up to all higher equivalences.
+\end{definition}
+
+
+The notion of equivalence can be seen as a refinement of isomorphism without UIP \cite{txa:csl}. 
+In the higher-categorical setting, equivalence can be thought of as arising from isomorphisms by systematically replacing equalities by higher cells.
+For example, an equivalence 
+between two objects $A$ and $B$ in a 2-category is a morphism $f : A \rightarrow B$ which has a
+corresponding inverse morphism $ g : B \rightarrow A$, but instead of the
+equalities $f ∘ g = 1_B$ and $g ∘ f = 1_A$ we have 2-cell isomorphisms $f ∘ g ≅ 1_B$ and $g ∘ f ≅ 1_A$. In an $\omega$-category, these later isomorphisms are equivalences again.
+These equivalence is weak in the sense that they hold up to all higher equivalences. 
+As all equivalences here are weak equivalences, from now on we say just equivalence.
+In fact the \og used to model the interated identity types is also weak, so precisely we should call them \wog.
+
+\end{remark}
+
+
+
+To distinguish these structured objects interpretation with usual set-like types, we also call them \textbf{homotopy types}. Although we interpret all types as \og, most types behaves internally like a $k$-groupoid, which is called trucation.
+
+\begin{definition}
+\textbf{Trucated $n$-groupoid.}
+An $n$-truncated \ogs is an $n$-groupoid.
+\end{definition}
+
+In \hott the notion of \textbf{homotopy $n$-types} are analogous to $n$-groupoids in higher category theory,
+A set can be seen as a discrete space which is $0$-groupoid. Thus a set is called homotopy $0$-type or h-set which is of \textbf{homotopy level} $2$. It is a fact that the identity type of an $n+1$-type is an $n$-type, for example, the identity type of a groupoid is a set. Following this relation, a $-1$-type is a proposition (mere proposition or h-proposition in \hott) and $-2$-type is a unit type or contractible type.
+
+\textbf{Univalence Axiom}
+
+Voevodsky recognised that the homotopic interpretation is \emph{univalent} which means isomorphic types are equal, which does not usually hold in \itt. 
+
+\begin{definition}
+\textbf{Univalence axiom}. for any two types $X$ and $Y$, the function 
+$$f : X = Y \to X \simeq Y$$ is an equivalence.
+\end{definition}
+
+It is one of the fundamental axioms of the \hott and is central to the Voevodsky's proposal of Univalent Foundation Project \cite{vv_uf}. 
+It can be viewed as a strong extensionality which does imply functional extensionality (a coq proof of this can be found in \cite{uafe}). 
+
+Since isomorphic types are cosidered the same, all constructions and proofs are automatically transported between them, and it actually makes reasoning abstract.
+
+
+\textbf{Higher inductive types}
+
+In \itt, types are treated as sets and we use \emph{inductive types} \ref{df:inductivetypes} to define sets which have only "points". However, in \hott, inductive types are not enough in expresiveness, because types have higher structures namely the interated identity types on each levels.
+A more general schema to define types including higher paths is required which is \textbf{higher inductive types}. 
+
+\begin{definition}
+\textbf{Higher inductive types} (HITs).
+Higher inductive types allow constructors for not only points of the type being defined, but also elements of its iterated identity types.
+\end{definition}
+
+It is also one of the fundamental axioms of \hott.
+One commonly used example is a circle
+$\base:\Sn^1$ (1-sphere) can be \emph{inductively} defined as:
+
+\begin{itemize}
+\item A point $\base:\Sn^1$, and
+\item A path $\lloop : {\id[\Sn^1]\base\base}$.
+\end{itemize}
+
+It is also essential to provide the elimination rule for the paths as well. Categorically speaking, it means the functions have to be functorial. For example, to define a function $f :\Sn^1 \rightarrow B$, assume $f(base)=b$, we have to map $\lloop$ to an identity path $l : b = b$, i.e.\ $ap_{f}(\lloop)=l$.
+
+
+For further explanation of \hott, a well-written text book elaborated by many brilliant mathematicians and computer scientists is available online \cite{hott}. 
+
+
+
+\subsection{Extensionality in \hott}
+
+In \hott, many extensional concepts are automatically derivable. As we have mentioned, functional extensionality is implied by univalence, propositional extensionality is just an instance of univalence, moreover quotient types are indeed a specific way of applying higher inductive types which are more powerful.
+
+In the usual \itt, types are sets so the quotient types are simply adding level-$1$ equivalence in the structure of given sets. 
+In this sense, each non-trivial morphism derived from an equivalence relation is the unique
+one. This looks like a setoid, but indeed there is no difference
+between sets and setoids categorically, because a skeleton of a setoid
+is just a discrete category which is equivalent to a set.
+
+
+Assume $A$ is a set (h-set) and $\_\sim\_ : A \to A \to \Prop$
+\footnote{$\Prop$ stands for mere propositions in \hott} is an
+equivalence relation. The quotient set $\qset{A}$
+can be defined as a higher inductive type:
+
+\begin{itemize}
+\item $[\_] : A \rightarrow \qset{A}$
+\item $eqv : (a,b : A) \rightarrow A \sim B \rightarrow  [a] = [b]$
+
+the resulting type is a set as well, so
+
+\item $isSet : (x,y:\qset{A}) \rightarrow (p_1,p_2 : x = y) \rightarrow p_1 = p_2$
+
+\end{itemize}
+
+
+Note that it is not a generic quotient construction of any types but specially for sets, so
+we also call it \textbf{set quotient} or QITs (Quotient inductive types). In fact, since types are essentially structured objects, it is possible to quotient any kinds of types with any kinds of equivalences which can be not propositional.
+ 
+\subsection{QITs v.s. Quotient types}
+
+We can prove that QITs are more powerful than quotient types using an
+example called unordered trees (rooted tree). An unordered tree is a tree connected to a multiset of rooted trees, hence there is no ordering on subtrees.
+
+Firsrtly we define ordered trees as:
+
+\begin{itemize}
+\item A leaf $l: \mathsf{Tree}$, or
+\item An ordered list of subtrees indexed by $\mathbb{N}$, $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
+\end{itemize}
+
+With the following equivalence relation:
+
+\begin{itemize}
+\item $l_{eq} : l \sim l$,
+\item $st_{eq} : (f , g : \N \to \mathsf{Tree}) \to f \sim_{p} g \to sp~f \sim sp~g$
+\end{itemize}
+
+where $f \sim_{p} g$ stands for $f$ is a permutation of $g$. The permutation can be defined using a bijective map $p : \N \to \N$ which relates equivalent subtrees recursively.
+
+%However, if we use quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, the resulting trees have unordered subtrees which are themselves ordered.
+
+However, the equivalence relation can be undecidable which means that if we use quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, it is impossible to lift constructor $\overline{st} : (\N \to \mathsf{Tree}) \to \mathsf{Tree}$. 
+We use a symbol $\mathsf{Tree}^{\sim}$ for unordered trees.
+
+For finitary branching trees like binary trees whose equivalence relation is decidable, $(\textbf{2} \rightarrow \mathsf{BTree}^{\sim}) \to \mathsf{BTree}^{\sim}$ is ismorphic to $\mathsf{BTree}^{\sim} \rightarrow \mathsf{BTree}^{\sim} \rightarrow \mathsf{BTree}^{\sim}$ the lifting of functions can be nested,
+
+$\overline{st}~a~b = \text{lift}~(\text{lift}~st~a)~b$
+
+Intuitively it is impossible to apply this approach to $\mathsf{Tree}$ because we cannot eliminate infinite number of $\mathsf{Tree^{\sim}}$.
+
+
+%$\overline{st} : (\mathbb{N} \rightarrow \mathsf{Tree^{\sim}}) \rightarrow \mathsf{Tree^{\sim}}$
+
+%such that for any $f : \mathbb{N} \rightarrow \mathsf{Tree}$
+
+%$\overline{st}~ ([\_] \circ f) = [ st~f ] $
+
+
+
+\todo{not so clear why}
+It means that we are unable to define unordered tree using
+quotient types because the constructors and equivalence have to be
+defined mutually.
+
+
+
+%To define a function on permutation trees, it is necessary to define them as
+
+%$f : Tree~A \rightarrow B$ which respects the equivalence relation $a~b : Tree~A, f ~a = f ~b$
+
+
+
+
+Higher inductive types, specially quotient inductive types, allow  us to define constructors of trees and paths simultaneously.
+
+\begin{itemize}
+\item $l: \mathsf{Tree}$, 
+\item $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
+  and
+\item a set of pathes relates two permutated trees:
+
+$l_{eq} : l  =_{\mathsf{Tree}} l $
+
+$st_{eq} : \forall (f, g : \N \to \mathsf{Tree}) \rightarrow
+f \sim_{p} g \rightarrow  st~f =_{\mathsf{Tree}} st~g$
+\end{itemize}
+
+
+%\subsection{Quotient inductive inductive types}
 
 
 \section{Summary}

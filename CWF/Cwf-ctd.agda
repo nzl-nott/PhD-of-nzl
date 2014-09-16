@@ -9,25 +9,18 @@ open import Data.Unit
 open import Function
 open import Data.Product
 
-import CwF-setoid
-
-open CwF-setoid ext
+open import CwF-setoid ext public
 
 
-import CategoryOfSetoid
-module cos' = CategoryOfSetoid ext
-open cos'
+-- open import CategoryOfSetoid ext
 
-import HProp
-module hp' = HProp ext
-open hp'
+-- open import HProp ext
 
 open import Data.Nat
 
 
 
 -- Relation
-
 
 Rel : {Γ : Con} → Ty Γ → Set₁
 Rel {Γ} A = Ty (Γ & A & A [ fst& {A = A} ]T)
@@ -81,7 +74,7 @@ module Natural (Γ : Con) where
     ; substT = λ _ → id
     ; subst* = λ _ → id
     ; refl* = λ x a → reflNat {a}
-    ; trans* = λ p q a → reflNat {a} 
+    ; trans* = λ a → reflNat {a} 
     }
 
   ⟦0⟧ : Tm ⟦Nat⟧
@@ -139,7 +132,7 @@ module Natural (Γ : Con) where
     ; substT = λ _ → id
     ; subst* = λ _ → id
     ; refl* = λ x a → reflU {a}
-    ; trans* = λ p q a → reflU {a}
+    ; trans* = λ a → reflU {a}
     }
 
   elfm : Σ ∣ Γ ∣ (λ x → ⟦U⟧⁰) → HSetoid
@@ -194,7 +187,7 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
                }
     ; subst* = λ _ _ → tt
     ; refl* = λ _ _ → tt
-    ; trans* = λ _ _ _ → tt 
+    ; trans* = λ _ → tt 
     }
 
 
@@ -216,11 +209,11 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
            { tm = λ {((((x , a) , b) , p) , PA) → [ B ]subst ([ Γ ]refl , [ [ A ]fm _ ]trans ([ A ]refl* _ _) p) PA }
            ; respt = λ {((((m , a) , b) , p) , PA) → 
              [ [ B ]fm _ ]trans 
-             ([ B ]trans* _ _ _) 
+             ([ B ]trans* _) 
               ([ [ B ]fm _ ]trans 
              [ B ]subst-pi 
              ([ [ B ]fm _ ]trans 
-             ([ [ B ]fm _ ]sym ([ B ]trans* _ _ _))
+             ([ [ B ]fm _ ]sym ([ B ]trans* _))
              ([ B ]subst* _ PA) )) }
            }
 

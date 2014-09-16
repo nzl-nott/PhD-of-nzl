@@ -18,13 +18,9 @@ open import Function
 open import Relation.Binary.Core using (_≡_; _≢_)
 open import Data.Unit
 
-import CategoryOfSetoid
-module cos = CategoryOfSetoid ext
-open cos
+open import CategoryOfSetoid ext public
 
-import HProp
-module hp = HProp ext
-open hp
+-- open import HProp ext
 
 open import CwF hiding (_⇉_)
 
@@ -61,8 +57,8 @@ record Ty (Γ : Con) : Set₁ where
              (a : ∣ fm x ∣) → 
              [ fm x ] substT [ Γ ]refl a ≈ a
     trans* : ∀{x y z : ∣ Γ ∣}
-             (p : [ Γ ] x ≈ y)
-             (q : [ Γ ] y ≈ z)
+             {p : [ Γ ] x ≈ y}
+             {q : [ Γ ] y ≈ z}
              (a : ∣ fm x ∣) → 
              [ fm z ] substT q (substT p a) ≈ substT ([ Γ ]trans p q) a
 
@@ -91,7 +87,7 @@ record Ty (Γ : Con) : Set₁ where
               {p : [ Γ ] x ≈ y}{q : [ Γ ] y ≈ x}
               {a : ∣ fm x ∣} → 
               [ fm x ] substT q (substT p a) ≈ a
-  trans-refl = [ fm _ ]trans (trans* _ _ _) subst-pi'
+  trans-refl = [ fm _ ]trans (trans* _) subst-pi'
 
 -- some more theorems
   
@@ -124,8 +120,7 @@ _[_]T {Γ} {Δ} A f
      ; substT = substT ∘ resp
      ; subst* = subst* ∘ resp
      ; refl*  = λ _ _ → subst-pi'
-     ; trans* = λ p q a → 
-                [ fm (fn _) ]trans (trans* _ _ _) subst-pi
+     ; trans* = λ _ → [ fm (fn _) ]trans (trans* _) subst-pi
      }
      where 
        open Ty A
@@ -190,7 +185,7 @@ _&_ : (Γ : Con) → Ty Γ → HSetoid
        ; sym   = λ {(p , q) → (sym p) , [ fm _ ]trans (subst* _ ([ fm _ ]sym q)) trans-refl }
        ; trans = λ {(p , q) (m , n) →
                     trans p m , 
-                    [ fm _ ]trans ([ fm _ ]trans ([ fm _ ]sym (trans* _ _ _)) (subst* _ q)) n }
+                    [ fm _ ]trans ([ fm _ ]trans ([ fm _ ]sym (trans* _)) (subst* _ q)) n }
        }
        where 
          open HSetoid Γ
@@ -274,11 +269,11 @@ f ^ A = record
                 let pre = [ B ]subst* r H in
                 
                 [ [ B ]fm (y , b) ]trans 
-                ([ B ]trans* _ _ _)                 
+                ([ B ]trans* _)                 
                 ([ [ B ]fm (y , b) ]trans 
                 [ B ]subst-pi 
                 ([ [ B ]fm (y , b) ]trans 
-                ([ [ B ]fm (y , b) ]sym ([ B ]trans* _ _ _)) 
+                ([ [ B ]fm (y , b) ]sym ([ B ]trans* _)) 
                 pre))  
                 )
  -- this is g-resp                    
@@ -287,12 +282,12 @@ f ^ A = record
 
   ; subst* = λ _ q _ → [ B ]subst* _ (q _)
   ; refl* = λ {x (f , rsp) a →  [ [ B ]fm _ ]trans [ B ]subst-pi (rsp ([ A ]subst ([ Γ ]sym [ Γ ]refl) a) a [ A ]subst-pi')  }
-  ; trans* = λ p q → λ {(f , rsp) a →
+  ; trans* = λ {(f , rsp) a →
              [ [ B ]fm _ ]trans 
              ([ [ B ]fm _ ]trans 
-             ([ B ]trans* _ _ _) 
-             ([ [ B ]fm _ ]sym ([ [ B ]fm _ ]trans ([ B ]trans* _ _ _) [ B ]subst-pi))) 
-             ([ B ]subst* _ (rsp _ _ ([ [ A ]fm _ ]trans ([ A ]trans* _ _ _) [ A ]subst-pi))) } 
+             ([ B ]trans* _) 
+             ([ [ B ]fm _ ]sym ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi))) 
+             ([ B ]subst* _ (rsp _ _ ([ [ A ]fm _ ]trans ([ A ]trans* _) [ A ]subst-pi))) } 
   }
 
 lam : {Γ : Con}{A : Ty Γ}{B : Ty (Γ & A)} → Tm B → Tm (Π A B)
@@ -309,11 +304,11 @@ app {Γ} {A} {B} (tm: tm resp: respt) =
                  [ [ B ]fm _ ]trans 
                  ([ B ]subst* (p , tr) ([ [ B ]fm _ ]sym [ B ]subst-pi')) 
                  ([ [ B ]fm _ ]trans
-                 ([ B ]trans* ([ Γ ]refl , [ A ]refl* _ _) _ _) 
+                 ([ B ]trans* {p = ([ Γ ]refl , [ A ]refl* _ _)} _)
                  ([ [ B ]fm _ ]trans 
                  [ B ]subst-pi 
                  ([ [ B ]fm _ ]trans 
-                 ([ [ B ]fm _ ]sym ([ B ]trans* _ (p , [ A ]trans-refl) _))
+                 ([ [ B ]fm _ ]sym ([ B ]trans* {q = (p , [ A ]trans-refl)} _))
                  ([ [ B ]fm _ ]trans 
                  ([ B ]subst-pi* (fresp _ _ ([ A ]subst-mir2 tr))) 
                  (respt p _))))) }
@@ -340,13 +335,48 @@ A ⇒ B = Π A (B [ fst& {A = A} ]T)
       ; trans   = λ f g a → [ Bx ]trans (f a) (g a)
       }
 
--- other types are in different files
-
 
 -- to do: verification
 
 -- verification of functor laws (do we have extensional equality for record types? or eta equality?)
 -- define equality with respect to propositions which are proof irrelevant
+
+
+
+
+---------------------------
+-- Σ types (object level)
+
+
+Σ'' : {Γ : Con}(A : Ty Γ)(B : Ty (Γ & A)) → Ty Γ
+Σ'' {Γ} A B = record 
+        { fm = λ x → let Ax = [ A ]fm x in
+               let Bx = λ a → [ B ]fm (x , a) in
+         record
+           { Carrier = Σ[ a ∶ ∣ Ax ∣ ] ∣ Bx a ∣
+           ; _≈h_    = λ{(a₁ , b₁) (a₂ , b₂) → 
+                             Σ'[ eq₁ ∶ [ Ax ] a₁ ≈h a₂ ] 
+                             [ Bx a₂ ] [ B ]subst ([ Γ ]refl , [ [ A ]fm x ]trans ([ A ]refl* x a₁) eq₁) b₁ ≈h b₂ }
+           ; refl    = λ {t} → [ [ A ]fm x ]refl , [ B ]subst-pi'
+           ; sym     = λ {(p , q) → ([ [ A ]fm x ]sym p) , [ B ]subst-mir1 ([ [ B ]fm (x , _) ]sym q) }
+           ; trans   = λ {(p , q) (r , s) → ([ [ A ]fm x ]trans p r) ,
+                       ([ [ B ]fm (x , _) ]trans ([ [ B ]fm (x , _) ]trans
+                                                    ([ [ B ]fm (x , _) ]trans [ B ]subst-pi
+                                                     ([ [ B ]fm (x , _) ]sym
+                                                      ([ B ]trans*
+                                                       {q = [ Γ ]refl , [ [ A ]fm x ]trans ([ A ]refl* x _) r} _)))
+                                                    ([ B ]subst-pi* q)) s)}
+
+           }
+        ; substT = λ x≈y → λ {(p , q) → ([ A ]subst x≈y p) , [ B ]subst (x≈y , [ [ A ]fm _ ]refl) q}
+        ; subst* = λ x≈y →  λ {(p , q)  → [ A ]subst* x≈y p , [ [ B ]fm _ ]trans ([ [ B ]fm _ ]trans ([ B ]trans* _) 
+                              ([ [ B ]fm _ ]trans [ B ]subst-pi ([ [ B ]fm _ ]sym ([ B ]trans* _)))) ([ B ]subst* (x≈y , [ [ A ]fm _ ]refl) q) }
+        ; refl* = λ x →  λ {(p , q) → ([ A ]refl* _ _) , ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi')}
+        ; trans* =  λ {(p , q)  → ([ A ]trans* _) , ([ [ B ]fm _ ]trans ([ B ]trans* _) ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi)) }
+        }
+
+
+
 
 {-
 module TypeTerm-Equality

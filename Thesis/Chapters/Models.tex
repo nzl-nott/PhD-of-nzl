@@ -1,0 +1,312 @@
+%\chapter{Homotopy Type Theory and higher inductive types}\label{HITs}
+
+
+\chapter{Models of Type Theory}\label{models}
+
+
+To introduce extensional concepts in \itt, one can simply postulate them as axioms but the good computational properties of Type Theory will be lost. Therefore it is crucial that these axioms have 
+a computational interpretation. One solution is to construct a model of theses axioms in \itt or in a constructive setting such that extensional concepts like functional extensionality, quotient types, univalence are automatically derivable. Types as usually interpreted as structured objects rather than sets, and the model is named after the structured objects, for example, setoid, groupoid, simplicial sets. 
+
+
+In this chapter, we discuss several models of extensional concepts, and mainly introduce Altenkirch's setoid model. We build a category with families of setoids to accommodate the types theory described in
+\cite{alti:lics99}  so that it is possible to define quotient types following Martin Hofmann's Paper \cite{hof:95:sm}. We also briefly introduce several models of \hott where quotient types are also available.
+
+\section{Setoid model}
+
+
+One of the intensional models of extensional concepts inside \itt is setoid model where types are interpreted as setoids. Martin Hofmann has studied this approach in \cite{hof:phd}, but a naive version of setoid model does not satisfy all definitional equalities. The version in \cite{DBLP:conf/tlca/Hofmann95} which is a model for quotient types does not allow large eliminations (defining a dependent type by recursion).
+
+Altenkirch then proposes \cite{alti:lics99} a different approach in which the setoid model serves as the metatheory.
+He uses an extension of \itt by a universe of propositions $\Prop$ as metatheory, and the $\eta$-rules for $\Pi$-types and $\Sigma$-types hold. 
+
+%In \cite{DBLP:conf/csl/Hofmann94}, Martin Hofmann first proposes a setoid model where types are interpreted as setoids, and the function are equivalence preserving. Cateogically, a setoid is a special groupoid where every isomorphism is unique, and then functions between two setoids are just functors.
+
+
+\infrule[proof-irr]{\Gamma \vdash P : \Prop \andalso \Gamma \vdash p,q : P}{\Gamma \vdash p \equiv q : P}
+
+
+
+ $\Prop$ only contains "propositional'' sets which has at most one
+inhabitant. Notice that it is not a definition of types, which means
+that we cannot conclude a type is of type \textbf{Prop} if we have a
+proof that all inhabitants of it are definitionally equal.
+
+The propositional universe is closed under $\Pi$-types and $\Sigma$-types:
+
+
+
+\infrule[$\Pi$-Prop]{\Gamma \vdash A : \Set \andalso \Gamma, x : A \vdash P : \Prop}
+{\Gamma \vdash \Pi~ (x : A) \to P : \Prop}
+
+
+
+\infrule[$\Sigma$-Prop]{\Gamma \vdash P : \Prop \andalso \Gamma,x : P \vdash Q : \Prop}
+{\Gamma \vdash \Sigma ~(x : P) ~ Q : \Prop}
+
+
+The metatheory is proved:
+
+\begin{itemize}
+\item Decidable. The definitional equality is decideable, hence type checking is decidable.
+
+\item Consistent. Not all types inhabited and not all well typed definitionality equality holds. 
+
+\item Adequate. All terms of type $\N$ are reducible to numerals.
+\end{itemize}
+
+
+And then Altenkirch constrct an intensional model within this metatheory which is decidable and adequate, functional extensionality is inhabited and it permits large elimination. 
+
+
+% Within this type theory, introduction of quotient types is straightforward. 
+%The set of functions are naturally quotient types, the hidden information is the definition of the functions and the equivalence relation is the functional extensionality.
+
+
+
+\begin{remark}[The setoid model is not LCCC]
+This model is different to a setoid model as an E-category, for instance
+the one introduced by Hofmann \cite{hofmann1995interpretation}. An E-category is a category equipped with
+an equivalence relation for homsets. To distinguish them, we call this
+category \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
+gives rise to types and they are cartesian closed, namely it is a a locally
+cartesian closed category (LCCC). However not all morphisms in our category of setoids give rise to types which means that it is not an LCCC. Every LCCC can serve as a model for categories with
+families but not every category with families has to be a LCCC. 
+
+This setoid model is the category of setoids \textbf{Std} which is a full subcategory of \textbf{Gpd} (the category of small groupoids). Every object of \textbf{Gpd} whose all homsets contain at most one morphism are in this subcategory. Altenkirch and Klaus \cite{Altenkirch12setoidsare} prove that both \textbf{Gpd} and \textbf{Std} are cartesian closed but not locally cartesian closed.
+\end{remark}
+
+
+\section{Category with families}
+
+
+The setoid model is defined as categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
+\cite{hof:97}. The object theory is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
+
+We implement categories with families in Agda, and the detailed code can be found in Appendix \ref{cwf}.
+
+We first define \textbf{hProp} which serves as the proof-irrelevant universe of propositions although it is not exactly the same as the $Prop$ universe which is judgemental. Any set behaves like a $Proposition$ belongs to $HProp$ but not $Prop$.
+
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{HProp} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{prf} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Uni} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{prf}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\<
+%
+\>\<\end{code}
+
+We also define basic propositions $\top$ and $\bot$ and the universal and existential quantifier, namely it is closed under $\Pi$-types and $\Sigma$-types. Notice that, the $\Pi$-closure requires functional extensionality which can be postulated since $\Pi$-closure is itself an axiom in this model.
+
+valent to the closure under $\Pi$-types.
+
+\begin{code}\>\<
+%
+\\
+\>\AgdaFunction{∀'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)(}\AgdaBound{P} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{hProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>\AgdaFunction{∀'} \AgdaBound{A} \AgdaBound{P} \AgdaSymbol{=} \AgdaInductiveConstructor{hp} \AgdaSymbol{((}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{P} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)))}\<%
+\\
+\>\<\end{code}
+
+Then setoids can be defined as follows considering \textbf{HProp}.
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{hSetoid} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{\_,\_,\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{infix} \AgdaNumber{4} \_≈h\_ \_≈\_\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Carrier} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{\_≈h\_} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaRecord{hProp}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{isEquiv} \AgdaSymbol{:} \AgdaRecord{ishEquivalence} \AgdaBound{\_≈h\_}\<%
+\\
+%
+\\
+%
+\\
+\>\<\end{code}
+
+
+As long as we define all ingredients, we can build the category of setoids of $\textbf{Std}$. However we still follow the Altenkirch's approach to define types and terms separately instead of a categorical presheaf construction.
+
+The main thing we have done is to define more types within this setoid model, including $\Pi$-types and $\Sigma$-types, equality types, universe, natural numbers and most importantly the quotient types.
+
+
+
+
+
+
+\section{Quotient types in setoid model}
+
+
+
+
+
+\section{Observational equality}
+
+%definitional distinct types
+
+Later in in \cite{alti:ott-conf}, Altenkirch and McBride further
+simplifies the setoid model by adopting McBride's heterogeneous
+approach to equality. They identifies values up to observation rather than
+  construction which is called observational equality. It is the
+  propositional equality induced by the Setoid model.  In general we have a heterogeneous equality which
+  compares terms of types which are different in construction. It only
+  make sense when we can prove the types are the same. It helps us
+  avoids the heavy use of $subst$ which makes formalisation and
+  reasoning involved. We could simplify the setoid model by adapting this
+  approach and the implementation could be easier.
+
+
+
+
+
+
+
+
+
+
+
+\section{Groupoid model}
+
+
+
+
+\section{Models of \hott}
+
+
+
+
+\cite{bezem2013model}
+
+\hott can be seen as Type Theory together with several axioms, like the univalence axiom and higher inductive types. We can postulate these axioms but then we can not keep the good computational properties. Therefore it is crucial that axioms have a computational interpretation. One solution is 
+
+
+
+
+
+
+
+
+
+There are some models of \hott currently being studied extensively.
+To interpret types as weak $\omega$-groupoids, one main problems is
+the complexity of the definition of weak $\omega$-groupoid. The
+coherence conditions are very difficult to specified.
+It is much simpler to interpret types as Kan simplicial sets.
+Voevodsky's univalent model\cite{klv:ssetmodel} is based on Kan simplicial sets. 
+ Streicher wrote a concise introduction to this model \cite{DBLP:dblp_journals/japll/Streicher14}. 
+
+
+
+\iffalse % comment out multiple line
+
+\begin{definition}
+A simplicial set $X$ is a functor from $\Delta^{op}$ to $\Set$ where
+$\Delta$ is the simplex category.
+\end{definition}
+
+$\Delta^{op}$ is a category whose objects are non-empty totally ordered
+finite sets. The morphisms are order-preserving functions. 
+Face maps and degeneracy maps are the most important morphisms in this
+category.
+
+A simplexes is a generalisation of a triangle to arbitrary
+dimensions. $3$-dimensional simplex is tetrahedron and $k+1$-simplex can
+be obtained by adding one point to $k$-simplex which does not lie in the
+dimension where the $k$-simplex is.
+
+A simplicial complex is a collection of simplexes. Topologically speaking, it
+is constructed by gluing n-dimensional simplexes together. 
+\todo{show an example graph}
+
+A simplicial set, therefore, can be illustrate by the same graph where
+the set of points is given by $X_0$, the set of lines is $X_1$ and so
+on. The graph looks very similar to n-groupoids. In fact simplical
+sets can interpret types in a similar way (?).
+
+\fi
+
+
+
+
+However the simplicial set model is not constructive as Coquand showed
+that it requires classical logic in an essential way \cite{TC:sset}.
+
+
+The distinction of semi-simplicial set is there is only face maps
+but no degeneracy maps. We can denote a semi-simplicial set as a
+functor $X : \Delta_{inj} \rightarrow |Set$. The morphisms in $\Delta_{inj}$ are not only order preserving
+but also injective.
+A “iterated dependency” approach is believed to solve the coherence
+issues.
+
+
+\subsection{semi-simplicial sets}
+
+\todo{cite https://uf-ias-2012.wikispaces.com/Semi-simplicial+types}
+
+
+%Klaus and me were trying to implement semi-simplical set in Agda. 
+
+
+\subsection{Cubical sets}
+
+Someone can deduce what is a cubical set from the name literaly. It is
+also a functor $S : \Box^{op} \rightarrow \Set$ (or a presheaf on the
+cube category $ \Box^{op}$).
+
+\section{Summary}
+
+In this chapter we introduce the basic notions in \hott, discuss the
+various implementations of \hott. In the next chapter we will focus on
+thesyntactic implementation of \wog following
+Brunerie's approach. We attempt to formalise the groupoid model of
+\hott in intensional type theory, specially in Agda.
+
+
+
+
+\section{Summary}
+
+
+
+
+% In \itt, the uniqueness of identity types is not
+% accepted in general, but derivable for types whose propositional
+% equality is decidable. The homotopy interpretation fits
+% nicely by provides higher levels structures which are weaker
+% equivalence relation (compared to strict equality) between identity types.
+
+
+However the implementation of \hott in \itt is still an open problem. We
+work on defining semi-simplicial types and \wog to solve this problem. There
+is also the very new model using cubical sets proposed by Bezem,
+Coquand and Huber in \cite{bezem2013model}.
+
+
+
+\hott does not only help us model type theory with a focus on the equality, but also provides mathematicians type theoretical tools to study homotopy theory.
+

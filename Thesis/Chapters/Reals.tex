@@ -9,10 +9,12 @@ To encode these types, quotient types are not necessary. However there are some 
 \section{Real numbers as Cauchy sequences}
 To construction real numbers in Type Theory, there are several different approaches, for example auchy sequences, Dedekind cut, decimal representation, etc. Here we use Cauchy construction of real numbers as in \cite{bis:85}:
 %In \cite{hott} it has been proved that Cauchy reals and Dedekind reals are equivalent if excluded middle or countable choice holds.
-
+\begin{definition}\label{R01}
 $$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon
   :\Q^{+}, \exists m:\N, \forall i:\N, i>m\to \vert  s_i -
-  s_m \vert  <\varepsilon}$$ \label{R01}
+  s_m \vert  <\varepsilon}$$
+\end{definition}
+
 
 This definition is equipped with a proof which can help us guess the real number if the existential quantifier is not truncated. However usually we would like the proof to be truncated so that the Cauchy sequences are proof-irrelevant. 
 
@@ -574,7 +576,7 @@ a sequence $s : \N \to A$,
 
 there exists $n_0 : \N$ such that
 
-for all sequences $t : \N \to A$ sastifying that $\forall i < n_0, s_i = t_i$,
+for all sequences $t : \N \to A$ satisfying that $\forall i < n_0, s_i = t_i$,
 
 we have that $f~s = f~t$
 
@@ -619,7 +621,10 @@ We can prove that for all $k : N$ ($s_k \not= \infty$), $f(s^0_k) = f(s^1_k)$ be
 
 
 
-\todo{This can be removed, may be not very important here}
+
+
+
+%This can be removed, may be not very important here
 
 \begin{proposition}
 It is not true that given type $T$, if $T$ is connected then $T$ is contractible.

@@ -9,24 +9,14 @@ open import Data.Unit
 open import Function
 open import Data.Product
 
+-- open import HProp ext
 
--- importing other CWF files
+-- open import CategoryOfSetoid ext
 
-import CwF-setoid
+-- open import CwF-setoid ext
 
-open CwF-setoid ext
 
-import CategoryOfSetoid
-module cos' = CategoryOfSetoid ext
-open cos'
-
-import HProp
-module hp' = HProp ext
-open hp'
-
-import CwF-ctd
-module cc = CwF-ctd ext
-open cc
+open import CwF-ctd ext
 
 -- propositional univalence
 
@@ -41,7 +31,7 @@ Pu = record
 
 
 ⟦Prop⟧ : Ty ●
-⟦Prop⟧ = record { fm = λ x → Pu; substT = λ x' x0 → x0; subst* = λ p x' → x'; refl* = λ x a → id , id; trans* = λ p q a → id , id }
+⟦Prop⟧ = record { fm = λ x → Pu; substT = λ x' x0 → x0; subst* = λ p x' → x'; refl* = λ x a → id , id; trans* = λ _ → id , id }
 
 ⟦Prf⟧ : Ty (● & ⟦Prop⟧)
 ⟦Prf⟧ = record { fm = λ {(_ , p) → 
@@ -52,7 +42,7 @@ Pu = record
                  ; sym     = id
                  ; trans   = λ x' x0 → x'
                  } }
-               ; substT = λ x' x0 → x0; subst* = λ p x' → x'; refl* = λ x a → a; trans* = λ p q a → a }
+               ; substT = λ x' x0 → x0; subst* = λ p x' → x'; refl* = λ x a → a; trans* = λ a → a }
 
 -- several isomorphisms
 
@@ -61,30 +51,41 @@ isoPi1 (tm: tm resp: respt) = tm: (λ x → (λ a → tm (x , a)) , (λ a b p �
 
 
 
--- Do I need to define equivalence relation or follow the way on the paper by Martin Hoffmann ?
-
-Equiv : {Γ : Con}(A : Ty Γ) → Ty Γ
-Equiv A = Π A (Π (A [ fst& {A = A} ]T) (⟦Prop⟧ [ (fn: (λ x → tt) resp: (λ x' → tt)) ]T))
-
-module Q (Γ : Con)(A : Ty Γ)(R : Tm (Equiv A)) where
+PropRel : {Γ : Con}(A : Ty Γ) → Ty Γ
+PropRel A = Π A (Π (A [ fst& {A = A} ]T) (⟦Prop⟧ [ (fn: (λ x → tt) resp: (λ x' → tt)) ]T))
 
 {-
+Refl : {Γ : Con}(A : Ty Γ) → Tm (PropRel A) → Ty Γ
+Refl A rel = ?
+
+Equiv :  {Γ : Con}(A : Ty Γ) → Ty Γ
+Equiv A = Σ'' (PropRel A)  {!!}
+-}          
+
+{-
+stack overflow
+Refl : {Γ : Con}(A : Ty Γ) → Tm (PropRel A) → Ty Γ
+Refl A rel = ?
+-}
+
+
+module Q (Γ : Con)(A : Ty Γ)(R : Tm (PropRel A)) where
   ⟦Q⟧ : Ty Γ
   ⟦Q⟧ = record 
-    { fm = λ γ → record
+    { fm = λ γ →
+         record
          { Carrier = ∣ [ A ]fm γ ∣
-         ; _≈h_ = λ x x' → proj₁ (proj₁ ([ R ]tm γ) x) x'
-         ; refl = [ _ ]refl
-         ; sym = [ _ ]sym
-         ; trans = [ _ ]trans
+         ; _≈h_ = λ m n → proj₁ (proj₁ ([ R ]tm γ) m) n
+         ; refl = λ {x} → {!!} -- [ _ ]refl
+         ; sym = {!!} -- [ _ ]sym
+         ; trans = {!!} -- [ _ ]trans
          }
-    ; substT = {!!}
-    ; subst* = {!!}
+    ; substT = [ A ]subst
+    ; subst* = λ p x₁ → {![ A ]subst* p !}
     ; refl* = {!!}
     ; trans* = {!!}
     }
 
--}
 
 
 -- The mechanism used in Martin Hofmann's Paper
@@ -114,7 +115,7 @@ Id A
                      r)}
        ; subst* = λ p x₁ → tt
        ; refl* = λ x a → tt
-       ; trans* = λ p q a → tt }
+       ; trans* = λ _ → tt }
 
 
 -- Is it correct to write  Tm A → Tm B for dependent types?

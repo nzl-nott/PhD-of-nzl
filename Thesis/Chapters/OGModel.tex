@@ -7,6 +7,45 @@
 %why do we need to use omega groupoid
 
 
+
+From the interpretation, it is natural to define the types as some
+generalisation of setoids or groupoids.
+
+It is all about adding more structures on types. 
+
+A setoid is a set with
+an equivalence relation. Categorically, terms are objects and in setoid models, there is at most one morphism
+between terms which stands for the equivalence relation.
+The reflexivity is the identity morphism, the symmetry provides an
+inverse of each morphism and the transitivity is just the composition
+of morphism. One important deduction is that for any $p : a \sim b, p
+\dot p^{-1} = id$. However it is not true for groupoid models.
+
+In groupoid models, Instead of the definitional equality $p : a \sim
+b, p . p^{-1} = id$, we have a 2-dimensional isomorphism $G3 : p . p^{-1}
+\sim id$ (It is one of the groupoid laws \cite{MR1686862}) which
+stands for the propositional equality.
+Setoids are just a special cases of groupoids. The morphism is not
+unique in each homset, i.e. the identity types are
+non-trivial.
+
+The second level is non-trivial in a groupoid, what if the third level
+and higher levels are non-trivial? It we turn the equalities, namely
+groupoid laws of each level, into explicit morphisms (which are called
+equivalence), we get \og.
+
+By building the infinite tower of identity types, every type has a \wog \cite{van2011types}.
+Similar to the interpretation of types as setoids, \wog is more
+general choice. It has more expressive power than setoid models.
+
+
+
+
+
+
+
+
+
 \todo{define strict equality and weak....}
 
 It is possible to

@@ -8,6 +8,8 @@
 
 \PassOptionsToPackage{utf8x}{inputenc}
 
+%\DeclareUnicodeCharacter{00A0}{ }
+
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
 
@@ -23,11 +25,18 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{autofe} % font for code environment
+\usepackage{bbm}
+\usepackage[greek,english]{babel}
 \usepackage{stmaryrd}
 \usepackage{textgreek}
-%\usepackage{ucs}
-\usepackage[utf8x]{inputenc}
+
+%\usepackage{unicode-math}
+
+%\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenx}
+\usepackage{autofe} % font for code environment
+
+
 \usepackage{booktabs}% horizontal lines
 
 \usepackage{proof} % For type derivation
@@ -86,6 +95,10 @@
 
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+
+
+
 
 \begin{document}
 
@@ -229,9 +242,9 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 \input{Chapters/Reals}
 
-\input{Chapters/SetoidModel}
+%\input{Chapters/SetoidModel}
 
-\input{Chapters/HITs}
+\input{Chapters/Models}
 
 \input{Chapters/OGModel}
 
@@ -257,6 +270,40 @@ The acknowledgments and the people to thank go here, don't forget to include you
 \input{Appendices/Codes/latex/Quotient}
 \input{Appendices/Codes/latex/GroupoidQuotient}
 
+
+\chapter{Category with families of setoids}
+
+\input{CwF/latex/hProp.tex}
+
+\section{Category}
+
+\input{./CwF/Cats/latex/Category.tex}
+
+\section{Category of setoids}
+
+\input{./CwF/latex/CategoryOfSetoid.tex}
+
+\section{Categories with families of setoids}\label{cwf}
+
+
+A Category with families consists of a base category and a functor
+\cite{clairambault2005categories}. We firstly define the categories with
+families of sets in Agda  as a guidance for the one for setoids. We
+would present the setoid one here since it is relevant.
+
+\input{./CwF/latex/CwF-setoid.tex}
+
+\section{Examples of types}
+
+\input{./CwF/latex/CwF-ctd.tex}
+
+\input{./CwF/latex/CwF-quotient.tex}
+
+
+
+
+
+
 \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
 
 \backmatter
@@ -271,7 +318,6 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 \bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
 
-%\bibliographystyle{plain}
 \bibliography{my}
 
 

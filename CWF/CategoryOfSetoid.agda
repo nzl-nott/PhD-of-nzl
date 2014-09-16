@@ -9,9 +9,7 @@ open import Cats.Category
 open import Function
 open import Relation.Binary.Core using (_⇒_)
 open import Data.Empty
-import HProp
-module hpx = HProp ext
-open hpx
+open import HProp ext public
 
 record HSetoid : Set₁ where
   constructor _,_,_,_,_

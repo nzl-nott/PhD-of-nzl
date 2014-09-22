@@ -513,7 +513,7 @@ For all $x:A$ and $p: x=x$ we have $p=\text{refl}_{x}$.
 From the usual definition of identity types, UIP is not a result for every type. UIP is also 
 \end{axiom}
 
-which has been shown not derivable from J by Hofmann and Streicher. 
+which has been shown not derivable from $J$ by Hofmann and Streicher. 
 
 However Agda's dependent pattern matching allows us to define UIP and K.
 As we mentioned before, we would like to interpret types as groupoids or higher groupoids instead of sets, UIP does not hold in general. A type $A$ is a \textbf{set} (or h-set in \hott) if UIP holds for it.
@@ -539,7 +539,7 @@ $$\forall P, Q : \Prop~ (P \iff Q) \to P = Q$$
 
 \textbf{Quotient types} 
 
-A quotient type is a type formed by redefing equality on a underlying type with a given equivalence relation on it. It is the main topic of this thesis and will be discussed in detail in next chapter.
+A quotient type is a type formed by redefing equality on a underlying type with a given equivalence relation on it. It is the main topic of this thesis and will be discussed in detail in next chapter \ref{qt}.
 
 \textbf{Univalence axiom}
 
@@ -693,7 +693,7 @@ For further explanation of \hott, a well-written text book elaborated by many br
 
 
 
-\subsection{Extensionality in \hott}
+\subsection{Extensionality in \hott}\label{hott:ext}
 
 In \hott, many extensional concepts are automatically derivable. As we have mentioned, functional extensionality is implied by univalence, propositional extensionality is just an instance of univalence, moreover quotient types are indeed a specific way of applying higher inductive types which are more powerful.
 
@@ -719,82 +719,9 @@ the resulting type is a set as well, so
 
 \end{itemize}
 
-
 Note that it is not a generic quotient construction of any types but specially for sets, so
-we also call it \textbf{set quotient} or QITs (Quotient inductive types). In fact, since types are essentially structured objects, it is possible to quotient any kinds of types with any kinds of equivalences which can be not propositional.
+we also call it \textbf{set quotient} or quotient inductive types (QITs). In fact, since types are essentially structured objects, it is possible to quotient any kinds of types with any kinds of equivalences which can be not propositional.
  
-\subsection{QITs v.s. Quotient types}
-
-We can prove that QITs are more powerful than quotient types using an
-example called unordered trees (rooted tree). An unordered tree is a tree connected to a multiset of rooted trees, hence there is no ordering on subtrees.
-
-Firsrtly we define ordered trees as:
-
-\begin{itemize}
-\item A leaf $l: \mathsf{Tree}$, or
-\item An ordered list of subtrees indexed by $\mathbb{N}$, $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
-\end{itemize}
-
-With the following equivalence relation:
-
-\begin{itemize}
-\item $l_{eq} : l \sim l$,
-\item $st_{eq} : (f , g : \N \to \mathsf{Tree}) \to f \sim_{p} g \to sp~f \sim sp~g$
-\end{itemize}
-
-where $f \sim_{p} g$ stands for $f$ is a permutation of $g$. The permutation can be defined using a bijective map $p : \N \to \N$ which relates equivalent subtrees recursively.
-
-%However, if we use quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, the resulting trees have unordered subtrees which are themselves ordered.
-
-However, the equivalence relation can be undecidable which means that if we use quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, it is impossible to lift constructor $\overline{st} : (\N \to \mathsf{Tree}) \to \mathsf{Tree}$. 
-We use a symbol $\mathsf{Tree}^{\sim}$ for unordered trees.
-
-For finitary branching trees like binary trees whose equivalence relation is decidable, $(\textbf{2} \rightarrow \mathsf{BTree}^{\sim}) \to \mathsf{BTree}^{\sim}$ is ismorphic to $\mathsf{BTree}^{\sim} \rightarrow \mathsf{BTree}^{\sim} \rightarrow \mathsf{BTree}^{\sim}$ the lifting of functions can be nested,
-
-$\overline{st}~a~b = \text{lift}~(\text{lift}~st~a)~b$
-
-Intuitively it is impossible to apply this approach to $\mathsf{Tree}$ because we cannot eliminate infinite number of $\mathsf{Tree^{\sim}}$.
-
-
-%$\overline{st} : (\mathbb{N} \rightarrow \mathsf{Tree^{\sim}}) \rightarrow \mathsf{Tree^{\sim}}$
-
-%such that for any $f : \mathbb{N} \rightarrow \mathsf{Tree}$
-
-%$\overline{st}~ ([\_] \circ f) = [ st~f ] $
-
-
-
-\todo{not so clear why}
-It means that we are unable to define unordered tree using
-quotient types because the constructors and equivalence have to be
-defined mutually.
-
-
-
-%To define a function on permutation trees, it is necessary to define them as
-
-%$f : Tree~A \rightarrow B$ which respects the equivalence relation $a~b : Tree~A, f ~a = f ~b$
-
-
-
-
-Higher inductive types, specially quotient inductive types, allow  us to define constructors of trees and paths simultaneously.
-
-\begin{itemize}
-\item $l: \mathsf{Tree}$, 
-\item $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
-  and
-\item a set of pathes relates two permutated trees:
-
-$l_{eq} : l  =_{\mathsf{Tree}} l $
-
-$st_{eq} : \forall (f, g : \N \to \mathsf{Tree}) \rightarrow
-f \sim_{p} g \rightarrow  st~f =_{\mathsf{Tree}} st~g$
-\end{itemize}
-
-
-%\subsection{Quotient inductive inductive types}
-
 
 \section{Summary}
 

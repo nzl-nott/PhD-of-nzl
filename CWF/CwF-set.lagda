@@ -1,3 +1,5 @@
+\begin{code}
+
 {-# OPTIONS --type-in-type #-}
 
 module CWFstructure where
@@ -146,3 +148,5 @@ record _withContextComprehension (cwf : CWF) : Set where
 
 -}
 
+
+\end{code}

@@ -1,3 +1,4 @@
+\begin{code}
 
 {-# OPTIONS --type-in-type #-}
 
@@ -272,3 +273,5 @@ record _withProp (cwf : CWF)(cc : cwf withContextComprehension) : Set where
 
 
 -- something is true when we don't have quotients, fails when we have quotients
+
+\end{code}

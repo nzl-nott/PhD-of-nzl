@@ -1,3 +1,5 @@
+\begin{code}
+
 {-# OPTIONS --type-in-type #-}
 
 import Level
@@ -25,15 +27,6 @@ open import Data.Nat
 Rel : {Γ : Con} → Ty Γ → Set₁
 Rel {Γ} A = Ty (Γ & A & A [ fst& {A = A} ]T)
 
-{-
-RecN : (P : ℕ → Set) → 
-       P 0 → 
-       (∀ n → P n → P (suc n)) →
-       (∀ n → P n)
-RecN P p0 ps zero = p0
-RecN P p0 ps (suc n) = ps n (RecN P p0 ps n)
-
--}
 
 -- Natural numbers
 
@@ -222,3 +215,5 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
     ⟦subst⟧ = lam (lam (lam ⟦subst⟧⁰))
     
 -}
+
+\end{code}

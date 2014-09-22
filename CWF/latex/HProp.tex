@@ -1,0 +1,170 @@
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Level}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality}\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{HProp} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{:} \AgdaFunction{Extensionality} \AgdaPrimitive{zero} \AgdaPrimitive{zero}\AgdaSymbol{)} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Nullary}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Unit}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Empty}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+HProp as propositional universe
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{HProp} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{hProp}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{prf} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Uni} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{prf}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaModule{HProp} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}prf \AgdaSymbol{to} <\_>\AgdaSymbol{)}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{⊤'} \AgdaSymbol{:} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{⊤'} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaRecord{⊤} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{exUni} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaSymbol{(}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{exUni} \AgdaBound{f} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaBound{f} \AgdaBound{p} \AgdaBound{q}\<%
+\\
+%
+\\
+\>\AgdaFunction{⊥'} \AgdaSymbol{:} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{⊥'} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaDatatype{⊥} \AgdaSymbol{(}\AgdaFunction{exUni} \AgdaSymbol{(λ} \AgdaSymbol{()))}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+HProp is closed under Π-types
+
+1. universal quantification
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{∀'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)(}\AgdaBound{P} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{∀'} \AgdaBound{A} \AgdaBound{P} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaSymbol{((}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{P} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)))}\<%
+\\
+%
+\\
+\>\AgdaKeyword{syntax} ∀' A \AgdaSymbol{(λ} x \AgdaSymbol{→} B\AgdaSymbol{)} \AgdaSymbol{=} ∀'[ x ∶ A ] B
+
+\AgdaKeyword{infixr} \AgdaNumber{2} \_⇛\_\<%
+\\
+%
+\\
+\>\AgdaFunction{\_⇛\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaBound{P} \AgdaFunction{⇛} \AgdaBound{Q} \AgdaSymbol{=} \<[9]%
+\>[9]\AgdaFunction{∀'} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{Q}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+HProp is closed under Σ-types
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+%
+\\
+\>\AgdaFunction{sig-eq} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{\{}\AgdaBound{c} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{a}\AgdaSymbol{\}\{}\AgdaBound{d} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{x}\AgdaSymbol{)} \AgdaBound{p} \AgdaBound{c} \AgdaDatatype{≡} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{\_≡\_} \AgdaSymbol{\{\_\}} \AgdaSymbol{\{}\AgdaRecord{Σ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{c}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{b} \AgdaInductiveConstructor{,} \AgdaBound{d}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{sig-eq} \AgdaInductiveConstructor{refl} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{Σ'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaSymbol{:} \AgdaRecord{HProp}\AgdaSymbol{)(}\AgdaBound{Q} \AgdaSymbol{:} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{Σ'} \AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaSymbol{(}\AgdaRecord{Σ} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{Q} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{))} \AgdaSymbol{(λ} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{sig-eq} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaBound{P}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{Q} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{q}\AgdaSymbol{))))}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaKeyword{syntax} Σ' A \AgdaSymbol{(λ} x \AgdaSymbol{→} B\AgdaSymbol{)} \AgdaSymbol{=} Σ'[ x ∶ A ] B
+
+\AgdaKeyword{infixr} \AgdaNumber{3} \_∧\_\<%
+\\
+%
+\\
+\>\AgdaFunction{\_∧\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaBound{P} \AgdaFunction{∧} \AgdaBound{Q} \AgdaSymbol{=} \AgdaFunction{Σ'} \AgdaBound{P} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{Q}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+Negation
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{\textasciitilde} \AgdaSymbol{:} \AgdaRecord{HProp} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{\textasciitilde} \AgdaBound{P} \AgdaSymbol{=} \AgdaBound{P} \AgdaFunction{⇛} \AgdaFunction{⊥'} \<[13]%
+\>[13]\<%
+\\
+%
+\\
+\>\<\end{code}
+
+Logical equivalence
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{\_⇄\_} \<[6]%
+\>[6]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaBound{P} \AgdaFunction{⇄} \AgdaBound{Q} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{P} \AgdaFunction{⇛} \AgdaBound{Q}\AgdaSymbol{)} \AgdaFunction{∧} \AgdaSymbol{(}\AgdaBound{Q} \AgdaFunction{⇛} \AgdaBound{P}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}

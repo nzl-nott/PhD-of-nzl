@@ -1,3 +1,4 @@
+\begin{code}
 
 {-# OPTIONS --type-in-type #-}
 
@@ -32,7 +33,6 @@ open import CwF hiding (_⇉_)
 Con = HSetoid
 
 -----------------------------------------------
--- old versions
 -- Types and Terms
 
 record Ty (Γ : Con) : Set₁ where
@@ -68,7 +68,7 @@ record Ty (Γ : Con) : Set₁ where
   subst-pi : ∀{x y : ∣ Γ ∣}
               {p q : [ Γ ] x ≈ y}
               {a : ∣ fm x ∣} → [ fm y ] substT p a ≈ substT q a
-  subst-pi {x} {y} {p} {q} {a} = reflexive (fm y) (PI Γ (λ x → substT x a))
+  subst-pi {x} {y} {p} {q} {a} = reflexive (fm y) (PI Γ (λ x → substT x a))
 
   subst-pi' : ∀{x : ∣ Γ ∣}
                {p : [ Γ ] x ≈ x}
@@ -147,16 +147,7 @@ _[_]m t f = record
 ----------------------------------------------------
 -- Context
 
--- terminal object: empty context
-
-● : Con
-● = record {
-      Carrier = ⊤;
-      _≈h_    = λ _ _ → ⊤';
-      refl    = tt;
-      sym     = λ _ → tt;
-      trans   = λ _ _ → tt }
-
+-- terminal object: empty context ●
 
 -- empty substitution
 
@@ -174,8 +165,6 @@ uniqueHom Δ f = PE.refl
 
 -- Context Comprehension
  
--- To implement & using &' is because I found Agda does not support lambda pattern matching for implicit arguments (though I found a patch on the Internet) 
-
 _&_ : (Γ : Con) → Ty Γ → HSetoid
 Γ & A = record 
        { Carrier = Σ[ x ∶ ∣ Γ ∣ ] ∣ fm x ∣
@@ -275,8 +264,7 @@ f ^ A = record
                 ([ [ B ]fm (y , b) ]trans 
                 ([ [ B ]fm (y , b) ]sym ([ B ]trans* _)) 
                 pre))  
-                )
- -- this is g-resp                    
+                )     
              }
 
 
@@ -322,6 +310,8 @@ app {Γ} {A} {B} (tm: tm resp: respt) =
 
 _⇒_ : {Γ : Con}(A B : Ty Γ) → Ty Γ
 A ⇒ B = Π A (B [ fst& {A = A} ]T)
+
+infixr 6 _⇒_
 
 -- simpler definition
 
@@ -414,3 +404,5 @@ module TypeTerm-Equality
   Pi-Sub A B f = Ty-ExtEq {!ext!} {!!}
 
 -}
+
+\end{code}

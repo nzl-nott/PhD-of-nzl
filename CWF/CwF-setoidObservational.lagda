@@ -1,4 +1,3 @@
-\AgdaHide{
 \begin{code}
 
 {-# OPTIONS --type-in-type #-}
@@ -7,7 +6,7 @@
 open import Level
 open import Relation.Binary.PropositionalEquality as PE hiding (refl ; sym ; trans; isEquivalence; [_])
 
-module CwF-setoidwo (ext : Extensionality zero zero) where
+module CwF-setoidObservational (ext : Extensionality zero zero) where
 
 
 open import Cats.Category
@@ -26,57 +25,44 @@ open import CategoryOfSetoid ext public
 
 open import CwF hiding (_⇉_)
 
-\end{code}
-}
 
-\subsection{Categories with families}
 
-Context are interpreted as setoids
-
-\begin{code}
+-- Definition of Context:
+-- Context are interpreted as setoids
 
 Con = HSetoid
 
-\end{code}
-
-Types are functors from $\Gamma → \mathbf{Std}$
-
-\begin{code}
+-----------------------------------------------
+-- Types and Terms
 
 record Ty (Γ : Con) : Set₁ where
   field
     fm     : ∣ Γ ∣ → HSetoid
 
-    substT : {x y : ∣ Γ ∣} → 
-             [ Γ ] x ≈ y →
-             ∣ fm x ∣ → ∣ fm y ∣
+    _≅_    : {x y : ∣ Γ ∣} → ∣ fm x ∣ →  ∣ fm y ∣ → HProp
 
-    subst* : ∀{x y : ∣ Γ ∣}
-             (p : [ Γ ] x ≈ y)
-             {a b : ∣ fm x ∣} →
-             [ fm x ] a ≈ b →
-             [ fm y ] substT p a ≈ substT p b
+    refl≅  : {x : ∣ Γ ∣} → (a : ∣ fm x ∣) → < a ≅ a >
 
-    refl*  : ∀(x : ∣ Γ ∣)(a : ∣ fm x ∣) → 
+    coe    : {x y : ∣ Γ ∣}{a : ∣ fm x ∣}{b : ∣ fm y ∣} →  < a ≅ b > → 
+
+-- beta equality (Computation rules)
+
+    refl*  : ∀(x : ∣ Γ ∣)
+             (a : ∣ fm x ∣) → 
              [ fm x ] substT [ Γ ]refl a ≈ a
-
     trans* : ∀{x y z : ∣ Γ ∣}
-             {p : [ Γ ] x ≈ y}{q : [ Γ ] y ≈ z}
+             {p : [ Γ ] x ≈ y}
+             {q : [ Γ ] y ≈ z}
              (a : ∣ fm x ∣) → 
              [ fm z ] substT q (substT p a) ≈ substT ([ Γ ]trans p q) a
 
-\end{code}
 
-Proof-irrelevance lemmas for substT
-
-\begin{code}
+-- the proof-irrelevance lemmas for substT
 
   subst-pi : ∀{x y : ∣ Γ ∣}
               {p q : [ Γ ] x ≈ y}
-              {a : ∣ fm x ∣} 
-           → [ fm y ] substT p a ≈ substT q a
-  subst-pi {x} {y} {p} {q} {a} 
-           = reflexive (fm y) (PI Γ (λ x → substT x a))
+              {a : ∣ fm x ∣} → [ fm y ] substT p a ≈ substT q a
+  subst-pi {x} {y} {p} {q} {a} = reflexive (fm y) (PI Γ (λ x → substT x a))
 
   subst-pi' : ∀{x : ∣ Γ ∣}
                {p : [ Γ ] x ≈ x}
@@ -89,6 +75,7 @@ Proof-irrelevance lemmas for substT
   subst-pi* eq = [ fm _ ]trans (subst* _ eq) subst-pi
 
 
+-- simplify proofs of trans of inverse equality (including groupoid laws?)
 
   trans-refl : ∀{x y : ∣ Γ ∣}
               {p : [ Γ ] x ≈ y}{q : [ Γ ] y ≈ x}
@@ -96,6 +83,8 @@ Proof-irrelevance lemmas for substT
               [ fm x ] substT q (substT p a) ≈ a
   trans-refl = [ fm _ ]trans (trans* _) subst-pi'
 
+-- some more theorems
+  
   subst-mir1 : ∀{x y : ∣ Γ ∣}
               {p : [ Γ ] x ≈ y}{q : [ Γ ] y ≈ x}
               {a : ∣ fm x ∣}{b : ∣ fm y ∣} → 
@@ -110,16 +99,13 @@ Proof-irrelevance lemmas for substT
 
 open Ty public 
   renaming (substT to [_]subst; subst* to [_]subst*; fm to [_]fm ;
-            refl* to [_]refl* ; trans* to [_]trans*; 
-            subst-pi to [_]subst-pi ;
+            refl* to [_]refl* ; trans* to [_]trans*; subst-pi to [_]subst-pi ;
             subst-pi' to [_]subst-pi' ; subst-pi* to [_]subst-pi* ;
             trans-refl to [_]trans-refl ; subst-mir1 to [_]subst-mir1 ;
             subst-mir2 to [_]subst-mir2)
-\end{code}
 
-Type substitution
+-- Type substitution
 
-\begin{code}
 
 _[_]T : ∀ {Γ Δ : Con} → Ty Δ → Γ ⇉ Δ → Ty Γ
 _[_]T {Γ} {Δ} A f
@@ -134,39 +120,44 @@ _[_]T {Γ} {Δ} A f
        open Ty A
        open _⇉_ f
 
-\end{code}
-
-Terms
-
-\begin{code}
-
 record Tm {Γ : Con}(A : Ty Γ) : Set where
   constructor tm:_resp:_
   field
     tm    : (x : ∣ Γ ∣) → ∣ [ A ]fm x ∣
     respt : ∀ {x y : ∣ Γ ∣} → 
-          (p : [ Γ ] x ≈ y) → 
-          [ [ A ]fm y ] [ A ]subst p (tm x) ≈ tm y
+              (p : [ Γ ] x ≈ y) → 
+              [ [ A ]fm y ] [ A ]subst p (tm x) ≈ tm y
 
 open Tm public renaming (tm to [_]tm ; respt to [_]respt)
 
-\end{code}
+-- Term substitution
 
-Term substitution
-
-\begin{code}
-
-_[_]m : ∀ {Γ Δ : Con}{A : Ty Δ} → Tm A 
-      → (f : Γ ⇉ Δ) → Tm (A [ f ]T)
+_[_]m : ∀ {Γ Δ : Con}{A : Ty Δ} → Tm A → (f : Γ ⇉ Δ) → Tm (A [ f ]T)
 _[_]m t f = record 
           { tm = [ t ]tm ∘ [ f ]fn
           ; respt = [ t ]respt ∘ [ f ]resp 
           }
-\end{code}
 
-Context comprehension
+----------------------------------------------------
+-- Context
 
-\begin{code}
+-- terminal object: empty context ●
+
+-- empty substitution
+
+⋆ : {Δ : Con} → Δ ⇉ ●
+⋆ = record 
+      { fn = λ _ → tt
+      ; resp = λ _ → tt }
+
+
+-- the empty substitution is unique
+
+uniqueHom : ∀ (Δ : Con) → (f : Δ ⇉ ●) → f ≡ ⋆
+uniqueHom Δ f = PE.refl
+
+
+-- Context Comprehension
  
 _&_ : (Γ : Con) → Ty Γ → HSetoid
 Γ & A = record 
@@ -174,12 +165,10 @@ _&_ : (Γ : Con) → Ty Γ → HSetoid
        ; _≈h_  = λ{(x , a) (y , b) → 
                  Σ'[ p ∶ x ≈h y ] [ fm y ] substT p a ≈h b}
        ; refl  = refl , (refl* _ _)
-       ; sym   = λ {(p , q) → (sym p) , 
-                 [ fm _ ]trans (subst* _ ([ fm _ ]sym q)) trans-refl }
+       ; sym   = λ {(p , q) → (sym p) , [ fm _ ]trans (subst* _ ([ fm _ ]sym q)) trans-refl }
        ; trans = λ {(p , q) (m , n) →
-                 trans p m , 
-                 [ fm _ ]trans ([ fm _ ]trans ([ fm _ ]sym (trans* _))
-                 (subst* _ q)) n }
+                    trans p m , 
+                    [ fm _ ]trans ([ fm _ ]trans ([ fm _ ]sym (trans* _)) (subst* _ q)) n }
        }
        where 
          open HSetoid Γ
@@ -193,11 +182,7 @@ fst& = record
          ; resp = proj₁
          }
 
-\end{code}
-
-Pairing operation
-
-\begin{code}
+-- pairing operation
 
 _,,_ : {Γ Δ : Con}{A : Ty Δ}(f : Γ ⇉ Δ) → (Tm (A [ f ]T)) → Γ ⇉ (Δ & A)
 f ,, t = record 
@@ -205,11 +190,7 @@ f ,, t = record
          ; resp = ⟨ [ f ]resp , [ t ]respt ⟩
          }
 
-\end{code}
-
-Projections
-
-\begin{code}
+-- projections
 
 fst : {Γ Δ : Con}{A : Ty Δ} → Γ ⇉ (Δ & A) → Γ ⇉ Δ
 fst f = record 
@@ -231,11 +212,9 @@ f ^ A = record
         ; resp = ⟨ [ f ]resp ∘ proj₁ , proj₂ ⟩
         }
 
-\end{code}
 
-$\Pi$-types (object level)
-
-\begin{code}
+---------------------------
+-- Π types (object level)
 
 
 Π : {Γ : Con}(A : Ty Γ)(B : Ty (Γ & A)) → Ty Γ
@@ -246,21 +225,22 @@ $\Pi$-types (object level)
          { Carrier = Σ[ fn ∶ ((a : ∣ Ax ∣) → ∣ Bx a ∣) ]
                      ((a b : ∣ Ax ∣)
                      (p : [ Ax ] a ≈ b) →
-                     [ Bx b ] [ B ]subst ([ Γ ]refl , 
-                     [ Ax ]trans ([ A ]refl* x a) p) (fn a) ≈ fn b) 
-         ; _≈h_    = λ{(f , _) (g , _) →
-                     ∀'[ a ∶ _ ] [ Bx a ] f a ≈h g a }
+                     [ Bx b ] [ B ]subst ([ Γ ]refl , [ Ax ]trans ([ A ]refl* x a) p) (fn a) ≈ fn b) 
+ 
+     -- f-resp on the paper ignores refl*
+
+         ; _≈h_    = λ{(f , _) (g , _) → ∀'[ a ∶ _ ] [ Bx a ] f a ≈h g a }
          ; refl    = λ a → [ Bx a ]refl 
          ; sym     = λ f a → [ Bx a ]sym (f a)
          ; trans   = λ f g a → [ Bx a ]trans (f a) (g a)
          }
 
-  ; substT = λ {x} {y} p 
-               → let y2x = λ a → [ A ]subst ([ Γ ]sym p) a in
-                 let x2y = λ a → [ A ]subst p a in
-                 let p' = λ a → [ A ]trans-refl in
+  ; substT = λ {x} {y} p → let y2x = λ a → [ A ]subst ([ Γ ]sym p) a in
+                           let x2y = λ a → [ A ]subst p a in
+                           let p' = λ a → [ A ]trans-refl in -- p' is different on the paper
              λ{(f , rsp) →  
-               (λ a → [ B ]subst (p , p' a) (f (y2x a)))
+               (λ a → [ B ]subst (p , p' a) (f (y2x a)))                         
+               -- this is g -- g a = [ B ]subst (p , p' a) (f (y2x a))
                ,                                 
                (λ a b q → 
                 let a' = y2x a in 
@@ -280,25 +260,21 @@ $\Pi$-types (object level)
                 pre))  
                 )     
              }
+
+
   ; subst* = λ _ q _ → [ B ]subst* _ (q _)
-  ; refl* = λ {x (f , rsp) a 
-            → [ [ B ]fm _ ]trans [ B ]subst-pi 
-            (rsp ([ A ]subst ([ Γ ]sym [ Γ ]refl) a) a [ A ]subst-pi')  }
+  ; refl* = λ {x (f , rsp) a →  [ [ B ]fm _ ]trans [ B ]subst-pi (rsp ([ A ]subst ([ Γ ]sym [ Γ ]refl) a) a [ A ]subst-pi')  }
   ; trans* = λ {(f , rsp) a →
              [ [ B ]fm _ ]trans 
              ([ [ B ]fm _ ]trans 
              ([ B ]trans* _) 
-             ([ [ B ]fm _ ]sym ([ [ B ]fm _ ]trans 
-             ([ B ]trans* _) [ B ]subst-pi))) 
-             ([ B ]subst* _ (rsp _ _ ([ [ A ]fm _ ]trans 
-             ([ A ]trans* _) [ A ]subst-pi))) } 
+             ([ [ B ]fm _ ]sym ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi))) 
+             ([ B ]subst* _ (rsp _ _ ([ [ A ]fm _ ]trans ([ A ]trans* _) [ A ]subst-pi))) } 
   }
 
 lam : {Γ : Con}{A : Ty Γ}{B : Ty (Γ & A)} → Tm B → Tm (Π A B)
 lam {Γ} {A} (tm: tm resp: respt) = 
-  record { tm = λ x → (λ a → tm (x , a)) 
-                , (λ a b p → respt ([ Γ ]refl , 
-                [ [ A ]fm x ]trans ([ A ]refl* _ _) p))
+  record { tm = λ x → (λ a → tm (x , a)) , (λ a b p → respt ([ Γ ]refl , [ [ A ]fm x ]trans ([ A ]refl* _ _) p))
          ; respt = λ p _ → respt (p , [ A ]trans-refl) 
          }
 
@@ -320,38 +296,41 @@ app {Γ} {A} {B} (tm: tm resp: respt) =
                  (respt p _))))) }
          }
 
-\end{code}
+-- to do : verification of β and η
 
-Verification of β causes stack overflow
-
-\begin{code}
+-- cause stack overflow
+-- beta : {Γ : Con}{A : Ty Γ}{B : Ty (Γ & A)} → (t : Tm B) → app (lam t) ≡ t
+-- beta t = PE.refl
 
 _⇒_ : {Γ : Con}(A B : Ty Γ) → Ty Γ
 A ⇒ B = Π A (B [ fst& {A = A} ]T)
 
 infixr 6 _⇒_
-\end{code}
 
-Simpler definition for functions
-
-\begin{code}
+-- simpler definition
 
 [_,_]_⇒fm_ : (Γ : Con)(x : ∣ Γ ∣) → HSetoid → HSetoid → HSetoid
 [ Γ , x ] Ax ⇒fm Bx 
   = record
-      { Carrier = Σ[ fn ∶ (∣ Ax ∣ → ∣ Bx ∣) ] ((a b : ∣ Ax ∣)
-                  (p : [ Ax ] a ≈ b) → [ Bx ] fn a ≈ fn b)
+      { Carrier = Σ[ fn ∶ (∣ Ax ∣ → ∣ Bx ∣) ] ((a b : ∣ Ax ∣)(p : [ Ax ] a ≈ b) → [ Bx ] fn a ≈ fn b)
       ; _≈h_    = λ{(f , _) (g , _) → ∀'[ a ∶ _ ] [ Bx ] f a ≈h g a }
       ; refl    = λ _ → [ Bx ]refl 
       ; sym     = λ f a → [ Bx ]sym (f a)
       ; trans   = λ f g a → [ Bx ]trans (f a) (g a)
       }
 
-\end{code}
 
-$\Sigma$-types (object level)
+-- to do: verification
 
-\begin{code}
+-- verification of functor laws (do we have extensional equality for record types? or eta equality?)
+-- define equality with respect to propositions which are proof irrelevant
+
+
+
+
+---------------------------
+-- Σ types (object level)
+
 
 Σ'' : {Γ : Con}(A : Ty Γ)(B : Ty (Γ & A)) → Ty Γ
 Σ'' {Γ} A B = record 
@@ -359,50 +338,30 @@ $\Sigma$-types (object level)
                let Bx = λ a → [ B ]fm (x , a) in
          record
            { Carrier = Σ[ a ∶ ∣ Ax ∣ ] ∣ Bx a ∣
-
            ; _≈h_    = λ{(a₁ , b₁) (a₂ , b₂) → 
-                       Σ'[ eq₁ ∶ [ Ax ] a₁ ≈h a₂ ] 
-                       [ Bx a₂ ] [ B ]subst 
-                       ([ Γ ]refl , [ [ A ]fm x ]trans 
-                       ([ A ]refl* x a₁) eq₁) b₁ ≈h b₂ }
-
+                             Σ'[ eq₁ ∶ [ Ax ] a₁ ≈h a₂ ] 
+                             [ Bx a₂ ] [ B ]subst ([ Γ ]refl , [ [ A ]fm x ]trans ([ A ]refl* x a₁) eq₁) b₁ ≈h b₂ }
            ; refl    = λ {t} → [ [ A ]fm x ]refl , [ B ]subst-pi'
-
-           ; sym     = λ {(p , q) → ([ [ A ]fm x ]sym p) , 
-                       [ B ]subst-mir1 ([ [ B ]fm (x , _) ]sym q) }
-
+           ; sym     = λ {(p , q) → ([ [ A ]fm x ]sym p) , [ B ]subst-mir1 ([ [ B ]fm (x , _) ]sym q) }
            ; trans   = λ {(p , q) (r , s) → ([ [ A ]fm x ]trans p r) ,
-                       ([ [ B ]fm (x , _) ]trans 
-                       ([ [ B ]fm (x , _) ]trans
-                       ([ [ B ]fm (x , _) ]trans [ B ]subst-pi
-                       ([ [ B ]fm (x , _) ]sym ([ B ]trans* 
-                       {q = [ Γ ]refl , [ [ A ]fm x ]trans 
-                       ([ A ]refl* x _) r} _))) ([ B ]subst-pi* q)) s)}
+                       ([ [ B ]fm (x , _) ]trans ([ [ B ]fm (x , _) ]trans
+                                                    ([ [ B ]fm (x , _) ]trans [ B ]subst-pi
+                                                     ([ [ B ]fm (x , _) ]sym
+                                                      ([ B ]trans*
+                                                       {q = [ Γ ]refl , [ [ A ]fm x ]trans ([ A ]refl* x _) r} _)))
+                                                    ([ B ]subst-pi* q)) s)}
 
            }
-
-        ; substT = λ x≈y → λ {(p , q) → 
-                   ([ A ]subst x≈y p) , [ B ]subst (x≈y , 
-                   [ [ A ]fm _ ]refl) q}
-
-        ; subst* = λ x≈y →  λ {(p , q) → [ A ]subst* x≈y p , 
-                   [ [ B ]fm _ ]trans ([ [ B ]fm _ ]trans 
-                   ([ B ]trans* _) ([ [ B ]fm _ ]trans [ B ]subst-pi 
-                   ([ [ B ]fm _ ]sym ([ B ]trans* _)))) ([ B ]subst* 
-                   (x≈y , [ [ A ]fm _ ]refl) q) }
-        ; refl* = λ x →  λ {(p , q) → ([ A ]refl* _ _) , 
-                  ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi')}
-
-        ; trans* =  λ {(p , q)  → ([ A ]trans* _) , ([ [ B ]fm _ ]trans
-                    ([ B ]trans* _) ([ [ B ]fm _ ]trans ([ B ]trans* _)
-                    [ B ]subst-pi)) }
+        ; substT = λ x≈y → λ {(p , q) → ([ A ]subst x≈y p) , [ B ]subst (x≈y , [ [ A ]fm _ ]refl) q}
+        ; subst* = λ x≈y →  λ {(p , q)  → [ A ]subst* x≈y p , [ [ B ]fm _ ]trans ([ [ B ]fm _ ]trans ([ B ]trans* _) 
+                              ([ [ B ]fm _ ]trans [ B ]subst-pi ([ [ B ]fm _ ]sym ([ B ]trans* _)))) ([ B ]subst* (x≈y , [ [ A ]fm _ ]refl) q) }
+        ; refl* = λ x →  λ {(p , q) → ([ A ]refl* _ _) , ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi')}
+        ; trans* =  λ {(p , q)  → ([ A ]trans* _) , ([ [ B ]fm _ ]trans ([ B ]trans* _) ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi)) }
         }
 
-\end{code}
 
 
-\AgdaHide{
-\begin{code}
+
 {-
 module TypeTerm-Equality
   (Ty-ExtEq : {Γ : Con}{A B : Ty Γ} →
@@ -441,4 +400,3 @@ module TypeTerm-Equality
 -}
 
 \end{code}
-}

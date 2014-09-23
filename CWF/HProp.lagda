@@ -1,3 +1,4 @@
+\AgdaHide{
 \begin{code}
 
 open import Level
@@ -9,10 +10,14 @@ open import Relation.Nullary
 open import Data.Unit
 open import Data.Empty
 open import Data.Nat
+open import Function
 
 \end{code}
+}
 
-HProp as propositional universe
+\subsection{Metatheory}
+
+\HProp used as propositional universe
 
 \begin{code}
 
@@ -24,11 +29,17 @@ record HProp : Set₁ where
 
 open HProp public renaming (prf to <_>)
 
+\end{code}
+
+$\top$ and $\bot$
+
+\begin{code}
 
 ⊤' : HProp
 ⊤' = hProp ⊤ refl
 
-exUni : {A : Set} → (∀ (p q : A) → p ≡ q) → (∀ {p q : A} → p ≡ q)
+exUni : {A : Set} → (∀ (p q : A) → p ≡ q) 
+      → (∀ {p q : A} → p ≡ q)
 exUni f {p} {q} = f p q
 
 ⊥' : HProp
@@ -36,9 +47,7 @@ exUni f {p} {q} = f p q
 
 \end{code}
 
-HProp is closed under Π-types
-
-1. universal quantification
+\HProp is closed under $\Pi$-types
 
 \begin{code}
 
@@ -54,18 +63,22 @@ P ⇛ Q =  ∀' < P > (λ _ → Q)
 
 \end{code}
 
-HProp is closed under Σ-types
+\HProp is closed under $\Sigma$-types
 
 \begin{code}
 
 open import Data.Product
 
-sig-eq : {A : Set}{B : A → Set}{a b : A} → (p : a ≡ b) → {c : B a}{d : B b} → (subst (λ x → B x) p c ≡ d) → _≡_ {_} {Σ A B} (a , c) (b , d)
+sig-eq : {A : Set}{B : A → Set}
+         {a b : A}(p : a ≡ b)
+         {c : B a}{d : B b} →
+         (subst (λ x → B x) p c ≡ d) →
+         _≡_ {_} {Σ A B} (a , c) (b , d)
 sig-eq refl refl = refl
 
 Σ' : (P : HProp)(Q : < P > → HProp) → HProp
-Σ' P Q = hProp (Σ < P > (λ x → < Q x >)) (λ {p} {q} → sig-eq (Uni P) (Uni (Q (proj₁ q))))
-
+Σ' P Q = hProp (Σ < P > (λ x → < Q x >)) 
+         (λ {p} {q} → sig-eq (Uni P) (Uni (Q (proj₁ q))))
 
 syntax Σ' A (λ x → B) = Σ'[ x ∶ A ] B
 
@@ -91,5 +104,21 @@ Logical equivalence
 
 _⇄_   : (P Q : HProp) → HProp
 P ⇄ Q = (P ⇛ Q) ∧ (Q ⇛ P)
+
+
+
+\end{code}
+
+$\eta$-rules for $\Pi$-types and $\Sigma$-types
+
+\begin{code}
+
+Π-eta : {A : Set}{B : A → Set}(f : (a : A) → B a) → 
+        (λ x → f x) ≡ f
+Π-eta f = refl
+
+Σ-eta : {A : Set}{B : A → Set}(p : Σ A B) → 
+        (proj₁ p , proj₂ p) ≡ p
+Σ-eta p = refl
 
 \end{code}

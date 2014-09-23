@@ -1,3 +1,4 @@
+\AgdaHide{
 \begin{code}
 
 {-# OPTIONS --type-in-type #-}
@@ -11,24 +12,25 @@ open import Data.Unit
 open import Function
 open import Data.Product
 
-open import CwF-setoid ext public
-
-
--- open import CategoryOfSetoid ext
-
--- open import HProp ext
+open import CwF-setoidwo ext public
 
 open import Data.Nat
 
+\end{code}
+}
 
+Binary relation
 
--- Relation
+\begin{code}
 
 Rel : {Γ : Con} → Ty Γ → Set₁
 Rel {Γ} A = Ty (Γ & A & A [ fst& {A = A} ]T)
 
+\end{code}
 
--- Natural numbers
+Natural numbers
+
+\begin{code}
 
 module Natural (Γ : Con) where
 
@@ -83,12 +85,18 @@ module Natural (Γ : Con) where
       ; respt = respt
       }
 
--- Simply-typed-universe
+\end{code}
 
+Simply typed universe
+
+\AgdaHide{
+\begin{code}
+
+{-
   data  ⟦U⟧⁰ : Set where
     nat : ⟦U⟧⁰
     arr<_,_> : (a b : ⟦U⟧⁰) → ⟦U⟧⁰
-  
+
   _~⟦U⟧_ : ⟦U⟧⁰ → ⟦U⟧⁰ → HProp
   nat ~⟦U⟧ nat = ⊤'
   nat ~⟦U⟧ arr< a , b > = ⊥'
@@ -103,15 +111,17 @@ module Natural (Γ : Con) where
   symU {nat} {nat} eq = tt
   symU {nat} {arr< a , b >} eq = eq
   symU {arr< a , b >} {nat} eq = eq
-  symU {arr< a , b >} {arr< a' , b' >} (p , q) = (symU {a} {a'} p) , (symU {b} {b'} q)
+  symU {arr< a , b >} {arr< a' , b' >} (p , q) = (symU {a} {a'} p) 
+                                               , (symU {b} {b'} q)
 
   transU : {x y z : ⟦U⟧⁰} → < x ~⟦U⟧ y > → < y ~⟦U⟧ z > → < x ~⟦U⟧ z >
   transU {nat} {nat} eq1 eq2 = eq2
   transU {nat} {arr< a , b >} () eq2
   transU {arr< a , b >} {nat} () eq2
   transU {arr< a , b >} {arr< a' , b' >} {nat} eq1 eq2 = eq2
-  transU {arr< a , b >} {arr< a' , b' >} {arr< a0 , b0 >} (p1 , q1) (p2 , q2) =
-    (transU {a} {a'} {a0} p1 p2) , transU {b} {b'} {b0} q1 q2
+  transU {arr< a , b >} {arr< a' , b' >} {arr< a0 , b0 >} (p1 , q1) 
+         (p2 , q2) = (transU {a} {a'} {a0} p1 p2) 
+         , transU {b} {b'} {b0} q1 q2
 
   ⟦U⟧ : Ty Γ
   ⟦U⟧ = record 
@@ -131,8 +141,13 @@ module Natural (Γ : Con) where
   elfm : Σ ∣ Γ ∣ (λ x → ⟦U⟧⁰) → HSetoid
   elfm (γ , nat) = [ ⟦Nat⟧ ]fm γ
   elfm (γ , arr< a , b >) = [ Γ , γ ] elfm (γ , a) ⇒fm elfm (γ , b)
+-}
 
+\end{code}
+}
 
+\AgdaHide{
+\begin{code}
 
 {- To do : To find the way to extract the substT from ->
 
@@ -155,9 +170,12 @@ module Natural (Γ : Con) where
        }
 
 -}
+\end{code}
+}
 
+The equality type
 
--- The equality type
+\begin{code}
 
 module Equality-Type (Γ : Con)(A : Ty Γ) where
 
@@ -184,7 +202,8 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
     }
 
 
-  ⟦refl⟧⁰ : Tm {Γ & A} (⟦Id⟧ [ record { fn = λ x' → x' , proj₂ x' ; resp = λ x' → x' , proj₂ x' } ]T) 
+  ⟦refl⟧⁰ : Tm {Γ & A} (⟦Id⟧ [ record { fn = λ x' → x' , proj₂ x' 
+                       ; resp = λ x' → x' , proj₂ x' } ]T) 
   ⟦refl⟧⁰ = record
            { tm = λ {(x , a) → [ [ A ]fm x ]refl {a} }
            ; respt = λ p → tt
@@ -192,14 +211,26 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
 
   ⟦refl⟧ =  lam {Γ} {A} ⟦refl⟧⁰
 
+\end{code}
+
+Subst using equality types
+
+\begin{code}
+
   module substIn (B : Ty (Γ & A)) where
   
     ⟦subst⟧⁰ : Tm {Γ & A & (A [ fst& {A = A} ]T) 
-               & ⟦Id⟧ & B [ fst& {A = A [ fst& {A = A} ]T}  ]T [ fst& {A = ⟦Id⟧} ]T} 
-             (B [ record { fn = λ x → (proj₁ (proj₁ (proj₁ (proj₁ x)))) , (proj₂ (proj₁ (proj₁ x))) ; resp = λ x → proj₁ (proj₁ (proj₁ (proj₁ x))) , proj₂ (proj₁ (proj₁ x)) } ]T)
+               & ⟦Id⟧ & B [ fst& {A = A [ fst& {A = A} ]T}  ]T 
+               [ fst& {A = ⟦Id⟧} ]T} 
+             (B [ record { fn = λ x → (proj₁ (proj₁ (proj₁ (proj₁ x)))) 
+             , (proj₂ (proj₁ (proj₁ x))) 
+             ; resp = λ x → proj₁ (proj₁ (proj₁ (proj₁ x))) 
+             , proj₂ (proj₁ (proj₁ x)) } ]T)
 
     ⟦subst⟧⁰ = record
-           { tm = λ {((((x , a) , b) , p) , PA) → [ B ]subst ([ Γ ]refl , [ [ A ]fm _ ]trans ([ A ]refl* _ _) p) PA }
+           { tm = λ {((((x , a) , b) , p) , PA) → [ B ]subst 
+                  ([ Γ ]refl , [ [ A ]fm _ ]trans 
+                  ([ A ]refl* _ _) p) PA }
            ; respt = λ {((((m , a) , b) , p) , PA) → 
              [ [ B ]fm _ ]trans 
              ([ B ]trans* _) 
@@ -209,11 +240,13 @@ module Equality-Type (Γ : Con)(A : Ty Γ) where
              ([ [ B ]fm _ ]sym ([ B ]trans* _))
              ([ B ]subst* _ PA) )) }
            }
-
-
-{-
-    ⟦subst⟧ = lam (lam (lam ⟦subst⟧⁰))
-    
--}
-
 \end{code}
+
+
+\AgdaHide{
+\begin{code}
+
+--    ⟦subst⟧ = lam (lam (lam ⟦subst⟧⁰))
+    
+\end{code}
+}

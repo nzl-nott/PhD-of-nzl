@@ -44,7 +44,7 @@ The propositional universe is closed under $\Pi$-types and $\Sigma$-types:
 {\Gamma \vdash \Sigma ~(x : P) ~ Q : \Prop}
 
 
-The metatheory is proved:
+The metatheory is proved {\cite{alti:lics99}} to be:
 
 \begin{itemize}
 \item Decidable. The definitional equality is decideable, hence type checking is decidable.
@@ -55,7 +55,7 @@ The metatheory is proved:
 \end{itemize}
 
 
-And then Altenkirch constrct an intensional model within this metatheory which is decidable and adequate, functional extensionality is inhabited and it permits large elimination. 
+And then Altenkirch construct an intensional model within this metatheory which is decidable and adequate, functional extensionality is inhabited and it permits large elimination. 
 
 
 % Within this type theory, introduction of quotient types is straightforward. 
@@ -120,6 +120,7 @@ We also define basic propositions $\top$ and $\bot$ and the universal and existe
 
 Notice that we use a syntactic abbreviation $<\_>$ for projection of proof in $\textbf{HProp}$. Moever to avoid conficts with existing code, we sometimes add a $'$ symbol in names. 
 
+The $\eta$-rules for both $\Pi$-types and $\Sigma$-types automatically holds in Agda. Finally, the metatheory which is extended is proved to be decidable, consistent and adequate as mentioned earlier.
 
 \subsection{Category of setoids}
 
@@ -784,8 +785,9 @@ We first try to construct the predicates of defining an equivalence relation fro
 \\
 \end{code}
 
+It is then straightforward to define quotient types: the underlying sets are the same as $A$, the new equivalence relation is the reflexive, symmetric and transitive closure of $\mathsf{R}$ ($\mathsf{R_C}$) which also respects the original setoid equivalence of $A$.
 
-We postulate the properties of the repsectiveness of equivalence which has to be held by the equivalence relation $\mathsf{R}$. Another property postulated is that a function $f$ which repsects $\mathsf{R}$, it also respects the closure of $\mathsf{R}$.
+As a type defined in setoid model, The property $\mathsf{R}_{subst}$ holds as part of the definition of it. The same property must hold for $\mathsf{R_C}$ as well. However we do not use type construction in setoid model for simplicity and technical reasons, we have to postualate them. It means that our constructions are not suitable for practical use but enough for explanation.
 
 \begin{code}
 %
@@ -796,37 +798,17 @@ We postulate the properties of the repsectiveness of equivalence which has to be
 \>[9]\AgdaSymbol{(}\AgdaBound{R} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaBound{Rresp} \AgdaSymbol{:} \<[19]%
-\>[19]\AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{x'} \AgdaBound{y'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)}\<%
+\>[9]\AgdaSymbol{(}\AgdaBound{R-subst} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{γ} \AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}} \<[36]%
+\>[36]\<%
 \\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{(}\AgdaBound{eq1} \AgdaSymbol{:} \AgdaFunction{<} \AgdaFunction{rel} \AgdaBound{Γ} \AgdaBound{γ} \AgdaBound{γ'} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)}\<%
 \\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{(}\AgdaBound{eq2} \AgdaSymbol{:} \AgdaFunction{<} \AgdaFunction{rel} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaBound{x} \AgdaBound{x'} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaBound{eq1} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{γ} \AgdaFunction{≈} \AgdaBound{γ'}\AgdaSymbol{)} \AgdaSymbol{→}\<%
 \\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{(}\AgdaBound{eq3} \AgdaSymbol{:} \AgdaFunction{<} \AgdaFunction{rel} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaBound{y} \AgdaBound{y'} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{⇄} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{x'} \AgdaBound{y'} \AgdaFunction{>}\AgdaSymbol{)}\<%
-\\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaBound{Rresp2} \AgdaSymbol{:} \<[20]%
-\>[20]\AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)}\<%
-\\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{x'} \AgdaBound{y'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ'} \AgdaFunction{∣}\AgdaSymbol{)}\<%
-\\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{(}\AgdaBound{eq1} \AgdaSymbol{:} \AgdaFunction{<} \AgdaFunction{rel} \AgdaBound{Γ} \AgdaBound{γ} \AgdaBound{γ'} \AgdaFunction{>}\AgdaSymbol{)}\<%
-\\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{(}\AgdaBound{eq2} \AgdaSymbol{:} \AgdaFunction{<} \AgdaFunction{rel} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ'}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{eq1} \AgdaBound{x}\AgdaSymbol{)} \AgdaBound{x'} \AgdaFunction{>}\AgdaSymbol{)}\<%
-\\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{(}\AgdaBound{eq3} \AgdaSymbol{:} \AgdaFunction{<} \AgdaFunction{rel} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ'}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{eq1} \AgdaBound{y}\AgdaSymbol{)} \AgdaBound{y'} \AgdaFunction{>}\AgdaSymbol{)} \<[62]%
-\>[62]\<%
-\\
-\>[9]\AgdaIndent{11}{}\<[11]%
-\>[11]\AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{⇄} \AgdaBound{R} \AgdaBound{γ'} \AgdaBound{x'} \AgdaBound{y'} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{eq1} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{eq1} \AgdaBound{y}\AgdaSymbol{)} \AgdaFunction{>}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaKeyword{where}\<%
@@ -839,60 +821,25 @@ We postulate the properties of the repsectiveness of equivalence which has to be
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaFunction{RC} \AgdaBound{γ} \AgdaSymbol{=} \AgdaFunction{Closure} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaFunction{rel} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ}\AgdaSymbol{))} \AgdaSymbol{(}\AgdaBound{R} \AgdaBound{γ}\AgdaSymbol{)}\<%
 \\
-%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{inc} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \<[27]%
-\>[27]\AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{inc} \AgdaBound{r} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaSymbol{→} \AgdaBound{x₃} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaBound{r}\<%
-\\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaKeyword{postulate} \AgdaPostulate{respClosure} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{γ} \AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \<[49]%
-\>[49]\AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
+\>[2]\AgdaKeyword{postulate} \AgdaPostulate{RC-subst} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{γ} \AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}} \<[39]%
+\>[39]\<%
 \\
-\>[2]\AgdaIndent{26}{}\<[26]%
-\>[26]\AgdaSymbol{\{}\AgdaBound{f} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ'} \AgdaFunction{∣}\AgdaSymbol{\}} \<[64]%
-\>[64]\<%
+\>[2]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaSymbol{(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaIndent{24}{}\<[24]%
-\>[24]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{b}\AgdaSymbol{)} \AgdaFunction{>}\AgdaSymbol{)} \<[63]%
-\>[63]\<%
+\>[2]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaSymbol{(}\AgdaBound{eq1} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{γ} \AgdaFunction{≈} \AgdaBound{γ'}\AgdaSymbol{)} \AgdaSymbol{→}\<%
 \\
-\>[0]\AgdaIndent{24}{}\<[24]%
-\>[24]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{b}\AgdaSymbol{)} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\>[2]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \<[36]%
+\>[36]\<%
 \\
-%
-\\
-%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{Qsubst*} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{γ} \AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{γ} \AgdaFunction{≈} \AgdaBound{γ'}\AgdaSymbol{)} \<[45]%
-\>[45]\<%
-\\
-\>[0]\AgdaIndent{10}{}\<[10]%
-\>[10]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \<[20]%
-\>[20]\AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)} \<[35]%
-\>[35]\<%
-\\
-\>[0]\AgdaIndent{10}{}\<[10]%
-\>[10]\AgdaSymbol{→} \AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>} \<[25]%
-\>[25]\<%
-\\
-\>[0]\AgdaIndent{10}{}\<[10]%
-\>[10]\AgdaSymbol{→} \AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaBound{b}\AgdaSymbol{)} \AgdaFunction{>}\<%
-\\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{Qsubst*} \AgdaBound{γ} \AgdaBound{γ'} \AgdaBound{p} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{=} \AgdaPostulate{respClosure} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaSymbol{(}\AgdaBound{Rresp2} \AgdaSymbol{\_} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaBound{p} \<[64]%
-\>[64]\<%
-\\
-\>[0]\AgdaIndent{23}{}\<[23]%
-\>[23]\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ'} \AgdaFunction{]refl} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ'} \AgdaFunction{]refl}\AgdaSymbol{))} \<[63]%
-\>[63]\<%
+\>[2]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaFunction{<} \AgdaFunction{RC} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{eq1} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{eq1} \AgdaBound{y}\AgdaSymbol{)} \AgdaFunction{>}\<%
 \\
 %
 \\
@@ -912,17 +859,17 @@ We postulate the properties of the repsectiveness of equivalence which has to be
 \>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \AgdaSymbol{=} \AgdaFunction{RC} \AgdaBound{γ}\<%
 \\
 \>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄} \AgdaSymbol{→} \AgdaBound{x₃} \AgdaBound{x} \AgdaBound{x} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]refl}\<%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaBound{\_} \AgdaBound{\_} \AgdaBound{\_} \AgdaBound{x₃} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{x₃} \AgdaBound{x} \AgdaBound{x} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]refl}\<%
 \\
 \>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaBound{x≈y} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄} \AgdaSymbol{→} \AgdaBound{x₁} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{(}\AgdaBound{x≈y} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄}\AgdaSymbol{)}\<%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaBound{x≈y} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄} \AgdaSymbol{→} \AgdaBound{x₁} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaBound{x≈y} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄}\AgdaSymbol{)}\<%
 \\
 \>[2]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{z}\AgdaSymbol{\}} \AgdaBound{x≈y} \AgdaBound{y≈z} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄} \<[56]%
 \>[56]\<%
 \\
 \>[9]\AgdaIndent{19}{}\<[19]%
-\>[19]\AgdaSymbol{→} \AgdaBound{x₂} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{(}\AgdaBound{x≈y} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{y≈z} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄}\AgdaSymbol{)}\<%
+\>[19]\AgdaSymbol{→} \AgdaBound{x₂} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaBound{x≈y} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{y≈z} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{\}}\<%
@@ -945,7 +892,7 @@ We postulate the properties of the repsectiveness of equivalence which has to be
 \>[4]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
-\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{γ'}\AgdaSymbol{\}} \AgdaBound{p} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{Qsubst*} \AgdaBound{γ} \AgdaBound{γ'} \AgdaBound{p} \AgdaBound{a} \AgdaBound{b}\<%
+\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaPostulate{RC-subst} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaBound{p}\<%
 \\
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaBound{a} \AgdaBound{R'} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaBound{x₄} \AgdaSymbol{→} \AgdaBound{x₃} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*} \AgdaSymbol{\_} \AgdaSymbol{\_)}\<%
@@ -956,24 +903,41 @@ We postulate the properties of the repsectiveness of equivalence which has to be
 \>[2]\AgdaIndent{4}{}\<[4]%
 \>[4]\AgdaSymbol{\}}\<%
 \\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[\_]⟧} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{Tm} \AgdaFunction{⟦Q⟧}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[} \AgdaBound{x} \AgdaFunction{]⟧} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]tm}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{R'} \AgdaBound{\_} \AgdaBound{\_} \AgdaBound{x₄} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{x₄} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]respt} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
 \end{code}
 
+The formation and introduction rule for quotient types have been given above, Q-\textbf{Ax} is trivial. The elimination rule and induction principle for quotient types are also straightforward. Given any function $f : A \to B$ (more precisely a functor) that respects the equivalence relation $\mathsf{R_C}$, it naturally gives rise to a function $\hat{f} : Q \to B$. If a predicate holds for all normalised terms $[a]$, it also holds for all terms of $Q$ because the underlying sets are the same.
 
 
-\section{Observational equality}
+
+
+\subsection{Observational type theory}
 
 %definitional distinct types
 
 Later in in \cite{alti:ott-conf}, Altenkirch and McBride further
 simplifies the setoid model by adopting McBride's heterogeneous
-approach to equality. They identifies values up to observation rather than
-  construction which is called observational equality. It is the
-  propositional equality induced by the Setoid model.  In general we have a heterogeneous equality which
-  compares terms of types which are different in construction. It only
-  make sense when we can prove the types are the same. It helps us
-  avoids the heavy use of $subst$ which makes formalisation and
-  reasoning involved. We could simplify the setoid model by adapting this
-  approach and the implementation could be easier.
+approach to equality. 
+
+They identifies values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. However it only make sense when we can prove the types are the same, in other words, only if two types are definitionally equal, it can be inhabited. 
+
+It usually helps us avoids the heavy use of $subst$ which makes formalisation and reasoning involved. We could simplify the setoid model by adapting this approach and the implementation could be easier. The use of heterogeneous equality also means that we accept $K$ in general.
 
 
 

@@ -1,3 +1,4 @@
+\AgdaHide{
 \begin{code}
 
 {-# OPTIONS --type-in-type #-}
@@ -15,6 +16,9 @@ open import HProp ext public
 open import Data.Unit
 
 \end{code}
+}
+
+\subsection{Category of setoids}
 
 \begin{code}
 
@@ -38,7 +42,8 @@ record HSetoid : Set₁ where
   reflexive : _≡_ ⇒ _≈_
   reflexive PE.refl = refl
 
-open HSetoid public renaming (refl to [_]refl; sym to [_]sym; _≈_ to [_]_≈_ ; _≈h_ to [_]_≈h_ ; Carrier to ∣_∣ ; trans to [_]trans)
+open HSetoid public renaming (refl to [_]refl; sym to [_]sym; 
+  _≈_ to [_]_≈_ ; _≈h_ to [_]_≈h_ ; Carrier to ∣_∣ ; trans to [_]trans)
 
 rel : (A : HSetoid) → ∣ A ∣ → ∣ A ∣ → HProp
 rel A a b = [ A ] a ≈h b
@@ -48,7 +53,7 @@ rel A a b = [ A ] a ≈h b
 
 \end{code}
 
-Morphisms between HSetoid (Functors)
+Morphisms between HSetoids (Functors)
 
 \begin{code}
 
@@ -129,7 +134,6 @@ Terminal object
 
 \begin{code}
 
-
 ● : HSetoid
 ●   = record {
       Carrier = ⊤;
@@ -137,5 +141,14 @@ Terminal object
       refl    = tt;
       sym     = λ _ → tt;
       trans   = λ _ _ → tt }
+
+
+⋆ : {Δ : HSetoid} → Δ ⇉ ●
+⋆ = record 
+      { fn = λ _ → tt
+      ; resp = λ _ → tt }
+
+uniqueHom : ∀ (Δ : HSetoid) → (f : Δ ⇉ ●) → f ≡ ⋆
+uniqueHom Δ f = PE.refl
 
 \end{code}

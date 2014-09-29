@@ -207,8 +207,8 @@
                 {THE UNIVERSITY OF NOTTINGHAM}}
 %-------------------------------------------------                
 \department{\texorpdfstring{\href{Department or School Web Site URL Here (include http://)} % Your department's URL
-                {Department or Computer Science}} % Your department's name - used in the title page and abstract
-                {Department or Computer Science}}
+                {Department of Computer Science}} % Your department's name - used in the title page and abstract
+                {Department of Computer Science}}
 %-------------------------------------------------                
 \DEPARTMENT{\texorpdfstring{\href{Department or School Web Site URL Here (include http://)} % Your department's URL
                 {DEPARTMENT OR SCHOOL NAME (IN BLOCK CAPITALS)}} % Your department's name in capitals - this is not currently used anywhere in the template, cite it with \DEPTNAME if you want it
@@ -254,7 +254,7 @@
       \vfill
       {\LARGE by \par}
       \smallskip
-      {\LARGE \authornames \par}
+      {\LARGE \authornames, BSc. \par}
       \vfill
       {\large A thesis submitted in partial fulfillment for the \par}
       {\large degree of \degreename \par}
@@ -296,19 +296,19 @@
   \null\vfil
   \begin{center}
     \setlength{\parskip}{0pt}
-    {\normalsize \UNIVNAME \par} % University name in capitals
-    \bigskip
+    %{\normalsize \UNIVNAME \par} % University name in capitals
+    %\bigskip
     {\huge{\textit{Abstract}} \par}
     \bigskip
-    {\normalsize \facname \par} % Faculty name
-    {\normalsize \deptname \par} % Department name
-    \bigskip
-    {\normalsize \degreename\par} % Degree name
-    \bigskip
-    {\normalsize\bf \@title \par} % Thesis title
-    \medskip
-    {\normalsize by \authornames \par} % Author name
-    \bigskip
+    %{\normalsize \facname \par} % Faculty name
+    %{\normalsize \deptname \par} % Department name
+    %\bigskip
+    %{\normalsize \degreename\par} % Degree name
+    %\bigskip
+    %{\normalsize\bf \@title \par} % Thesis title
+    %\medskip
+    %{\normalsize by \authornames \par} % Author name
+    %\bigskip
   \end{center}
 }
 %----------------------------------------------------------------------------------------

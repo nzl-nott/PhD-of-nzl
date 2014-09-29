@@ -62,19 +62,13 @@ Context are interpreted as setoids
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{Con} \AgdaSymbol{=} \AgdaRecord{HSetoid}\<%
-\\
-%
 \\
 \>\<\end{code}
 
 Types are functors from $\Gamma → \mathbf{Std}$
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{record} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
 \\
@@ -139,15 +133,11 @@ Types are functors from $\Gamma → \mathbf{Std}$
 \>[0]\AgdaIndent{13}{}\<[13]%
 \>[13]\AgdaFunction{[} \AgdaBound{fm} \AgdaBound{z} \AgdaFunction{]} \AgdaBound{substT} \AgdaBound{q} \AgdaSymbol{(}\AgdaBound{substT} \AgdaBound{p} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{substT} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]trans} \AgdaBound{p} \AgdaBound{q}\AgdaSymbol{)} \AgdaBound{a}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Proof-irrelevance lemmas for substT
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaFunction{subst-pi} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
@@ -192,14 +182,13 @@ Proof-irrelevance lemmas for substT
 \>[16]\AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{\}}\<%
 \\
 \>[2]\AgdaIndent{16}{}\<[16]%
-\>[16]\AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{fm} \AgdaBound{y} \AgdaFunction{]} \AgdaFunction{substT} \AgdaBound{p} \AgdaBound{a} \AgdaFunction{≈} \AgdaFunction{substT} \AgdaBound{q} \AgdaBound{b}\<%
+\>[16]\AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\<%
+\\
+\>[2]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{fm} \AgdaBound{y} \AgdaFunction{]} \AgdaFunction{substT} \AgdaBound{p} \AgdaBound{a} \AgdaFunction{≈} \AgdaFunction{substT} \AgdaBound{q} \AgdaBound{b}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaFunction{subst-pi*} \AgdaBound{eq} \AgdaSymbol{=} \AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{subst*} \AgdaSymbol{\_} \AgdaBound{eq}\AgdaSymbol{)} \AgdaFunction{subst-pi}\<%
-\\
-%
-\\
-%
 \\
 %
 \\
@@ -257,16 +246,23 @@ Proof-irrelevance lemmas for substT
 \\
 %
 \\
-\>\AgdaKeyword{open} \AgdaModule{Ty} \AgdaKeyword{public} \<[15]%
-\>[15]\<%
+\>\AgdaKeyword{open} \AgdaModule{Ty} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}substT \AgdaSymbol{to} [\_]subst\AgdaSymbol{;} subst* \AgdaSymbol{to} [\_]subst*\AgdaSymbol{;} %
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaKeyword{renaming} \AgdaSymbol{(}substT \AgdaSymbol{to} [\_]subst\AgdaSymbol{;} subst* \AgdaSymbol{to} [\_]subst*\AgdaSymbol{;} fm \AgdaSymbol{to} [\_]fm \AgdaSymbol{;}
-            refl* \AgdaSymbol{to} [\_]refl* \AgdaSymbol{;} trans* \AgdaSymbol{to} [\_]trans*\AgdaSymbol{;} 
-            subst-pi \AgdaSymbol{to} [\_]subst-pi \AgdaSymbol{;}
-            subst-pi' \AgdaSymbol{to} [\_]subst-pi' \AgdaSymbol{;} subst-pi* \AgdaSymbol{to} [\_]subst-pi* \AgdaSymbol{;}
-            trans-refl \AgdaSymbol{to} [\_]trans-refl \AgdaSymbol{;} subst-mir1 \AgdaSymbol{to} [\_]subst-mir1 \AgdaSymbol{;}
-            subst-mir2 \AgdaSymbol{to} [\_]subst-mir2\AgdaSymbol{)}\<%
+\>[2]
+  fm \AgdaSymbol{to} [\_]fm \AgdaSymbol{;} refl* \AgdaSymbol{to} [\_]refl* \AgdaSymbol{;} trans* \AgdaSymbol{to} [\_]trans*\AgdaSymbol{;} %
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]
+  subst-pi \AgdaSymbol{to} [\_]subst-pi \AgdaSymbol{;} subst-pi' \AgdaSymbol{to} [\_]subst-pi' \AgdaSymbol{;} %
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]
+  subst-pi* \AgdaSymbol{to} [\_]subst-pi* \AgdaSymbol{;} trans-refl \AgdaSymbol{to} [\_]trans-refl \AgdaSymbol{;}%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]
+  subst-mir1 \AgdaSymbol{to} [\_]subst-mir1 \AgdaSymbol{;} subst-mir2 \AgdaSymbol{to} [\_]subst-mir2\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
 
@@ -274,36 +270,34 @@ Type substitution
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{\_[\_]T} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
 \\
 \>\AgdaFunction{\_[\_]T} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaBound{f}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{=} \AgdaKeyword{record}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{\{} \AgdaField{fm} \<[14]%
 \>[14]\AgdaSymbol{=} \AgdaFunction{fm} \AgdaFunction{∘} \AgdaFunction{fn}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaFunction{substT} \AgdaFunction{∘} \AgdaFunction{resp}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaFunction{subst*} \AgdaFunction{∘} \AgdaFunction{resp}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{;} \AgdaField{refl*} \<[14]%
 \>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{subst-pi'}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{(}\AgdaFunction{fn} \AgdaSymbol{\_)} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{trans*} \AgdaSymbol{\_)} \AgdaFunction{subst-pi}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaSymbol{\}}\<%
 \\
-\>[2]\AgdaIndent{5}{}\<[5]%
+\>[0]\AgdaIndent{5}{}\<[5]%
 \>[5]\AgdaKeyword{where} \<[11]%
 \>[11]\<%
 \\
@@ -313,15 +307,11 @@ Type substitution
 \>[5]\AgdaIndent{7}{}\<[7]%
 \>[7]\AgdaKeyword{open} \AgdaModule{\_⇉\_} \AgdaBound{f}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Terms
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{record} \AgdaRecord{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
 \\
@@ -350,15 +340,11 @@ Terms
 \\
 \>\AgdaKeyword{open} \AgdaModule{Tm} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}tm \AgdaSymbol{to} [\_]tm \AgdaSymbol{;} respt \AgdaSymbol{to} [\_]respt\AgdaSymbol{)}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Term substitution
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{\_[\_]m} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Tm} \AgdaBound{A} \<[39]%
 \>[39]\<%
@@ -384,9 +370,6 @@ Term substitution
 Context comprehension
 
 \begin{code}\>\<%
-\\
-\>[0]\AgdaIndent{1}{}\<[1]%
-\>[1]\<%
 \\
 \>\AgdaFunction{\_\&\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaRecord{HSetoid}\<%
 \\
@@ -463,15 +446,11 @@ Context comprehension
 \>[7]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Pairing operation
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{\_,,\_} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]T}\AgdaSymbol{))} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaSymbol{(}\AgdaBound{Δ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{)}\<%
 \\
@@ -487,15 +466,11 @@ Pairing operation
 \>[7]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Projections
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{fst} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaSymbol{(}\AgdaBound{Δ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ}\<%
 \\
@@ -511,8 +486,6 @@ Projections
 \\
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{\}}\<%
-\\
-%
 \\
 %
 \\
@@ -533,8 +506,6 @@ Projections
 \\
 %
 \\
-%
-\\
 \>\AgdaFunction{\_\textasciicircum\_} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]T} \AgdaRecord{⇉} \AgdaBound{Δ} \AgdaFunction{\&} \AgdaBound{A}\<%
 \\
 \>\AgdaBound{f} \AgdaFunction{\textasciicircum} \AgdaBound{A} \AgdaSymbol{=} \AgdaKeyword{record} \<[15]%
@@ -549,17 +520,11 @@ Projections
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 $\Pi$-types (object level)
 
 \begin{code}\>\<%
-\\
-%
-\\
-%
 \\
 \>\AgdaFunction{Π} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{))} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
 \\
@@ -578,39 +543,35 @@ $\Pi$-types (object level)
 \>[0]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaRecord{Σ[} \AgdaBound{fn} \AgdaRecord{∶} \AgdaSymbol{((}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Ax} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaRecord{]}\<%
 \\
-\>[9]\AgdaIndent{21}{}\<[21]%
-\>[21]\AgdaSymbol{((}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Ax} \AgdaFunction{∣}\AgdaSymbol{)}\<%
+\>[9]\AgdaIndent{22}{}\<[22]%
+\>[22]\AgdaSymbol{((}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Ax} \AgdaFunction{∣}\AgdaSymbol{)}\<%
 \\
-\>[9]\AgdaIndent{21}{}\<[21]%
-\>[21]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Ax} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\>[9]\AgdaIndent{22}{}\<[22]%
+\>[22]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Ax} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→}\<%
 \\
-\>[9]\AgdaIndent{21}{}\<[21]%
-\>[21]\AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{b} \AgdaFunction{]} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]subst} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]refl} \AgdaInductiveConstructor{,} \<[54]%
-\>[54]\<%
+\>[9]\AgdaIndent{22}{}\<[22]%
+\>[22]\AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{b} \AgdaFunction{]} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]subst} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]refl} \AgdaInductiveConstructor{,} \<[55]%
+\>[55]\<%
 \\
-\>[9]\AgdaIndent{21}{}\<[21]%
-\>[21]\AgdaFunction{[} \AgdaBound{Ax} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*} \AgdaBound{x} \AgdaBound{a}\AgdaSymbol{)} \AgdaBound{p}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{fn} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{fn} \AgdaBound{b}\AgdaSymbol{)} \<[68]%
-\>[68]\<%
-\\
-\>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \<[19]%
-\>[19]\AgdaSymbol{=} \AgdaSymbol{λ\{(}\AgdaBound{f} \AgdaInductiveConstructor{,} \AgdaSymbol{\_)} \AgdaSymbol{(}\AgdaBound{g} \AgdaInductiveConstructor{,} \AgdaSymbol{\_)} \AgdaSymbol{→}\<%
-\\
-\>[0]\AgdaIndent{21}{}\<[21]%
-\>[21]\AgdaFunction{∀'[} \AgdaBound{a} \AgdaFunction{∶} \AgdaSymbol{\_} \AgdaFunction{]} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]} \AgdaBound{f} \AgdaBound{a} \AgdaFunction{≈h} \AgdaBound{g} \AgdaBound{a} \AgdaSymbol{\}}\<%
+\>[9]\AgdaIndent{22}{}\<[22]%
+\>[22]\AgdaFunction{[} \AgdaBound{Ax} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*} \AgdaBound{x} \AgdaBound{a}\AgdaSymbol{)} \AgdaBound{p}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{fn} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{fn} \AgdaBound{b}\AgdaSymbol{)} \<[69]%
+\>[69]\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{;} \AgdaField{refl} \<[19]%
-\>[19]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]refl} \<[40]%
-\>[40]\<%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \AgdaSymbol{=} \AgdaSymbol{λ\{(}\AgdaBound{f} \AgdaInductiveConstructor{,} \AgdaSymbol{\_)} \AgdaSymbol{(}\AgdaBound{g} \AgdaInductiveConstructor{,} \AgdaSymbol{\_)} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaFunction{∀'[} \AgdaBound{a} \AgdaFunction{∶} \AgdaSymbol{\_} \AgdaFunction{]} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]} \AgdaBound{f} \AgdaBound{a} \AgdaFunction{≈h} \AgdaBound{g} \AgdaBound{a} \AgdaSymbol{\}}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{;} \AgdaField{sym} \<[19]%
-\>[19]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]sym} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)}\<%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]refl} \<[37]%
+\>[37]\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{;} \AgdaField{trans} \<[19]%
-\>[19]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{g} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaBound{a}\AgdaSymbol{)}\<%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]sym} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{g} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaBound{a}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{\}}\<%
@@ -635,11 +596,8 @@ $\Pi$-types (object level)
 \>[28]\<%
 \\
 \>[0]\AgdaIndent{15}{}\<[15]%
-\>[15]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]subst} \AgdaSymbol{(}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{p'} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{(}\AgdaBound{y2x} \AgdaBound{a}\AgdaSymbol{)))}\<%
-\\
-\>[0]\AgdaIndent{15}{}\<[15]%
-\>[15]\AgdaInductiveConstructor{,} \<[49]%
-\>[49]\<%
+\>[15]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]subst} \AgdaSymbol{(}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{p'} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{(}\AgdaBound{y2x} \AgdaBound{a}\AgdaSymbol{)))} \AgdaInductiveConstructor{,} \<[59]%
+\>[59]\<%
 \\
 \>[0]\AgdaIndent{15}{}\<[15]%
 \>[15]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{q} \AgdaSymbol{→} \<[26]%
@@ -839,14 +797,6 @@ $\Pi$-types (object level)
 \\
 %
 \\
-\>\<\end{code}
-
-Verification of β causes stack overflow
-
-\begin{code}\>\<%
-\\
-%
-\\
 \>\AgdaFunction{\_⇒\_} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
 \\
 \>\AgdaBound{A} \AgdaFunction{⇒} \AgdaBound{B} \AgdaSymbol{=} \AgdaFunction{Π} \AgdaBound{A} \AgdaSymbol{(}\AgdaBound{B} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{)}\<%
@@ -860,8 +810,6 @@ Verification of β causes stack overflow
 Simpler definition for functions
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{[\_,\_]\_⇒fm\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)(}\AgdaBound{x} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HSetoid} \AgdaSymbol{→} \AgdaRecord{HSetoid} \AgdaSymbol{→} \AgdaRecord{HSetoid}\<%
 \\
@@ -897,15 +845,11 @@ Simpler definition for functions
 \>[0]\AgdaIndent{6}{}\<[6]%
 \>[6]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 $\Sigma$-types (object level)
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{Σ''} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{))} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
 \\
@@ -1053,10 +997,7 @@ $\Sigma$-types (object level)
 \>[0]\AgdaIndent{8}{}\<[8]%
 \>[8]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
-
 
 \AgdaHide{
 \begin{code}\>\<%
@@ -1097,8 +1038,6 @@ module TypeTerm-Equality
   Pi-Sub A B f = Ty-ExtEq \{!ext!\} \{!!\}
 
 -\}}\<%
-\\
-%
 \\
 \>\<\end{code}
 }

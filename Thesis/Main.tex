@@ -12,7 +12,6 @@
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
-
 \usepackage[all]{xy}
 %agda literal file
 \usepackage{agda}
@@ -39,6 +38,8 @@
 
 
 \usepackage{booktabs}% horizontal lines
+
+\usepackage{bookmark}
 
 \usepackage{proof} % For type derivation
 \setlength{\inferLineSkip}{4pt}
@@ -77,9 +78,9 @@
 %\usepackage{glossaries}
 
 
-\usepackage[textwidth=3cm]{todonotes}
-\reversemarginpar
-\setlength{\marginparwidth}{3cm}
+%\usepackage[textwidth=3cm]{todonotes}
+%\reversemarginpar
+%\setlength{\marginparwidth}{3cm}
 
 \input{macros}
 \usepackage{mypack}
@@ -123,7 +124,7 @@
 \hypersetup{pdfkeywords=\keywordnames}
 
 
-\listoftodos
+%\listoftodos
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -175,11 +176,7 @@
 
 \addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
 
-\abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
-
-The Thesis Abstract is written here (and usually kept to just this page). This thesis mainly covered the quotient types in type theory
-}
-
+\input{Abstract}
 
 \clearpage % Start a new page
 
@@ -189,10 +186,9 @@ The Thesis Abstract is written here (and usually kept to just this page). This t
 
 \setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
 
-\acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
 
-The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
-}
+\input{Acknowledgements}
+
 \clearpage % Start a new page
 
 %----------------------------------------------------------------------------------------
@@ -204,11 +200,11 @@ The acknowledgments and the people to thank go here, don't forget to include you
 \lhead{\emph{Contents}} % Set the left side page header to "Contents"
 \tableofcontents % Write out the Table of Contents
 
-\lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
-\listoffigures % Write out the List of Figures
+%\lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
+%\listoffigures % Write out the List of Figures
 
-\lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
-\listoftables % Write out the List of Tables
+%\lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
+%\listoftables % Write out the List of Tables
 
 
 
@@ -251,7 +247,7 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 %\input{Chapters/Miscellaneous]
 
-\input{Chapters/Summary}
+\input{Chapters/Conclusion}
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
@@ -266,23 +262,47 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 \input{Appendices/AppendixA}
 
-\chapter{Set Quotients and Groupoid Quotients}
+\chapter{Definable quotient structures}
 
 \input{Appendices/Codes/latex/Quotient}
-\input{Appendices/Codes/latex/GroupoidQuotient}
+
+%\input{Appendices/Codes/latex/GroupoidQuotient}
+
+\chapter{Category with families of setoids}\label{app:cwf}
+
+\input{Appendices/Codes/latex/HProp}
+
+\input{Appendices/Codes/latex/CategoryOfSetoid}
+
+\input{Appendices/Codes/latex/CwF-setoidwo}
+
+\input{Appendices/Codes/latex/CwF-ctd}
+
+\input{Appendices/Codes/latex/CwF-quotient}
+
+\chapter{syntactic \wog}
+
+\input{Appendices/Codes/latex/BasicSyntax}
 
 
-\chapter{Category with families of setoids}ter
+\section{Some Important Derivable Constructions}
 
-%\input{Appendices/Codes/CWF/HProp}
+\input{Appendices/Codes/latex/IdentityContextMorphisms}
+	
+\input{Appendices/Codes/latex/Suspension}
 
-%\input{Appendices/Codes/CWF/CategoryOfSetoid}
+\input{Appendices/Codes/latex/GroupoidStructure}
 
-%\input{Appendices/Codes/CWF/CwF-setoidwo}
+%\input{Appendices/Codes/latex/Telescopes2}
 
-%\input{Appendices/Codes/CWF/CwF-ctd}
 
-%\input{Appendices/Codes/CWF/CwF-quotient}
+\input{Appendices/Codes/latex/GlobularTypes}
+
+
+\input{Appendices/Codes/latex/Semantics}
+
+
+
 
 %\input{CwF/latex/hProp.tex}
 
@@ -323,7 +343,9 @@ The acknowledgments and the people to thank go here, don't forget to include you
 
 \lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
 
-\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\bibliographystyle{plainnat}
+
+%\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
 
 \bibliography{my}
 

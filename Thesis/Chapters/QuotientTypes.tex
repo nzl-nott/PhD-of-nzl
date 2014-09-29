@@ -32,8 +32,8 @@
 %operations. For instance, the product is extended to the cartesian product in set theory.
 
 
-Quotient is one of the primitive notions in Mathematics. 
-In arithmetics, quotient is the result of division
+Quotient is one of the primitive notions in \maths. 
+In arithmetic, quotient is the result of division
 
 $$8 \div 4 = 2 ~~ \text{or}~~ 8/4 = 2$$
 
@@ -43,7 +43,7 @@ In abstract algebra quotient is the result of ``dividing'' a set, group, space o
 \begin{definition}
 \textbf{Equivalence relation}.
 An equivalence relation is a binary
-relation which is refleixive, symmetric and transitive.
+relation which is reflexive, symmetric and transitive.
 \end{definition}
 
 Intuitively, given any equivalence relation, a set can be partitioned into
@@ -70,7 +70,7 @@ set is denoted as $\qset{A}$,
 \end{equation}
 \end{definition}
 
-Similarly in topology, group theory or other branches there are also quotient space, quotient group and other quotients. How can we construct a quotient set in type theory? How about quotient \textbf{type}?
+Similarly in topology, group theory or other branches there are also quotient space, quotient group and other quotients. How can we construct a quotient set in type theory? How about a quotient type?
 
 \section{Quotient types in type theory}
 
@@ -102,8 +102,8 @@ unsafe because we have access to the underlying
  equivalence relation and the result does not make any sense.
 Therefore, setoids are not considered as a good solution.
 
-From other quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in tpye theory it is also expected
-that the type representing a quotient set is of sort $\Set$ rather that $\textbf{Setoid}$. 
+From other quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in type theory it is also expected
+that the type representing a quotient set is of sort $\Set$ rather that $\Setoid$. 
 
 \subsection{An impredicative encoding of quotient types}\label{impredicative}
 
@@ -303,7 +303,7 @@ $$a \sim b$$.
 
 \subsection{Quotient types are coequalizers}
 
-The intensinal quotient set is indeed characterised in category-theoretical way.
+The intensional quotient set is indeed characterised in category-theoretical way.
 Categorically speaking, a quotient is a coequalizer.
 
 \begin{definition}
@@ -352,7 +352,7 @@ $\pi_1 \circ t = 1_A$ (i.e.\ $t ~ a = (\emb [ a ] , a)$)
 
 
 
-\subsection{Quotient types is a left ajoint functor}
+\subsection{Quotient types is a left adjoint functor}
 
 Recalling the definition of adjunction.
 
@@ -388,7 +388,7 @@ To prove that this is an isomorphism, assume $f : \qset{B} \to A$, there exists 
 
 $\Omega ~ f = f \circ [\_]$ and its inverse
 
-$\Omega^{-1} ~ g = \hat{g}$ (we omit the property that $g$ repsects $\sim$)
+$\Omega^{-1} ~ g = \hat{g}$ (we omit the property that $g$ respects $\sim$)
 
 The isomorphic properties can be verified as follows,
 
@@ -399,13 +399,13 @@ $\Omega (\Omega^{-1}~g) = \hat{g} \circ [\_] = g$ by definition of lifting.
 
 \subsection{Quotient inductive types}
 
-As we have seen in \ref{hott:ext}, quotient inductive types is an alternative way to define quotients in \hott. In fact, some examples suggests that QITs are more powerful than quotient types.
+As we have seen in \autoref{hott:ext}, quotient inductive types is an alternative way to define quotients in \hott. In fact, some examples suggests that QITs are more powerful than quotient types.
 
-One of the example is the definition of reals which will be discussed in \ref{rl}. Our construction of reals by Cauchy sequences of rational numbers is not Cauchy complete because there is no limit of each equivalence class. However, the Cauchy approximation approach in \cite{hott-online} using quotient inductive types is Cauchy complete due to the fact that the equivalence relation and limits are included in its definition.
+One of the example is the definition of reals which will be discussed in \autoref{rl}. Our construction of reals by Cauchy sequences of rational numbers is not Cauchy complete because there is no limit of each equivalence class. However, the Cauchy approximation approach in \cite{hott} using quotient inductive types is Cauchy complete due to the fact that the equivalence relation and limits are included in its definition.
 
 Another example is unordered trees (rooted tree). An unordered tree is a tree connected to a multiset of rooted trees, hence there is no ordering on subtrees.
 
-Firsrtly we define ordered trees as:
+Firstly we define ordered trees as:
 
 \begin{itemize}
 \item A leaf $l: \mathsf{Tree}$, or
@@ -425,12 +425,12 @@ where $f \sim_{p} g$ stands for $f$ is a permutation of $g$. The permutation can
 
 If we define unordered trees as a quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, 
 there is some problem of lifting the $st$. 
-For finitary branching trees like binary trees,$st$ can be lifted by nesting lifting functions,
+For finitely branching trees like binary trees,$st$ can be lifted by nesting lifting functions,
 
 $$\overline{st}~a~b = \text{lift}~(\text{lift}~st~a)~b$$
 
-because its type is ismorphic to $\mathsf{BTree} \rightarrow \mathsf{BTree} \rightarrow \mathsf{BTree}$.
-Intuitively we can apply this approach to trees with finatary subtrees. However it fails if have infinite subtrees.
+because its type is isomorphic to $\mathsf{BTree} \rightarrow \mathsf{BTree} \rightarrow \mathsf{BTree}$.
+Intuitively we can apply this approach to trees with finite subtrees. However it fails if have infinite subtrees.
 
 Quotient inductive types does not have such problems:
 
@@ -438,7 +438,7 @@ Quotient inductive types does not have such problems:
 \item $l: \mathsf{Tree}$, 
 \item $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
   and
-\item a set of pathes relates two permutated trees:
+\item a set of paths relates two permuted trees:
 
 $l_{eq} : l  =_{\mathsf{Tree}} l $
 
@@ -446,9 +446,9 @@ $st_{eq} : \forall (f, g : \N \to \mathsf{Tree}) \rightarrow
 f \sim_{p} g \rightarrow  st~f =_{\mathsf{Tree}} st~g$
 \end{itemize}
 
-The cumulative hierachy of all sets introduced in \cite{hott-online} also suggests that quotient types have some weaknesses compared to quotient inductive types.
+The cumulative hierarchy of all sets introduced in \cite{hott} also suggests that quotient types have some weaknesses compared to quotient inductive types.
 
-A cumulative hierachy can be given by constructors,
+A cumulative hierarchy can be given by constructors,
 
 $\{\_\} : (I : \Set) \to (I \to M_0) \to M_0$
 
@@ -462,7 +462,7 @@ Then we can easily define the equivalence relation using set-theoretical definit
 
 $A \sim B \defeq \forall m : M_0, m \in A \iff m \in B$
 
-Similar to unorder trees, we can not obtain the constructor $\overline{\{\_\}}$ because the index set $I$ can be infinte.
+Similar to unordered trees, we can not obtain the constructor $\overline{\{\_\}}$ because the index set $I$ can be infinite.
 
 
 In the above examples, it seems that quotient inductive types are more powerful than quotient types due to the ability of defining term constructors and equivalence relations simultaneously. 
@@ -472,10 +472,7 @@ However, quotient inductive types are not available in type theories other than 
 
 \section{Literature review}
 
-\todo{rewrite}
-
-There are a few researches on quotient types.
-
+%\todo{rewrite}
 
 \begin{itemize}
 

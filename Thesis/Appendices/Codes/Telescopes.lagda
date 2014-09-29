@@ -1,0 +1,198 @@
+
+\AgdaHide{
+\begin{code}
+{-# OPTIONS --type-in-type --no-positivity-check --no-termination-check #-}
+
+module Telescopes where
+
+open import Relation.Binary.PropositionalEquality 
+open import Data.Product renaming (_,_ to _,,_)
+open import Data.Nat
+
+open import BasicSyntax renaming (_∾_ to htrans)
+open import BasicSyntax2
+open import Suspension
+open import GroupoidLaws
+\end{code}
+}
+
+\subsection{Higher Structure}
+%
+In this section we propose how also higher groupoid structure can be
+introduced in the syntactical framework. We use the more abstract
+language of category theory to communicate the gist of the
+construction leaving the tedious formalisation for future work. To this
+end note that contexts and context morphisms form a category up to
+definitional quality. Because equality of contexts is decidable we
+may assume \textsf{UIP} on context morphisms and we are therefore
+working in a honest 1-category where equality of arrows is
+definitional equality of context morphisms. This category will be
+denoted $\mathsf{Con}$.
+
+\subsubsection{Identities}
+\label{sec:spans}
+
+For each type of level $n\in \mathbf{N}$, we have defined in Section \ref{sec:replacement} a context called
+\emph{span} which has $2n+1$ variables
+which except for the top level, $n$, there are two variables on each
+level whose type is the equality type of the two variables on the
+level below, except for the bottom-level variables which are of type $\ast$. 
+We call denote a span of any type of level $n$, $S_n$. Note that all
+such spans are isomorphic. 
+
+%p
+In each case we call the last variable the
+\emph{peak}. Note that each $S_n$ is contractible because it is a
+suspension of a contractible context. We call the proof of
+contractibility of $S_n$ $\mathsf{is\text{-}contr}~S_n$. 
+
+In each $S_n$ define the type $\sigma_n$ as $x_{2n-2}\,=_\mathsf{h}\,x_{2n-1}$. It is the type of the top variable. We are going to show that the following 
+\[
+S_0 \three/<-`>`<-/^{s_0}|{i_0}_{t_0} S_1 \three/<-`>`<-/^{s_1}|{i_1}_{t_1} S_2 \cdots S_n
+\three/<-`>`<-/^{s_n}|{i_n}_{t_n} S_{n+1} \cdots
+\]
+is a \emph{reflexive globular object} in $\mathsf{Con}$. I.e. we define
+morphisms $s_n$, $t_n$, $i_n$ between spans that it satisfy the
+following usual \emph{globular identities}:
+\begin{equation}\label{eq:glob}
+\begin{array}{rl}
+s_n t_{n+1}&~=~s_n s_{n+1}\\
+t_n t_{n+1}&~=~t_n s_{n+1}
+\end{array}
+\end{equation}
+% 
+together with
+\begin{equation}
+  \label{eq:refl-glob}
+  s_n i_n ~= ~\mathsf{id}~=~ t_ni_n
+\end{equation}
+
+To this end, for each $n$, define context morphisms $s_n, t_n  : S_{n+1}
+\Rightarrow S_n$ by the substitutions
+\begin{align*}
+s_n &~=~& x_k &~\mapsfrom~x_k &k < 2n\\
+&&x_{2n} &~\mapsfrom~x_{2n} \\
+t_n &~=~& x_k &~\mapsfrom~x_k &k < 2n\\
+&&x_{2n} &~\mapsfrom~2n+1
+\end{align*}
+%
+In words, $s_n$ forgets the last two variables of $S_{n+1}$ and
+$t_n$ forgets the peak and its domain. It's easy to check that $s$ and
+$t$ indeed satisfy \eqref{eq:glob}.
+
+
+In order to define $i_n :  S_n \Rightarrow S_{n+1}$, 
+we must consider stalks (see Section \ref{sec:susp-and-repl}), which
+are contexts, hereby denoted $\overline{S_n}$, which are like
+$S_n$ without the last variable, together with types
+$\overline{\sigma}_n$ which are like $\sigma_n$ but considered in the
+smaller context. 
+
+%
+For each $n$ there is a context morphism $\overline{i_n}: S_n
+\Rightarrow \overline{S}_{n+1}$ defined by
+\begin{align*}
+\overline{i_n} &~=~& x_k &~\mapsfrom ~ x_k & k \le 2n\\
+&& x_{2n+1} &~\mapsfrom~x_{2n}
+\end{align*}
+%
+The substitution of $\overline{\sigma}_{n+1}$ along $\overline{i_n}$,
+$\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$, is equal to $x_{2n}
+=_\mathsf{h} x_{2n}$ in $S_n$. So in order to extend $\overline{i_n}$ to
+$i_n : S_n \Rightarrow S_{n+1}$ we must define a term in
+$\overline{i_n}[\overline{\sigma}_{n+1}]_\mathsf{T}$.  We can
+readily do that by $\mathsf{coh}$:
+\[
+i_n~ = ~ \overline{i_n}\, ,
+\,\mathsf{coh}~(\mathsf{IdCm\,S_n})~(x_{2n}\,=_\mathsf{h}\,x_{2n})~(\mathsf{is\text{-}contr}~S_n)
+\]
+\noindent It's easy to check that $i_n$ satisfies \eqref{eq:refl-glob}. 
+
+For each $n$ consider the chain 
+\[i_0^n \quad \equiv \quad S_0 \to^{i_0} S_1 \to^{i_1} S_2 \to \cdots \to^{i_{n-1}} S_n\]
+%
+The substitution
+$\sigma_n[i_0]_\mathsf{T}\cdots[i_{n-2}]_\mathsf{T}[i_{n-1}]_\mathsf{T}
+\equiv \sigma_n[i_0^n]_\mathsf{T}$ is
+a type, $\lambda_n$, in $S_0$.
+We call $\lambda_n$ the \emph{n\text{-}iterated loop type} on 
+$x_0$. The term $S_0 \vdash (\mathsf{var}~x_{2n}) [i_0^n]_\mathsf{tm} : \lambda_n$ is
+the iterated identity term on $x_0$. 
+
+\newbox\anglebox
+\setbox\anglebox=\hbox{\xy \POS(75,0)\ar@{-} (0,0) \ar@{-} (75,75)\endxy}
+\def\angle{\copy\anglebox}
+
+\newbox\coanglebox
+\setbox\coanglebox=\hbox{\xy \POS(0,75)\ar@{-} (75,75) \ar@{-} (0,0)\endxy}
+\def\coangle{\copy\coanglebox}
+
+
+\subsubsection{Composition}
+\label{sec:composition}
+%
+For $m>n$ write $s^m_n$, $t^m_n$ for $m-n$ iteration of $s$ and $t$,
+respectively. Explicitly:
+\begin{align*}
+s_n^m &~=~ s_{m-1}\cdots s_n &:~ S_m \Rightarrow S_n\\
+t_n^m &~=~ t_{m-1}\cdots t_n &:~ S_m \Rightarrow S_n
+\end{align*}
+%
+For each $n\in \mathbb{N}$ define context $Y_n$ by the pullback in:
+\[\bfig
+\square/<-`<-`<-`<-/[S_0`S_n`S_n`Y_n;t^n_0`s^n_0`l_n`r_n]
+\place(400,100)[\coangle]
+\efig\]
+%
+By definition of pullbacks, $Y_n$ looks like a pair of spans $S_n$
+together with the proviso that the variable $1$ of one is always
+equal to variable $0$ of the other. I.e. $Y_n$ has the shape of two
+spans pasted target-to-source at level $0$. It is easy to check that
+this is indeed a pullback. 
+%
+
+By the globular identities the two outer squares in the diagram below
+commute and by the universal property of the pullback imply a pair
+of mediating arrows as indicated. 
+\[\bfig
+\square/<-`<-`<-`<-/[S_0`S_n`S_n`Y_n;t^n_0`s^n_0`l_n`r_n]
+\place(400,100)[\coangle]
+\morphism(500,500)/<-/<500,0>[S_n`S_{n+1};s_n]
+%\morphism(500,500)/{@{<-}@<.5em>}/<500,0>[S_n`S_{n+1};t_n]
+%\morphism(0,0)/{@{<-}@<-.5em>}/<0,-500>[S_n`S_{n+1};s_n]
+\morphism(0,0)|l|/<-/<0,-500>[S_n`S_{n+1};s_n]
+\morphism(1000,500)|r|/<-/<0,-1000>[S_{n+1}`Y_{n+1};l_{n+1}]
+\morphism(0,-500)|b|/<-/<1000,0>[S_{n+1}`Y_{n+1};r_{n+1}]
+\place(900,-400)[\coangle]
+\morphism(500,0)/<--/<500,-500>[Y_n`Y_{n+1};\langle s , s \rangle_n]
+\efig\]
+%
+Similarly we obtain an arrow $Rr_n : Y_{n+1} \to Y_n$. The morphisms
+$l_n$ and $r_n$ provide projections onto the left and right span of
+$Y_n$ respectively. The mediating arrows $\langle s, s\rangle_n$ and
+$\langle t , t \rangle_n$ provide
+projections out of $Y_{n+1}$ onto the join of the sources and targets of the left
+and right parts respectively.
+%\oxr{We must say a bit more: how is this morphism defined? By recursion. }
+
+In order to define composition we define for each $n$ a third morphism
+$c_n: Y_n \Rightarrow S_n$ with the property that both the $s$-squares
+and $t$-squares below commute. 
+\begin{equation}\label{eq:comp}
+\bfig
+\square/`<-`<-`/[S_n`S_{n+1}`Y_n`Y_{n+1};`c_n`c_{n+1}`]
+\morphism(0,500)|a|/{@{<-}@<.5em>}/[S_n`S_{n+1};s_n]
+\morphism(0,500)|b|/{@{<-}@<-.5em>}/[S_n`S_{n+1};t_n]
+\morphism(0,0)|a|/{@{<-}@<.5em>}/[Y_n`Y_{n+1};\langle s , s \rangle_n]
+\morphism(0,0)|b|/{@{<-}@<-.5em>}/[Y_n`Y_{n+1};\langle t , t \rangle_n]
+\efig
+\end{equation}
+% 
+The commutativity of \eqref{eq:comp} expresses the fact that the
+source of a composition is a composition of sources and the target of
+a composition is a composition of target. 
+
+It follows from all of this that for a context $\Gamma$ and a pair of
+morphisms $a , b : \Gamma \Rightarrow S_n$, there is a context morphism $c \langle a , b \rangle
+: \Gamma \Rightarrow S_n$ from $s^n_0 a$ to $t^n_0 b$ which is the composition
+of $a$ and $b$.

@@ -24,7 +24,7 @@ We found it is often easier to define the operations on the
 setoid and the required algebraic properties are direct consequences
 of the semiring structure of the natural numbers.
 
-Another example is the set of rational numbers. In this case the setoid representation \emph{fraction} and set representation \emph{reduced fraction} are both commonly used in arithmetics. Following our conventions, it is more reansonable to compute with setoid representation and display with reduced fractions. If we define operations on reduced fractions, we have to prove coprimarity in every step which is too complicated and is also a burden for computers.
+Another example is the set of rational numbers. In this case the setoid representation \emph{fraction} and set representation \emph{reduced fraction} are both commonly used in arithmetic. Following our conventions, it is more reasonable to compute with setoid representation and display with reduced fractions. If we define operations on reduced fractions, we have to prove coprimarity in every step which is too complicated and is also a burden for computers.
 In these cases, both the set interpretation and the setoid one
 have some nice features.
 Hence we propose to use both the setoid
@@ -111,8 +111,8 @@ Suppose $B$ is a predicate,
 \[\qind \colon((a: A)\rightarrow B \,\class a)\rightarrow ((q : Q)\rightarrow B\,q)\]
 \end{definition}
 
-Such a quotient is \emph{exact}~\footnote{Exact quotient is just \emph{effective
-  quotient} in \cite{maietti1999effective}} if exactly one element of
+Such a quotient is \emph{exact}~\footnote{Exact quotient is just effective
+  quotient in \cite{maietti1999effective}} if exactly one element of
 quotient set represents one equivalence class. This property is captured by the following definition.
 
 \begin{definition}
@@ -128,7 +128,7 @@ $$exact :(\forall a,b : A) \rightarrow  \class a \equiv \class b \rightarrow a \
 \end{definition}
 
 \begin{remark}
-This is indeed provable if we have propositional univalence. The proof can be found in \ref{PUEF}.
+This is indeed provable if we have propositional univalence. The proof can be found in \autoref{PUEF}.
 \end{remark}
 
 
@@ -157,7 +157,7 @@ prequotient $(Q, [\_], \sound)$ with
 \end{align*}
 \end{definition}
 
-It is equivalent to \ref{def:nor} because:
+It is equivalent to \autoref{def:nor} because:
 
 the normalisation function can be recovered as 
 
@@ -169,7 +169,7 @@ $Q \defeq \Sigma c : \R_0, [ c ]_0 = c$ with a function
 
 $[ c ] \defeq [c]_0 , ~\sound ~ [[c]_0]_0 ~~ [c]_0~~ (\complete ~ c)$
 
- and then the embedding function is just the first projection. The properties can be verified easily. It has to be notised that although we call $[\_]$ as a normsalition function, it is only true in a definable quotient structure.
+ and then the embedding function is just the first projection. The properties can be verified easily. It has to be noticed that although we call $[\_]$ as a normalisation function, it is only true in a definable quotient structure.
 
 Categorically speaking, a definable quotient is a \emph{split coequalizer}.
 
@@ -220,7 +220,7 @@ A better representation provides a separate symbol for 0 but $+suc~
 0$ for 1, $-suc ~0$ for $- 1$. This does not sacrifice canonicity,
 although the denotations are not natural.
 
-\begin{code}
+\begin{code}%
 \\
 \>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
 \\
@@ -237,12 +237,12 @@ although the denotations are not natural.
 \>\<\end{code}
 
 Take into account the embedding of natural numbers into integers, it
-makes sense to combine the positive's integers with zeros. Actually it is
+makes sense to combine the positive integers with zeros. Actually it is
 better pragmatically. In principle, definition with less
 cases is preferable because pattern matching grows with exponentially
 with the number of cases.
 
-\begin{code}
+\begin{code}%
 \\
 \>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
 \\
@@ -741,7 +741,7 @@ large to make it efficient.
 \subsection{Unreduced fractions}
 
 The setoid representation of rational numbers -- unreduced fractions
-are more common in mathematics.
+are more common in \maths.
 Usually a fraction denoted as $\frac{m}{n}$ consists of an integers
 $m$ called \emph{numerator} and a non-zero integer $n$ called
 \emph{denominator}.
@@ -781,7 +781,7 @@ a sign defined separately. However this also complicates calculation somehow.
 The rational number represented by a fraction $\frac{m}{n}$ is indeed the result of
 division $m \div n$. Therefore two different fractions can represent
 the same rational numbers.
-In mathematics, to judge the equality of two fractions, it is easier to conduct the following conversion,
+In \maths, to judge the equality of two fractions, it is easier to conduct the following conversion,
 
 $$ \frac{a}{b} = \frac{c}{d} \iff a \times d = c \times b $$
 
@@ -866,7 +866,7 @@ definition, it is clear that normalisation from $\Q_0 \to \Q$ is just
 reducing functions.
 
 To implement reducing process, we can utilize the library code about
-\emph{great common divisor (gcd)}. The function $\AgdaFunction{gcd}$
+\emph{great common divisor}(gcd). The function $\AgdaFunction{gcd}$
 calculates the divisor and a data type $\AgdaDatatype{GCD}$ containing
 information from calculating the
 greatest common divisor which can be converted to another data type $\AgdaDatatype{GCD′}$
@@ -910,7 +910,7 @@ Similar to the case of integers, complete the definable quotient, we
 also need to prove the sound, complete, stable and exact
 properties. There is no need to show the proof of them since the
 normalisation function is implemented using an approach which has been
-tested in mathematics.
+tested in \maths.
 Also we can apply the definable quotient structures in helping form
 the field of rational numbers. After embedding the natural numbers
 into integers, any theorems using only the operations in the field

@@ -1,5 +1,5 @@
 
-
+\AgdaHide{
 \begin{code}
 
 module GroupoidQuotient where
@@ -10,8 +10,11 @@ open import Quotient
 open import Data.Product
 open ≡-Reasoning
 \end{code}
+}
 
-The equivalence relation is not propositional but h-set.
+\textbf{Groupoid Quotient}
+
+To quotient a set with an equivalence relation which is not propositional but h-set, i.e.\ $A \to A \to \Set$. 
 
 \begin{code}
 
@@ -48,7 +51,8 @@ record Groupoid : Set₁ where
   sym-comp p q = begin
               (p * q) ⁻¹                           ≡⟨ sym inv₁-id₂ ⟩
               (p * q) ⁻¹ * (p * p ⁻¹)               ≡⟨ cong (λ x → (p * q) ⁻¹ * (x * p ⁻¹)) (sym inv₁-id₂) ⟩
-              (p * q) ⁻¹ * (p * (q * q ⁻¹) * p ⁻¹)   ≡⟨ cong (λ x → (p * q) ⁻¹ * (x * p ⁻¹)) (sym assoc) ⟩
+              (p * q) ⁻¹ * (p * (q * q ⁻¹) * p ⁻¹)   ≡⟨ cong (λ x → (p * q) ⁻¹ * (x * p ⁻¹))
+                                                       (sym assoc) ⟩
               (p * q) ⁻¹ * (p * q * q ⁻¹ * p ⁻¹)     ≡⟨ sym assoc ⟩
               (p * q) ⁻¹ * (p * q * q ⁻¹) * p ⁻¹     ≡⟨ cong (λ x → x * p ⁻¹) (sym assoc) ⟩
               (p * q) ⁻¹ * (p * q) * q ⁻¹ * p ⁻¹     ≡⟨ cong (λ x → x * p ⁻¹) inv₂-id₁ ⟩
@@ -73,12 +77,14 @@ record GQuotient {G : Groupoid}(PGQ : pre-GQuotient G) : Set₁ where
             → (f : (a : A) → B [ a ])
             → (∀ {a a'} → (p : a ~ a') → subst B [ p ]⁼ (f a) ≡ f a')
             → (q : Q) → B q
-    qelim-β : ∀ {B a f}(resp : (∀ {a a'} → (p : a ~ a') → subst B [ p ]⁼ (f a) ≡ f a'))
-            → qelim {B} f resp [ a ] ≡ f a
+    qelim-β : ∀ {B a f}(resp : (∀ {a a'} → (p : a ~ a') → 
+              subst B [ p ]⁼ (f a) ≡ f a')) → 
+              qelim {B} f resp [ a ] ≡ f a
 
 
 
-record ExactGQuotient {G : Groupoid}{PGQ : pre-GQuotient G}(GQu : GQuotient PGQ) : Set₁ where
+record ExactGQuotient {G : Groupoid}{PGQ : pre-GQuotient G}
+      (GQu : GQuotient PGQ) : Set₁ where
   open pre-GQuotient PGQ
   field
     exact  : ∀{a b : A} → [ a ] ≡ [ b ] → a ~ b
@@ -111,7 +117,8 @@ There is also an equivalence on the arrow level $\_\sim_{1}\_$ derived from $\_\
   ~₁-equiv₁ p q r = begin
              (p * ((p ⁻¹ * r) * q)) * q ⁻¹ ≡⟨ cong (λ x → x * q ⁻¹) (sym assoc) ⟩
              ((p * (p ⁻¹ * r)) * q) * q ⁻¹ ≡⟨ cong (λ x → x * q * q ⁻¹) (sym assoc) ⟩
-             (((p * p ⁻¹) * r) * q) * q ⁻¹ ≡⟨ cong (λ x → x * q * q ⁻¹) (trans (cong (λ x → x * _) inv₁) id₁) ⟩
+             (((p * p ⁻¹) * r) * q) * q ⁻¹ ≡⟨ cong (λ x → x * q * q ⁻¹) 
+                                            (trans (cong (λ x → x * _) inv₁) id₁) ⟩
              (r * q) * q ⁻¹               ≡⟨ assoc ⟩
              r * (q * q ⁻¹)               ≡⟨ trans (cong (λ x → r * x) inv₁) id₂ ⟩
              r ∎
@@ -121,7 +128,8 @@ There is also an equivalence on the arrow level $\_\sim_{1}\_$ derived from $\_\
   ~₁-equiv₂ p q r = begin
              (p ⁻¹ * ((p * r) * q ⁻¹)) * q ≡⟨ cong (λ x → x * q) (sym assoc) ⟩
              ((p ⁻¹ * (p * r)) * q ⁻¹) * q ≡⟨ cong (λ x → x * q  ⁻¹ * q) (sym assoc) ⟩
-             (((p ⁻¹ * p) * r) * q ⁻¹) * q ≡⟨ cong (λ x → x * q ⁻¹ * q) (trans (cong (λ x → x * _) inv₂) id₁) ⟩
+             (((p ⁻¹ * p) * r) * q ⁻¹) * q ≡⟨ cong (λ x → x * q ⁻¹ * q) 
+                                          (trans (cong (λ x → x * _) inv₂) id₁) ⟩
              (r * q ⁻¹) * q               ≡⟨ assoc ⟩
              r * (q ⁻¹ * q)               ≡⟨ trans (cong (λ x → r * x) inv₂) id₂ ⟩
              r ∎
@@ -176,8 +184,8 @@ Functorial
           P₁-id : ∀{b}{r : P b} → P₁ id r ≡ r
           P₁-id = id₂
 
-          P₁-comp : ∀{b c d}{p : b ~ c}{q : c ~ d}{r : P b} → P₁ (p * q) r ≡ P₁ q (P₁ p r)
-
+          P₁-comp : ∀{b c d}{p : b ~ c}{q : c ~ d}{r : P b} → 
+                    P₁ (p * q) r ≡ P₁ q (P₁ p r)
           P₁-comp = sym assoc
 \end{code}
 
@@ -195,6 +203,12 @@ We didn't write the equivalence proof explicitly i.e.\ isEquivalence (P₁ x).
           P^-β = trans (sym lift-β₁) (trans (cong P^ eq) lift-β₁)
 
 
+\end{code}
+
+
+
+\AgdaHide{
+\begin{code}
 -- coerce (trans (sym lift-β₁) (trans (cong (lift₁ P P-resp) [ p ]⁼) lift-β₁)) (id {a}) ≡ p
 --  isInv₁ : ∀{a b}{p : a ~ b} → exact [ p ]⁼ ≡ p
 --  isInv₁ {p = p} = {!!}
@@ -203,3 +217,4 @@ We didn't write the equivalence proof explicitly i.e.\ isEquivalence (P₁ x).
 
 
 \end{code}
+}

@@ -1,0 +1,722 @@
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaSymbol{\{-\#} \AgdaKeyword{OPTIONS} --type-in-type \AgdaSymbol{\#-\}}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{Level}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality} \AgdaSymbol{as} \AgdaModule{PE} \AgdaKeyword{hiding} \AgdaSymbol{(}refl \AgdaSymbol{;} sym \AgdaSymbol{;} trans\AgdaSymbol{;} isEquivalence\AgdaSymbol{;} [\_]\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{CwF-quotient} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{:} \AgdaFunction{Extensionality} \AgdaPrimitive{Level.zero} \AgdaPrimitive{Level.zero}\AgdaSymbol{)} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Unit}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Function}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{CwF-ctd} \AgdaBound{ext}\<%
+\\
+\>\<\end{code}
+}
+
+Propositions
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Pu} \AgdaSymbol{:} \AgdaRecord{HSetoid}\<%
+\\
+\>\AgdaFunction{Pu} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaRecord{HProp}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{;} \AgdaField{\_≈h\_} \<[16]%
+\>[16]\AgdaSymbol{=} \AgdaFunction{\_⇄\_}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{;} \AgdaField{refl} \<[16]%
+\>[16]\AgdaSymbol{=} \AgdaFunction{id} \AgdaInductiveConstructor{,} \AgdaFunction{id} \<[26]%
+\>[26]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{;} \AgdaField{sym} \<[16]%
+\>[16]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{b} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)\}}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{;} \AgdaField{trans} \<[16]%
+\>[16]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{(}\AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{a'} \AgdaInductiveConstructor{,} \AgdaBound{b'}\AgdaSymbol{)} \<[39]%
+\>[39]\<%
+\\
+\>[6]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{a'} \AgdaFunction{∘} \AgdaBound{a}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaBound{b} \AgdaFunction{∘} \AgdaBound{b'}\AgdaSymbol{)\}}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{⟦Prop⟧} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>\AgdaFunction{⟦Prop⟧} \AgdaSymbol{=} \AgdaKeyword{record} \<[16]%
+\>[16]\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Pu}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{x}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{x}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{id} \AgdaInductiveConstructor{,} \AgdaFunction{id}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{id} \AgdaInductiveConstructor{,} \AgdaFunction{id} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\<\end{code}
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaComment{\{-
+⟦Prop⟧ : Ty ●
+⟦Prop⟧ = record \{ fm = λ x → Pu; substT = λ x' x0 → x0;
+                 subst* = λ p x' → x'; refl* = λ x a → id ,
+                           id; trans* = λ \_ → id , id \}
+
+⟦Prf⟧ : Ty (● \& ⟦Prop⟧)
+⟦Prf⟧ = record \{ fm = λ \{(\_ , p) → 
+                 record
+                 \{ Carrier = ⊤
+                 ; \_≈h\_    = λ x x' → ⊤'
+                 ; refl    = tt
+                 ; sym     = id
+                 ; trans   = λ x' x0 → x'
+                 \} \}
+               ; substT = λ x' x0 → x0; subst* = λ p x' → x'; refl* = λ x a → a; trans* = λ a → a \}
+-\}}\<%
+\\
+%
+\\
+\>\AgdaComment{\{-
+--Several isomorphisms
+
+isoPi1 : \{Γ : Con\}\{A : Ty Γ\}\{B : Ty (Γ \& A)\} → Tm \{Γ \& A\} B → Tm (Π A B)
+isoPi1 (tm: tm resp: respt) = tm: (λ x → (λ a → tm (x , a)) , (λ a b p → respt \_)) resp: (λ p x' → respt \_)
+
+
+
+abstract
+  PropRel   : \{Γ : Con\}(A : Ty Γ) → Ty Γ
+  PropRel A = Π A (Π (A [ fst\& \{A = A\} ]T) \{!!\}) -- (⟦Prop⟧ [ fn: (λ x → tt) resp: (λ x' → tt) ]T))
+-\}}\<%
+\\
+%
+\\
+\>\AgdaComment{-- postulate apply : \{Γ : Con\}\{A : Ty Γ\} → Tm (PropRel A) → Tm A → Tm A → Tm ⟦Prop⟧}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Refl : \{Γ : Con\}(A : Ty Γ) → Tm (PropRel A) → Ty Γ}\<%
+\\
+\>\AgdaComment{-- Refl A rel =  \{!!\} -- Π A → \{!apply !\}}\<%
+\\
+%
+\\
+\>\AgdaComment{\{-Equiv :  \{Γ : Con\}(A : Ty Γ) → Ty Γ
+Equiv A = Σ'' (PropRel A)  \{!!\}
+-\}} \<[82]%
+\>[82]\<%
+\\
+%
+\\
+\>\AgdaComment{\{-
+stack overflow
+Refl : \{Γ : Con\}(A : Ty Γ) → Tm (PropRel A) → Ty Γ
+Refl A rel = ?
+-\}}\<%
+\\
+%
+\\
+\>\AgdaComment{-- Eqv : }\<%
+\\
+%
+\\
+\>\AgdaComment{-- Rel A}\<%
+\\
+\>\<\end{code}
+}
+
+Propostional relation
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{PropRel} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaFunction{PropRel} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaBound{γ} \AgdaSymbol{=} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\<\end{code}
+
+Quotient types
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{module} \AgdaModule{Q} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{R} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{PropRel} \AgdaBound{A} \AgdaBound{γ}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{Rrsp} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{Rref} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{a} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{Rsym} \AgdaSymbol{:} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{b} \AgdaBound{a} \AgdaFunction{>}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{Rtrn} \AgdaSymbol{:} \<[18]%
+\>[18]\AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaFunction{>} \<[45]%
+\>[45]\<%
+\\
+\>[9]\AgdaIndent{17}{}\<[17]%
+\>[17]\AgdaSymbol{→} \<[20]%
+\>[20]\AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{b} \AgdaBound{c} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{c} \AgdaFunction{>}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{Rsubst} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{γ} \AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}} \<[35]%
+\>[35]\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{γ} \AgdaFunction{≈} \AgdaBound{γ'}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \<[33]%
+\>[33]\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{<} \AgdaBound{R} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaBound{x}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaBound{y}\AgdaSymbol{)} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaKeyword{where}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧₀} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaRecord{HSetoid}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧₀} \AgdaBound{γ} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \AgdaSymbol{=} \AgdaBound{R} \AgdaBound{γ}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaBound{Rref}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaBound{Rsym}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaBound{Rtrn}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧} \AgdaSymbol{=} \AgdaKeyword{record} \<[15]%
+\>[15]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaFunction{⟦Q⟧₀}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{q} \AgdaSymbol{→} \AgdaBound{Rsubst} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaBound{p} \AgdaBound{q}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{γ} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{Rrsp} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*} \AgdaSymbol{\_} \AgdaSymbol{\_)}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{Rrsp} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]trans*} \AgdaSymbol{\_)}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[\_]⟧} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{Tm} \AgdaFunction{⟦Q⟧}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[} \AgdaBound{x} \AgdaFunction{]⟧} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]tm}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaBound{Rrsp} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]respt} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+\>\<\end{code}
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaComment{\{-
+  Q-elim : (B : Ty Γ) 
+         → (f : ∀ γ → ∣ [ A ]fm γ ∣ → ∣ [ B ]fm γ ∣)
+         → (frespt : ∀ γ γ' a b → (p : [ Γ ] γ ≈ γ')
+                  → ([ [ A ]fm γ ] a ≈ b)
+                  → [ [ B ]fm γ' ]  [ B ]subst p (f γ a) ≈ f γ' b)
+         → (∀ γ a b → < RC γ a b > → [ [ B ]fm γ ] f γ a ≈ f γ b)
+         → Tm (⟦Q⟧ ⇒ B)
+  Q-elim B f fresp fsubst respR = record
+           \{ tm = λ γ → f γ , (λ a b p → [ [ B ]fm γ ]trans 
+                              [ B ]subst-pi' (respR γ a b p))
+           ; respt = λ \{γ\} \{γ'\} p a → \{!fsubst γ γ' p!\} -- λ p R' \_ \_ x₄ \_ → x₄ \_ \_ ([ x ]respt p)
+           \}
+
+-\}}\<%
+\\
+%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{-- The mechanism used in Martin Hofmann's Paper}\<%
+\\
+%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Prop-Uni} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{prf} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{uni} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{prf} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈h} \AgdaBound{y} \AgdaDatatype{≡} \AgdaFunction{⊤'}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Prop-Uni}\<%
+\\
+%
+\\
+\>\AgdaComment{-- The Equality Type}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{Id} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{\&} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{Id} \AgdaBound{A}\<%
+\\
+\>[0]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaSymbol{=} \AgdaKeyword{record} \<[12]%
+\>[12]\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{((}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \<[34]%
+\>[34]\AgdaKeyword{record}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{x} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x₁} \AgdaBound{x₂} \AgdaSymbol{→} \AgdaFunction{⊤'} \AgdaComment{-- it is : Prop}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x₁}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x₂} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x₂} \AgdaBound{x₃} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}} \AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{λ} \AgdaSymbol{\{((}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{q}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{r}\AgdaSymbol{)} \AgdaBound{x₂} \AgdaSymbol{→} \<[52]%
+\>[52]\<%
+\\
+\>[0]\AgdaIndent{20}{}\<[20]%
+\>[20]\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{y}\AgdaSymbol{))} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{y}\AgdaSymbol{))} \AgdaFunction{]sym} \AgdaBound{q}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{y}\AgdaSymbol{))} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst*} \AgdaBound{p} \AgdaBound{x₂}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaBound{r}\AgdaSymbol{)\}}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{x₁} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaBound{a} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaInductiveConstructor{tt} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{-- Is it correct to write  Tm A → Tm B for dependent types?}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{Id-is-prop} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Prop-Uni} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{\&} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{))}\<%
+\\
+\>\AgdaFunction{Id-is-prop} \AgdaBound{A} \AgdaSymbol{=} \AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{prf} \AgdaSymbol{=} \AgdaFunction{Id} \AgdaBound{A} \AgdaSymbol{;} \AgdaField{uni} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{γ} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaInductiveConstructor{PE.refl} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaComment{\{-
+record Quo \{Γ : Con\}(A : Ty Γ)(R : Prop-Uni (Γ \& A \& (A [ fst\& \{Γ\} \{A\} ]T))) : Set where
+  field
+    Q : Ty Γ
+    [\_] : Tm A → Tm Q
+    Q-elim : ∀ (B : Ty Γ)
+                 (M : Tm \{Γ \& A\} (B [ fst\& \{Γ\} \{A\} ]T))
+                 (N : Tm Q)
+                 (H : Tm \{Γ \& A \& A [ fst\& \{Γ\} \{A\} ]T \& prf R\} (prf (Id-is-prop B) [ fst\& \{Γ \& A \& A [ fst\& \{Γ\} \{A\} ]T\} \{prf R\} ]T)) -- (prf (Id-is-prop (B [ fst\& \{Γ\} \{A\} ]T)))
+               → Tm B
+
+-\}}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{\{-
+
+
+
+
+\{-
+       data RC
+              : A → A → Set where
+     emb : ∀\{a b\} → R a b → Closure' R a b
+     rfl : ∀\{a b\} → [ [ A ]fm γ ] a ≈ b → Closure' R a b
+     cls : ∀\{a b c\} → R b a → Closure' \{A\} \{\_≈\_\} R b c 
+         → Closure' R a c
+
+sym : ∀\{A\}\{\_≈\_ : A → A → Set\}\{R : A → A → Set\}
+    →  ∀ \{a b\} → Closure' \{A\} \{\_≈\_\} R a b → Closure' \{A\} \{\_≈\_\} R b a
+sym (emb x) = cls x \{!!\}
+sym (rfl x) = \{!!\}
+sym (cls x ab) = \{!!\}
+
+trn : ∀\{A\}\{\_≈\_ : A → A → Set\}\{R : A → A → Set\}
+    →  ∀ \{a b c\} → Closure' \{A\} \{\_≈\_\} R a b → Closure' \{A\} \{\_≈\_\} R b c
+    → Closure' \{A\} \{\_≈\_\} R a c
+trn (emb x) bc = \{!cls x bc!\}
+trn (rfl x) bc = \{!!\}
+trn (cls x ab) bc = \{!!\} -- cls \{!ab!\} bc
+-\}
+
+
+\{-
+  data RC₀ (γ : ∣ Γ ∣) : ∣ [ A ]fm γ ∣ → ∣ [ A ]fm γ ∣ → Set where
+     emb : ∀\{a b\} → < R γ a b > → RC₀ γ a b
+     ref : ∀\{a b\} → [ [ A ]fm γ ] a ≈ b → RC₀ γ a b
+     cls : ∀\{a b c\} → < R γ b a > → RC₀ γ b c
+         → RC₀ γ a c
+
+  sym : ∀\{γ a b\} → RC₀ γ a b → RC₀ γ b a
+  sym (emb x) = cls x (ref [ [ A ]fm \_ ]refl)
+  sym (ref x) = ref ([ [ A ]fm \_ ]sym x)
+  sym (cls x bc) = \{!bc!\} -- cls \{!bc!\} (emb x)
+
+
+  trn : ∀ \{γ a b c\} → RC₀ γ a b → RC₀ γ b c
+      → RC₀ γ a c
+  trn (emb x) bc =  cls \{!x!\} bc
+  trn (ref x) bc = \{!!\}
+  trn (cls x ab) bc = \{!!\} -- cls \{!ab!\} bc
+-\}
+
+
+
+
+  data RC₀ (γ : ∣ Γ ∣) : ∣ [ A ]fm γ ∣ → ∣ [ A ]fm γ ∣ → Set where
+     emb : ∀\{a b\} → < R γ a b > → RC₀ γ a b
+     ref : ∀\{a b\} → [ [ A ]fm γ ] a ≈ b → RC₀ γ a b
+     trn : ∀\{a b c\} → RC₀ γ a b → RC₀ γ b c
+           → RC₀ γ a c
+     sym : ∀\{a b\} → RC₀ γ a b → RC₀ γ b a
+
+
+  RC' : (γ : ∣ Γ ∣) → (a b : ∣ [ A ]fm γ ∣)
+      → (p q : RC₀ γ a b) → p ≡ q
+  RC' γ a b = \{!!\}
+
+  RC : (γ : ∣ Γ ∣) → ∣ [ A ]fm γ ∣ → ∣ [ A ]fm γ ∣ → HProp
+  RC γ = Closure \_ (rel ([ A ]fm γ)) (R γ)
+  
+  postulate RC-subst : ∀\{γ γ' : ∣ Γ ∣\} 
+                     (x y : ∣ [ A ]fm γ ∣)
+                     (eq1 : [ Γ ] γ ≈ γ') →
+                     < RC γ x y > → 
+                     < RC γ' ([ A ]subst eq1 x) ([ A ]subst eq1 y) >
+
+
+
+  ⟦Q⟧₀ : ∣ Γ ∣ → HSetoid
+  ⟦Q⟧₀ γ =
+         record
+         \{ Carrier = ∣ [ A ]fm γ ∣
+         ; \_≈h\_ = R γ -- RC γ
+         ; refl = Rref -- λ \{x\} \_ \_ \_ x₃ \_ → x₃ x x [ [ A ]fm γ ]refl
+         ; sym = Rsym -- λ \{x\} \{y\} x≈y R' x₁ x₂ x₃ x₄ → x₁ \_ \_ (x≈y R' x₁ x₂ x₃ x₄)
+         ; trans = Rtrn --λ \{x\} \{y\} \{z\} x≈y y≈z R' x₁ x₂ x₃ x₄ 
+                   -- → x₂ \_ \_ \_ (x≈y R' x₁ x₂ x₃ x₄) (y≈z R' x₁ x₂ x₃ x₄)
+         \}
+
+
+  ⟦Q⟧ : Ty Γ
+  ⟦Q⟧ = record 
+    \{ fm = ⟦Q⟧₀
+    ; substT = [ A ]subst
+    ; subst* = λ p q → Rsubst \_ \_ p q --Rresp ([ A ]subst-pi* \{!!\})  λ p → RC-subst \_ \_ p
+    ; refl* = λ γ a → Rresp ([ A ]refl* \_ \_) --λ x a R' x₁ x₂ x₃ x₄ → x₃ \_ \_ ([ A ]refl* \_ \_)
+    ; trans* = λ a → Rresp ([ A ]trans* \_) -- λ a R' x₁ x₂ x₃ x₄ → x₃ \_ \_ ([ A ]trans* \_)
+    \}
+
+  ⟦[\_]⟧ : Tm A → Tm ⟦Q⟧
+  ⟦[ x ]⟧ = record
+           \{ tm = [ x ]tm
+           ; respt = \{!!\} -- λ p R' \_ \_ x₄ \_ → x₄ \_ \_ ([ x ]respt p)
+           \}
+
+
+
+-\}}\<%
+\\
+%
+\\
+%
+\\
+%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{\{-
+Closure' : (A : Set)(\_∼\_ R : A → A → HProp) → A → A → HProp
+Closure' A \_∼\_ R s s'
+          = ∀' (A → A → HProp) (λ R' 
+          → ∀'[ x ∶ A ] ∀'[ y ∶ A ] R' x y ⇛ R' y x
+            ⇛ (∀'[ x ∶ A ] ∀'[ y ∶ A ] ∀'[ z ∶ A ] R' x y ⇛ 
+              R' y z ⇛ R' x z)
+            ⇛ (∀'[ x ∶ A ] ∀'[ y ∶ A ] x ∼ y ⇛ R' x y)
+            ⇛ (∀'[ x ∶ A ] ∀'[ y ∶ A ] R x y ⇛ R' x y)
+            ⇛ R' s s')
+-\}}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{Closure} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)(}\AgdaBound{\_∼\_} \AgdaBound{R} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \<[43]%
+\>[43]\<%
+\\
+\>[7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{Closure} \AgdaBound{A} \AgdaBound{\_∼\_} \AgdaBound{R} \AgdaBound{s} \AgdaBound{s'}\<%
+\\
+\>[9]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[10]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{\{} \AgdaField{prf} \AgdaSymbol{=} \AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{R'} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \<[43]%
+\>[43]\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{y} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{y} \AgdaBound{z} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{z} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaBound{∼} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{s} \AgdaBound{s'} \AgdaFunction{>}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{;} \AgdaField{Uni} \AgdaSymbol{=} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{R'} \AgdaSymbol{→} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x₁} \AgdaSymbol{→} \AgdaBound{ext} \<[48]%
+\>[48]\<%
+\\
+\>[0]\AgdaIndent{20}{}\<[20]%
+\>[20]\AgdaSymbol{(λ} \AgdaBound{x₂} \AgdaSymbol{→} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x₃} \AgdaSymbol{→} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x₄} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{R'} \AgdaBound{s} \AgdaBound{s'}\AgdaSymbol{))))))}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{-- Rel≈ : }\<%
+\\
+%
+\\
+\>\AgdaComment{--        (R≈ : ∀ \{γ : ∣ Γ ∣\}\{r1 r2 : PropRel A γ\}}\<%
+\\
+\>\AgdaComment{--               \{a b :  ∣ [ A ]fm γ ∣\} → ∀ a b → < r1 a b ⇄ r2 a b >)}\<%
+\\
+\>\AgdaComment{\{-
+Eqv₀ : \{Γ : Con\}(A : Ty Γ) → ∣ Γ ∣ → HSetoid
+Eqv₀ \{Γ\} A γ = record
+         \{ Carrier = ∣ [ A ]fm γ ∣ → ∣ [ A ]fm γ ∣ → HProp
+         ; \_≈h\_ = λ r1 r2 → ∀' \_ (λ a → ∀' \_ (λ b → r1 a b ⇄ r2 a b))
+         ; refl = λ \_ \_ → (λ x → x) , (λ x → x)
+         ; sym = λ eq a b → let (p , q) = eq a b in q , p
+         ; trans = λ eq1 eq2 a b →
+                     let (p1 , q1) = eq1 a b in 
+                     let (p2 , q2) = eq2 a b in
+                     (p2 ∘ p1) , (q1 ∘ q2)
+         \}
+-\}}\<%
+\\
+%
+\\
+\>\AgdaComment{\{-
+Eqv : \{Γ : Con\}(A : Ty Γ) → Ty Γ
+Eqv \{Γ\} A =  record
+    \{ fm = Eqv₀ A
+    ; substT = λ p r1 → λ a b 
+               → r1 ([ A ]subst ([ Γ ]sym p) a)
+               ([ A ]subst ([ Γ ]sym p) b)
+    ; subst* = λ \{γ\} \{γ'\} p \{R1\} \{R2\} eq → λ a b → \{!!\} \{-
+λ p \{R1\} \{R2\} eq a b → eq ([ A ]subst ([ Γ ]sym p) a) 
+               ([ A ]subst ([ Γ ]sym p) b)
+-\}
+    ; refl* = λ γ R → λ a b → \{!!\}
+    ; trans* = \{!!\}
+    \}
+
+-\}}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{-- Rsubst' = subst-pi*}\<%
+\\
+%
+\\
+%
+\\
+%
+\\
+%
+\\
+\>\AgdaComment{\{-         (Rresp :  ∀ \{γ : ∣ Γ ∣\}
+           (x y : ∣ [ A ]fm γ ∣)(x' y' : ∣ [ A ]fm γ ∣)
+           (eq2 : < rel ([ A ]fm γ) x x' >)
+           (eq3 : < rel ([ A ]fm γ) y y' >) 
+           → < R γ x y ⇄ R γ x' y' >)
+
+
+  Qsubst* : (γ γ' : ∣ Γ ∣)(p : [ Γ ] γ ≈ γ') 
+          → (a b :  ∣ [ A ]fm γ ∣) 
+          → < RC γ a b > 
+          → < RC γ' ([ A ]subst p a) ([ A ]subst p b) >
+  Qsubst* γ γ' p a b = \{!!\}
+
+
+\_ (rel ([ A ]fm γ)) (R γ)
+  
+  postulate RCresp : ∀\{γ γ' : ∣ Γ ∣\}\{a b :  ∣ [ A ]fm γ ∣\}
+                      \{f : ∣ [ A ]fm γ ∣ → ∣ [ A ]fm γ' ∣\}  
+                       → (< R γ a b > → < R γ' (f a) (f b) >) 
+                        → (< RC γ a b > → < RC γ' (f a) (f b) >)
+
+
+-\}}\<%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+
+
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaComment{\{-
+BRel : \{Γ : Con\}(A : Ty Γ) → Ty Γ
+BRel A = A ⇒ A ⇒ ⟦Prop⟧
+
+
+Tm \{Γ , A , A [ fst\& \{A = A\} ]\} ⟦Prop⟧
+
+record Equiv \{Γ : Con\}(A : Ty Γ) : Set where
+  field
+    R : Tm (BRel A)
+    ref : Tm (Π A ((BRel A) [ record \{ fn = λ x → \{!x!\} 
+                       ; resp = \{!!\}\} ]T))
+
+
+
+BRel-set : \{Γ : Con\}\{A : Ty Γ\} → Tm (BRel A) 
+   → (γ : ∣ Γ ∣) → ∣ [ A ]fm γ ∣ →  ∣ [ A ]fm γ ∣ → HProp
+BRel-set R γ m n = proj₁ (proj₁ ([ R ]tm γ) m) n
+-\}}\<%
+\\
+\>\<\end{code}
+}

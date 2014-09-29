@@ -39,8 +39,6 @@
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaKeyword{record} \AgdaRecord{HSetoid} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
@@ -101,8 +99,10 @@
 \\
 %
 \\
-\>\AgdaKeyword{open} \AgdaModule{HSetoid} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}refl \AgdaSymbol{to} [\_]refl\AgdaSymbol{;} sym \AgdaSymbol{to} [\_]sym\AgdaSymbol{;} 
-  \_≈\_ \AgdaSymbol{to} [\_]\_≈\_ \AgdaSymbol{;} \_≈h\_ \AgdaSymbol{to} [\_]\_≈h\_ \AgdaSymbol{;} Carrier \AgdaSymbol{to} ∣\_∣ \AgdaSymbol{;} trans \AgdaSymbol{to} [\_]trans\AgdaSymbol{)}\<%
+\>\AgdaKeyword{open} \AgdaModule{HSetoid} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}refl \AgdaSymbol{to} [\_]refl\AgdaSymbol{;} sym \AgdaSymbol{to} [\_]sym\AgdaSymbol{;}%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\_≈\_ \AgdaSymbol{to} [\_]\_≈\_ \AgdaSymbol{;} \_≈h\_ \AgdaSymbol{to} [\_]\_≈h\_ \AgdaSymbol{;} Carrier \AgdaSymbol{to} ∣\_∣ \AgdaSymbol{;} trans \AgdaSymbol{to} [\_]trans\AgdaSymbol{)}\<%
 \\
 %
 \\
@@ -116,15 +116,11 @@
 \\
 \>\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]uip} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈h} \AgdaBound{b}\AgdaSymbol{)}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Morphisms between HSetoids (Functors)
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{infix} \AgdaNumber{5} \_⇉\_\<%
 \\
@@ -155,30 +151,22 @@ Morphisms between HSetoids (Functors)
 \\
 \>\AgdaKeyword{open} \AgdaModule{\_⇉\_} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}fn \AgdaSymbol{to} [\_]fn \AgdaSymbol{;} resp \AgdaSymbol{to} [\_]resp\AgdaSymbol{)}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Identity
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{idCH} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaRecord{HSetoid}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Γ} \<[29]%
 \>[29]\<%
 \\
 \>\AgdaFunction{idCH} \AgdaSymbol{=} \AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{fn} \AgdaSymbol{=} \AgdaFunction{id}\AgdaSymbol{;} \AgdaField{resp} \AgdaSymbol{=} \AgdaFunction{id}\AgdaSymbol{\}}\<%
-\\
-%
 \\
 \>\<\end{code}
 
 Composition
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{infixl} \AgdaNumber{5} \_∘c\_\<%
 \\
@@ -203,8 +191,6 @@ Composition
 Categorical laws
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{id₁} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ}\AgdaSymbol{\}(}\AgdaBound{ch} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{ch} \AgdaFunction{∘c} \AgdaFunction{idCH} \AgdaDatatype{≡} \AgdaBound{ch}\<%
 \\
@@ -253,17 +239,11 @@ Categorical laws
 \>[0]\AgdaIndent{11}{}\<[11]%
 \>[11]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Category of Setoids
 
 \begin{code}\>\<%
-\\
-%
-\\
-%
 \\
 \>\AgdaFunction{Std} \AgdaSymbol{:} \AgdaRecord{Category}\<%
 \\
@@ -281,15 +261,11 @@ Category of Setoids
 \>[0]\AgdaIndent{6}{}\<[6]%
 \>[6]\AgdaSymbol{(λ} \AgdaBound{α} \AgdaBound{δ} \AgdaBound{f} \AgdaBound{g} \AgdaBound{h} \AgdaSymbol{→} \AgdaInductiveConstructor{PE.refl}\AgdaSymbol{))}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Terminal object
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{●} \AgdaSymbol{:} \AgdaRecord{HSetoid}\<%
 \\
@@ -317,8 +293,6 @@ Terminal object
 \\
 %
 \\
-%
-\\
 \>\AgdaFunction{⋆} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Δ} \AgdaSymbol{:} \AgdaRecord{HSetoid}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Δ} \AgdaRecord{⇉} \AgdaFunction{●}\<%
 \\
 \>\AgdaFunction{⋆} \AgdaSymbol{=} \AgdaKeyword{record} \<[11]%
@@ -335,7 +309,5 @@ Terminal object
 \>\AgdaFunction{uniqueHom} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{Δ} \AgdaSymbol{:} \AgdaRecord{HSetoid}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaRecord{⇉} \AgdaFunction{●}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{f} \AgdaDatatype{≡} \AgdaFunction{⋆}\<%
 \\
 \>\AgdaFunction{uniqueHom} \AgdaBound{Δ} \AgdaBound{f} \AgdaSymbol{=} \AgdaInductiveConstructor{PE.refl}\<%
-\\
-%
 \\
 \>\<\end{code}

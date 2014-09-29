@@ -23,6 +23,8 @@
 \\
 \>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Function}\<%
 \\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
 %
 \\
 \>\<\end{code}
@@ -30,11 +32,9 @@
 
 \section{Metatheory}
 
-\HProp used as propositional universe
+\HProp used as universe of propositions
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{record} \AgdaRecord{HProp} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
 \\
@@ -54,15 +54,11 @@
 \\
 \>\AgdaKeyword{open} \AgdaModule{HProp} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}prf \AgdaSymbol{to} <\_>\AgdaSymbol{)}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 $\top$ and $\bot$
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{⊤'} \AgdaSymbol{:} \AgdaRecord{HProp}\<%
 \\
@@ -84,25 +80,28 @@ $\top$ and $\bot$
 \\
 \>\AgdaFunction{⊥'} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaDatatype{⊥} \AgdaSymbol{(}\AgdaFunction{exUni} \AgdaSymbol{(λ} \AgdaSymbol{()))}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 \HProp is closed under $\Pi$-types
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{∀'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)(}\AgdaBound{P} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
 \\
 \>\AgdaFunction{∀'} \AgdaBound{A} \AgdaBound{P} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaSymbol{((}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{P} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)))}\<%
 \\
-%
+\>\<\end{code}
+
+\AgdaHide{
+\begin{code}\>\<%
 \\
 \>\AgdaKeyword{syntax} ∀' A \AgdaSymbol{(λ} x \AgdaSymbol{→} B\AgdaSymbol{)} \AgdaSymbol{=} ∀'[ x ∶ A ] B
+\<\end{code}
+}
 
-\AgdaKeyword{infixr} \AgdaNumber{2} \_⇛\_\<%
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{infixr} \AgdaNumber{2} \_⇛\_\<%
 \\
 %
 \\
@@ -111,19 +110,11 @@ $\top$ and $\bot$
 \>\AgdaBound{P} \AgdaFunction{⇛} \AgdaBound{Q} \AgdaSymbol{=} \<[9]%
 \>[9]\AgdaFunction{∀'} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{Q}\AgdaSymbol{)}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 \HProp is closed under $\Sigma$-types
 
 \begin{code}\>\<%
-\\
-%
-\\
-\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
-\\
-%
 \\
 \>\AgdaFunction{sig-eq} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}}\<%
 \\
@@ -151,11 +142,18 @@ $\top$ and $\bot$
 \>[6]\AgdaIndent{9}{}\<[9]%
 \>[9]\AgdaSymbol{(λ} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{sig-eq} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaBound{P}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{Q} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{q}\AgdaSymbol{))))}\<%
 \\
-%
+\>\<\end{code}
+
+\AgdaHide{
+\begin{code}\>\<%
 \\
 \>\AgdaKeyword{syntax} Σ' A \AgdaSymbol{(λ} x \AgdaSymbol{→} B\AgdaSymbol{)} \AgdaSymbol{=} Σ'[ x ∶ A ] B
+\<\end{code}
+}
 
-\AgdaKeyword{infixr} \AgdaNumber{3} \_∧\_\<%
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{infixr} \AgdaNumber{3} \_∧\_\<%
 \\
 %
 \\
@@ -163,22 +161,16 @@ $\top$ and $\bot$
 \\
 \>\AgdaBound{P} \AgdaFunction{∧} \AgdaBound{Q} \AgdaSymbol{=} \AgdaFunction{Σ'} \AgdaBound{P} \AgdaSymbol{(λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaBound{Q}\AgdaSymbol{)}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Negation
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{\textasciitilde} \AgdaSymbol{:} \AgdaRecord{HProp} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
 \\
 \>\AgdaFunction{\textasciitilde} \AgdaBound{P} \AgdaSymbol{=} \AgdaBound{P} \AgdaFunction{⇛} \AgdaFunction{⊥'} \<[13]%
 \>[13]\<%
-\\
-%
 \\
 \>\<\end{code}
 
@@ -186,26 +178,16 @@ Logical equivalence
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{\_⇄\_} \<[6]%
 \>[6]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{:} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
 \\
 \>\AgdaBound{P} \AgdaFunction{⇄} \AgdaBound{Q} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{P} \AgdaFunction{⇛} \AgdaBound{Q}\AgdaSymbol{)} \AgdaFunction{∧} \AgdaSymbol{(}\AgdaBound{Q} \AgdaFunction{⇛} \AgdaBound{P}\AgdaSymbol{)}\<%
-\\
-%
-\\
-%
-\\
-%
 \\
 \>\<\end{code}
 
 $\eta$-rules for $\Pi$-types and $\Sigma$-types
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaFunction{Π-eta} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}(}\AgdaBound{f} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{→} \<[52]%
 \>[52]\<%
@@ -224,7 +206,5 @@ $\eta$-rules for $\Pi$-types and $\Sigma$-types
 \>[8]\AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaFunction{proj₂} \AgdaBound{p}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{p}\<%
 \\
 \>\AgdaFunction{Σ-eta} \AgdaBound{p} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
-\\
-%
 \\
 \>\<\end{code}

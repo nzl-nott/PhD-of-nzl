@@ -1,5 +1,79 @@
 % Reusable code
 
+In set theory quotient set is
+a set of the equivalence classes of some equivalence relation on
+another set. The word \emph{Quotient} is usually used to capture
+similar notions in other abstract branches, such as quotient group,
+quotient space, quotient category etc. Move to type theory, it is
+expected to have \emph{Quotient types} to construct similar objects in
+mathematics. However in current setting of \itt, it is not
+available. Motivated by this fact, I start to extend type theory with
+quotient types. This thesis first
+introduce background knowledges about type theory , Agda and specially
+quotient types, then discuss about definable quotients which are
+quotients definable without using quotient types, other models of type
+theory to implement quotient types and homotopy type theory which has
+a stronger notion called higher inductive types. The author further
+extend the setoid models and study an approach to implement \wog model
+in \itt for \hott where quotient types are available.
+
+
+
+
+
+\section{Basic category theoretical notions}
+
+A category has a collection of objects and one collection of arrows
+for each pair of objects. 
+A simple finite category can be visualised as a directed diagram
+ but there are also a set of conditions which are called categorical laws to obey. 
+The most accessible example is the category of sets. Objects are sets,
+arrows are functions and all categorical conditions fulfilled. It is
+also very helpful to formulate type theoretical concepts in a
+categorical way. 
+
+Category theory abstracts a lot of similar concepts in different
+fields and provides a concise language for mathematics for
+mathematicians.
+Type theory and category theory are closely related,
+especially Homotopy type theory
+\footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
+Category theory is very useful in giving the type theoretical
+notions, particularly the ones involving functions, relations and some
+properties.
+
+
+
+
+\section{Related work}
+
+\todo{fill this part}
+
+
+
+
+
+\subsection{Category Theory}
+
+Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and transformations.
+A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are called categorical laws to obey. 
+
+The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
+
+Category theory abstracts a lot of similar concepts in different
+fields and provides a concise language for mathematics for
+mathematicians.
+\todo{to complete this part}
+
+
+
+
+
+
+
+
+
+
 
 \begin{corollary}
 We generalise the theorem \ref{PUEF}, assume we quotient a set with a groupoid relation, $\infixeqv: A \to A \to
@@ -738,3 +812,145 @@ composition of $f$ written as $f \circ\_$ or $\Sigma_f$.
 \end{displaymath}
 
 
+
+
+
+We first try to construct the predicates of defining an equivalence relation from a propositional relation, which is not as simple as we expected. We refer to Hofmann's approach in \cite{hof:95:sm}, namely by defing reflexive, symmetric and transitive closure of a propositional relation. The same concern also makes us choose the underlying set definition over the propositional construction.
+
+\begin{code}
+%
+\\
+\>\AgdaFunction{Closure} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)(}\AgdaBound{\_∼\_} \AgdaBound{R} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \<[43]%
+\>[43]\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{Closure} \AgdaBound{A} \AgdaBound{\_∼\_} \AgdaBound{R} \AgdaBound{s} \AgdaBound{s'}\<%
+\\
+\>[9]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[10]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{\{} \AgdaField{prf} \AgdaSymbol{=} \AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{R'} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \<[43]%
+\>[43]\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{y} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{y} \AgdaBound{z} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{z} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaBound{∼} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{x} \AgdaBound{y} \AgdaFunction{>}\AgdaSymbol{)}\<%
+\\
+\>[12]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{R'} \AgdaBound{s} \AgdaBound{s'} \AgdaFunction{>}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{;} \AgdaField{Uni} \AgdaSymbol{=} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{R'} \AgdaSymbol{→} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x₁} \AgdaSymbol{→} \AgdaBound{ext} \<[48]%
+\>[48]\<%
+\\
+\>[0]\AgdaIndent{20}{}\<[20]%
+\>[20]\AgdaSymbol{(λ} \AgdaBound{x₂} \AgdaSymbol{→} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x₃} \AgdaSymbol{→} \AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x₄} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{R'} \AgdaBound{s} \AgdaBound{s'}\AgdaSymbol{))))))}\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+
+
+
+
+
+
+
+
+
+
+It is all about adding more structures on types. 
+
+A setoid is a set with
+an equivalence relation. Categorically, terms are objects and in setoid models, there is at most one morphism
+between terms which stands for the equivalence relation.
+The reflexivity is the identity morphism, the symmetry provides an
+inverse of each morphism and the transitivity is just the composition
+of morphism. One important deduction is that for any $p : a \sim b, p
+\dot p^{-1} = id$. However it is not true for groupoid models.
+
+In groupoid models, Instead of the definitional equality $p : a \sim
+b, p . p^{-1} = id$, we have a 2-dimensional isomorphism $G3 : p . p^{-1}
+\sim id$ (It is one of the groupoid laws \cite{MR1686862}) which
+stands for the propositional equality.
+Setoids are just a special cases of groupoids. The morphism is not
+unique in each homset, i.e. the identity types are
+non-trivial.
+
+The second level is non-trivial in a groupoid, what if the third level
+and higher levels are non-trivial? It we turn the equalities, namely
+groupoid laws of each level, into explicit morphisms (which are called
+equivalence), we get \og.
+
+By building the infinite tower of identity types, every type has a \wog \cite{van2011types}.
+Similar to the interpretation of types as setoids, \wog is more
+general choice. It has more expressive power than setoid models.
+
+
+
+
+
+
+
+
+
+
+Similarly, an
+n-groupoid is an n-category in which morphisms on all levels are
+equivalence.
+
+\begin{displaymath}
+\xymatrix{ 
+a
+\ar@/_4pc/[ddd]^p="p" 
+\\
+\\
+\\
+b 
+\ar@/_4pc/[uuu]^{p^{-1}}="p^{-1}"" 
+\ar@2{->} @/^2pc/ "p";"p^{-1}" _{H}="H"
+\ar@2{<-} @/_2pc/ "p";"p^{-1}" ^{H ^{-1}}="H^{-1}"
+\ar@3{->} @/^1pc/ "H";"H^{-1}"_{...}="A"
+\ar@3{<-}@/_1pc/  "H";"H^{-1}"^{...}="A"
+}
+\end{displaymath} 
+
+ {\og} which are also called $\infty$-groupoids is an
+infinite version of n-groupoids. To model Type Theory without UIP we
+also require the equalities to be non-strict, in other words, they are
+not definitionally equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
+
+There are several approaches to formalise {\wog} in Type Theory. For instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
+This paper mainly explains an implementation of {\wog} following Brunerie's approach in Agda which is a well-known theorem prover and also a variant of intensional {\mltt}. The approach is to specify when a globular set is a {\wog} by first defining a type theory called {\tig} to describe the internal language
+of Grothendieck {\wog}, then interpret it with a globular set and a dependent function. All coherence laws of the {\wog} should be derivable from the syntax, we will present some basic ones, for example reflexivity. One of the main contribution of this paper is to use the heterogeneous equality for terms to overcome some very difficult problems when we used the normal homogeneous one. In this paper, we omit some complicated and less important programs, namely the proofs of some lemmas or the definitions of some auxiliary functions. it is still possible for the reader who is interested in the details to check the code online, in which there are only some minor differences.
+
+
+
+
+
+%This can be removed, may be not very important here
+
+\begin{proposition}
+It is not true that given type $T$, if $T$ is connected then $T$ is contractible.
+\end{proposition}
+\begin{proof}
+As we have seen $ \R_0 / \sim$ is connected. However, it is not
+contractible.
+Assume it is contractible then there exists $x : \R_0 / \sim$, for
+all $y : \R_0 / \sim$, we know $x = y$. Given two uniform sequences
+$\bar{0} , \bar{1} : \R_0 / \sim$, we have $\bar{0}  = x = \bar{1}$
+which negates $\bar{0} \ne \bar{1}$.
+\end{proof}

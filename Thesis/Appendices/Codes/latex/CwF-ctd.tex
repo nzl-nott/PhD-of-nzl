@@ -40,21 +40,15 @@ Binary relation
 
 \begin{code}\>\<%
 \\
-%
-\\
 \>\AgdaFunction{Rel} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaPrimitiveType{Set₁}\<%
 \\
 \>\AgdaFunction{Rel} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaSymbol{=} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{\&} \AgdaBound{A} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{)}\<%
-\\
-%
 \\
 \>\<\end{code}
 
 Natural numbers
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{module} \AgdaModule{Natural} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)} \AgdaKeyword{where}\<%
 \\
@@ -209,8 +203,6 @@ Natural numbers
 \>[2]\AgdaIndent{6}{}\<[6]%
 \>[6]\AgdaSymbol{\}}\<%
 \\
-%
-\\
 \>\<\end{code}
 
 Simply typed universe
@@ -218,60 +210,148 @@ Simply typed universe
 \AgdaHide{
 \begin{code}\>\<%
 \\
-%
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{data} \AgdaDatatype{⟦U⟧⁰} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
 \\
-\>\AgdaComment{\{-
-  data  ⟦U⟧⁰ : Set where
-    nat : ⟦U⟧⁰
-    arr<\_,\_> : (a b : ⟦U⟧⁰) → ⟦U⟧⁰
-
-  \_\textasciitilde⟦U⟧\_ : ⟦U⟧⁰ → ⟦U⟧⁰ → HProp
-  nat \textasciitilde⟦U⟧ nat = ⊤'
-  nat \textasciitilde⟦U⟧ arr< a , b > = ⊥'
-  arr< a , b > \textasciitilde⟦U⟧ nat = ⊥'
-  arr< a , b > \textasciitilde⟦U⟧ arr< a' , b' > = a \textasciitilde⟦U⟧ a' ∧ b \textasciitilde⟦U⟧ b'
-
-  reflU :  \{x : ⟦U⟧⁰\} → < x \textasciitilde⟦U⟧ x >
-  reflU \{nat\} = tt
-  reflU \{arr< a , b >\} = reflU \{a\} , reflU \{b\}
-
-  symU : \{x y : ⟦U⟧⁰\} → < x \textasciitilde⟦U⟧ y > → < y \textasciitilde⟦U⟧ x >
-  symU \{nat\} \{nat\} eq = tt
-  symU \{nat\} \{arr< a , b >\} eq = eq
-  symU \{arr< a , b >\} \{nat\} eq = eq
-  symU \{arr< a , b >\} \{arr< a' , b' >\} (p , q) = (symU \{a\} \{a'\} p) 
-                                               , (symU \{b\} \{b'\} q)
-
-  transU : \{x y z : ⟦U⟧⁰\} → < x \textasciitilde⟦U⟧ y > → < y \textasciitilde⟦U⟧ z > → < x \textasciitilde⟦U⟧ z >
-  transU \{nat\} \{nat\} eq1 eq2 = eq2
-  transU \{nat\} \{arr< a , b >\} () eq2
-  transU \{arr< a , b >\} \{nat\} () eq2
-  transU \{arr< a , b >\} \{arr< a' , b' >\} \{nat\} eq1 eq2 = eq2
-  transU \{arr< a , b >\} \{arr< a' , b' >\} \{arr< a0 , b0 >\} (p1 , q1) 
-         (p2 , q2) = (transU \{a\} \{a'\} \{a0\} p1 p2) 
-         , transU \{b\} \{b'\} \{b0\} q1 q2
-
-  ⟦U⟧ : Ty Γ
-  ⟦U⟧ = record 
-    \{ fm = λ γ → record
-         \{ Carrier = ⟦U⟧⁰
-         ; \_≈h\_ = \_\textasciitilde⟦U⟧\_
-         ; refl = λ \{x\} → reflU \{x\}
-         ; sym = λ \{x\} \{y\} → symU \{x\} \{y\}
-         ; trans = λ \{x\} \{y\} \{z\} → transU \{x\} \{y\} \{z\}
-         \}
-    ; substT = λ \_ → id
-    ; subst* = λ \_ → id
-    ; refl* = λ x a → reflU \{a\}
-    ; trans* = λ a → reflU \{a\}
-    \}
-
-  elfm : Σ ∣ Γ ∣ (λ x → ⟦U⟧⁰) → HSetoid
-  elfm (γ , nat) = [ ⟦Nat⟧ ]fm γ
-  elfm (γ , arr< a , b >) = [ Γ , γ ] elfm (γ , a) ⇒fm elfm (γ , b)
--\}}\<%
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaInductiveConstructor{nat} \AgdaSymbol{:} \AgdaDatatype{⟦U⟧⁰}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaInductiveConstructor{arr<\_,\_>} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{⟦U⟧⁰}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{⟦U⟧⁰}\<%
 \\
 %
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{\_\textasciitilde⟦U⟧\_} \AgdaSymbol{:} \AgdaDatatype{⟦U⟧⁰} \AgdaSymbol{→} \AgdaDatatype{⟦U⟧⁰} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{nat} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaInductiveConstructor{nat} \AgdaSymbol{=} \AgdaFunction{⊤'}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{nat} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>} \AgdaSymbol{=} \AgdaFunction{⊥'}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaInductiveConstructor{nat} \AgdaSymbol{=} \AgdaFunction{⊥'}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaInductiveConstructor{arr<} \AgdaBound{a'} \AgdaInductiveConstructor{,} \AgdaBound{b'} \AgdaInductiveConstructor{>} \AgdaSymbol{=} \AgdaBound{a} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{a'} \AgdaFunction{∧} \AgdaBound{b} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{b'}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{reflU} \AgdaSymbol{:} \<[11]%
+\>[11]\AgdaSymbol{\{}\AgdaBound{x} \AgdaSymbol{:} \AgdaDatatype{⟦U⟧⁰}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{x} \AgdaFunction{>}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaInductiveConstructor{,} \AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{symU} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaDatatype{⟦U⟧⁰}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{y} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{x} \AgdaFunction{>}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{symU} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaBound{eq} \AgdaSymbol{=} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{symU} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaBound{eq} \AgdaSymbol{=} \AgdaBound{eq}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{symU} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaBound{eq} \AgdaSymbol{=} \AgdaBound{eq}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{symU} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a'} \AgdaInductiveConstructor{,} \AgdaBound{b'} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{symU} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{a'}\AgdaSymbol{\}} \AgdaBound{p}\AgdaSymbol{)} \<[67]%
+\>[67]\<%
+\\
+\>[2]\AgdaIndent{47}{}\<[47]%
+\>[47]\AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaFunction{symU} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b'}\AgdaSymbol{\}} \AgdaBound{q}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{transU} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{:} \AgdaDatatype{⟦U⟧⁰}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{y} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{z} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaFunction{\textasciitilde⟦U⟧} \AgdaBound{z} \AgdaFunction{>}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{transU} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaBound{eq1} \AgdaBound{eq2} \AgdaSymbol{=} \AgdaBound{eq2}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{transU} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{()} \AgdaBound{eq2}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{transU} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaSymbol{()} \AgdaBound{eq2}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{transU} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a'} \AgdaInductiveConstructor{,} \AgdaBound{b'} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{nat}\AgdaSymbol{\}} \AgdaBound{eq1} \AgdaBound{eq2} \AgdaSymbol{=} \AgdaBound{eq2}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{transU} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a'} \AgdaInductiveConstructor{,} \AgdaBound{b'} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{arr<} \AgdaBound{a0} \AgdaInductiveConstructor{,} \AgdaBound{b0} \AgdaInductiveConstructor{>}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{p1} \AgdaInductiveConstructor{,} \AgdaBound{q1}\AgdaSymbol{)} \<[68]%
+\>[68]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{p2} \AgdaInductiveConstructor{,} \AgdaBound{q2}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{transU} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{a'}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{a0}\AgdaSymbol{\}} \AgdaBound{p1} \AgdaBound{p2}\AgdaSymbol{)} \<[50]%
+\>[50]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaInductiveConstructor{,} \AgdaFunction{transU} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b'}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b0}\AgdaSymbol{\}} \AgdaBound{q1} \AgdaBound{q2}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦U⟧} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦U⟧} \AgdaSymbol{=} \AgdaKeyword{record} \<[15]%
+\>[15]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{γ} \AgdaSymbol{→} \AgdaKeyword{record}\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaDatatype{⟦U⟧⁰}\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈h\_} \AgdaSymbol{=} \AgdaFunction{\_\textasciitilde⟦U⟧\_}\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{symU} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{z}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{transU} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{z}\AgdaSymbol{\}}\<%
+\\
+\>[4]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{id}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaFunction{id}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{reflU} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{elfm} \AgdaSymbol{:} \AgdaRecord{Σ} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaDatatype{⟦U⟧⁰}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HSetoid}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{elfm} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{nat}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaFunction{[} \AgdaFunction{⟦Nat⟧} \AgdaFunction{]fm} \AgdaBound{γ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{elfm} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{arr<} \AgdaBound{a} \AgdaInductiveConstructor{,} \AgdaBound{b} \AgdaInductiveConstructor{>}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{,} \AgdaBound{γ} \AgdaFunction{]} \AgdaFunction{elfm} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{⇒fm} \AgdaFunction{elfm} \AgdaSymbol{(}\AgdaBound{γ} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)}\<%
 \\
 \>\<\end{code}
 }
@@ -309,8 +389,6 @@ Simply typed universe
 The equality type
 
 \begin{code}\>\<%
-\\
-%
 \\
 \>\AgdaKeyword{module} \AgdaModule{Equality-Type} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaKeyword{where}\<%
 \\
@@ -391,8 +469,6 @@ The equality type
 \\
 %
 \\
-%
-\\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaFunction{⟦refl⟧⁰} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaFunction{⟦Id⟧} \AgdaFunction{[} \AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{fn} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x'} \AgdaSymbol{→} \AgdaBound{x'} \AgdaInductiveConstructor{,} \AgdaFunction{proj₂} \AgdaBound{x'} \<[66]%
 \>[66]\<%
@@ -418,8 +494,6 @@ The equality type
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaFunction{⟦refl⟧} \AgdaSymbol{=} \<[12]%
 \>[12]\AgdaFunction{lam} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{⟦refl⟧⁰}\<%
-\\
-%
 \\
 \>\<\end{code}
 
@@ -512,18 +586,23 @@ Subst using equality types
 \>[0]\AgdaIndent{11}{}\<[11]%
 \>[11]\AgdaSymbol{\}}\<%
 \\
-\>\<\end{code}
-
-
-\AgdaHide{
-\begin{code}\>\<%
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaFunction{⟦subst⟧} \AgdaSymbol{=} \AgdaFunction{lam} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{)\}} \<[46]%
+\>[46]\<%
+\\
+\>[4]\AgdaIndent{14}{}\<[14]%
+\>[14]\AgdaSymbol{(}\AgdaFunction{lam} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaFunction{⟦Id⟧}\AgdaSymbol{\}} \<[30]%
+\>[30]\<%
+\\
+\>[4]\AgdaIndent{14}{}\<[14]%
+\>[14]\AgdaSymbol{(}\AgdaFunction{lam} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{B} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{A} \AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaBound{A}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{\}}\AgdaFunction{]T} \<[61]%
+\>[61]\<%
+\\
+\>[14]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaFunction{[} \AgdaFunction{fst\&} \AgdaSymbol{\{}A \AgdaSymbol{=} \AgdaFunction{⟦Id⟧}\AgdaSymbol{\}} \AgdaFunction{]T}\AgdaSymbol{\}} \AgdaFunction{⟦subst⟧⁰}\AgdaSymbol{))}\<%
 \\
 %
 \\
-\>\AgdaComment{--    ⟦subst⟧ = lam (lam (lam ⟦subst⟧⁰))}\<%
-\\
-\>[0]\AgdaIndent{4}{}\<[4]%
-\>[4]\<%
-\\
 \>\<\end{code}
-}

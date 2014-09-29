@@ -1,58 +1,23 @@
 \chapter{Introduction}
 
-The aim of this work is to find out the approach to implement quotient
-types in intensional \mltt. Type theory serves as both a foundation of
-mathematics and a programming language. In set theory quotient set is
-a set of the equivalence classes of some equivalence relation on
-another set. The word \emph{Quotient} is usually used to capture
-similar notions in other abstract branches, such as quotient group,
-quotient space, quotient category etc. Move to type theory, it is
-expected to have \emph{Quotient types} to construct similar objects in
-mathematics. However in current setting of \itt, it is not
-available. Motivated by this fact, I start to extend type theory with
-quotient types. This thesis first
-introduce background knowledges about type theory , Agda and specially
-quotient types, then discuss about definable quotients which are
-quotients definable without using quotient types, other models of type
-theory to implement quotient types and homotopy type theory which has
-a stronger notion called higher inductive types. The author further
-extend the setoid models and study an approach to implement \wog model
-in \itt for \hott where quotient types are available.
-
-
-
-
-
-
-Theories of dependent types have been proposed as a foundation of constructive mathematics and as a framework in which to construct certified programs and to extract programs from proofs. Using implementations of such type theories, substantial pieces of constructive mathematics have been formalised and medium scale program developments and verifications have been carried out.
-
 Type theory is usually considered as an more rigorous foundation of
-constructive mathematics that set theory. Per Martin-L\"{o}f's developed several
-versions of type theory which we usually call them Martin-Löf's
-intuitionistic type theory (or in short Martin-Löf's type theory). A number of
-dependently typed functional programming languages are developed upon
-one of his type theories, including NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
-The Curry-Howard correspondence (propositions corresponds to types and
-proofs corresponds to terms), and the notion of dependent types from
-\mltt make it possible to do computer-based reasoning within these
-languages.
+constructive mathematics that set theory.
+ It is a formal system serves as not only a foundation of constructive mathematics but also a dependently typed programming language. A number of
+dependently typed functional programming languages are implementations of \mltt, including NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
 
-However there are many important extensional concepts missing in the
-intensional variants of \mltt. The equality in mathematics is
-subdivided into several different notions in type theory and many
-problems arose.
-\emph{Quotient types} is one of these extensional
-concepts which does not exist in \itt like Agda. 
 
-The main subject of this thesis is to study the approaches to encode
-quotients and to implement quotient types in type theory.
+Type Theory is based on Curry-Howard isomorphism which is a correspondence between propositions and types such that one can build constructive proofs as programs in  implementations of Type Theory like Agda. Compared to other programming languages, one can reason about programs in themselves and thus write certified programs.
+Since Type Theory provides computer aid formal reasoning, there have been a lot of \maths formalised in it. The encoding of constructive mathematics also helps in program specification and verification. 
 
-\section{Background}
+However, most of the implementations are based on the \emph{intensional} variant of \mltt where \emph{propositional equality} is different to \emph{definitional equality}. The propositional equality which induced by the identity type is intensional such that extensionally equal terms like point-wise equal functions, logically equivalent propositions are not propositionally equal. \itt is preferable because type checking is decidable so that it has good computational behaviours. However the lack of extensional concepts in current implementations like Agda, hinders them from becoming a more popular theorem prover.
 
-\subsection{Equality and extensional concepts}
+The notion of \emph{quotient types} is one of the essential extensional concepts which is not available in current implementations of \itt. A quotient type is obtained by redefining equality of a type with a given equivalence relation which is not supported. This thesis mainly studies quotient types from a discussion on the definability of quotients via a normalisation to models where quotient types are available. Most of the work is conducted in Agda.
 
-We first learn equality for numbers in mathematics. It generally
-expressed the sameness of two mathematical objects such as numbers or sets.
+
+\section{Equality}
+
+We first learn equality for numbers in \maths. Generally speaking, it
+expresses the sameness of two mathematical objects such as numbers or sets.
 $1+2=3$ tells us the mathematical object calculated from $1+2$ is the
 same as $3$.
 
@@ -64,126 +29,72 @@ equality:
 Given any $x$ and $y$, $x = y$ if, given any predicate $P$, $P(x)$ if and only
 if $P(y)$.
 
-In type theory, equality also plays a very important role.
-It is not difficult to imagine that the subject of equality is also
-contentious in type theory. Considering a variety of issues, there are
+In Type Theory, the encoding of equality is also contentious. Considering a variety of issues, there are
 several notions of equality in type theory.
 We can compare whether two types are equal or two terms are equal. If two
 expressions can be computed to the same object then we claim they are
- \emph{definitionally} equal.  In addition we can define types to
- internalise these propositions. A term of this type is just a witness or evidence of
- this equality. We usually call these types identity types or
- propositional equalities.
+ \emph{definitionally} equal.  
+ We can also internalise definitional equality by defining \emph{identity types}. An inhabitant of identity type is an evidence of the \emph{propositional equality} between two terms or types are equal and is usually denoted as refl. 
 
-The problem also arises from the computational difficulties. We
-usually equate functions which gives the same outputs if we feed in the
-same inputs. However this equality is extensional because the intension
-of functions are definitions which can be different. In \itt, which is
-more widely used, the encoding of this extensional equality of
-functions is also a problem. A type checker can easily decide whether two
+In \ett, propositional equality is identified with definitional equality which makes definitional equality undecidable and then type checking undecidable. However in \itt, they are different. Propositional equality is only induced by identity types which captures equality on two closed terms. 
+Functions are considered equal if they are extensionally equal, namely point-wise equal, but can be definitionally different. For example, $\lambda n \to n$ and $\lambda n \to n + 0$ does not equal in the usual definition of addition, because $n+0$ does not reduce to $n$.
+The problem arises from the computational difficulties. A type checker can easily decide whether two
 values of inductive types are the same, but not whether two functions
 are extensionally equal. Even suppose we encode the method to compute
 the definitional equality of the outputs for each given input, it can
-only decide the equality for finite types. Because there is no
-attached equality for each types other than trivial identity, it is
-necessary to use a different model of type theory in which types are
-equipped with equalities.
+only decide the equality for finite types.
+
+There are also many other extensional concepts missing as Martin Hofmann pointed out in \cite{hof:phd}.Quotient types is one of them and is essential for construction of \maths and programs.
+
+% Because there is no attached equality for each types other than trivial identity, it is
+% necessary to use a different model of type theory in which types are
+% equipped with equalities.
 
 \subsection{Quotient types}
 
-
-In mathematics, a quotient set is a set of the equivalence classes of
+In \maths, a quotient set is a set of the equivalence classes of
 some equivalence relation on another set. Abstracted from this
 concept, there are also quotient groups, quotient categories etc.
 
-Naturally, given a type and an equivalence relation, quotient types
-are interesting to study. Due to the difference of type theory and set
-theory, quotient types can not be constructed via equivalence classes
-(or we need some other axioms as we will discussed in detail
-later).
+Naturally, given a type and an equivalence relation, one would expect a \emph{quotient type}
+which can be intuitively thought as a new type generated by redefining equality on original type with the given equivalence relation.
+However such a type former does not exist in current formulation of \itt because there is no attached equivalence on each type except definitional equality which can not be changed. Usually a setoid which consists of a set and an equivalence relation on it is used to represent quotients. However, this will not ideal because we have to redefine everything on sets for setoids.
 
-Quotient types are very useful in three aspects. 
-When the quotients
-can be defined without the help of quotient types, it provides us
-framework to define functions and properties on the base types and
-lift them if they respects the equivalence relation. This sounds
-superfluous at first, but in practise, it is much easier to define
+Some quotients can be defined inductively without using quotient types. 
+For example integers can be represented as pairs of natural numbers which are equivalent if the subtraction of first number from the second are equal.  This setoid gives rise to a quotient, but the set of integers can also be inductively. An algebraic structure of quotients consists of the set definition and a normalisation mapping from the "base" type to the "quotient" type and essential properties and operations. Such a framework provides a flexible approach to lifting functions and proofs from base types to quotient types. The simulation sounds superfluous at first, but in practice, it is much easier to define
 functions for the base types (because usually they have a bundle of
 library codes) on underlying level, and the ''quotient types'' has no
 redundant on the surface level.
-Quotient types can also enable us define some types which are not
-definable in standard \itt, for example real numbers, multisets etc.
-Usually the examples we want to implement by quotient types are cases
-of quotient sets in mathematics. However, there are not only sets
-(whose equality is propositional), but also other types with higher
-level of structures. It is an interesting topic in \hott and quotient
-types are extended to cover types which are more than $h-sets$.
 
-The topic of quotient types started very early and there are already
-several models of type theory to encode extensional concepts including
-quotient types.
+However not all types are definable with a normalisation functions, for example real numbers, multisets etc. Thus quotient types are essential for encoding of these important constructions.
 
-\subsection{different models}
+If a type is treat like a set, it seems impossible to enforce a equality on it. Therefore, it becomes more and more popular to interpret types as structure objects like setoids, groupoids and \wog which internalising equality as definitions. 
 
-If each type comes with its own equality, it looks like it naturally
-encodes quotient types.
+There are several different models of Type Theory where extensional concepts including quotient types are derivable.
 
-Martin Hofmann and Thorsten Altenkirch have studied several models to
-accomadate extensional quotient types:
+\begin{itemize}
 
-There are several existing intensional models for extensional
-concepts. The first one we are going to work with is Altenkirch's
-setoid model. To introduce an extensional propositional equality in \itt{}, 
-Altenkirch \cite{alti:lics99} proposes an intensional setoid model
-with a proof-irrelevant universe of propositions \textbf{Prop}.
-
-1. Altenkirch's setoid model. Altenkirch \cite{alti:lics99} proposed an intensional setoid model
+\item Altenkirch's setoid model. Altenkirch \cite{alti:lics99} proposed an intensional setoid model
 with a proof-irrelevant universe of propositions \textbf{Prop} which
 is closed under $\Pi$ and $\Sigma$. It interprets types as setoids
 such that quotient types are just setoids whose equality is replaced
 by given equivalence relation.
 
-1. Hofmann's setoid model. Hofmann \cite{hofmann1995interpretation}  introduced a setoid model as an
-E-category which is a category equipped with an equivalence relation
-for homsets.
-
-2. Hofmann and Streicher's groupoid model. They give a model in which
+\item Hofmann and Streicher's groupoid model. They give a model in which
 types are interpreted as groupoids. In this model, propositional
-equality is interpreted as isomorphism and K eliminator for equality
+equality is interpreted as isomorphism and $K$ eliminator for equality
 types is unavailable. 
 
-3. Homotopy type theory and \wog model. It can be seen as a
+\item Homotopy type theory and \wog model. It can be seen as a
 generalisation of the groupoid model above. Types are interpreted as
-higher groupoids. It will be discussed in detail in the chapter of \hott.
+higher groupoids.
 
-
-
-
-\section{Basic category theoretical notions}
-
-A category has a collection of objects and one collection of arrows
-for each pair of objects. 
-A simple finite category can be visualised as a directed diagram
- but there are also a set of conditions which are called categorical laws to obey. 
-The most accessible example is the category of sets. Objects are sets,
-arrows are functions and all categorical conditions fulfilled. It is
-also very helpful to formulate type theoretical concepts in a
-categorical way. 
-
-Category theory abstracts a lot of similar concepts in different
-fields and provides a concise language for mathematics for
-mathematicians.
-Type theory and category theory are closely related,
-especially Homotopy type theory
-\footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
-Category theory is very useful in giving the type theoretical
-notions, particularly the ones involving functions, relations and some
-properties.
-
+\end{itemize}
 
 \section{Programming in Agda}
 
-In this thesis we use Agda as the only programming language. Agda is a dependently typed, functional programming language, which is
+In this thesis we use Agda to implement our constructions in \itt. 
+Agda is a dependently typed, functional programming language, which is
 based on the intensional version of \mltt. It is mainly developed by
 Ulf Norell, Nils Anders Danielsson, and Andreas Abel.
 It is a functional language like Haskell, but has dependent types. It has dependent pattern
@@ -198,9 +109,8 @@ Agda. It is also one of the popular languages in the community of the recently
 developed field \hott and the library of \hott is under construction.
 The adequate reasoning library code also helps in writing certified programs.
 
-In chapter \ref{bg} we present a brief introduction to it for someone
-who meet this language for the first time. In chapter 3 we use Agda to
-show...\todo{Write where we use Agda and how}
+In \autoref{bg} we present a brief introduction to it for someone
+who meet this language for the first time. In \autoref{dq} we use Agda to implement our definable quotient algebraic structures. In \autoref{models} we build a category with families of setoids in Agda. In \autoref{wog}, we implement a syntactic construction of \wog.
 
 Agda wiki\cite{agdawiki:main} is a good reference to it and there are
 several good tutorials to Agda for example Ulf Norell's
@@ -208,34 +118,11 @@ several good tutorials to Agda for example Ulf Norell's
 
 
 
-
-\subsection{Category Theory}
-
-Category theory is a very useful tools to formalise mathematical notions, particularly focussing on morphisms which can be functions, relations and transformations.
-A category has a collection of objects and one collection of arrows for each pair of objects. A simple finite category can be visualised as a directed diagram but there are also a set of conditions which are called categorical laws to obey. 
-
-The most accessible example is the category of sets. Objects are sets, arrows are functions and all categorical conditions fulfilled. It is also very helpful to formulate type theoretical concepts in a categorical way. Type theory and category theory are closely related, especially Homotopy type theory \footnote{\url{http://ncatlab.org/nlab/show/relation+between+type+theory+and+category+theory}}.
-
-Category theory abstracts a lot of similar concepts in different
-fields and provides a concise language for mathematics for
-mathematicians.
-\todo{to complete this part}
-
-\section{Related work}
-
-\todo{fill this part}
-
-
 \section{Applications}
 
 
-Quotients are very useful in applications. First it is essential in some
+Quotient types are very useful or even essential in some
 mathematics formalisation. 
-In a type theory with quotient type, real numbers can be encoded as
-the Cauchy sequences with an equivalence relation.
-From programming perspective,  it also provides more algebraic
-datatypes and enable us to reason about infinite types and
-semantics-based verification of concurrent programs \cite{hof:phd}.
 
 For quotients which are definable without quotient types, it is
 possible to relate them with setoid representation within some
@@ -249,6 +136,11 @@ of the comparatively ease of reasoning about setoids and flexible
 conversion between the setoids and sets.
 
 
+In a type theory with quotient type, real numbers can be encoded as
+the Cauchy sequences with an equivalence relation.
+From programming perspective,  it also provides more algebraic
+datatypes and enable us to reason about infinite types and
+semantics-based verification of concurrent programs \cite{hof:phd}.
 
 
 \section{Overview}
@@ -258,53 +150,50 @@ conversion between the setoids and sets.
 
 
 
-In \autoref{bg}, we will discuss the background of this research. Type theory is a popular topic in
-theoretical computer science. It is quite powerful not only a a theory
-but also as a programming language. We use a dependent functional
-programming language called Agda which is design based on \mltt. The
- related work will also be discussed in this chapter.
+In \autoref{bg}, we introduce Type Theory as background of our study. We provide a brief
+history of it and some basic rules of it as a formal system.
+We also introduce a dependent functional
+programming language called Agda which is designed based on Type Theory.
+we also discuss the new area between \maths and
+computer science -- \hott. Quotient types can be encoded in \hott simply.
 
 
-In \autoref{qt}, we will discuss quotient types which is the topic of
-this thesis in detail. Quotient types
-can be understood as a interpretation of quotient set in set
-theory. It is an extensional concept which is also related to other extensional concepts. It can be encoded in different ways. Categorically speaking it
-is a coequalizer, and a split quotient is a just a split coequalizer.
+In \autoref{qt}, we discuss quotient types which is the topic of
+this thesis in detail. We explain what is a quotient type by a set of rules  together with a categorical explanation.
+
 
 
 In \autoref{dq}, we start introducing one of our achievements, the
-definable quotients. It is usually very unreadable, unorganised and
-complicated to write some programs without abstracting. It is also
-applied to quotient types. If we have some types that can be abstract
-as a quotient type of some common types, then it will be easily
-encoded and manipulated. As a example, integers can be encoded as the
+definable quotient algebraic structures. A quotient structure consists of a set definition servers as the "quotient" type and a normalisation function with several essential functions and conditions.
+For quotients that are definable inductively, a new type former of quotient seems unnecessary.
+As a example, integers can be encoded as the
 quotients types of paired natural numbers over the equivalence
 relation that two pairs are equal if they represent the same
-subtraction.
-
-In \autoref{rl}, we discuss the undefinable quotients, specially the
-real numbers. Also multisets and partiality monads are mentioned as
-examples of quotients which can be implemented as long as we have
-quotient types. 
+subtraction. Integers can also be defined inductive as a set. Definable quotient structures abstract the relation between these two representations and provides a flexible way of conversions. It can be seen as 
+a simulation of the quotient types.
 
 
-In \autoref{sm}, we will talk about the setoid model approach to encode
+
+In \autoref{rl}, we discuss quotients that are undefinable as a inductive set with a normalisation mapping, such as the real numbers, finite multisets and partiality monads. We show a meta-theoretical proof of the undefinability of real numbers and generalise it.
+
+
+In \autoref{models}, we discussed several models where quotient types are available. We present an implementation on the setoid model approach to encode
 extensional concepts. The work is mainly extending the setoid model
 done by Altenkirch in \cite{alti:lics99} to
-quotient types.
+quotient types. Some other models including models of \hott are also mentioned.
 
 
-In \autoref{HITs}, we will discuss the new area between mathematics and
-computer science -- \hott. We will talk about the higher inductive
-types and also the \wog-model which is used to interpret
-homotopy types in \itt. Quotient types can be encoded \hott simply.
 
 
-Finally, in \autoref{wog}, we
-
-\todo{to finish this.}
 
 
-In Appendix, we present the code of some important constructions in
-Agda which are too long to present in text.
-\todo{maybe glossary}
+Finally, in \autoref{wog}, we present a new formalisation of the syntax of weak
+  $\omega$-groupoids in Agda using heterogeneous equality. We show how
+  to recover basic constructions on $\omega$-groupoids using
+  suspension and replacement. In particular we show that any type
+  forms a groupoid and we outline how to derive higher dimensional
+  composition. We present a possible semantics using globular sets and
+  discuss the issues which arise when using globular types instead. The work in the chapter has been published in \cite{LFMTP14} together with Thorsten Altenkich and Ond\v{r}ej Ryp\'{a}\v{c}ek.
+
+
+In Appendix, we present the complete code of as a reference for someone who is interested in our work.

@@ -70,12 +70,13 @@ set is denoted as $\qset{A}$,
 \end{equation}
 \end{definition}
 
-Similarly in topology, group theory or other branches there are also quotient space, quotient group and other quotients. How can we construct a quotient set in type theory? How about a quotient type?
+Similarly in topology, group theory or other branches of \maths there are also quotient space, quotient group and other quotients. 
 
-\section{Quotient types in type theory}
+\section{Quotients in Type Theory}
 
-As long as we define a set as a type in type theory, for example the set of natural numbers $\N$, and an equivalence relation on it, we would like to have a quotient set immediately. In \ett like NuPRL, it is possible to redefine
-equality of some types, hence we can define extensional quotient
+Natural one would also expect quotient types in Type Theory.
+As long as we define a set as a type in Type Theory, for example the set of natural numbers $\N$, and an equivalence relation on it, we would like to have a quotient immediately. In \ett like NuPRL, it is possible to redefine
+equality on some types, hence we can define extensional quotient
 types. However since the equality is extensional, we cannot recover the witness of
 the equality.
 %\footnote{See http://www.cs.cornell.edu/home/sfa/Nuprl/NuprlPrimitives/Xquotient_doc.html}
@@ -98,16 +99,16 @@ For example, functions on setoids, equalities on setoids,
 products on setoids etc. Moreover it is essential to define higher setoids, when the base set is represent as setoids. Not only the manipulation of equivalence complicates
 these definitions, from a programming perspective, setoids are also
 unsafe because we have access to the underlying
- sets \cite{aan}. We can perform operations which does not respect
+ sets \cite{aan}. We can perform operations which do not respect
  equivalence relation and the result does not make any sense.
 Therefore, setoids are not considered as a good solution.
 
-From other quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in type theory it is also expected
+For quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in type theory it is also expected
 that the type representing a quotient set is of sort $\Set$ rather that $\Setoid$. 
 
 \subsection{An impredicative encoding of quotient types}\label{impredicative}
 
-An natural idea is to imitate the set theoretical construction. We would like to define an equivalence class first.
+A natural idea is to imitate the set theoretical construction. We would like to define an equivalence class first.
 
 An equivalence class of $a$ can be defined as a tuple
 
@@ -173,9 +174,9 @@ There is an alternative type-theoretical encoding which is sometimes called inte
 %$|| A || = (P : \Prop)(A \to P) \to P$
 
 
-\subsection{Intensional quotient set}
+\subsection{Intensional quotient set}\label{iqs}
 
-In type theory, given a setoid $(A,\sim)$, an intensional quotient set is given by
+In Type Theory, given a setoid $(A,\sim)$, an intensional quotient set is given by
 following rules:
 
 \infrule[Q-\bf{Form}]
@@ -506,16 +507,16 @@ We call this \emph{soundness} property in \cite{aan}.
  in a category of types to define a notion called \emph{squash types},
  which is further discussed by Nogin \cite{nog:02}.
 
-\item To add quotient types to \mltt{}, Hofmann proposes  three models for
+\item To add quotient types to \mltt, Hofmann proposes three models for
 quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
 quotient types. In this model all types are attached with partial
 equivalence relations, namely all types are setoids rather than
 sets. Types without a specific equivalence relation can be seen as
 setoids with the basic intensional equality. This is similar to
-\ett{} in some sense. The second one is groupoid model which solves some problems
-but it is not definable in \itt{}. He also proposes a third model to
+\ett in some sense. The second one is groupoid model which solves some problems
+but it is not definable in \itt. He also proposes a third model to
 combine the advantages of the first two models, but it also has some
-disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that extensional Type Theory is conservative over \itt  extended with quotient types and a universe \cite{hof:95:con}.
+disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that \ett is conservative over \itt extended with quotient types \cite{hof:95:con}.
 
 \item Nogin \cite{nog:02} considers a modular approach to axiomatizing the
 same quotient types in NuPRL as well. Despite the ease of constructing new types
@@ -555,7 +556,7 @@ purpose of introducing congruence types is to solve problems in
 term rewriting systems rather than to implement quotient types.
 
 
-\item Barthe and Capretta \cite{bar:03} compare different ways to setoids in type theory.
+\item Barthe and Capretta \cite{bar:03} compare different ways to setoids in Type Theory.
 The setoid is classified as partial setoid or total setoid depending
 on whether the equality relation is reflexive or not. They also
 consider obtain quotients with different kinds of setoids, especially
@@ -571,10 +572,9 @@ containers quotiented by a collection of isomorphisms on the positions
 within the containers.
 
 \item Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
-of axioms of Homotopy Type Theory. He firstly implement
+of axioms of \hott. He firstly implement
 equivalence class and use it to implement quotients which is an
 analogy to the construction of quotient sets in set theory. The detail has been given in \autoref{impredicative}.
-
 
 \end{itemize}
 

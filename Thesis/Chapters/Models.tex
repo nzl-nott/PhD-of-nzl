@@ -13,7 +13,7 @@ a computational interpretation. One solution is to construct a model of theses a
 In this chapter, we discuss several models of extensional concepts, and mainly introduce Altenkirch's setoid model. We build a category with families of setoids to accommodate the types theory described in
 \cite{alti:lics99}  so that it is possible to define quotient types following Martin Hofmann's Paper \cite{hof:95:sm}. We also briefly introduce several models of \hott where quotient types are also available.
 
-\section{The setoid model}
+\section{The setoid model}\label{setoidmodel}
 
 
 One of the intensional models of extensional concepts inside \itt is setoid model where types are interpreted as setoids. Martin Hofmann has studied this approach in \cite{hof:phd}, but a naive version of setoid model does not satisfy all definitional equalities. The version in \cite{DBLP:conf/tlca/Hofmann95} which is a model for quotient types does not allow large eliminations (defining a dependent type by recursion).
@@ -923,71 +923,15 @@ Martin Hofmann and Thomas Streicher's \cite{MR1686862} groupoid model interprets
 
 In a groupoid model UIP does not hold in general because there can be different inhabitants of the same identity types. In fact, propositional equality is a generalisation of isomorphism. For example to prove that $\bool = \bool$, there are two intensionally different inhabitants: one is given by identity function on $\bool$, the other is given by negation on $\bool$.
 
-\subsection{Models of \hott}
-
-
-
-The idea of view types as groupoids later inspires mathematicians such as Warren \cite{Warren} who interprets types as strict \og, and Voevodsky \cite{klv:ssetmodel} who interprets types as \wog, which is a generalised notion of groupoids. 
-
-To interpret types as weak $\omega$-groupoids, one main problems is
-the complexity of the definition of weak $\omega$-groupoid. The
-coherence conditions are very difficult to specified.
-It is much simpler to interpret types as \emph{Kan simplicial sets}.
-Voevodsky's univalent model\cite{klv:ssetmodel} is based on Kan simplicial sets. 
- Streicher wrote a concise introduction to this model \cite{DBLP:dblp_journals/japll/Streicher14}. 
-However the simplicial set model is not constructive as Coquand showed
-that it requires classical logic in an essential way \cite{TC:sset}.
-
-\begin{remark}[Simplicial set]
-A simplicial set $X$ is a functor from $\Delta^{op}$ to $\Set$ where
-$\Delta$ is the simplex category.
-
-$\Delta^{op}$ is a category whose objects are non-empty totally ordered
-finite sets. The morphisms are order-preserving functions. 
-Face maps and degeneracy maps are the most important morphisms in this
-category.
-
-A simplexes is a generalisation of a triangle to arbitrary
-dimensions. $3$-dimensional simplex is tetrahedron and $k+1$-simplex can
-be obtained by adding one point to $k$-simplex which does not lie in the
-dimension where the $k$-simplex is.
-
-A simplicial complex is a collection of simplexes. Topologically speaking, it
-is constructed by gluing n-dimensional simplexes together. 
-%\todo{show an example graph}
-
-A simplicial set, therefore, can be illustrated by the same graph where
-the set of points is given by $X_0$, the set of lines is $X_1$ and so
-on.
-\end{remark}
-
-
-To avoid the use classical logic, types can be interpreted as \emph{semi-simplicial sets} which are similar to simplicial sets, but there is only face maps
-but no degeneracy maps. We can denote a semi-simplicial set as a
-functor $X : \Delta_{inj} \rightarrow |Set$. The morphisms in $\Delta_{inj}$ are not only order preserving but also injective.
-An “iterated dependency” approach is believed to solve the coherence
-issues. However we have not successfully implemented the notion of semi-simplicial sets in an \itt like Agda. Some relevant discussion of it can be found online \cite{ssSet}.
-%Klaus and me were trying to implement semi-simplical set in Agda. 
-
-
-Recently, Bezem, Coquand and Huber \cite{bezem2013model} proposed another model of dependent type theory 
-in \emph{cubical sets}. Similarly, a cubical set is a presheaf on cube category, denoted as $S : \Box^{op} \rightarrow \Set$ . Different to simplicial set model, it is expressed in a constructive metalogic which makes it more plausible model to obtain a computational interpretation of univalence.
-
 
 \section{Summary}
 
-In this chapter we have introduced several models of Type Theory where extensional concepts are derivable. We mainly present an implemntation of Altenkirch's setoid model where types are interpreted as setoids. It is then very straightforward to define quotient types in this model by simply replacing underlying setoid equivalence with given equivalence relation. 
+In this chapter we have introduced several models of Type Theory where extensional concepts are derivable. We mainly present an implementation of Altenkirch's setoid model where types are interpreted as setoids. It is then very straightforward to define quotient types in this model by simply replacing the underlying setoid equivalence with a given equivalence relation. 
 We can simplify the setoid model by adopting McBride's heterogeneous
 approach to equality introdced in \cite{alti:ott-conf} where Altenkirch, McBride and Swierstra
  proposed \emph{Observational Type Theory}. They identifies values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. However it only make sense when we can prove the types are the same, in other words, only if two types are definitionally equal, it can be inhabited.
 The heterogeneous equality usually helps us avoid the heavy use of $subst$ which complicates formalisation and reasoning. 
 However it also means that we accept UIP and $K$ in general, which is not the case in groupoid model.
-
-
-
-We also briefly compared different models of \hott where types are interpreted as different forms of \wog, e.g.\ simplicial sets. In these models, quotient types are available as a special case of higher inductive types. However only constructive models can possibly provide a computational interpretation of univalence.
-Although coherence laws of \wog are very involved, there are some attempts of encoding it in Type Theory. We will introduce a syntactic implementation of \wog by the author in next chapter.
-
 
 
 

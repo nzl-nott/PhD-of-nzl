@@ -1,0 +1,86 @@
+\usepackage{etex}
+
+\PassOptionsToPackage{utf8x}{inputenc}
+
+%\DeclareUnicodeCharacter{00A0}{ }
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+\usepackage[all]{xy}
+%agda literal file
+\usepackage{agda}
+
+\usepackage{multicol}
+\usepackage{dsfont} % math symbols
+\usepackage{amsthm}
+\usepackage{relsize}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{wasysym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage[greek,english]{babel}
+\usepackage{stmaryrd}
+\usepackage{textgreek}
+
+%\usepackage{unicode-math}
+
+%\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenx}
+\usepackage{autofe} % font for code environment
+
+
+\usepackage{booktabs}% horizontal lines
+
+\usepackage{bookmark}
+
+\usepackage{proof} % For type derivation
+\setlength{\inferLineSkip}{4pt}
+
+\usepackage{diagxy} % commutative diagram 
+
+\usepackage{bcprules}
+
+\usepackage[square, numbers, comma, sort&compress]{natbib} 
+% Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
+
+%\usepackage[toc,page]{appendix}
+
+
+\usepackage{xkvltxp}
+\usepackage[]{fixme}
+\fxsetup{
+    status=draft,
+    author=,
+    layout=inline,
+    theme=color
+}
+
+\definecolor{fxnote}{rgb}{0.8000,0.0000,0.0000}
+% define the background colour:
+\colorlet{fxnotebg}{yellow}
+
+% refedine the layout macro:
+\makeatletter
+\renewcommand*\FXLayoutInline[3]{%
+  \@fxdocolon {#3}{%
+    \@fxuseface {inline}%
+    \colorbox{fx#1bg}{\color {fx#1}\ignorespaces #3\@fxcolon #2}}}
+\makeatother
+
+%\usepackage{glossaries}
+
+
+%\usepackage[textwidth=3cm]{todonotes}
+%\reversemarginpar
+%\setlength{\marginparwidth}{3cm}
+
+\input{macros}
+\usepackage{mypack}
+
+\usepackage{tikz}
+
+\hypersetup{urlcolor=blue, colorlinks=true}
+% Colors hyperlinks in blue - change to black if annoying
+\dump

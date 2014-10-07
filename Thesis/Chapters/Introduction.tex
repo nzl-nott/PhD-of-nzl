@@ -10,6 +10,8 @@ As a foundation of constructive mathematics, there have been a lot of \maths for
 
 
 
+
+
 However, most of the implementations are based on the \emph{intensional} variant of \mltt where \emph{propositional equality} is different to \emph{definitional equality}. The propositional equalities induced by the identity type are intensional such that extensionally equal terms like point-wise equal functions, logically equivalent propositions are not propositionally equal. \itt is preferable because type checking is decidable so that it has good computational behaviours. However the lack of extensional concepts may hinder the formalisation of mathematics in current implementations like Agda, for example functional extensionality and quotient types.
 
 
@@ -19,6 +21,21 @@ However, most of the implementations are based on the \emph{intensional} variant
 
 
 A \emph{quotient type} is a type obtained by redefining equality of an existing type with a given equivalence relation which is not supported. This thesis mainly studies quotient types from a discussion on the definability of quotients via a normalisation to models where quotient types are available. Most of the work is conducted in Agda.
+
+
+
+
+
+
+
+In NuPRL as a implementation of \ett, there is a quotient operator which builds a new type from a given type and an equivalence relation on it \cite{DBLP:books/daglib/0068834}. However it is impossible to recover the witness of the equality between two equal elements in quotient type in general \cite{nog:02}.
+Because of the computational property of \itt, we would like to have quotient types in \itt as well.
+
+
+
+
+
+
 
 
 \section{Equality}

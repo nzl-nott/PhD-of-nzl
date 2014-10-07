@@ -74,37 +74,205 @@ Similarly in topology, group theory or other branches of \maths there are also q
 
 \section{Quotients in Type Theory}
 
-Natural one would also expect quotient types in Type Theory.
-As long as we define a set as a type in Type Theory, for example the set of natural numbers $\N$, and an equivalence relation on it, we would like to have a quotient immediately. In \ett like NuPRL, it is possible to redefine
-equality on some types, hence we can define extensional quotient
-types. However since the equality is extensional, we cannot recover the witness of
-the equality.
-%\footnote{See http://www.cs.cornell.edu/home/sfa/Nuprl/NuprlPrimitives/Xquotient_doc.html}
-In \itt which lacks quotient types, setoids are often used to represent quotients.
-
-
+Naturally one would also expect quotient types (or quotients) in Type Theory. Intuitively speaking, a \emph{quotient type} $\qset{A}$ is a type $A$ whose equality is redefined by an equivalence relation $\sim : A \to A \to \Prop$. Unlike \ett, there is no quotient operator in traditional \itt, but setoids are usually used to represent quotients.
 
 \begin{definition}
 \textbf{Setoid}.
-\noindent A setoid (usually written as $(A,\sim)$) consists of
+\noindent A setoid $(A,\sim,\text{eqv}~\sim)$ (usually written as $(A,\sim)$) consists of
 \begin{enumerate}
-\item a set $A : \Set$,
+\item a set (type) $A : \Set$,
 \item a relation $\sim : A \to A \to \Prop$, and
 \item it is an equivalence, i.e.\ the proofs that it is reflexive, symmetric and transitive.
 \end{enumerate}
 \end{definition}
 
-Since it is an alternative representation of sets, everything defined on $\Set$ has to be redefined on setoids again.
+However it is not an ideal solution. Since it is an alternative representation of sets, everything defined on $\Set$ has to be redefined on $\Setoid$ again. 
 For example, functions on setoids, equalities on setoids,
-products on setoids etc. Moreover it is essential to define higher setoids, when the base set is represent as setoids. Not only the manipulation of equivalence complicates
-these definitions, from a programming perspective, setoids are also
+products on setoids etc. Moreover, considering a setoid $(A,\sim)$ whose $A$ is also encoded as a setoid, 
+it is essential to define higher setoids.
+From a programming perspective, setoids are also
 unsafe because we have access to the underlying
  sets \cite{aan}. We can perform operations which do not respect
  equivalence relation and the result does not make any sense.
-Therefore, setoids are not considered as a good solution.
+Therefore, it is essential to use a quotient of type $\Set$ which can be uniformly treated with other types. It is also the case in various branches of mathematics that the quotient is the same kind of object as the base one.
 
-For quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in type theory it is also expected
-that the type representing a quotient set is of sort $\Set$ rather that $\Setoid$. 
+%As long as we define a set as a type in Type Theory, for example the set of natural numbers $\N$, and an equivalence relation on it, we would like to have a quotient immediately. 
+
+%\footnote{See http://www.cs.cornell.edu/home/sfa/Nuprl/NuprlPrimitives/Xquotient_doc.html}
+
+
+%For quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in type theory it is also expected that the type representing a quotient set is of sort $\Set$ rather that $\Setoid$. 
+
+
+\subsection{Rules for quotients}\label{iqs}
+
+The quotient types are defined by the following rules as described in \cite{Jacobs94quotientsin,hof:95:sm}. 
+
+
+\infrule[Q-\bf{Form}]
+{ \Gamma \vdash A  \andalso \Gamma ,x : A , y : A \vdash x \sim y : \bf{Prop} }
+{\Gamma \vdash \qset{A}}
+
+Given a type $A$ and with a binary relation $\sim$ on $A$, we can form the quotient $\qset{A}$.
+Notice that $\sim$ is not required to be only equivalence relation. It is because we can prove that $\qset{A}$ is equivalent to $\qsetc{A}$ where $\sim_{C}$ is the least equivalence relation containing $\sim$ (see \autoref{equivalencerelationiso}). However usually we would use an equivalence relation which makes more sense and we assume our quotients is derived from an equivalence relation if not specially pointed out in this thesis.
+
+
+\begin{multicols}{2}
+\infrule[Q-\bf{Intro}]{\Gamma \vdash a : A}{\Gamma \vdash [ a ] : \qset{A}}
+\columnbreak
+\infrule[Q-\bf{Ax}]
+{\Gamma \vdash a , b :  A  \andalso  \Gamma \vdash  p : a \sim b}
+{ \Gamma \vdash \text{Qax} ~p : [a]=_{\qset{A}} [b]}
+\end{multicols}
+
+
+We introduce an ``equivalence class'' for each element of $A$. It is usually denoted as $[ a ]$, or $[ a ]_{\sim}$ for $\sim$ if it is unclear which relation it refers to. Qax states that the ``equivalence classes'' of two terms which are related by $\sim$ are (propositionally) equal.
+
+
+According to Hofmann's \cite{hof:95:sm} definition, it comes with an eliminator with its computation rule and an induction principle:
+
+
+\infrule[Q-\bf{elim}]
+{\Gamma \vdash  B :  \Set \andalso \Gamma , x : A \vdash f ~ a : B \\
+\Gamma, a: A, b : A, p : a \sim b \vdash  f^{=}~a~b~p : f ~a =  f ~ b \andalso \Gamma \vdash  q : \qset{A}}
+{\Gamma \vdash  \hat{f} ~ q : B}
+
+\infrule[Q-\bf{comp}]{\Gamma \vdash  a : A}{\Gamma \vdash  \text{Qcomp} ~a  : \hat{f} ~ [ a ] \equiv f~ a }
+
+
+\infrule[Q-\bf{ind}]
+{\Gamma,  x : \qset{A} \vdash P ~ x : \Prop \andalso \Gamma, a : A \vdash h ~ a : P ~ [ a ] \andalso \Gamma \vdash  q : \qset{A}}
+{\Gamma \vdash \text{Qind} ~h ~q :P~q}
+
+Given a function $f : A \to B$ which respects $\sim$, we can lift it to be a function on $\qset{A}$ as $\hat{f} : \qset{A} \to B$ such that for any element $a : A$, $\hat{f} ~[ a ]$ computes to the same value as $f ~ a$. It allows us to define functions on quotient types by functions on base types (representatives).
+Notice that \emph{function application} is written like "$f ~x ~ y$'' where $x$ and $y$ are two arguments for function $f$. We also omit $f^=$ since the computation rule already implies that it is proof-irrelevant.
+
+The induction principle states that for any proposition $P : \qset{A} \to \Prop$. it is enough to just consider cases $ P ~ [ a ]$ for all $a : A$. In other words, it $\qset{A}$ only consists of "equivalence classes" i.e.\ $[ a ]$.
+
+
+Alternatively, a \emph{dependent} eliminator (dependent lifting) serves the same purpose:
+
+\infrule[Q-\bf{dep-elim}]
+{\Gamma, x : \qset{A} \vdash B ~ x : \Set \andalso \Gamma , a : A \vdash f ~ a : B ~ [ a ] \\
+\Gamma, a : A, b : A, p : a \sim b \vdash f^= ~a ~b~ p : f ~a
+\stackrel{p}{=}  f ~b \andalso \Gamma \vdash q :
+\qset{A}}
+{\Gamma \vdash \hat{f} ~q : B~ q}
+
+\infrule[Q-\bf{dep-comp}]{\Gamma \vdash a : A}
+{\Gamma \vdash \text{Qdcomp} ~a  : \hat{f} ~ [ a ] \equiv f ~ a }
+
+
+Notice that $\stackrel{p}{=}$ is an abbreviation for propositional equality which requires substitution in the type of the left hand side by $\text{Qax}~p$ so that both sides have the same type.
+
+\begin{proposition}
+The non-dependent eliminator with the induction principle is equivalent to the dependent eliminator.
+\end{proposition}
+\begin{proof}
+1. Assume we have non-dependent eliminator and the induction principle, $B$ is an dependent type on $\qset{A}$, $f$ is a function of type $(a : A) \to B ~ [ a ]$ and it respects $\sim$ under substitution ($f^=$), $q$ is an element of $\qset{A}$.
+
+Set $B'$ as a dependent product as $\Sigma (r : \qset{A}) ~B ~r$,
+
+An independent version of $f : A \to B'$ can be defined as
+
+$$f' a \defeq [ a ] , f ~a$$
+
+Given $p : a \sim b$, we can conclude that $f' a =_{B'} f' b$ is inhabited from Qax and $f^=$.
+
+It allows us to lift the non-dependent function $f'$ as $\hat{f'}$ such that 
+
+\begin{equation}\label{f'comp}
+\hat{f'} [ a ] \equiv [ a ] , f ~a
+\end{equation}
+Applying first projection on both sides, the following propositional equality is inhabited:
+
+ $$\text{proj}_1 (\hat{f'} ~[ a ]) = [ a ]$$
+
+By induction principle, the predicate $P : \qset{A} \to \Prop$ defined as
+
+$$P ~ q \defeq \text{proj}_1 ~(\hat{f'} ~q) = q$$
+
+is inhabited.
+
+Finally, to complete the dependent eliminator, we can construct an element of type $B~q$ by
+
+$$\text{proj}_2 ~(\hat{f'} ~q)$$
+
+which has the correct type because of predicate $P$. The computation rule is derivable from \ref{f'comp}.
+
+2. It is easy to find out that the non-dependent eliminator and induction principle are just special cases of dependent eliminator.
+
+A constructive proof in Agda can be found in \autoref{app:dq}.
+\end{proof}
+
+
+Additionally, a quotient is effective (or exact) if an "equivalence class" only contains terms that are related by $\sim$.
+
+\infrule[Q-\bf{effective}]
+{\Gamma \vdash a :  A \andalso \Gamma \vdash b :  A  \andalso p : [a] = [b] }
+{\text{Qexact}~{p} : a \sim b}
+
+\begin{proposition}
+With propositional extensionality, we can prove that all quotients\footnote{we assume $\sim$ is an equivalence relation} are effective.
+\end{proposition}
+
+\begin{proof}\label{PUEF}
+Suppose we have a set $A$ with an equivalence relation $\sim : A \to A
+\to \Prop$, a quotient set is $\qset{A}$.
+
+Given $a : A$, and a predicate $P_a : A \to \Prop$ defined as 
+$$P_a ~ x \defeq a \sim x$$
+
+To lift it we have to check $P_a$ is compatible with $\sim$.
+
+Suppose $x \sim y$
+
+by symmetry and transitivity
+
+$\Rightarrow a \sim x \iff a \sim y$
+
+$\equiv P_a~x \iff P_a~y$
+
+by propositional extensionality
+
+$\Rightarrow P_a~x = P_a~y$
+
+
+To prove the quotient $\qset{A}$ is effective, suppose $[ a ] = [ b ]$, we can simply prove $ \hat{P} [ a ] = \hat{P} [ b ]$ and then
+
+$$a \sim a \equiv \hat{P} [ a ] = \hat{P} [ b ] \equiv a \sim b$$
+
+Finally with eliminator J and $\text{refl} : a \sim a$ we can easily prove
+
+$$a \sim b$$.
+
+\end{proof}
+
+%Alternatively, we can prove it as follows:
+
+%\begin{proof}
+
+%Firstly we prove the equivalence relation is well-defined on the
+%quotient types, namely it respects the equivalence relation:
+
+%Suppose we have $a \sim b$ and $c \sim d$, we can deduce $a \sim c \iff
+%b \sim d$. Then applying the propositional univalence axiom, we know
+%that $a \sim c = b \sim d$, hence the equivalence relation is
+%well-defined.
+
+%Because it is well-defined, we can lift it such that
+
+%$[ a ] ~\hat{\sim}~ [ b ] \equiv a \sim b$
+
+
+%From reflexivity of the equivalence relation, $\forall x : A, x \sim x$, 
+%we know that $\forall x : A, [x]~\hat{\sim}~[x]$.
+
+%Assume $[a]=[b]$, using J-eliminator in $[a]~\hat{\sim}~[a]$
+%(reflexivity), $[a]~\hat{\sim}~[b]$ which is definitionally equal to $a \sim b$, Hence the quotient is
+%effective.
+%\end{proof}
+
 
 \subsection{An impredicative encoding of quotient types}\label{impredicative}
 
@@ -174,137 +342,22 @@ There is an alternative type-theoretical encoding which is sometimes called inte
 %$|| A || = (P : \Prop)(A \to P) \to P$
 
 
-\subsection{Intensional quotient set}\label{iqs}
-
-In Type Theory, given a setoid $(A,\sim)$, an intensional quotient set is given by
-following rules:
-
-\infrule[Q-\bf{Form}]
-{A : \Set  \andalso \sim : A \to A
-  \to \bf{Prop}  \andalso \sim \text{is an equivalence
-    relation \footnote{i.e.\ it is reflexive, transitive and symmetric}}}
-{\qset{A} : \Set}
 
 
-\begin{multicols}{2}
-\infrule[Q-\bf{Intro}]{a : A}{[ a ] : \qset{A}}
-\columnbreak
-\infrule[Q-\bf{Ax}]
-{a ~ b :  A  \andalso p : a \sim b}
-{\text{Qax} ~ p : [a]=[b]}
-\end{multicols}
+\section{Coequalizers?}
 
-where $=$ stands for propositional equality.
+\begin{remark}\label{equivalencerelationiso}
 
-According to Hofmann's\cite{hof:95:sm} definition, an eliminator or lifting rule
-
-
-\infrule[Q-\bf{elim}]
-{B :  \Set      \andalso f : A \to B             \andalso        q : \qset{A}\\
-f^{=} : \forall a ~ b : A, p : a \sim b  \to f ~a =  f ~ b}
-{\hat{f} ~ q ~ f^{=} : B}
-
-
-\infrule[Q-\bf{comp}]{a : A}{f_{\beta} a  : \hat{f} ~ [ a ] ~ f^{=} = f a }
-
-it also comes with an induction principle
-
-\infrule[Q-\bf{ind}]
-{P : \qset{A} \to \Prop \andalso ~ h : (a : A) \to P ~ [ a ] \andalso ~ q :  q : \qset{A}}
-{\text{Qind} ~h ~q :P~q}
-
-An alternative equivalent elimination rule is a depedent lifting rule
-
-\infrule[Q-\bf{dep-elim}]
-{B : \qset{A} \to  \Set \andalso f : (a : A) \to B\, [ a ] \andalso q :
-\qset{A} \\
-f^= : \forall a ~ b : A, p : a \sim b  \to f ~a
-\stackrel{p}{=}  f ~b}
-{\hat{f} ~q ~ f^= : B~ q}
-
-\infrule[Q-\bf{dep-comp}]{a : A}
-{f_{\beta} a  : \hat{f} ~ [ a ] ~ f^= = f a }
-
-Here, $\stackrel{p}{=}$ stands for equality under unification on types by substitution by $p$.
-
-A quotient is \emph{exact} (or effective) if exactly one equivalence class corresponds to
-an element of $Q$,
-
-\infrule[Q-\bf{exact}]
-{a , b :  A  \andalso p : [a] = [b] }
-{\text{Qexact}~{p} : a \sim b}
-
-
-With propositional extensionality, we can prove that all quotients are effective.
-
-\begin{theorem} \label{PUEF}
-\emph{propositional extensionality} (or propositional univalence) implies that all quotients are effective.
-\end{theorem}
-
-\begin{proof}
-Suppose we have a set $A$ with an equivalence relation $\sim : A \to A
-\to \Prop$, a quotient set is $\qset{A}$.
-
-Given $a : A$, and a predicate $P_a : A \to \Prop$ defined as 
-$$P_a ~ x \defeq a \sim x$$
-
-To lift it we have to check $P_a$ is compatible with $\sim$.
-
-Suppose $x \sim y$
-
-by symmetry and transitivity
-
-$\Rightarrow a \sim x \iff a \sim y$
-
-$\equiv P_a~x \iff P_a~y$
-
-by propositional extensionality
-
-$\Rightarrow P_a~x = P_a~y$
-
-
-To prove the quotient $\qset{A}$ is effective, suppose $[ a ] = [ b ]$, we can simply prove $ \hat{P} [ a ] = \hat{P} [ b ]$ and then
-
-$$a \sim a \equiv \hat{P} [ a ] = \hat{P} [ b ] \equiv a \sim b$$
-
-Finally with eliminator J and $\text{refl} : a \sim a$ we can easily prove
-
-$$a \sim b$$.
-
-\end{proof}
-
-%Alternatively, we can prove it as follows:
-
-%\begin{proof}
-
-%Firstly we prove the equivalence relation is well-defined on the
-%quotient types, namely it respects the equivalence relation:
-
-%Suppose we have $a \sim b$ and $c \sim d$, we can deduce $a \sim c \iff
-%b \sim d$. Then applying the propositional univalence axiom, we know
-%that $a \sim c = b \sim d$, hence the equivalence relation is
-%well-defined.
-
-%Because it is well-defined, we can lift it such that
-
-%$[ a ] ~\hat{\sim}~ [ b ] \equiv a \sim b$
-
-
-%From reflexivity of the equivalence relation, $\forall x : A, x \sim x$, 
-%we know that $\forall x : A, [x]~\hat{\sim}~[x]$.
-
-%Assume $[a]=[b]$, using J-eliminator in $[a]~\hat{\sim}~[a]$
-%(reflexivity), $[a]~\hat{\sim}~[b]$ which is definitionally equal to $a \sim b$, Hence the quotient is
-%effective.
-%\end{proof}
-
-
+\end{remark}
 
 
 
 \subsection{Quotient types are coequalizers}
 
-The intensional quotient set is indeed characterised in category-theoretical way.
+The rules of quotient set is indeed characterised in category-theoretical way.
+As Bart pointed out, quotients can be described as a left adjoint to an equality functor.
+
+
 Categorically speaking, a quotient is a coequalizer.
 
 \begin{definition}

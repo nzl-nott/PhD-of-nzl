@@ -350,10 +350,14 @@ A quotient is just the coequalizer $(\qset{A},[\_])$ such that the following dia
 & &&& B}
 \end{displaymath}
 
-The factorisation $\hat{\_}$ is just the eliminator, the computation rule corresponds to its existence, the induction principle corresponds to its uniqueness. 
+The factorisation $\hat{\_}$ is just the eliminator, the computation rule and induction principle corresponds to the universal property of it. 
 
-\begin{remark}
-It is easy to see that the uniqueness of $\hat{f}$ is implied by induction principle:
+\begin{proposition}
+The induction principle implies uniqueness, and is also derivable from the definition of coequalizer.
+\end{proposition}
+
+\begin{proof}
+It is easy to see that induction principle implies the uniqueness of $\hat{f}$:
 
 Given any $g : \qset{A} \to B$ fulfils the same property as $\hat{f}$, applying induction principle on 
 
@@ -385,11 +389,11 @@ By replacing \ref{eq2} in \ref{eq1}
 \pi_1 \circ \hat{h'} \circ [\_] = [\_]
 \end{equation}
 
-From uniqueness rule of coequalizer we can easily prove that $[\_]$ is an \emph{epimorphism}:
+From \emph{uniqueness} we can easily prove that $[\_]$ is an \emph{epimorphism} as follows:
 
 given $f_1,f_2 : \qset{A} \to B$ s.t. $f_1 \circ [\_] = f_2 \circ [\_]$
 
-By universal property, there is a unique $g : \qset{A} \to B$ such that
+Then $f_1 \circ [\_] \circ \pi_1 = f_1 \circ [\_] \circ \pi_2$ and $f_2 \circ [\_] \circ \pi_1 = f_2 \circ [\_] \circ \pi_2$ there is a unique $g : \qset{A} \to B$ such that
 
 $g \circ [\_] = f_1 \circ [\_] = f_2 \circ [\_]$
 
@@ -406,8 +410,9 @@ Thus for any $q : \qset{A}$, the type of $\pi_2(\hat{h'}(q))$ is
 
 $P(\pi_1(\hat{h'}(q))) = P(q)$
 
-as expected, hence we derived the induction principle.
-\end{remark}
+as expected, hence we derived the induction principle. 
+In fact, following the same procedure, a dependent eliminator is also derivable.
+\end{proof}
 
 The coequalizer (quotient) is effective if the following diagram is a \emph{pullback}
 

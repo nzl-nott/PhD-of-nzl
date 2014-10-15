@@ -72,21 +72,26 @@ set is denoted as $\qset{A}$,
 
 Similarly in topology, group theory or other branches of \maths there are also quotient space, quotient group and other quotients. 
 
-\section{Quotients in Type Theory}
-
-Naturally one would also expect quotient types (or quotients) in Type Theory. Intuitively speaking, a \emph{quotient type} $\qset{A}$ is a type $A$ whose equality is redefined by an equivalence relation $\sim : A \to A \to \Prop$. Unlike \ett, there is no quotient operator in traditional \itt, but setoids are usually used to represent quotients.
+Naturally one would also expect quotient types (or quotients) in Type Theory. Intuitively speaking, a \emph{quotient type} $\qset{A}$ is a type $A$ whose equality is redefined by an equivalence relation. 
+Unlike \ett, there is no quotient operator in traditional \itt, but setoids are usually used to represent quotients.
 
 \begin{definition}
 \textbf{Setoid}.
-\noindent A setoid $(A,\sim,\text{eqv}~\sim)$ (usually written as $(A,\sim)$) consists of
+\noindent A setoid $(A,\sim,\text{eqv}_{\sim})$ (usually written as just $(A,\sim)$) consists of
 \begin{enumerate}
 \item a set (type) $A : \Set$,
-\item a relation $\sim : A \to A \to \Prop$, and
+\item a binary relation $\sim : A \to A \to \Prop$, and
 \item it is an equivalence, i.e.\ the proofs that it is reflexive, symmetric and transitive.
 \end{enumerate}
 \end{definition}
 
-However it is not an ideal solution. Since it is an alternative representation of sets, everything defined on $\Set$ has to be redefined on $\Setoid$ again. 
+%Notice that $\Prop$ here is not necessarily a universe of propositions. In an \itt like Agda, we use $\Set$ instead (in standard library) which does not reflect the fact that the relation is propositional. Indeed we can fix it by adding additional condition that the relation is propositional.
+
+\begin{remark}
+This notion is also called a \emph{total setoid}. If the relation of a total setoid is not required to be reflexive, then it becomes a \emph{partial setoid}. Barthe Capretta and Pons have studied different definitions of setoids and categories of setoids in \cite{bar:03}. In this thesis, the term "setoid" refers to total setoids in general.
+\end{remark}
+
+However using setoids to represents quotients is not an ideal solution. Since it is an alternative representation of sets, everything defined on $\Set$ has to be redefined on $\Setoid$ again. 
 For example, functions on setoids, equalities on setoids,
 products on setoids etc. Moreover, considering a setoid $(A,\sim)$ whose $A$ is also encoded as a setoid, 
 it is essential to define higher setoids.
@@ -96,13 +101,10 @@ unsafe because we have access to the underlying
  equivalence relation and the result does not make any sense.
 Therefore, it is essential to use a quotient of type $\Set$ which can be uniformly treated with other types. It is also the case in various branches of mathematics that the quotient is the same kind of object as the base one.
 
-%As long as we define a set as a type in Type Theory, for example the set of natural numbers $\N$, and an equivalence relation on it, we would like to have a quotient immediately. 
-
-%\footnote{See http://www.cs.cornell.edu/home/sfa/Nuprl/NuprlPrimitives/Xquotient_doc.html}
+In this chapter, we present a definition of quotient type in an \itt extended with a proof-irrelevant universe of propositions in the sense of \autoref{ittprop}. We also explain the categorical meanings of quotient types.
 
 
-%For quotient algebraic structures in abstract algebra, usually the quotients are same kind of object as the base one. Hence in type theory it is also expected that the type representing a quotient set is of sort $\Set$ rather that $\Setoid$. 
-
+\section{Quotients in Type Theory}
 
 \subsection{Rules for quotients}\label{iqs}
 
@@ -110,139 +112,174 @@ The quotient types are defined by the following rules as described in \cite{Jaco
 
 
 \infrule[Q-\bf{Form}]
-{ \Gamma \vdash A  \andalso \Gamma ,x : A , y : A \vdash x \sim y : \bf{Prop} }
+{ \Gamma \vdash A  \andalso \Gamma ,x : A , y : A \vdash x \sim y : \bf{Prop} \andalso \sim~\text{is an equivalence}}
 {\Gamma \vdash \qset{A}}
 
-Given a type $A$ and with a binary relation $\sim$ on $A$, we can form the quotient $\qset{A}$.
-Notice that $\sim$ is not required to be only equivalence relation. It is because we can prove that $\qset{A}$ is equivalent to $\qsetc{A}$ where $\sim_{C}$ is the least equivalence relation containing $\sim$ (see \autoref{equivalencerelationiso}). However usually we would use an equivalence relation which makes more sense and we assume our quotients is derived from an equivalence relation if not specially pointed out in this thesis.
+Given a type $A$ and with a binary equivalence relation $\sim$ on $A$, we can form the quotient $\qset{A}$. Here we use an infix notation for readability.
 
+The equivalence properties includes
+
+
+\begin{multicols}{2}
+\infrule[$\sim$-\bf{refl}]
+{ \Gamma \vdash a : A}
+{\Gamma \vdash \text{ref}_{\sim}(a) : a \sim a}
+\columnbreak
+\infrule[$\sim$-\bf{sym}]
+{ \Gamma \vdash a : A \andalso \Gamma \vdash b : A \andalso \Gamma \vdash p : a \sim b}
+{\Gamma \vdash \text{sym}_{\sim}(p) : b \sim a}
+\end{multicols}
+
+
+
+
+\infrule[$\sim$-\bf{trans}]
+{ \Gamma \vdash a : A \andalso \Gamma \vdash b : A \andalso \Gamma \vdash c : A \\
+\Gamma \vdash p : a \sim b \andalso \Gamma \vdash q : b \sim c}
+{\Gamma \vdash \text{trn}_{\sim}(p,q) : a \sim c}
+
+\begin{remark}
+Notice that the formation rule is different to Hofmann's version \cite{hof:95:sm} where $\sim$ is not required to be only equivalence relation. In fact his version is just more general which accepts non equivalence relation $R : A \to A \to \Prop$, but $A/R$ has to be understood as the quotient of $A$ by the equivalence closure of $R$.
+\end{remark}
 
 \begin{multicols}{2}
 \infrule[Q-\bf{Intro}]{\Gamma \vdash a : A}{\Gamma \vdash [ a ] : \qset{A}}
 \columnbreak
 \infrule[Q-\bf{Ax}]
 {\Gamma \vdash a , b :  A  \andalso  \Gamma \vdash  p : a \sim b}
-{ \Gamma \vdash \text{Qax} ~p : [a]=_{\qset{A}} [b]}
+{ \Gamma \vdash \text{Qax}(p) : [a]=_{\qset{A}} [b]}
 \end{multicols}
 
 
-We introduce an ``equivalence class'' for each element of $A$. It is usually denoted as $[ a ]$, or $[ a ]_{\sim}$ for $\sim$ if it is unclear which relation it refers to. Qax states that the ``equivalence classes'' of two terms which are related by $\sim$ are (propositionally) equal.
+We introduce an ``equivalence class'' for each element of $A$. It is usually denoted as $[ a ]$, or $[ a ]_{\sim}$ for $\sim$ if it is unclear which relation it refers to. 
+ Qax states that the ``equivalence classes'' of two terms which are related by $\sim$ are (propositionally) equal.
+
+ Notice that the notation of terms $[a]$ can be confused with the substitution notation like $B[a]$ or $B [[ a ]/x]$. So for a $\Pi$-type $B : (x : A) \to \Set$ and $a : A$, we write $B(a) : \Set$ for $B [[ a ]/x]$ where order of the arguments in brackets matches its definition.
+
+% $for any possibly ambiguous occurrence, we use full notations i.e.\ $[a]_{\sim}$  for terms and $B[a/x]$ for substitution.$
 
 
-According to Hofmann's \cite{hof:95:sm} definition, it comes with an eliminator with its computation rule and an induction principle:
+In Hofmann's \cite{hof:95:sm} definition, it comes with an eliminator (also called \emph{lifting}) with its computation rule ($\beta$-rule) and an induction principle (equivalent to a $\eta$-rule): \footnote{We use shorthand notation $\hat{}$ for lifting here} 
 
 
 \infrule[Q-\bf{elim}]
-{\Gamma \vdash  B :  \Set \andalso \Gamma , x : A \vdash f ~ a : B \\
-\Gamma, a: A, b : A, p : a \sim b \vdash  f^{=}~a~b~p : f ~a =  f ~ b \andalso \Gamma \vdash  q : \qset{A}}
-{\Gamma \vdash  \hat{f} ~ q : B}
+{\Gamma \vdash  B \andalso \Gamma \vdash f : A \to B \\
+\Gamma, a: A, b : A, p : a \sim b \vdash  f^{\sim}(a,b,p) : f(a) =_{B}  f(b) \andalso \Gamma \vdash  q : \qset{A}}
+{\Gamma \vdash  \hat{f}(q) : B}
 
-\infrule[Q-\bf{comp}]{\Gamma \vdash  a : A}{\Gamma \vdash  \text{Qcomp} ~a  : \hat{f} ~ [ a ] \equiv f~ a }
+\infrule[Q-\bf{comp}]{\Gamma \vdash  a : A}{\Gamma \vdash  \text{Qcomp}(a)  : \hat{f}([ a ]) \equiv f(a) }
 
 
 \infrule[Q-\bf{ind}]
-{\Gamma,  x : \qset{A} \vdash P ~ x : \Prop \andalso \Gamma, a : A \vdash h ~ a : P ~ [ a ] \andalso \Gamma \vdash  q : \qset{A}}
-{\Gamma \vdash \text{Qind} ~h ~q :P~q}
+{\Gamma,  x : \qset{A} \vdash P : \Prop \andalso \Gamma, a : A \vdash h(a) : P([a]) \andalso \Gamma \vdash  q : \qset{A}}
+{\Gamma \vdash \text{Qind}(h,q) : P(q)}
 
-Given a function $f : A \to B$ which respects $\sim$, we can lift it to be a function on $\qset{A}$ as $\hat{f} : \qset{A} \to B$ such that for any element $a : A$, $\hat{f} ~[ a ]$ computes to the same value as $f ~ a$. It allows us to define functions on quotient types by functions on base types (representatives).
-Notice that \emph{function application} is written like "$f ~x ~ y$'' where $x$ and $y$ are two arguments for function $f$. We also omit $f^=$ since the computation rule already implies that it is proof-irrelevant.
+Given a function $f : A \to B$ which respects $\sim$, we can lift it to be a function on $\qset{A}$ as $\hat{f} : \qset{A} \to B$ such that for any element $a : A$, $\hat{f}([ a ])$ computes to the same value as $f(a)$. It allows us to define functions on quotient types by functions on base types (representatives).
+%Notice that \emph{function application} is written like "$f ~x ~ y$'' where $x$ and $y$ are two arguments for function $f$. 
+Notice that We omit $f^=$ since the computation rule already implies that it is proof-irrelevant.
 
-The induction principle states that for any proposition $P : \qset{A} \to \Prop$. it is enough to just consider cases $ P ~ [ a ]$ for all $a : A$. In other words, it $\qset{A}$ only consists of "equivalence classes" i.e.\ $[ a ]$.
+The induction principle states that for any proposition $P : \qset{A} \to \Prop$. it is enough to just consider cases $ P([ a ])$ for all $a : A$. In other words, $\qset{A}$ only consists of "equivalence classes" i.e.\ $[ a ]$.
 
 
 Alternatively, a \emph{dependent} eliminator (dependent lifting) serves the same purpose:
 
 \infrule[Q-\bf{dep-elim}]
-{\Gamma, x : \qset{A} \vdash B ~ x : \Set \andalso \Gamma , a : A \vdash f ~ a : B ~ [ a ] \\
-\Gamma, a : A, b : A, p : a \sim b \vdash f^= ~a ~b~ p : f ~a
-\stackrel{p}{=}  f ~b \andalso \Gamma \vdash q :
+{\Gamma, x : \qset{A} \vdash B \andalso \Gamma \vdash f : (a : A) \to B([ a ]) \\
+\Gamma, a : A, b : A, p : a \sim b \vdash f^= (a,b,p) : f(a)
+\stackrel{p}{=}  f(b) \andalso \Gamma \vdash q :
 \qset{A}}
-{\Gamma \vdash \hat{f} ~q : B~ q}
+{\Gamma \vdash \hat{f}(q) : B(q)}
 
 \infrule[Q-\bf{dep-comp}]{\Gamma \vdash a : A}
-{\Gamma \vdash \text{Qdcomp} ~a  : \hat{f} ~ [ a ] \equiv f ~ a }
+{\Gamma \vdash \text{Qdcomp} (a)  : \hat{f}([ a ]) \equiv f(a) }
 
 
-Notice that $\stackrel{p}{=}$ is an abbreviation for propositional equality which requires substitution in the type of the left hand side by $\text{Qax}~p$ so that both sides have the same type.
+Notice that $\stackrel{p}{=}$ is an abbreviation for propositional equality which requires substitution in the type of the left hand side by $\text{Qax}(p)$ so that both sides have the same type.
+We use the same notation for the two versions of eliminators because they are in fact equivalent (see \autoref{elim-equiv}).
 
-\begin{proposition}
-The non-dependent eliminator with the induction principle is equivalent to the dependent eliminator.
+\begin{proposition}\label{elim-equiv}
+The \emph{non-dependent eliminator} with the \emph{induction principle} is equivalent to the \emph{dependent eliminator}.
 \end{proposition}
 \begin{proof}
-1. Assume we have non-dependent eliminator and the induction principle, $B$ is an dependent type on $\qset{A}$, $f$ is a function of type $(a : A) \to B ~ [ a ]$ and it respects $\sim$ under substitution ($f^=$), $q$ is an element of $\qset{A}$.
+1. Assume we have the non-dependent eliminator and the induction principle, $B$ is a dependent type on $\qset{A}$, $f$ is a dependent function of type $(a : A) \to B([ a ])$ and it respects $\sim$ under substitution (i.e.\ $f^=$), $q$ is an element of $\qset{A}$.
 
-Set $B'$ as a dependent product as $\Sigma (r : \qset{A}) ~B ~r$,
+Set $B'$ as a dependent product $\Sigma (r : \qset{A}) ~B[r/x]$,
 
-An independent version of $f : A \to B'$ can be defined as
+Then a non-dependent version of $f$ which is of type $A \to B'$ can be defined as
 
 $$f' a \defeq [ a ] , f ~a$$
 
-Given $p : a \sim b$, we can conclude that $f' a =_{B'} f' b$ is inhabited from Qax and $f^=$.
+Given $p : a \sim b$, we can conclude that $f'(a) =_{B'} f'(b)$ is inhabited from Qax and $f^=$.
 
 It allows us to lift the non-dependent function $f'$ as $\hat{f'}$ such that 
 
 \begin{equation}\label{f'comp}
-\hat{f'} [ a ] \equiv [ a ] , f ~a
+\hat{f'} ([ a ]) \equiv [ a ] , f ~a
 \end{equation}
-Applying first projection on both sides, the following propositional equality is inhabited:
+Applying first projection on both sides of \ref{f'comp}, the following propositional equality is inhabited:
 
- $$\text{proj}_1 (\hat{f'} ~[ a ]) = [ a ]$$
+ $$\pi_1 (\hat{f'}([ a ])) = [ a ]$$
 
 By induction principle, the predicate $P : \qset{A} \to \Prop$ defined as
 
-$$P ~ q \defeq \text{proj}_1 ~(\hat{f'} ~q) = q$$
+$$P(q) \defeq \pi_1 ~(\hat{f'}(q)) =_{\qset{A}} q$$
 
-is inhabited.
+is inhabited for all $q : \qset{A}$.
 
-Finally, to complete the dependent eliminator, we can construct an element of type $B~q$ by
+Finally, to complete the dependent eliminator, we can construct an element of type $B[q/x]$ by
 
-$$\text{proj}_2 ~(\hat{f'} ~q)$$
+$$\pi_2 ~(\hat{f'}(q))$$
 
-which has the correct type because of predicate $P$. The computation rule is derivable from \ref{f'comp}.
+which has the correct type because $P(q)$ holds. The computation rule is simply derivable from \ref{f'comp}.
 
 2. It is easy to find out that the non-dependent eliminator and induction principle are just special cases of dependent eliminator.
 
-A constructive proof in Agda can be found in \autoref{app:dq}.
+A constructive version of this proof in Agda can be found in \autoref{app:dq}.
 \end{proof}
 
 
 Additionally, a quotient is effective (or exact) if an "equivalence class" only contains terms that are related by $\sim$.
 
 \infrule[Q-\bf{effective}]
-{\Gamma \vdash a :  A \andalso \Gamma \vdash b :  A  \andalso p : [a] = [b] }
-{\text{Qexact}~{p} : a \sim b}
+{\Gamma \vdash a :  A \andalso \Gamma \vdash b :  A  \andalso p : [a] =_{\qset{A}} [b] }
+{\text{eff}(p) : a \sim b}
+
+In fact propositional extensionality implies that all quotients defined with \emph{equivalence} relation are effective.
 
 \begin{proposition}
 With propositional extensionality, we can prove that all quotients\footnote{we assume $\sim$ is an equivalence relation} are effective.
 \end{proposition}
 
 \begin{proof}\label{PUEF}
-Suppose we have a set $A$ with an equivalence relation $\sim : A \to A
-\to \Prop$, a quotient set is $\qset{A}$.
+%Suppose we have a set $A$ with an equivalence relation $\sim : A \to A \to \Prop$, a quotient set is $\qset{A}$.
 
-Given $a : A$, and a predicate $P_a : A \to \Prop$ defined as 
-$$P_a ~ x \defeq a \sim x$$
-
-To lift it we have to check $P_a$ is compatible with $\sim$.
-
-Suppose $x \sim y$
-
-by symmetry and transitivity
-
-$\Rightarrow a \sim x \iff a \sim y$
-
-$\equiv P_a~x \iff P_a~y$
-
-by propositional extensionality
-
-$\Rightarrow P_a~x = P_a~y$
+Suppose we have a quotient type $\qset{A}$, two elements of $a, b : A$ and $[ a ] =_{\qset{A}} [ b ]$
 
 
-To prove the quotient $\qset{A}$ is effective, suppose $[ a ] = [ b ]$, we can simply prove $ \hat{P} [ a ] = \hat{P} [ b ]$ and then
+Set a predicate $P_a : A \to \Prop$ as 
+$$P_a (x) \defeq a \sim x$$
 
-$$a \sim a \equiv \hat{P} [ a ] = \hat{P} [ b ] \equiv a \sim b$$
+$P_a$ is compatible with $\sim$ since
 
-Finally with eliminator J and $\text{refl} : a \sim a$ we can easily prove
+$x \sim y$
+
+$\Rightarrow a \sim x \iff a \sim y$ (symmetry and transitivity)
+
+$\equiv P_a(x) \iff P_a(y)$ (propositional extensionality)
+
+$\Rightarrow P_a(x) = P_a(y)$
+
+Therefore we can lift $P_a$\footnote{The elimination rule applies to large types} such that for any $x : A$
+
+$$\hat{P} ([ x ]) \equiv a \sim x$$
+
+
+We can simply deduce $\hat{P} ([ a ]) = \hat{P} ([ b ])$ from assumption $[ a ] = [ b ]$ which by definition
+is just
+
+$$a \sim a  = a \sim b$$ 
+
+Finally with eliminator $J$ and $\text{ref}(a) : a \sim a$ we can easily prove
 
 $$a \sim b$$.
 
@@ -274,95 +311,20 @@ $$a \sim b$$.
 %\end{proof}
 
 
-\subsection{An impredicative encoding of quotient types}\label{impredicative}
+\section{Quotients are coequalizers}
 
-A natural idea is to imitate the set theoretical construction. We would like to define an equivalence class first.
+%\begin{remark}\label{equivalencerelationiso}
 
-An equivalence class of $a$ can be defined as a tuple
+%\end{remark}
 
-$$[ a ] \defeq \Sigma (x : A) , x \sim a $$
+The rules of quotient types can be characterised in a category-theoretical way.
 
-However, given $a ~ b$, $[ a ]$ is not propositionally equal to $[ b ]$. The reason is that $x \sim a$ is not propositional equal to $x \sim b$ even though they are logically equivalent due to the lack of propositional extensionality.
+Categorically speaking, a quotient is a \textbf{coequalizer}. Let us recall the definition.
 
-
-\begin{definition}
-\textbf{propositional extensionality} (propositional univalence).
-
-$\forall P, Q : \Prop, (P \iff Q) \iff P = Q.$
-\end{definition}
-
-Vladimir Voevodsky introduces an impredicative definition of quotients
-%\footnote{\url{http://www.cse.chalmers.se/~coquand/cirm.pdf}} 
-which has been encoded in Coq
-\cite{voe:hset}. 
-
-Given a setoid $(A,\sim)$, an equivalence class is a subtype given by a predicate $P : A \to \Prop$.
-
-$\text{EqClass} ~ P \defeq (\exists a : A, P ~ a) \times \forall x ~ y : A, P x \to (x \sim y \iff P ~ y)$
-
-
-The \textbf{set quotient} is then defined as
-
-$\qset{A} \defeq \Sigma P : A \to \Prop, \text{EqClass} ~P$
-
-Notice that it is impossible to extract an element of $A$ from an proof of $\text{EqClass} ~ P$ because the encoding of $\exists a : A, P ~ a$ is impredicative as truncated $Sigma$-type: $\| \Sigma a : A, P ~ a \|$.
-The truncation $\|-\|$ is defined impredicatively as
-
-$\|A\| \defeq \forall P : \Prop \to (A \to P) \to P$
-
-$\|A\|$ is in the universe of $\Set_1$($\mathsf{U}_1$ in some articles) and with resizing rules, $\|A\|$
-is moved to the universe of $\Set$ (or $\mathsf{U}$). With resizing rules,
-$\qset{A}$ is then in the universe of $\Set$ as expected.
-
-% \footnote{\url{http://www.math.ias.edu/~vladimir/Site3/Univalent_Foundations_files/2011_Bergen.pdf}}
-
-There is a function $[\_] : A \to \qset{A}$ which is compatible with $\sim$ and
-we can lift any function $f : A \to B$ compatible with $\sim$ such that $\hat{f} [ a ] \equiv f a$
-
-Assume $x \sim y$, $[ x ]$ and $[ y ]$ have to be propositionally equal which can be proved with propositional extensionality.
-There is an alternative type-theoretical encoding which is sometimes called intensional quotient set.
-
-
-%with the proposional extensionality we can prove that
-%\begin{theorem}\label{thm-p-e}
-%Given $(P , prf) : \qset{A}$, all proofs of $\exists x : A, P (x)$ are equal
-%\end{theorem}
-
-%\begin{proof}
-%Given any two proofs of $\exists x : A, P (x)$ written as $(x , px)$ and $(y
-%, py)$, apply the $EqClass(P)$ to $(x, y, px, py)$ we know that $x
-%\sim y$. Hence the truncation of 
-%\end{proof}
-
-%Given a element $a : A$, the equivalence class is
-
-
-%It is called impredicative because it uses resizing rules \footnote{\url{http://phdsinlogic2014.wp.hum.uu.nl/files/2014/04/thierry-coquand1.pdf}} in the encoding of existential proof.
-
-%$|| A || = (P : \Prop)(A \to P) \to P$
-
-
-
-
-\section{Coequalizers?}
-
-\begin{remark}\label{equivalencerelationiso}
-
-\end{remark}
-
-
-
-\subsection{Quotient types are coequalizers}
-
-The rules of quotient set is indeed characterised in category-theoretical way.
-As Bart pointed out, quotients can be described as a left adjoint to an equality functor.
-
-
-Categorically speaking, a quotient is a coequalizer.
 
 \begin{definition}
 \textbf{Coequalizer}.
-Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ , a coequalizer is an object Q with a morphism $q : \morph{Y}{Q}$ such that $q \circ f = q \circ g$. It has to be universal as well. Any pair (Q' , q') $q' \circ f = q' \circ g$ has a unique factorisation u such that $q' = u \circ q$
+Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ , a coequalizer is an object $Q$ with a morphism $q : \morph{Y}{Q}$ such that $q \circ f = q \circ g$ and it is universal: any pair $(Q' , q')$ satisfying $q' \circ f = q' \circ g$ has a unique factorisation $u$ such that $q' = u \circ q$:
 \begin{displaymath}
     \xymatrix{X \ar@<0.5ex>[rr]^f \ar@<-0.5ex>[rr]_g && Y \ar[rr]^q
       \ar[ddrr]_{q'} && Q
@@ -371,166 +333,513 @@ Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ ,
 \end{displaymath}
 \end{definition}
 
-A quotient is the coequalizer when we have two projections $\pi_1$ and
-$\pi_2$ from the relation $R = \{(a_1,a_2) : A \times A ~|~ a_1 \sim a_2\}$
+
+In a cartesian closed category, e.g.\ $\Set$, assume
+
+$$R \defeq \Sigma (a_1,a_2 : A) ~ a_1 \sim a_2$$
+
+%$$R = \{(a_1,a_2) : A \times A ~|~ a_1 \sim a_2\}$$
+
+and the two projections are two parallel morphisms $\pi_1,\pi_2 : \morph{R}{A}$,
+
+A quotient is just the coequalizer $(\qset{A},[\_])$ such that the following diagram commutes:
 \begin{displaymath}
     \xymatrix{R \ar@<0.5ex>[rr]^{\pi_1} \ar@<-0.5ex>[rr]_{\pi_2} && A \ar[rr]^{ [\_]}
-      \ar[ddrr]_{f} && Q
+      \ar[ddrr]_{f} && \qset{A}
       \ar@{.>}[dd]^{\hat{f}} \\ \\
-& &&& B }
+& &&& B}
 \end{displaymath}
 
+The factorisation $\hat{\_}$ is just the eliminator, the computation rule corresponds to its existence, the induction principle corresponds to its uniqueness. 
 
-The exactness corresponds to effectiveness of coequalizer,
+\begin{remark}
+It is easy to see that the uniqueness of $\hat{f}$ is implied by induction principle:
+
+Given any $g : \qset{A} \to B$ fulfils the same property as $\hat{f}$, applying induction principle on 
+
+$$\forall (a :A) \to g([a]) = \hat{f}([a])$$
+
+we can deduce that $$\forall (q : \qset{A}) \to g(q) = \hat{f}(q)$$ hence $g = \hat{f}$.
+
+The other way is more difficult:
+
+Given $P : A \to \Prop$, $h : (x : A) \to P (x)$ define
+
+$$P' \defeq \Sigma(x : A) ~P(x) ~\text{and}~ h'(x) = ([x],h(x))$$
+
+we can observe that 
+
+\begin{equation}\label{eq1}
+\pi_1 \circ h' = [\_]
+\end{equation}
+
+By universal property, there is a unique $\hat{h'}$ s.t. 
+
+\begin{equation}\label{eq2}
+\hat{h'} \circ [\_] = h'
+\end{equation}
+
+By replacing \ref{eq2} in \ref{eq1}
+
+\begin{equation}\label{eq3}
+\pi_1 \circ \hat{h'} \circ [\_] = [\_]
+\end{equation}
+
+From uniqueness rule of coequalizer we can easily prove that $[\_]$ is an \emph{epimorphism}:
+
+given $f_1,f_2 : \qset{A} \to B$ s.t. $f_1 \circ [\_] = f_2 \circ [\_]$
+
+By universal property, there is a unique $g : \qset{A} \to B$ such that
+
+$g \circ [\_] = f_1 \circ [\_] = f_2 \circ [\_]$
+
+Because both $f_1$ and $f_2$ fulfil this property, $f_1 = f_2$, hence $[\_]$ is epi.
+
+
+Thus from \ref{eq3}, we prove that
+
+\begin{equation}\label{eq4}
+\pi_1 \circ \hat{h'} = id
+\end{equation}
+
+Thus for any $q : \qset{A}$, the type of $\pi_2(\hat{h'}(q))$ is
+
+$P(\pi_1(\hat{h'}(q))) = P(q)$
+
+as expected, hence we derived the induction principle.
+\end{remark}
+
+The coequalizer (quotient) is effective if the following diagram is a \emph{pullback}
 
 \[\xymatrix{
-R\pullbackcorner\ar[r]^\pi_1\ar[d]_\pi_2 & A\ar[d]^{[\_]} \\
-A\ar[r]_{[\_]} & Q
+R\pullbackcorner\ar[rr]^{\pi_1}\ar[dd]_{\pi_2} && A\ar[dd]^{[\_]} \\ \\
+A\ar[rr]_{[\_]} && Q
 }\]
 
+\begin{proof}
+Assume we have two points $a, b : \textbf{1} \to A$ satisfying $[ a ] = [ b ]$.
 
-A quotient with a right inverse "emb" for $[\_]$ corresponds to \emph{split coequalizer} which is a fork 
+From the pullback property, there is a unique point $r : \textbf{1} \to R$ such that
+
+$$\pi_1(r) = a$$ and $$\pi_2(r) = b$$ 
+
+Hence $(a, b)$ is an element of $R$, by definition it means
+
+$$a \sim b$$
+\end{proof}
+
+In \autoref{dq}, we also introduce two other notions: prequotient and definable quotient.
+
+Cateogorically speaking, a \emph{prequotient} is just a \emph{fork}
 
 \[\xymatrix{
-R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
-& Q
+R\ar@<0.5ex>[rr]^{\pi_0}\ar@<-0.5ex>[rr]_{\pi_1}& & A\ar[rr]^{[\_]}
+& & Q
 }\]
 
-with morphisms $\emb : Q \to A$ and $t : A \to R$ such that 
+and a \emph{definable quotient} corresponds to a \emph{split coequalizer} which is a \emph{fork} with two morphisms $\emb : Q \to A$ and $t : A \to R$ such that 
 
-$[\_] \circ emb = 1_Q$
+$[\_] \circ \emb = 1_Q$
 
 $\emb \circ [\_]  = \pi_2 \circ t$ and 
 
-$\pi_1 \circ t = 1_A$ (i.e.\ $t ~ a = (\emb [ a ] , a)$)
+$\pi_1 \circ t = 1_A$.
 
+In fact, $t$ corresponds to the "complete" property of definable quotients as $t(a) = (\emb [ a ] , a)$.
 
+\section{Quotient is a left adjoint functor}
 
-\subsection{Quotient types is a left adjoint functor}
+As Jacobs\cite{Jacobs94quotientsin} suggests, quotient can be described as a left adjoint to an equality functor.
 
-Recalling the definition of adjunction.
-
+Let us recall the definition first.
 \begin{definition}
-\text{Adjunction}.
+\textbf{Adjunction}.
 Given two categories $A$ $B$, a functor $F : A \to B$ is left adjoint
 to $G : B \to A$ if we have a natural isomorphism
-$\Omega : hom_{B}(F ~\_ , \_) \to hom_{A}(\_, G ~\_)$
+$\Phi : \text{hom}_{B}(F ~\_ , \_) \to hom_{A}(\_, G ~\_)$
 \end{definition}
 
 
-Quotient can also be seen as a functor $\textbf{Q} : \textbf{Setoids} \to \textbf{Sets}$ which is
-left-adjoint to embedding functor $\nabla$
-where
+Given the category of setoids $\textbf{Setoid}$ and category of sets $\textbf{Set}$, there is an equality functor $\nabla : \textbf{Set} \to \textbf{Setoid}$ defined as
+$$\nabla A \defeq (A , =_{A})$$
 
-$\textbf{Q} ~ (B , \sim) \defeq \qset{B}$, and
+where the morphism part is trivial embedding.
 
-$\nabla A \defeq (A , =)$
+Quotients can be seen as a functor $\textbf{Q} : \textbf{Setoid} \to \textbf{Set}$ which is
+left-adjoint to a equality functor $\nabla A \defeq (A , =_{A})$
 
+The object part of this functor corresponds to the formation rule of quotients, hence we can use $\qset{B}$
+to represent $\textbf{Q} ~ (B , \sim)$.
 
-The adjunction above can be given by following natural isomorphism
+The adjunction can be described by a natural isomorphism
+
+$\Phi : \text{hom}_{\text{Set}}(\textbf{Q}  ~\_ , \_) \to \text{hom}_{\text{Setoid}}(\_ , \nabla ~\_)$
+
+or a diagram for each $(Y, \sim) : \textbf{Setoid}$ and $X : \textbf{Set}$:
 
 \begin{equation*}
 \begin{aligned}
-\qset{B} & \to A \\
+\qset{Y} & \to X \\
 \midrule
 \midrule
-(B , \sim) & \to (A , =)
+(Y, \sim) & \to (X , =_{X})
 \end{aligned}
 \end{equation*}
 
-To prove that this is an isomorphism, assume $f : \qset{B} \to A$, there exists a mapping
+%\begin{equation*}
+%\begin{aligned}
+%\text{hom}_{\text{Sets}}(\qset{Y},X) \\
+%\midrule
+%\midrule
+%\text{hom}_{\text{Setoids}}((Y, \sim), (X , =))
+%\end{aligned}
+%\end{equation*}
 
-$\Omega ~ f = f \circ [\_]$ and its inverse
 
-$\Omega^{-1} ~ g = \hat{g}$ (we omit the property that $g$ respects $\sim$)
+which consists of $\Phi_{(Y, \sim),X}$ and its inverse $\Phi^{-1}_{(Y, \sim),X}$ (the subscripts are omitted later).
 
-The isomorphic properties can be verified as follows,
 
-$\Omega^{-1} (\Omega~f) = \dlift{f \circ [\_]} = f$ by the uniqueness from lifting.
+Given an identity morphism $\text{id} : \qset{A} \to \qset{A}$, 
 
-$\Omega (\Omega^{-1}~g) = \hat{g} \circ [\_] = g$ by definition of lifting.
+$$\Phi(\text{id}) : (A, \sim) \to (\qset{A}, =_{\qset{A}})$$
+
+is just the introduction rule $[\_] : A \to \qset{A}$ with the property that it is compatible with $\sim$.
+It is also called \emph{unit} written as $\eta_{(A,\sim)}$.
+
+Given a morphism $f : (A, \sim) \to (B , =_{B})$ which is a function compatible with $\sim$,
+
+$$\Phi^{-1}(f) : \qset{A} \to B$$ 
+
+which corresponds to the elimination rule.
+
+The computation rule $\hat{f} \circ [\_] \equiv f$ corresponds to the following digram in the category of setoids:
+
+
+\[\xymatrix{
+(A,\sim)\ar@<-0.5ex>[dd]_{\eta_{(A,\sim)}}\ar@<0.5ex>[ddrr]^{f} \\ \\
+(\qset{A}, =_{\qset{A}})\ar@<-0.5ex>[rr]_{\nabla(\Phi^{-1}(f))} & & (B , =_{B})
+}\]
+
+which is commutative because
+
+$\nabla (\Phi^{-1}(f)) \circ \eta_{(A,\sim)}$
+
+$=\Phi(\Phi^{-1}(f))$ by adjunction law $G(f) \circ \eta_{Y} = \Phi(f)$
+
+$=f$
+
+
+
+We can also recover the adjunction from the definition of quotients. Define
+
+$$\textbf{Q} ~ (Y , \sim) \defeq \qset{Y}$$
+
+The adjunction is given by
+
+$$\Phi(f) \defeq f \circ [\_] ~\text{and} ~ \Phi^{-1}  (g, g^{\sim}) \defeq \hat{g}$$
+
+The computation rule and induction principle just express that these two mapping are each other inverses.
+
+%which is compatible with $\sim$ because $[\_]$ is compatible with $\sim$.
+
+%We can define its inverse as
+
+%: assume $f : \qset{Y} \to X$, there is a mapping
+
+%It is an isomorphism because it has an inverse: assume $(g, g^{\sim}) : (Y, \sim) \to (X, =_{X})$
+
+
+%such that
+
+%$\Phi^{-1} (\Phi(f))= \dlift{f \circ [\_]} = f$
+
+%because for all $y : Y$, $\dlift{f \circ [\_]} ([ y ]) \equiv (f \circ [\_]) (y) \equiv f ([ y ])$
+
+
+
+
+%where $g$ is a function compatible with $\sim$
+
+%To prove that this is an isomorphism, assume $f : \qset{B} \to A$, there exists a mapping
+
+%$\Omega ~ f = f \circ [\_]$ and its inverse
+
+%$\Omega^{-1} ~ g = \hat{g}$ (we omit the property that $g$ respects $\sim$)
+
+%The isomorphic properties can be verified as follows,
+
+%$\Omega^{-1} (\Omega~f) = \dlift{f \circ [\_]} = f$ by the uniqueness from lifting.
+
+%$\Omega (\Omega^{-1}~g) = \hat{g} \circ [\_] = g$ by definition of lifting.
+
+
+\section{Quotients in \hott}\label{qthott}
+
+As we mentioned before, quotient types (in the sense of \ref{iqs}) are available in \hott. Because of the different interpretations of types, it makes less confusion to call them \emph{quotients} or \emph{set quotients} here.
+
+First, let us recall that
+
+\begin{itemize}
+\item an h-proposition (hProp) $P$ is a type which has the property $\forall(a, b : A) \to a =_{A} b$, and
+
+\item an hSet $S$ is a type such that forall $x, y : S$, $x =_{S} y$ are h-propositions.
+\end{itemize}
+
+For simplicity, we use "sets" for h-sets and "propositions" for h-propositions here. Also $\Prop$ is \emph{not} the built-in universe of propositions in Coq, but the universe of h-propositions.
+
+\subsection{An impredicative encoding of quotient sets}\label{impredicative}
+
+Vladimir Voevodsky has introduced an impredicative definition of quotients which has been encoded in Coq \cite{voe:hset}. 
+
+%\footnote{\url{http://www.cse.chalmers.se/~coquand/cirm.pdf}} 
+
+Assume we have a type $A$ (which is not necessarily a set) and an equivalence relation $\sim : A \to A \to \Prop$. 
+
+\begin{definition}
+An \textbf{equivalence class} is a predicate $P : A \to \Prop$ such that
+
+it is inhabited $\exists (a : A) ~P (a)$
+
+For all $x, y : A$,
+
+$P(x) \to P(y) \to x \sim y$
+
+$P(x) \to x \sim y \to P(y) $
+
+The properties can be encoded as 
+
+$$\text{EqClass}(P) \defeq (\exists (a : A) ~ P (a)) \wedge (\forall (x, y : A) \to P(x) \to (x \sim y \iff P(y)))$$
+\end{definition}
+
+\begin{definition}
+We define the \textbf{set quotient} as
+
+$\qset{A} \defeq \Sigma (P : A \to \Prop) ~ \text{EqClass}(P)$
+\end{definition}
+
+$\qset{A}$ is a set because $A \to \Prop$ is a set and $\text{EqClass}(P)$ is a proposition. $\wedge$ is the non-dependent $\Sigma$-type for propositions and $\forall$ is the $\Pi$-type for propositions. The encoding of $\exists(a : A)~ P(a)$ is given by a truncated $\Sigma$-type: $\| \Sigma(a : A)~P(a) \|$.
+The (-1)-truncation $\|-\|$ is defined impredicatively as
+
+$$\|X\| \defeq \forall (P : \Prop) \to (X \to P) \to P$$
+
+with a trivial embedding function $|\_| : X \to \| X \|$:
+
+$$| x | \defeq \lambda P ~ f \to f(x)$$
+
+Note that $\|X\|$ is in the universe of $\Set_1$, but with \textbf{resizing rules} proposed by Voevodsky \cite{Universe-poly,RR}, $\|X\|$ is moved to the universe of $\Set$. We can apply the resizing rule for proposition because $\|X\|$ behaves like a proposition.
+It also has to be noticed that it is impossible to extract an element of $A$ from an proof of $\text{EqClass} ~ P$ because of the impredicative encoding. 
+
+
+There is a canonical function $[\_] : A \to \qset{A}$ defined as
+
+$$[ a ] \defeq (\lambda x \to a \sim x, | a, \text{ref}(a) | , \lambda x~y ~p \to (\lambda q \to\text{trn}(p,q), \lambda q \to \text{trn}(\text{sym}(p),q)))$$
+
+which is compatible with $\sim$, or in another word, it respects $\sim$.
+
+\begin{definition}
+We say a function $f : A \to B$ is \textbf{compatible} with $\sim$ if
+
+$$\forall (x, y : A) \to x \sim y \to f(x) =_{B} f(y)$$
+\end{definition}
+
+ The verification of compatibility requires propositional extensionality and functional extensionality which are available in \hott.
+
+
+Given a function $f : A \to B$ into a \emph{set} $B$ which is compatible with $\sim$, there exists a unique function $\hat{f} = \qset{A} \to B$ such that $\hat{f} ([ a ]) \equiv f(a)$. Since we can not extract a element of $A$, it has to be defined in a more complicated way.
+
+
+Assume we have an element of set $\qset{A}$ which can be written as
+
+$$(P, p, q) : \qset{A}$$
+
+where $P$ is the predicate, $p$ is the truncated witness of $P$ is inhabited, and $q$ contains the proofs of the logical equivalence.
+
+We can define a function $f_{P} : (\Sigma (x : A) ~P(x)) \to B$ simply by 
+
+$$f_{P} \defeq f \circ \pi_{1}$$
+
+but our witness $p : \| \Sigma (x : A) ~P(x) \|$ is truncated which can not be applied to $f_{P}$. However we can generate a function $\bar{f_{P}} : \| (\Sigma (x : A) ~P(x)) \| \to B$ with the following lemma \cite{krausEscardoEtAll_existence}.
+
+\begin{lemma}\label{constantT}
+Given a constant function $g : X \to Y$ where $Y$ is a set, hence it satisfies
+
+$$\forall(x,y : X) \to g(x) = g(y)$$
+
+there exists a function $\bar{g} : \|X\| \to Y$ such that $\bar{g}(| x |) \equiv g(x)$.
+\end{lemma}
+
+\begin{proof}
+
+Define the subset
+
+$$Y' \defeq \Sigma (y : Y)~ \|\Sigma (x : X) ~g(x) = y \|$$
+
+Intuitively it contains only the image of the constant function i.e.\ \textbf{$Y'$
+is propositional}:
+
+For any $(y_1,p_1) : Y'$ and $(y_2,p_2): Y'$, 
+
+we can first generate the proofs 
+
+$p_1 ((g(x) = y_1),\pi_2) : g(x) = y_1$ and 
+
+$p_2 ((g(x) = y_2),\pi_2) : g(x) = y_2$
+
+By symmetry and transitivity we can prove that $y_1 = y_2$.
+
+From the fact that truncated type is always propositional, we can also deduce that $p1 = p2$, then $(y_1,p_1) = (y_2,p_2)$. Hence we can conclude that $Y'$ is propositional.
+
+We can simply define a function $g' : X \to Y'$ from $g$ as
+
+$$g'(x) \defeq (g(x), \lambda Q ~f \to f (x , \text{refl}_{=}(g(x))))$$
+
+
+Because $Y'$ is propositional, it is possible to lift $g'$ to a function $\hat{g'} : \| X\| \to Y'$ which is technically defined as
+
+$$\hat{g'}(x) \defeq x (Y',g')$$
+
+
+Finally we define
+
+$\bar{g} \defeq \pi_1 \circ \hat{g'}$
+
+Which fulfils the computation rule
+
+$\bar{g}(|x|) \equiv  \pi_1 (|x|(Y',g'))  \equiv \pi_1 (g' (x)) \equiv g(x)$
+\end{proof}
+
+\begin{proposition}
+$f_P$ is a constant function.
+\end{proposition}
+
+\begin{proof}
+Given two elements of $\Sigma (x : A) ~P(x)$, $(x_1,p_1)$ and $(x_2,p_2)$.
+
+From the properties of equivalence class $P$, given $p_1 : P(x_1)$ and $p_2 : P(x_2)$,
+we know that 
+
+$$x_1 \sim x_2$$
+
+Because $f$ is compatible with $\sim$,
+
+$$f(x_1) = f(x_2)$$
+
+
+By definition of $f_P$,
+
+$$f_P(x_1,p_1) \equiv f (x_1) = f(x_2) \equiv f_P(x_2,p_2)$$
+
+hence $f_P$ is a constant function.
+\end{proof} 
+
+Now apply \autoref{constantT} to constant function $f_{P}$, we obtain the expected function $\bar{f_{P}} : \| (\Sigma (x : A) ~P(x)) \| \to B$ which allows us to generate $\bar{f_{P}}(p) : B$.
+
+To conclude, we can lift a function $f : A \to B$ which is compatible with $\sim$. The computational rule can be verified easily as follows:
+
+$$\hat{f}([a]) \equiv \bar{f}_{\lambda x \to a \sim x}(|a|) \equiv f(a)$$
+
 
 
 \subsection{Quotient inductive types}
 
-As we have seen in \autoref{hott:ext}, quotient inductive types is an alternative way to define quotients in \hott. In fact, some examples suggests that QITs are more powerful than quotient types.
 
-One of the example is the definition of reals which will be discussed in \autoref{rl}. Our construction of reals by Cauchy sequences of rational numbers is not Cauchy complete because there is no limit of each equivalence class. However, the Cauchy approximation approach in \cite{hott} using quotient inductive types is Cauchy complete due to the fact that the equivalence relation and limits are included in its definition.
+%As we mentioned before, quotient types (in the sense of \ref{iqs}) are available in \hott. Because of the different interpretations of types, it makes less confusion to call them \emph{quotients} here.
 
-Another example is unordered trees (rooted tree). An unordered tree is a tree connected to a multiset of rooted trees, hence there is no ordering on subtrees.
+An alternative way to define quotients in \hott is by using higher inductive types.
+
+
+Assume $A$ is a set and $\_\sim\_ : A \to A \to \Prop$ is an equivalence relation. 
+To build a quotient, we can simply impose level-$1$ morphisms in the structure of given sets according to the equivalence relation.
+Thus, a quotient $\qset{A}$ can be defined as a higher inductive type:
+
+\begin{itemize}
+\item $[\_] : A \rightarrow \qset{A}$
+\item $eqv : (a,b : A) \rightarrow a \sim b \rightarrow  [a] = [b]$
+\item $isSet : (x,y:\qset{A}) \rightarrow (p_1,p_2 : x = y) \rightarrow p_1 = p_2$
+\end{itemize}
+
+It is also a set so we call it \textbf{set-quotient} or \textbf{quotient inductive types} (QITs).
+
+\begin{remark}
+Categorically, there is no difference between a set and a setoid because a skeleton of a setoid
+is just a discrete category which is equivalent to a set.
+\end{remark}
+
+Some examples suggests that QITs are more powerful than quotient types.
+
+One of the example is the definition of real numbers $\R$ which will be discussed in \autoref{rl}. Our construction of reals by Cauchy sequences of rational numbers is not Cauchy complete because there is no limit of each equivalence class. However, the Cauchy approximation approach in \cite{hott} (see subsection 11.3.1) using quotient inductive types is Cauchy complete due to the fact that the equivalence relation and limits are included in its definition.
+
+Another example is unordered trees (rooted tree) which are trees connected to a multiset of subtrees, hence there is no ordering on subtrees.
 
 Firstly we define ordered trees as:
 
 \begin{itemize}
 \item A leaf $l: \mathsf{Tree}$, or
-\item An ordered list of subtrees indexed by $\mathbb{N}$, $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
+\item An ordered list of subtrees indexed by $I$, $st : (I \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
 \end{itemize}
 
 With the following equivalence relation:
 
 \begin{itemize}
 \item $l_{eq} : l \sim l$,
-\item $st_{eq} : (f , g : \N \to \mathsf{Tree}) \to f \sim_{p} g \to sp~f \sim sp~g$
+\item $st_{eq} : (f , g : I \to \mathsf{Tree}) \to f \sim_{p} g \to sp(f) \sim sp(g)$
 \end{itemize}
 
-where $f \sim_{p} g$ stands for $f$ is a permutation of $g$. The permutation can be defined using a bijective map $p : \N \to \N$ which relates equivalent subtrees recursively.
+where $f \sim_{p} g$ stands for $f$ is a permutation of $g$. The permutation can be defined using a bijective map $p : I \to I$ which relates equivalent subtrees recursively.
 
 %However, if we use quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, the resulting trees have unordered subtrees which are themselves ordered.
 
 If we define unordered trees as a quotient type $\mathsf{Tree^{\sim}} := \qset{\mathsf{Tree}}$, 
-there is some problem of lifting the $st$. 
-For finitely branching trees like binary trees,$st$ can be lifted by nesting lifting functions,
+it is problematic to lift $st$.
+For trees with finite subtrees such as \emph{binary trees} where $I \defeq \bool$, $st$ can be lifted by nesting lifting functions,
 
-$$\overline{st}~a~b = \text{lift}~(\text{lift}~st~a)~b$$
+$$\hat{st}(a,b) = \dlift{\hat{st}(a)}(b)$$
 
 because its type is isomorphic to $\mathsf{BTree} \rightarrow \mathsf{BTree} \rightarrow \mathsf{BTree}$.
-Intuitively we can apply this approach to trees with finite subtrees. However it fails if have infinite subtrees.
+Intuitively this approach can be applied to trees with finite subtrees. However it fails if have infinite subtrees, for example when $I \defeq \N$.
 
-Quotient inductive types does not have such problems:
+However we can avoid the problem by using QITs:
 
 \begin{itemize}
 \item $l: \mathsf{Tree}$, 
-\item $st : (\mathbb{N} \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$,
-  and
-\item a set of paths relates two permuted trees:
+\item $st : (I \rightarrow \mathsf{Tree}) \rightarrow \mathsf{Tree}$
 
-$l_{eq} : l  =_{\mathsf{Tree}} l $
+and a set of paths relates two permuted trees:
 
-$st_{eq} : \forall (f, g : \N \to \mathsf{Tree}) \rightarrow
-f \sim_{p} g \rightarrow  st~f =_{\mathsf{Tree}} st~g$
+\item $l_{eq} : l  =_{\mathsf{Tree}} l $
+
+\item$st_{eq} : \forall (f, g : I \to \mathsf{Tree}) \rightarrow  f \sim_{p} g \rightarrow  st(f) =_{\mathsf{Tree}} st(g)$
 \end{itemize}
 
-The cumulative hierarchy of all sets introduced in \cite{hott} also suggests that quotient types have some weaknesses compared to quotient inductive types.
+Similarly the cumulative hierarchy of all sets introduced in \cite{hott} (see section 10.5) also suggests that quotient types have some weaknesses compared to quotient inductive types.
 
 A cumulative hierarchy can be given by constructors,
 
-$\{\_\} : (I : \Set) \to (I \to M_0) \to M_0$
+$$\{\_\} : (I : \Set) \to (I \to M_0) \to M_0$$
 
 along with a subset relation,
 
-$\_\in\_ : M_0 \to M_0 \to \Prop$
+$$\_\in\_ : M_0 \to M_0 \to \Prop$$
 
-which is inhabited if $ f(i) \in \{ I , f \}$
+which is inhabited if $ f(i) \in \{ I , f \}$.
 
-Then we can easily define the equivalence relation using set-theoretical definition
+Then we can easily define the equivalence relation on "sets" using set-theoretical definition
 
 $A \sim B \defeq \forall m : M_0, m \in A \iff m \in B$
 
-Similar to unordered trees, we can not obtain the constructor $\overline{\{\_\}}$ because the index set $I$ can be infinite.
+Similar to unordered trees, we can not obtain the constructor $\dlift{\{\_\}}$ because the index set $I$ can be infinite.
 
+To summarise, it seems that quotient inductive types are more powerful than quotient types due to the ability of defining term constructors and equivalence relations simultaneously. 
+However, quotient inductive types are not available in type theories other than \hott and the computational interpretation of them is still an open problem.
+Moreover, there can be more general quotients in \hott, for example a quotient of a type by a $1$-groupoid (See section 9.9 in \cite{hott}). It is interesting to investigate \emph{real} \emph{quotient types} in \hott, but it is beyond this thesis.
 
-In the above examples, it seems that quotient inductive types are more powerful than quotient types due to the ability of defining term constructors and equivalence relations simultaneously. 
-However, quotient inductive types are not available in type theories other than \hott and the computational interpretation of it is still an open problem.
+\section{Related work}
 
-%However, it is still an open problem to find a computational interpretation of higher inductive types.
-
-\section{Literature review}
-
-%\todo{rewrite}
+The introduction of quotient types in Type Theory has been studied by several authors in different versions of \mltt and using various approaches.
 
 \begin{itemize}
 
-\item In \cite{cab}, Mendler et al. have firstly considered building new types from a
+\item In \cite{cab}, Mendler et al. have first considered building new types from a
 given type using a quotient operator $//$. Their work is done in an
 implementation of \ett, NuPRL. 
 In NuPRL, every type comes with its own equality relation, so the quotient operator can be
@@ -541,18 +850,17 @@ defining functions on the new type which can be illustrated using a simple examp
 Assume the base type is $A$ and the new equivalence relation is $E$, the new
 type can be formed as $A//E$. 
 
-When we want to define a function $f \,\colon\, A//E \to Bool$,  $f\,a \not= f\,b$ may
+When we want to define a function $f \,\colon\, A//E \to \2$,  $f(a) \not= f(b$ may
 exists for $a, b \,\colon A$ such that $E\,a\,b$. This will lead to
-inconsistency since $E\,a\,b$ implies $a$ converts to $b$ in \ett{}, hence
-the left hand side $f\,a$ can be converted to $f\,b$, namely we get $f\,b \not= f\,b$
+inconsistency since $E(a,b)$ implies $a$ converts to $b$ in \ett, hence
+the left hand side $f(a)$ can be converted to $f(b)$, namely we get $f(b) \not= f(b)$
 which is contradicted with the equality reflection rule. 
 
 Therefore a function is said to be well-defined \cite{cab} on the new type only
 if it respects the equivalence relation $E$, namely
 
-$$\forall \, a\,b\,\colon A, E\,a\,b \to f\,a = f\,b$$
+$$\forall a,b : A \to E(a,b) \to f(a) = f(b)$$
 
-We call this \emph{soundness} property in \cite{aan}.
 
  After the introduction of quotient types, Mendler further investigates
  this topic from a categorical perspective in ~\cite{men:90}. He uses
@@ -560,19 +868,7 @@ We call this \emph{soundness} property in \cite{aan}.
  in a category of types to define a notion called \emph{squash types},
  which is further discussed by Nogin \cite{nog:02}.
 
-\item To add quotient types to \mltt, Hofmann proposes three models for
-quotient types in his PhD thesis \cite{hof:phd}. The first one is a setoid model for
-quotient types. In this model all types are attached with partial
-equivalence relations, namely all types are setoids rather than
-sets. Types without a specific equivalence relation can be seen as
-setoids with the basic intensional equality. This is similar to
-\ett in some sense. The second one is groupoid model which solves some problems
-but it is not definable in \itt. He also proposes a third model to
-combine the advantages of the first two models, but it also has some
-disadvantages. Later in \cite{hof:95:sm} he gives a simple model in which we have type dependency only at the propositional level, he also shows that \ett is conservative over \itt extended with quotient types \cite{hof:95:con}.
-
-\item Nogin \cite{nog:02} considers a modular approach to axiomatizing the
-same quotient types in NuPRL as well. Despite the ease of constructing new types
+\item Nogin \cite{nog:02} considers a modular approach to axiomatizing quotient types in NuPRL as well. Despite the ease of constructing new types
 from base types, he also discusses some
 problems about quotient types. For example, since the equality is
 extensional, we cannot recover the
@@ -581,7 +877,27 @@ conceptualise quotients. He decomposes the formalisation of quotient type
 into several smaller primitives such that they can be handled much
 simpler.
 
-\item Homeier \cite{hom} axiomatises quotient types in Higher Order Logic
+
+\item Jacobs \cite{Jacobs94quotientsin} introduces a syntax for quotient types based on a predicate logic
+within simple type theory. He discusses quotient types from a categorical theoretical perspective. In fact the syntax of quotient types arises from an adjunction as we mentioned before.
+
+\item To add quotient types to \mltt, Hofmann proposes three models for
+quotient types in \cite{hof:phd}. The first one is a setoid model for
+quotient types. In this model all types are attached with partial
+equivalence relations, namely all types are partial setoids rather than
+sets. It does not provide dependency at the level of types but only at the level of the relations. 
+%This is similar to \ett in some sense but retains computational property in \itt. 
+The second one is groupoid model which supports most features required 
+but it is not definable in \itt. 
+He also proposes a third model to as an attempt to overcome problems in the previous two models. More type dependency is provided and quotient types are believed to be definable in this model.
+However it also has some disadvantages. 
+he also shows that \ett is conservative over \itt extended with quotient types \cite{hof:95:con}.
+
+
+\item Altenkirch \cite{alti:lics99} also provides a different setoid model which is built in an \itt
+extended with proof-irrelevant universes of propositions and $\eta$-rules for $\Pi$-types and $\Sigma$-types. It is decidable, adequate and permits large eliminations. We have implemented this setoid model and interpret quotient types in it (see \autoref{models}).
+
+\item Homeier \cite{hom} also axiomatises quotient types in Higher Order Logic
 (HOL), which is also a theorem prover. He creates a tool package to
 construct quotient types as a conservative extension of HOL such that
 users are able to define new types in HOL. Next he defines the
@@ -591,12 +907,13 @@ aggregate types such as lists and pairs.
 
 
 \item Courtieu \cite{cou:01} shows an extension of Calculus of Inductive Constructions
-with \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions. 
-However not all quotient types have normal forms. Normalised types are
-proper subsets of quotient types, because we can easily recover a quotient
-type from a normalised type as below
-%$$ \[ (A, Q, \class\dotph \colon A \to Q) \to (A, \lambda \,a \,b \to \class a = \class b)\]$$
+with \emph{Normalised Types} which are similar to quotient types, but equivalence relations are replaced by normalisation functions which select a canonical element for each equivalence class. 
+In fact normalised types can be seen as a proper subset of quotient types. We can easily recover a quotient type from a normalised type as below
 
+$$a \sim b \defeq [ a ] = [ b ]$$
+
+However not all quotient types have normal forms, for example, the set of real numbers (see \autoref{rl}).
+The notion \emph{definable quotients} we proposed in \autoref{dq} is also similar to it, but does not provide a new type automatically.
 
 \item Barthe and Geuvers \cite{bar:96} also propose a new notion called
 \emph{congruence types}, which is also a special class of quotient
@@ -607,7 +924,8 @@ $\beta$-conversion rules. Congruence types can be treated as an
 alternative to the pattern matching introduced in \cite{coq:92}. The main
 purpose of introducing congruence types is to solve problems in
 term rewriting systems rather than to implement quotient types.
-
+Congruence types are not inductive but have good computational behaviour because we can use term-rewriting system to link a term of base type to a unique term of congruence type as its normal form.
+However this approach has some problems in termination criteria and interaction between rewriting systems \cite{cou:01}.
 
 \item Barthe and Capretta \cite{bar:03} compare different ways to setoids in Type Theory.
 The setoid is classified as partial setoid or total setoid depending
@@ -627,9 +945,19 @@ within the containers.
 \item Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
 of axioms of \hott. He firstly implement
 equivalence class and use it to implement quotients which is an
-analogy to the construction of quotient sets in set theory. The detail has been given in \autoref{impredicative}.
-
+analogy to the construction of quotient sets in set theory. The detail is given in \autoref{impredicative}.
 \end{itemize}
+
+
+
+
+
+\section{Summary}
+
+We have given the syntax of quotient types in this chapter. We have provided a non-dependent eliminator with an induction principle and a dependent eliminator and proved they are equivalent. We have also shown that propositional extensionality actually implies the effectiveness of quotients. The characterisation of quotients in category theory has been given. It does not only corresponds to coequalizers but also can be generated from a left adjoint functor to the equality functor $\nabla : \textbf{Set} \to \textbf{Setoid}$. We have also briefly reviewed the research of quotient types by other authors.
+
+
+
 
 
 

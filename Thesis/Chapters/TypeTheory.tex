@@ -182,7 +182,7 @@ Throughout the thesis, we usually use the following notational conventions:
 
 \end{itemize}
 
-\subsection{Rules for types}
+\subsection{Rules for types}\label{typerule}
 
 
 The rules usually describe how we can define types with judgements above. They are syntactic rules but the semantic meaning may be revealed from the construction.
@@ -206,13 +206,13 @@ In practice, the empty context is usually not written, for example $\vdash \N$.
 \infrule[$\Pi$-elim]{\Gamma \vdash f : \Pi ~ (x:A)~B \andalso \Gamma \vdash a : A}{\Gamma \vdash f(a): B[a/x]}
 
 In the expressions like $\lambda (x:A).b$, $\lambda$ binds the free occurrences of $x$ in $b$.
-In the expressions like $B[a/x]$ or $b[a/x]$ we do an \emph{standard substitution} in type $B$ or term $b$ that replaces free occurences of $x$ by $a$.
+In the expressions like $B[a/x]$ or $b[a/x]$ we do an \emph{standard substitution} in type $B$ or term $b$ that replaces free occurences of $x$ by $a$. We will use a shorthand notation for substitution later, for example, $C[a,b]$ for $C[a/x,b/y]$ where the order of arguments corresponds to the order in the typing rule.
 
-In this thesis, we also adopt a generalised arrow notation to write $\Pi$-types, for example $(x : X) \to B$, and their terms $\lambda (x: A) \to b$.
+In this thesis, we also adopt a generalised arrow notation to write $\Pi$-types, for example $(x : A) \to B$, and their terms $\lambda (x: A) \to b$.
 
 \begin{multicols}{2}
 computation rule
-$$(\lambda (x:A) \to b)(a) \equiv b[a/x]$$
+$$(\lambda (x:A) \to b)(a) \equiv b[a]$$
 
 \columnbreak
 
@@ -253,9 +253,9 @@ Identity types is a notion of intensional propositional equality given by the fo
 \infrule[=-intro]{\Gamma \vdash a : A}{\Gamma \vdash r(a) : a =_A a}
 \end{multicols}
 
-We use  $a =_{A} a'$ instead of $Id_A(a, a')$ to denote the identity types, or simply $a = a'$.
+We use  $a =_{A} a'$ instead of $\text{Id}_A(a, a')$ to denote the identity types, or simply $a = a'$.
 
-\infrule[$\J$]{\Gamma , x : A, y : A, p : x =_A y \vdash C(x,y,p)  \andalso \Gamma , x : A \vdash t(a) : C(x,x,r(x)) \\ \andalso \Gamma \vdash a: A \andalso \Gamma \vdash a': A \andalso \Gamma \vdash p : a =_A a'}{\Gamma \vdash \J (t,a,a',p): C(a',a',p)}
+\infrule[$\J$]{\Gamma , x : A, y : A, p : x =_A y \vdash C  \andalso \Gamma , x : A \vdash t(a) : C[x,x,r(x)] \\ \andalso \Gamma \vdash a: A \andalso \Gamma \vdash a': A \andalso \Gamma \vdash p : a =_A a'}{\Gamma \vdash \J (t,a,a',p): C[a',a',p]}
 
 Its computation rule is,
 
@@ -273,7 +273,7 @@ The \emph{uniqueness of identity proofs} (UIP) is not a consequence of $\J$ but 
 \infrule[$\top$-intro]{}{\vdash \textsf{tt} : \top}
 \end{multicols}
 
-\infrule[$\top$-elim]{\Gamma ,x : \top \vdash A \andalso \Gamma \vdash t : A[*/x] }{ \vdash t : A}
+\infrule[$\top$-elim]{\Gamma ,x : \top \vdash A \andalso \Gamma \vdash t : A[*] }{ \vdash t : A}
 
 
 \textbf{Empty type}
@@ -596,13 +596,21 @@ In \hott, an \emph{h-set} is a type who has UIP e.g. $\N$ (See \autoref{hott}).
 
 %\red{Proof irrelevance refers to the principle that the choice of proofs of the same proposition is  irrelevant in arbitrary contexts}. 
 
-\begin{equation}
-\forall P : \Prop ~ \forall p,q : P \to p = q
-\end{equation}
+In traditional \itt, there is no universe of propositions $\Prop$ which has proof irrelevance:
 
-Two proofs of the same proposition are propositionally equal. 
-In traditional \itt, since there is no universe of propositions $\Prop$, we usually write $P : \Set$ for a proposition which does not automatically gives us a proof that $\forall p, q : P \to p = q$, hence there is no proof-irrelevance. 
-An example of \itt extended with proof irrelevance is the metatheory of Altenkirch's setoid model (see \autoref{setoidmodel}).
+\infrule[proof-irr]{\Gamma \vdash P : \Prop \andalso \Gamma \vdash p,q : P}{\Gamma \vdash p \equiv q : P}
+
+We usually use $\Set$ instead which does not automatically gives us a proof that $(p, q : P) \to p = q$.
+
+
+An example of \itt extended with $\Prop$ is the metatheory of Altenkirch's setoid model (see \autoref{setoidmodel}).
+
+
+In \hott, $\Prop$ is usually treated as the universe of h-propositions which are types of h-level 1 (see \autoref{hottinterpretation}). One can think h-propositions as the sets which has proof-irrelevance property, hence 
+
+$$\HProp = \Sigma (A : \Set) ~((a, b : A) \to a = b)$$.
+
+ It is different to a universe of propositions because not every set behaves like a proposition must be in $\Prop$, while it is the case for $\HProp$. 
 
 
 If we have proof irrelevance, we can simply define identity type for sets as $x = y : \Prop$ and UIP is provable.
@@ -673,6 +681,45 @@ However, the proof is non-constructive so that it does not provide an algorithm 
 %is worth more studying. It is more close to program construction and from a computer scientist's point of view, it is very natural to accept intuitionistic logic. 
 
 
+\section{An \itt with $\Prop$}\label{ittprop}
+
+Altenkirch has introduced an extension of \itt by a universe of proof-irrelevant propositions and $\eta$-rules for $\Pi$-types and $\Sigma$-types \cite{alti:lics99}. It is used as a metatheory for his setoid model (see \autoref{models}).
+
+The proof-irrelevant universe of proposition $\Prop$ is a subuniverse of  $\Set$ i.e.\ $p : \Prop$ implies $p : \Set$. It only contains sets with at most one inhabitant:
+
+\infrule[proof-irr]{\Gamma \vdash P : \Prop \andalso \Gamma \vdash p,q : P}{\Gamma \vdash p \equiv q : P}
+
+We also introduce $\top, \bot : \Prop$ as basic propositions which are similar to the unit types and empty types (see \ref{typerule}), namely we have $tt : \top$, and $\text{abort}(e) : A$ for any type $A$ and any $e : \bot$.
+
+ Notice that it is not a definition of types, which means
+that we cannot conclude a type is of type \textbf{Prop} if we have a
+proof that all inhabitants of it are definitionally equal.
+
+The propositional universe is closed under $\Pi$-types and $\Sigma$-types:
+
+\infrule[$\Pi$-Prop]{\Gamma \vdash A : \Set \andalso \Gamma, x : A \vdash P : \Prop}
+{\Gamma \vdash \Pi~ (x : A) ~ P : \Prop}
+
+
+\infrule[$\Sigma$-Prop]{\Gamma \vdash P : \Prop \andalso \Gamma,x : P \vdash Q : \Prop}
+{\Gamma \vdash \Sigma ~(x : P) ~ Q : \Prop}
+
+We may also use shorthand notation for $\Pi$-types, for example $(x:A) \to P$ or $\forall (x : A) \to P$, $P \wedge Q$ if $Q$ does not depend on $P$.
+
+
+The metatheory is then proved to be:
+
+\begin{itemize}
+\item Decidable. The definitional equality is decidable, hence type checking is decidable.
+
+\item Consistent. Not all types inhabited and not all well typed definitional equality holds. 
+
+\item Adequate. All terms of type $\N$ are reducible to numerals.
+\end{itemize}
+
+The proof can be found in \cite{alti:lics99}.
+
+
 \section{Homotopy Type Theory}\label{hott}
 
 \hott (HoTT) refers to a new interpretation of intensional \mltt
@@ -680,7 +727,7 @@ into \emph{abstract} homotopy theory.
 It accepts Vladimir Voevodsky's \textbf{univalence axiom} and a new schema to define types called \emph{higher inductive types}, which make many extensional concepts derivable including quotient types.
 
 
-\subsection{Homotopic interpretation}
+\subsection{Homotopic interpretation}\label{hottinterpretation}
 
 Types are usually interpreted as sets in \mltt, but the identity type of types enforces a more sophisticated structure on types compared to the one on sets due to the missing Axiom $\mathsf{K}$ for which asserts that all inhabitants are equal to the only constructor $\mathsf{refl}$. 
 
@@ -754,32 +801,12 @@ One commonly used example is the circle $\Sn^1$ (1-sphere) which can be \emph{in
 It is also essential to provide the elimination rule for the paths as well. Categorically speaking, it means that the functions have to be functorial. For example, to define a function $f :\Sn^1 \rightarrow B$, assume $f(base)=b$, we have to map $\lloop$ to an identity path $l : b = b$, i.e.\ $ap_{f}(\lloop)=l$.
 
 
+In \hott, many extensional concepts are derivable. As we have seen, functional and propositional extensionality and are both implied by univalence, UIP for h-sets, proof irrelevance for h-propositions are also available.
+
+Quotient types, or more precisely quotient sets because of the different interpretation of types, are also available. We will discuss it in detail in \autoref{qthott}.
+
 For further explanation of \hott, a well-written text book elaborated by a group of mathematicians and computer scientists is available online \cite{hott}. 
 
-
-
-\subsection{Quotients in \hott}\label{hott:ext}
-
-As we mentioned before, quotient types (see \autoref{iqs}) are available in \hott. Because of the different interpretations of types, it makes less confusion to call them \emph{quotients} here.
-Assume $A$ is a set (h-set) and $\_\sim\_ : A \to A \to \Prop$
-\footnote{$\Prop$ stands for mere propositions in \hott} is an
-equivalence relation. To build a quotient, we can simply impose level-$1$ morphisms in the structure of given sets according to the equivalence relation.
-Thus, a quotient $\qset{A}$ can be defined as a higher inductive type:
-
-\begin{itemize}
-\item $[\_] : A \rightarrow \qset{A}$
-\item $eqv : (a,b : A) \rightarrow a \sim b \rightarrow  [a] = [b]$
-\item $isSet : (x,y:\qset{A}) \rightarrow (p_1,p_2 : x = y) \rightarrow p_1 = p_2$
-\end{itemize}
-
-It is also a set so we call it \textbf{set-quotient} or \textbf{quotient inductive types} (QITs).
-
-\begin{remark}
-Categorically, there is no difference between a set and a setoid because a skeleton of a setoid
-is just a discrete category which is equivalent to a set.
-\end{remark}
-
-There can be more general quotients in \hott, for example a quotient of a type by a $1$-groupoid (See 9.9 in \cite{hott}). It is interesting to investigate \emph{quotient types} in \hott, but it is beyond this thesis.
 
 \subsection{Towards a computational interpretation of HoTT}
 
@@ -848,15 +875,7 @@ Despite the good properties of \itt, it lacks many extensional concepts like fun
 
 Finally we discussed \hott where many extensional concepts including quotient types (in the sense \autoref{iqs}) are available. 
 We briefly compared different models of \hott where types are interpreted as different forms of \wog. However only constructive models can possibly provide a computational interpretation of univalence.
-A potential solution is the cubical set model proposed by Coquand.
-
-
-
-
-
-
-
-
+A potential solution is the cubical set model.
 
 
 

@@ -1,0 +1,225 @@
+
+\textbf{$\Pi$-types} (dependent function type)
+
+\begin{multicols}{2}
+\infrule[$\Pi$-form]{\Gamma \vdash A \andalso \Gamma , A \vdash B}{\Gamma \vdash \Pi ~(x:A) ~B }
+\columnbreak
+\infrule[$\Pi$-intro]{\Gamma , x : A \vdash b : B}{\Gamma \vdash \lambda (x:A) \to b : \Pi ~(x:A) ~B }
+\end{multicols}
+
+\infrule[$\Pi$-elim]{\Gamma \vdash f : \Pi ~ (x:A)~B \andalso \Gamma \vdash a : A}{\Gamma \vdash f(a): B[a/x]}
+
+In the expressions like $\lambda (x:A) \to b$, $\lambda$ binds the free occurrences of $x$ in $b$. 
+In this thesis, we also adopt a generalised arrow notation to write $\Pi$-types, for example $(a : A) \to B ~ a$, and their terms as $\lambda (x: A) \to b(a)$.
+
+In the expressions like $B[a/x]$ or $b[a/x]$ we do an \emph{standard substitution} in type $B$ or term $b$ that replaces free occurences of $x$ by $a$.
+
+
+\begin{multicols}{2}
+computation rule
+$$(\lambda (x:A) \to b)(a) \equiv b[a/x]$$
+
+\columnbreak
+
+uniqueness rule
+$$f \equiv \lambda x \to f(x) $$
+\end{multicols}
+
+
+
+
+
+
+\subsection{Rules for quotients}\label{iqs}
+
+The quotient types are defined by the following rules as described in \cite{Jacobs94quotientsin,hof:95:sm}. 
+
+
+\infrule[Q-\bf{Form}]
+{ \Gamma \vdash A  \andalso \Gamma ,x : A , y : A \vdash x \sim y : \bf{Prop} }
+{\Gamma \vdash \qset{A}}
+
+Given a type $A$ and with a binary relation $\sim$ on $A$, we can form the quotient $\qset{A}$.
+Notice that $\sim$ is not required to be only equivalence relation. It is because we can prove that $\qset{A}$ is equivalent to $\qsetc{A}$ where $\sim_{C}$ is the least equivalence relation containing $\sim$ (see \autoref{equivalencerelationiso}). However usually we would use an equivalence relation which makes more sense and we assume our quotients is derived from an equivalence relation if not specially pointed out in this thesis.
+
+
+\begin{multicols}{2}
+\infrule[Q-\bf{Intro}]{\Gamma \vdash a : A}{\Gamma \vdash [ a ] : \qset{A}}
+\columnbreak
+\infrule[Q-\bf{Ax}]
+{\Gamma \vdash a , b :  A  \andalso  \Gamma \vdash  p : a \sim b}
+{ \Gamma \vdash \text{Qax} ~p : [a]=_{\qset{A}} [b]}
+\end{multicols}
+
+
+We introduce an ``equivalence class'' for each element of $A$. It is usually denoted as $[ a ]$, or $[ a ]_{\sim}$ for $\sim$ if it is unclear which relation it refers to. 
+ Qax states that the ``equivalence classes'' of two terms which are related by $\sim$ are (propositionally) equal.
+
+
+According to Hofmann's \cite{hof:95:sm} definition, it comes with an eliminator with its computation rule and an induction principle:
+
+
+\infrule[Q-\bf{elim}]
+{\Gamma \vdash  B :  \Set \andalso \Gamma , x : A \vdash f ~ a : B \\
+\Gamma, a: A, b : A, p : a \sim b \vdash  f^{=}~a~b~p : f ~a =  f ~ b \andalso \Gamma \vdash  q : \qset{A}}
+{\Gamma \vdash  \hat{f} ~ q : B}
+
+\infrule[Q-\bf{comp}]{\Gamma \vdash  a : A}{\Gamma \vdash  \text{Qcomp} ~a  : \hat{f} ~ [ a ] \equiv f~ a }
+
+
+\infrule[Q-\bf{ind}]
+{\Gamma,  x : \qset{A} \vdash P ~ x : \Prop \andalso \Gamma, a : A \vdash h ~ a : P ~ [ a ] \andalso \Gamma \vdash  q : \qset{A}}
+{\Gamma \vdash \text{Qind} ~h ~q :P~q}
+
+Given a function $f : A \to B$ which respects $\sim$, we can lift it to be a function on $\qset{A}$ as $\hat{f} : \qset{A} \to B$ such that for any element $a : A$, $\hat{f} ~[ a ]$ computes to the same value as $f ~ a$. It allows us to define functions on quotient types by functions on base types (representatives).
+Notice that \emph{function application} is written like "$f ~x ~ y$'' where $x$ and $y$ are two arguments for function $f$. We also omit $f^=$ since the computation rule already implies that it is proof-irrelevant.
+
+The induction principle states that for any proposition $P : \qset{A} \to \Prop$. it is enough to just consider cases $ P ~ [ a ]$ for all $a : A$. In other words, it $\qset{A}$ only consists of "equivalence classes" i.e.\ $[ a ]$.
+
+
+Alternatively, a \emph{dependent} eliminator (dependent lifting) serves the same purpose:
+
+\infrule[Q-\bf{dep-elim}]
+{\Gamma, x : \qset{A} \vdash B ~ x : \Set \andalso \Gamma , a : A \vdash f ~ a : B ~ [ a ] \\
+\Gamma, a : A, b : A, p : a \sim b \vdash f^= ~a ~b~ p : f ~a
+\stackrel{p}{=}  f ~b \andalso \Gamma \vdash q :
+\qset{A}}
+{\Gamma \vdash \hat{f} ~q : B~ q}
+
+\infrule[Q-\bf{dep-comp}]{\Gamma \vdash a : A}
+{\Gamma \vdash \text{Qdcomp} ~a  : \hat{f} ~ [ a ] \equiv f ~ a }
+
+
+Notice that $\stackrel{p}{=}$ is an abbreviation for propositional equality which requires substitution in the type of the left hand side by $\text{Qax}~p$ so that both sides have the same type.
+
+\begin{proposition}
+The non-dependent eliminator with the induction principle is equivalent to the dependent eliminator.
+\end{proposition}
+\begin{proof}
+1. Assume we have non-dependent eliminator and the induction principle, $B$ is an dependent type on $\qset{A}$, $f$ is a function of type $(a : A) \to B ~ [ a ]$ and it respects $\sim$ under substitution ($f^=$), $q$ is an element of $\qset{A}$.
+
+Set $B'$ as a dependent product as $\Sigma (r : \qset{A}) ~B ~r$,
+
+An independent version of $f : A \to B'$ can be defined as
+
+$$f' a \defeq [ a ] , f ~a$$
+
+Given $p : a \sim b$, we can conclude that $f' a =_{B'} f' b$ is inhabited from Qax and $f^=$.
+
+It allows us to lift the non-dependent function $f'$ as $\hat{f'}$ such that 
+
+\begin{equation}\label{f'comp}
+\hat{f'} [ a ] \equiv [ a ] , f ~a
+\end{equation}
+Applying first projection on both sides, the following propositional equality is inhabited:
+
+ $$\text{proj}_1 (\hat{f'} ~[ a ]) = [ a ]$$
+
+By induction principle, the predicate $P : \qset{A} \to \Prop$ defined as
+
+$$P ~ q \defeq \text{proj}_1 ~(\hat{f'} ~q) = q$$
+
+is inhabited.
+
+Finally, to complete the dependent eliminator, we can construct an element of type $B~q$ by
+
+$$\text{proj}_2 ~(\hat{f'} ~q)$$
+
+which has the correct type because of predicate $P$. The computation rule is derivable from \ref{f'comp}.
+
+2. It is easy to find out that the non-dependent eliminator and induction principle are just special cases of dependent eliminator.
+
+A constructive proof in Agda can be found in \autoref{app:dq}.
+\end{proof}
+
+
+Additionally, a quotient is effective (or exact) if an "equivalence class" only contains terms that are related by $\sim$.
+
+\infrule[Q-\bf{effective}]
+{\Gamma \vdash a :  A \andalso \Gamma \vdash b :  A  \andalso p : [a] = [b] }
+{\text{Qexact}~{p} : a \sim b}
+
+\begin{proposition}
+With propositional extensionality, we can prove that all quotients\footnote{we assume $\sim$ is an equivalence relation} are effective.
+\end{proposition}
+
+\begin{proof}\label{PUEF}
+Suppose we have a set $A$ with an equivalence relation $\sim : A \to A
+\to \Prop$, a quotient set is $\qset{A}$.
+
+Given $a : A$, and a predicate $P_a : A \to \Prop$ defined as 
+$$P_a ~ x \defeq a \sim x$$
+
+To lift it we have to check $P_a$ is compatible with $\sim$.
+
+Suppose $x \sim y$
+
+by symmetry and transitivity
+
+$\Rightarrow a \sim x \iff a \sim y$
+
+$\equiv P_a~x \iff P_a~y$
+
+by propositional extensionality
+
+$\Rightarrow P_a~x = P_a~y$
+
+
+To prove the quotient $\qset{A}$ is effective, suppose $[ a ] = [ b ]$, we can simply prove $ \hat{P} [ a ] = \hat{P} [ b ]$ and then
+
+$$a \sim a \equiv \hat{P} [ a ] = \hat{P} [ b ] \equiv a \sim b$$
+
+Finally with eliminator J and $\text{refl} : a \sim a$ we can easily prove
+
+$$a \sim b$$.
+
+\end{proof}
+
+%Alternatively, we can prove it as follows:
+
+%\begin{proof}
+
+%Firstly we prove the equivalence relation is well-defined on the
+%quotient types, namely it respects the equivalence relation:
+
+%Suppose we have $a \sim b$ and $c \sim d$, we can deduce $a \sim c \iff
+%b \sim d$. Then applying the propositional univalence axiom, we know
+%that $a \sim c = b \sim d$, hence the equivalence relation is
+%well-defined.
+
+%Because it is well-defined, we can lift it such that
+
+%$[ a ] ~\hat{\sim}~ [ b ] \equiv a \sim b$
+
+
+%From reflexivity of the equivalence relation, $\forall x : A, x \sim x$, 
+%we know that $\forall x : A, [x]~\hat{\sim}~[x]$.
+
+%Assume $[a]=[b]$, using J-eliminator in $[a]~\hat{\sim}~[a]$
+%(reflexivity), $[a]~\hat{\sim}~[b]$ which is definitionally equal to $a \sim b$, Hence the quotient is
+%effective.
+%\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+An equivalence class of $a$ can be defined as a tuple
+
+$$[ a ] \defeq \Sigma (x : A) , x \sim a $$
+
+However, given $a ~ b$, $[ a ]$ is not propositionally equal to $[ b ]$. The reason is that $x \sim a$ is not propositional equal to $x \sim b$ even though they are logically equivalent due to the lack of propositional extensionality.
+
+

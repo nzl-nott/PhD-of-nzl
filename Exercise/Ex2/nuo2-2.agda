@@ -31,3 +31,4 @@ J : (A : Set)(P : (a b : A) → Id A a b → Set)
     → ((a : A) → P a a (refl a))
     → (a b : A)(p : Id A a b) → P a b p
 J A P m a b p = (subst A a b p (λ x → (q : Id A a x) → P a x q) (J-l A P m a)) p
+

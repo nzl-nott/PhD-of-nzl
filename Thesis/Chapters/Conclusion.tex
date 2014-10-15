@@ -1,9 +1,9 @@
 \chapter{Conclusions and future work}
 
 
-QUOTIENT IN HOTT
+mention QUOTIENT IN HOTT
 
-
+\section{Conclusions}
 
 We have presented the evolution of theories of types especially \mltt (Type Theory) and discussed different variants of it. \ett does have more extensional concepts like functional extensionality, uniqueness of identity proof and quotient types. However the identification of propositional equality and definitional equality makes the type checking undecidable. On the other hand, the usual formulation of \itt lacks extensional concepts but has decidable type checking which makes it preferable to be implemented as programming languages. Therefore extending \itt with extensionality is a crucial task in the development of \mltt.
 
@@ -16,12 +16,13 @@ The solutions to add extensional concepts into \itt without losing good computat
 We also have investigated the new interpretation of Type Theory -- \hott. In \hott, the higher inductive types subsumes quotient types which means that a constructive model of \hott is also a solution to quotient types in \itt.
 Generalising from Hofmann and Streicher's groupoid model, types are interpreted as \wog. A syntactic construction of \wog has been built in Agda. 
 
+\section{Future work}
 
-A potential future work would be to complete the implementation of numbers in Agda. There are also other definable quotients implementable in our algebraic quotient structures. It can enrich the library of Agda for more potential mathematical proofs.
+A potential future project would be to complete the implementation of numbers in Agda. There are also other definable quotients implementable in our algebraic quotient structures. It can enrich the library of Agda for more potential mathematical proofs.
 
 It is also worthwhile to extend the setoid model with examples of quotients like the set of real numbers and finite multisets which are not definable via normalisation. The investigation of definability in general is also an open question. 
 
-There is also a lot of work to do within the syntactic framework of \wog. For instance, we would like to investigate the relation between the \tig{} and a type theory with equality types and $J$ eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the $J$ eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
+There is also a lot of work to do within the syntactic framework of \wog. For instance, we would like to investigate the relation between the \tig and a type theory with equality types and $J$ eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the $J$ eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$ eliminator are equivalent. 
 
 

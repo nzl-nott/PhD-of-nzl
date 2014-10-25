@@ -22,7 +22,7 @@ import Data.Integer.Setoid.Properties as ℤ₀
 open import Relation.Binary.Core
 open import Symbols
 open import Data.Nat.Properties+ as ℕ using (_+suc_≢0_)
-
+open import Relation.Binary.PropositionalEquality hiding ([_])
 
 infixl 7 _*_
 infixl 6 _+_ _-_
@@ -66,19 +66,9 @@ b) denormalise the normal integer to one representative setoid integer e.g. + 1 
 ⌜ + n ⌝    = n , 0
 ⌜ -suc n ⌝ = 0 , ℕ.suc n
 
-\end{code}
-
-
-c) verification
-
-\begin{code}
-
-compl : ∀ n → ⌜ [ n ] ⌝ ∼ n
-compl (x , 0)           = refl
-compl (0 , nsuc y)      = refl
-compl (nsuc x , nsuc y) = compl (x , y) >∼<  ⟨ ℕ.sm+n≡m+sn x ⟩
 
 \end{code}
+
 
 These two functions are quite important in the mechanism between ℤ and ℤ₀. They map one to the other so that we could define all the functions of ℤ from the ones of the ℤ₀. The situation looks similar as before (ℤ₀ and ℕ), but requires some auxiliary functions to eliminate these two functions.
 

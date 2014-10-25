@@ -18,7 +18,7 @@ open import Data.Product
 
 \section{Metatheory}
 
-\HProp used as universe of propositions
+\HProp
 
 \begin{code}
 record HProp : Set₁ where

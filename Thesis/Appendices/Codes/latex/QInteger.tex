@@ -1,0 +1,327 @@
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{QInteger} \AgdaKeyword{where}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Function}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat.Properties}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Nat.Properties+}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality} \AgdaSymbol{as} \AgdaModule{PE} \AgdaKeyword{hiding} \AgdaSymbol{(}[\_]\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary} \AgdaKeyword{hiding} \AgdaSymbol{(}Setoid\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Symbols}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Setoids}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Quotient}\<%
+\\
+\>\<\end{code}
+}
+
+\textbf{Setoid Integer}
+
+Base set
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{infix} \AgdaNumber{4} \_,\_\<%
+\\
+%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℤ₀} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{\_,\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ₀}\<%
+\\
+\>\<\end{code}
+
+Equivalence relation
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{infixl} \AgdaNumber{2} \_∼\_\<%
+\\
+%
+\\
+\>\AgdaFunction{\_∼\_} \AgdaSymbol{:} \AgdaDatatype{ℤ₀} \AgdaSymbol{→} \AgdaDatatype{ℤ₀} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaSymbol{(}\AgdaBound{x+} \AgdaInductiveConstructor{,} \AgdaBound{x-}\AgdaSymbol{)} \AgdaFunction{∼} \AgdaSymbol{(}\AgdaBound{y+} \AgdaInductiveConstructor{,} \AgdaBound{y-}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{x+} \AgdaPrimitive{+} \AgdaBound{y-}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaSymbol{(}\AgdaBound{y+} \AgdaPrimitive{+} \AgdaBound{x-}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+Equivalence properties
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{∼refl} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{∼} \AgdaBound{a}\<%
+\\
+\>\AgdaFunction{∼refl} \AgdaSymbol{\{}\AgdaBound{x+} \AgdaInductiveConstructor{,} \AgdaBound{x-}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{∼sym} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{∼} \AgdaBound{b} \AgdaSymbol{→} \AgdaBound{b} \AgdaFunction{∼} \AgdaBound{a}\<%
+\\
+\>\AgdaFunction{∼sym} \AgdaSymbol{\{}\AgdaBound{x+} \AgdaInductiveConstructor{,} \AgdaBound{x-}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y+} \AgdaInductiveConstructor{,} \AgdaBound{y-}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaFunction{sym}\<%
+\\
+%
+\\
+\>\AgdaFunction{∼trans} \AgdaSymbol{:} \<[10]%
+\>[10]\AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b} \AgdaBound{c}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{∼} \AgdaBound{b} \AgdaSymbol{→} \AgdaBound{b} \AgdaFunction{∼} \AgdaBound{c} \AgdaSymbol{→} \AgdaBound{a} \AgdaFunction{∼} \AgdaBound{c}\<%
+\\
+\>\AgdaFunction{∼trans} \AgdaSymbol{\{}\AgdaBound{x+} \AgdaInductiveConstructor{,} \AgdaBound{x-}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{y+} \AgdaInductiveConstructor{,} \AgdaBound{y-}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{z+} \AgdaInductiveConstructor{,} \AgdaBound{z-}\AgdaSymbol{\}} \AgdaBound{x=y} \AgdaBound{y=z} \AgdaSymbol{=} \<[47]%
+\>[47]\<%
+\\
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaFunction{cancel-+-left} \AgdaSymbol{(}\AgdaBound{y+} \AgdaPrimitive{+} \AgdaBound{y-}\AgdaSymbol{)} \<[31]%
+\>[31]\<%
+\\
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{(}\AgdaFunction{swap24} \AgdaBound{y+} \AgdaBound{y-} \AgdaBound{x+} \AgdaBound{z-} \<[27]%
+\>[27]\<%
+\\
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaFunction{>≡<} \AgdaSymbol{((}\AgdaBound{y=z} \AgdaFunction{+=} \AgdaBound{x=y}\AgdaSymbol{)} \AgdaFunction{>≡<} \AgdaFunction{swap13} \AgdaBound{z+} \AgdaBound{y-} \AgdaBound{y+} \AgdaBound{x-}\AgdaSymbol{))}\<%
+\\
+%
+\\
+\>\AgdaFunction{\_∼\_isEquivalence} \AgdaSymbol{:} \AgdaRecord{IsEquivalence} \AgdaFunction{\_∼\_}\<%
+\\
+\>\AgdaFunction{\_∼\_isEquivalence} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{} \AgdaField{refl} \<[10]%
+\>[10]\AgdaSymbol{=} \AgdaFunction{∼refl}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{sym} \<[10]%
+\>[10]\AgdaSymbol{=} \AgdaFunction{∼sym}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaFunction{∼trans}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+\>\<\end{code}
+
+(ℤ₀, ∼) is a setoid
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{ℤ-Setoid} \AgdaSymbol{:} \AgdaRecord{Setoid}\<%
+\\
+\>\AgdaFunction{ℤ-Setoid} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{} \AgdaField{Carrier} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaDatatype{ℤ₀}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{\_\textasciitilde\_} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaFunction{\_∼\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{isEquivalence} \AgdaSymbol{=} \AgdaFunction{\_∼\_isEquivalence}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+\>\<\end{code}
+
+
+Definition of ℤ
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℤ} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{+\_} \<[8]%
+\>[8]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{n} \AgdaSymbol{:} \AgdaDatatype{ℕ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{-suc\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{n} \AgdaSymbol{:} \AgdaDatatype{ℕ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+Normalisation function
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{[\_]} \<[22]%
+\>[22]\AgdaSymbol{:} \AgdaDatatype{ℤ₀} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{0} \AgdaFunction{]} \<[22]%
+\>[22]\AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaBound{m}\<%
+\\
+\>\AgdaFunction{[} \AgdaInductiveConstructor{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \<[20]%
+\>[20]\AgdaSymbol{=} \AgdaInductiveConstructor{-suc} \AgdaBound{n}\<%
+\\
+\>\AgdaFunction{[} \AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaFunction{]} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaBound{n} \AgdaFunction{]}\<%
+\\
+\>\<\end{code}
+
+Embedding function
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{⌜\_⌝} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaDatatype{ℤ} \AgdaSymbol{→} \AgdaDatatype{ℤ₀}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaInductiveConstructor{+} \AgdaBound{n} \AgdaFunction{⌝} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaBound{n} \AgdaInductiveConstructor{,} \AgdaNumber{0}\<%
+\\
+\>\AgdaFunction{⌜} \AgdaInductiveConstructor{-suc} \AgdaBound{n} \AgdaFunction{⌝} \AgdaSymbol{=} \AgdaNumber{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{ℕ.suc} \AgdaBound{n}\<%
+\\
+\>\<\end{code}
+
+Stability
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{stable} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{n}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{⌜} \AgdaBound{n} \AgdaFunction{⌝} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaBound{n}\<%
+\\
+\>\AgdaFunction{stable} \AgdaSymbol{\{}\AgdaInductiveConstructor{+} \AgdaBound{n}\AgdaSymbol{\}} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\AgdaFunction{stable} \AgdaSymbol{\{} \AgdaInductiveConstructor{-suc} \AgdaBound{n} \AgdaSymbol{\}} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\<\end{code}
+
+Completeness
+
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaFunction{compl} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{n} \AgdaSymbol{→} \AgdaFunction{⌜} \AgdaFunction{[} \AgdaBound{n} \AgdaFunction{]} \AgdaFunction{⌝} \AgdaFunction{∼} \AgdaBound{n}\<%
+\\
+\>\AgdaFunction{compl} \AgdaSymbol{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{0}\AgdaSymbol{)} \<[22]%
+\>[22]\AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\AgdaFunction{compl} \AgdaSymbol{(}\AgdaInductiveConstructor{0} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{y}\AgdaSymbol{)} \<[22]%
+\>[22]\AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\AgdaFunction{compl} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{suc} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaFunction{∼trans} \AgdaSymbol{(}\AgdaFunction{compl} \AgdaSymbol{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{y}\AgdaSymbol{))} \<[47]%
+\>[47]\<%
+\\
+\>[2]\AgdaIndent{26}{}\<[26]%
+\>[26]\AgdaSymbol{(}\AgdaFunction{sym} \AgdaSymbol{(}\AgdaFunction{sm+n≡m+sn} \AgdaBound{x}\AgdaSymbol{))}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{sound'} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{i} \AgdaBound{j}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{⌜} \AgdaBound{i} \AgdaFunction{⌝} \AgdaFunction{∼} \AgdaFunction{⌜} \AgdaBound{j} \AgdaFunction{⌝} \<[34]%
+\>[34]\AgdaSymbol{→} \AgdaBound{i} \AgdaDatatype{≡} \AgdaBound{j}\<%
+\\
+\>\AgdaFunction{sound'} \<[8]%
+\>[8]\AgdaSymbol{\{}\AgdaInductiveConstructor{+} \AgdaBound{i}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaInductiveConstructor{+} \AgdaBound{j}\AgdaSymbol{\}} \AgdaBound{eqt} \<[29]%
+\>[29]\AgdaSymbol{=} \AgdaInductiveConstructor{+\_} \AgdaFunction{⋆} \AgdaSymbol{(}\AgdaFunction{+r-cancel} \AgdaNumber{0} \AgdaBound{eqt}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{sound'} \<[8]%
+\>[8]\AgdaSymbol{\{}\AgdaInductiveConstructor{+} \AgdaBound{i}\AgdaSymbol{\}} \AgdaSymbol{\{} \AgdaInductiveConstructor{-suc} \AgdaBound{j} \AgdaSymbol{\}} \AgdaBound{eqt} \AgdaKeyword{with} \AgdaBound{i} \AgdaFunction{+suc} \AgdaBound{j} \AgdaFunction{≢0} \AgdaBound{eqt}\<%
+\\
+\>\AgdaSymbol{...} \AgdaSymbol{|} \AgdaSymbol{()}\<%
+\\
+\>\AgdaFunction{sound'} \<[8]%
+\>[8]\AgdaSymbol{\{} \AgdaInductiveConstructor{-suc} \AgdaBound{i} \AgdaSymbol{\}} \AgdaSymbol{\{} \AgdaInductiveConstructor{+} \AgdaBound{j} \AgdaSymbol{\}} \AgdaBound{eqt} \AgdaKeyword{with} \AgdaBound{j} \AgdaFunction{+suc} \AgdaBound{i} \AgdaFunction{≢0} \AgdaFunction{⟨} \AgdaBound{eqt} \AgdaFunction{⟩}\<%
+\\
+\>\AgdaSymbol{...} \AgdaSymbol{|} \AgdaSymbol{()}\<%
+\\
+\>\AgdaFunction{sound'} \<[8]%
+\>[8]\AgdaSymbol{\{} \AgdaInductiveConstructor{-suc} \AgdaBound{i} \AgdaSymbol{\}} \AgdaSymbol{\{} \AgdaInductiveConstructor{-suc} \AgdaBound{j} \AgdaSymbol{\}} \AgdaBound{eqt} \AgdaSymbol{=} \AgdaInductiveConstructor{-suc\_} \AgdaFunction{⋆} \AgdaFunction{pred} \AgdaFunction{⋆} \AgdaFunction{⟨} \AgdaBound{eqt} \AgdaFunction{⟩}\<%
+\\
+\>\<\end{code}
+
+Soundness
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{sound} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{x} \AgdaFunction{∼} \AgdaBound{y} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]} \AgdaDatatype{≡} \AgdaFunction{[} \AgdaBound{y} \AgdaFunction{]}\<%
+\\
+\>\AgdaFunction{sound} \AgdaSymbol{\{} \AgdaBound{x} \AgdaSymbol{\}} \AgdaSymbol{\{} \AgdaBound{y} \AgdaSymbol{\}} \AgdaBound{x∼y} \AgdaSymbol{=} \AgdaFunction{sound'} \AgdaSymbol{(}\AgdaFunction{∼trans} \AgdaSymbol{(}\AgdaFunction{compl} \AgdaSymbol{\_)} \<[49]%
+\>[49]\<%
+\\
+\>[18]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{(}\AgdaFunction{∼trans} \AgdaSymbol{(}\AgdaBound{x∼y}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{∼sym} \AgdaSymbol{(}\AgdaFunction{compl} \AgdaSymbol{\_))))} \<[39]%
+\>[39]\<%
+\\
+\>\<\end{code}
+
+The quotient definitions for ℤ
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{ℤ-PreQu} \AgdaSymbol{:} \AgdaRecord{pre-Quotient} \AgdaFunction{ℤ-Setoid}\<%
+\\
+\>\AgdaFunction{ℤ-PreQu} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{} \AgdaField{Q} \<[12]%
+\>[12]\AgdaSymbol{=} \AgdaDatatype{ℤ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{[\_]} \<[12]%
+\>[12]\AgdaSymbol{=} \<[15]%
+\>[15]\AgdaFunction{[\_]}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{[\_]⁼} \<[11]%
+\>[11]\AgdaSymbol{=} \AgdaFunction{sound}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{ℤ-QuD} \AgdaSymbol{:} \AgdaRecord{def-Quotient} \AgdaFunction{ℤ-PreQu}\<%
+\\
+\>\AgdaFunction{ℤ-QuD} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\{} \AgdaField{emb} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaFunction{⌜\_⌝}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{complete} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{z} \AgdaSymbol{→} \AgdaFunction{compl} \AgdaSymbol{\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{;} \AgdaField{stable} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{z} \AgdaSymbol{→} \AgdaFunction{stable}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{ℤ-Qu} \AgdaSymbol{=} \AgdaFunction{def-Quotient→Quotient} \AgdaFunction{ℤ-QuD}\<%
+\\
+\>\<\end{code}

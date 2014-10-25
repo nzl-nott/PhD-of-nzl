@@ -1,24 +1,24 @@
 %\chapter{Homotopy Type Theory and higher inductive types}\label{HITs}
 
 
-\chapter{Models of Type Theory}\label{models}
+\chapter{The setoid Model}\label{models}
 
 
 To introduce extensional concepts in \itt, one can simply postulate them as axioms but the good computational properties of Type Theory will be lost. Therefore it is crucial that these axioms have 
-a computational interpretation. One solution is to construct a model of theses axioms in \itt or in a constructive setting such that extensional concepts like functional extensionality, quotient types, univalence are automatically derivable. Types as usually interpreted as structured objects rather than sets, and the model is named after the structured objects, for example, setoid, groupoid, simplicial sets. 
+a computational interpretation. One solution is to construct a model of theses axioms in \itt or in a constructive setting such that extensional concepts like functional extensionality, quotient types, univalence are automatically derivable. Types are usually interpreted as structured objects rather than sets, and the model is named after the structured objects, for example, setoid, groupoid, simplicial sets. 
 
 % We can postulate these axioms but then we can not keep the good computational properties. Therefore it is crucial that axioms have a computational interpretation. One solution is 
 
 
-In this chapter, we discuss several models of extensional concepts, and mainly introduce Altenkirch's setoid model. We build a category with families of setoids to accommodate the types theory described in
-\cite{alti:lics99}  so that it is possible to define quotient types following Martin Hofmann's Paper \cite{hof:95:sm}. We also briefly introduce several models of \hott where quotient types are also available.
+In this chapter, we mainly discuss Altenkirch's setoid model of extensional concepts where quotient types are available. We build a category with families of setoids to accommodate the types theory described in
+\cite{alti:lics99}  and briefly discuss how can we build quotient types inside this model.
 
-\section{The setoid model}\label{setoidmodel}
+\section{Introduction}\label{setoidmodel}
 
 
 One of the intensional models of extensional concepts inside \itt is setoid model where types are interpreted as setoids. Martin Hofmann has studied this approach in \cite{hof:phd}, but a naive version of setoid model does not satisfy all definitional equalities. The version in \cite{hof:95:sm} which is a model for quotient types does not allow large eliminations (defining a dependent type by recursion).
 
-Altenkirch then proposes \cite{alti:lics99} a different approach in which the setoid model serves as the metatheory.
+Altenkirch proposes \cite{alti:lics99} a different approach in which the setoid model serves as the metatheory.
 He uses an extension of \itt by a universe of propositions $\Prop$ as metatheory, and the $\eta$-rules for $\Pi$-types and $\Sigma$-types hold. 
 
 %In \cite{DBLP:conf/csl/Hofmann94}, Martin Hofmann first proposes a setoid model where types are interpreted as setoids, and the function are equivalence preserving. Cateogically, a setoid is a special groupoid where every isomorphism is unique, and then functions between two setoids are just functors.
@@ -51,13 +51,13 @@ The metatheory is proved {\cite{alti:lics99}} to be:
 \begin{itemize}
 \item \emph{Decidable}. The definitional equality is decidable, hence type checking is decidable.
 
-\item \emph{Consistent}. Not all types inhabited and not all well typed definitional equality holds. 
+\item \emph{Consistent}. Not all types are inhabited and not all well typed definitional equalities holds. 
 
 \item \emph{Adequate}. All terms of type $\N$ are reducible to numerals.
 \end{itemize}
 
 
-And then Altenkirch construct an intensional model within this metatheory which is decidable and adequate, functional extensionality is inhabited and it permits large elimination. 
+And then Altenkirch constructs an intensional model within this metatheory which is decidable and adequate, functional extensionality is inhabited and it permits large elimination. 
 
 
 % Within this type theory, introduction of quotient types is straightforward. 
@@ -66,7 +66,7 @@ And then Altenkirch construct an intensional model within this metatheory which 
 
 
 \begin{remark}[The setoid model is not LCCC]
-This model is different to a setoid model as an E-category, for instance
+This model is different from a setoid model as an E-category, for instance
 the one introduced by Hofmann \cite{hofmann1995interpretation}. An E-category is a category equipped with
 an equivalence relation for homsets. To distinguish them, we call this
 category \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
@@ -89,7 +89,7 @@ We construct the setoid model in Agda together with some basic types including q
 
 \subsection{Metatheory}
 
-We first postulate axioms for metatheory. We define \textbf{HProp} which serves as the proof-irrelevant universe of propositions although it is not exactly the same as the \textbf{Prop} universe which is judgemental. A set can only be claimed in $\textbf{Prop}$. However any set behaves like a proposition can be encoded as \textbf{HProp} but not in \textbf{Prop}. Another difference is that the uniqueness of identity proof is propositional which complicates the proving.
+We first postulate axioms for metatheory. We define the h-propositions used in \hott replacing the axiomatic proof-irrelevant universe of propositions. It is not exactly the same as the \textbf{Prop} because a set can only be claimed in \textbf{Prop} but not proved to be a \textbf{Prop}. However any set which behaves like a proposition can be encoded as \textbf{HProp} but not in \textbf{Prop}. Another difference is that the uniqueness of identity proof is propositional which complicates the proofs.
 
 \begin{code}\>\<%
 \\
@@ -110,7 +110,7 @@ We first postulate axioms for metatheory. We define \textbf{HProp} which serves 
 \>\AgdaKeyword{open} \AgdaModule{HProp} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}prf \AgdaSymbol{to} <\_>\AgdaSymbol{)}\<%
 \end{code}
 
-We also define basic propositions $\top$ and $\bot$ and the universal and existential quantifier, namely it is closed under $\Pi$-types and $\Sigma$-types. Notice that, the $\Pi$-closure requires functional extensionality which can be postulated since $\Pi$-closure is itself an axiom in this model.
+We also define basic propositions $\top$ and $\bot$ and the universal and existential quantifier, namely it is closed under $\Pi$-types and $\Sigma$-types. Notice that, the $\Pi$-closure requires functional extensionality. Therefore, we lose canonicity in our construction.
 
 \begin{code}\>\<
 %
@@ -120,9 +120,9 @@ We also define basic propositions $\top$ and $\bot$ and the universal and existe
 \>\AgdaFunction{∀'} \AgdaBound{A} \AgdaBound{P} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaSymbol{((}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{P} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)))}\<%
 \>\<\end{code}
 
-Notice that we use a syntactic abbreviation $<\_>$ for projection of proof in $\textbf{HProp}$. Moever to avoid conficts with existing code, we sometimes add a $'$ symbol in names. 
+Notice that we use a syntactic abbreviation $<\_>$ for projection of proof in $\textbf{HProp}$. Moreover to avoid conflicts with existing code, we sometimes add a $'$ symbol in names. 
 
-The $\eta$-rules for both $\Pi$-types and $\Sigma$-types automatically holds in Agda. Finally, the metatheory which is extended is proved to be decidable, consistent and adequate as mentioned earlier.
+The $\eta$-rules for both $\Pi$-types and $\Sigma$-types automatically holds in Agda. This metatheory should be decidable, consistent but not adequate because the introduction of functional extensionality.
 
 \subsection{Category of setoids}
 
@@ -160,7 +160,7 @@ Notice that since \textbf{HProp} is not considered as a sort of types, we simpli
 
 
 
-Functors between setoids can be given as
+Functions between setoids can be given as
 
 \begin{code}
 \\
@@ -193,7 +193,7 @@ With identity morphisms, composition operator and all other ingredients we can b
 
 \subsection{Categories with families}
 
-Usually a a categories with families is defined as follows:
+Usually categories with families is defined as follows:
 
 \begin{definition}\label{cwf:def}
 \textbf{Categories with families}.
@@ -203,7 +203,7 @@ Usually a a categories with families is defined as follows:
 
 \item A functor $F : \mathsf{C}^{op} \to Fam$ where $Fam$ is a category of families whose objects are dependent products and morphisms are naturally pairs of functions. The types and terms are projections of this functor: given an object $\Gamma : \mathsf{C}$, we usually write $F ~ \Gamma \defeq \Sigma A : \text{Ty} ~\Gamma, \text{Tm} ~\Gamma ~ A)$, and the substitution of types and terms are just contained in the morphism part of this functor. 
 
-\item A comprehension of $\Gamma$ and $A : \text{Ty}~ \Gamma$ written as $\Gamma, A$ is a construction of a new object in $\mathsf{C}$ such that it expresses the extension of contexts.
+\item A comprehension of $\Gamma$ and $A : \text{Ty}~ \Gamma$ written as $\Gamma, A$ is a construction of a new object in $\mathsf{C}$ which expresses the extension of contexts.
 \end{itemize}
 
 \end{definition}
@@ -219,7 +219,7 @@ The category of contexts is just $\textbf{Std}$,
 \end{code}
 
 The second ingredient is the functors, namely types and terms.
-Given a context $\Gamma$, types of the context can be defined as functors from $\Gamma \to \textbf{Std}$ since a context is a setoid which are special cases of groupoids. However setoids are not implemented as categories, we manually build \emph{functors} which respects the internal equivalence of setoids:
+Given a context $\Gamma$, types of the context can be defined as functors from $\Gamma \to \textbf{Std}$ since a context is a setoid which are special cases of groupoids. However setoids are not implemented as categories, we manually build \emph{functors} which respect the internal equivalence of setoids:
 
 \begin{code}%
 \\
@@ -290,7 +290,7 @@ Given a context $\Gamma$, types of the context can be defined as functors from $
 
 Notice that there is a problem arising from the fact that $HProp$ is not definitionally proof-irrelevant which means that the substitution here is not automatically proof-irrelevant. Therefore we have to define a series of proof-irrelevance lemmas to help construction and reasoning which are omitted here.
 
-Terms follows naturally as families of elements in the underlying set of types indexed by $\gamma : \Gamma$ which respects the equality as well:
+Terms follow naturally as families of elements in the underlying set of types indexed by $\gamma : \Gamma$ which respects the equality as well:
 
 
 \begin{code}
@@ -369,10 +369,10 @@ The substitution of types can be defined simply by composing the underlying obje
 \\
 \end{code}
 
-The substitution of terms are similarly natural so that we omit it here.
+The substitution of terms is similar so that we omit it here.
 
 
-To complete the categories with families, the terminal object is just empty context
+To complete the categories with families, the terminal object is just the empty context
 \begin{code}
 %
 \\
@@ -667,14 +667,14 @@ The following code is an example of the complicated and nearly unreadable encodi
 \\
 \end{code}
 
-The type construction is not complete because it also includes lambda abstraction and function application which correspond to introduction and elimination rules respectively. The verification of $\beta$ and $\eta$ laws are also essential, but we can not implement it in Agda due to technical issue. Hopeful the problem can be fixed in later patches.
+The type construction is not complete because it also includes lambda abstraction and function application which correspond to introduction and elimination rules respectively. The verification of $\beta$ and $\eta$ laws are also essential, but we have not implemented them in Agda due to technical difficulties. The problem is that type-checking of them results in stack overflow. Hopefully the problems will be fixed by later patches.
 
-We also construct some basic types including natural numbers simply typed universe, equality types. $\Sigma$-types and quotient types are not discussed in the Altenkirch's original paper, which we cover here. $\Sigma$-types are intuitively simple, but the construction of it in setoid models still requires a lot of unification proofs due to the type dependency. The more important one is the construction of quotient types.
+We also construct some basic types including natural numbers, a simply typed universe and equality types. $\Sigma$-types and quotient types are not discussed in Altenkirch's original construction, which is covered here. $\Sigma$-types are intuitively simple, but the construction of it in setoid models still requires a lot of unification proofs due to the type dependency. The more important one is the construction of quotient types.
 
 
 \subsection{Quotient types}
 
-To formulate quotient types, we have to provide the encoding of equivalence in setoid model. First of all, the universe of propositions can be encoded as a setoid whose objects are meta-theoretical $\HProp$ with logical equivalence:
+To formulate quotient types, we have to provide the encoding of equivalence in the setoid model. First of all, the universe of propositions can be encoded as a setoid whose objects are meta-theoretical $\HProp$ with logical equivalence:
 
 \begin{code}
 %
@@ -745,7 +745,7 @@ and then a propositional binary relation can be constructed as:
 \\
 \end{code}
 
-However there are some problems arising here. First of all, $\HProp$ is not a $\Set$ which means we can only encode the object-level universe of proposition if we accept $\Set : \Set$. As long as we have a term of $R : \AgdaFunction{PropRel} ~\AgdaBound{A}$, the attempt of extracting properties of $R$ takes too long to type check for Agda due to the complex of construction. Moreover, when we extract an object or a property, it is usually not as simple as we want. For example the term of $\Pi$-types always equipped with equivalence preservation proofs, therefore a binary relation carries a proof for each abstraction:
+However there are some problems arising here. First of all, $\HProp$ is not a $\Set$ which means we can only encode the object-level universe of proposition if we accept $\Set : \Set$.
 
 \begin{code}
 %
@@ -771,7 +771,7 @@ Thus we use the underlying set of a propostion which is more convenient to use.
 \\
 \>\<\end{code}
 
-Similarly, when we try to encode properties for equivalences such as symmetry and transitive, the terms are always too cumbersome to use. Considering we use our code here for explanation rather than practical use, we only assume the necessary objects and properties in the simplest form instead of assuming a single equivalence relation constructed as a type in the setoid model. Still one can extract and adapt properties and apply them to obtain the same construction.
+Similarly, when we try to encode properties for equivalences such as symmetry and transitivity, the terms are always too cumbersome to use. Considering we use our code here for explanation rather than practical use, we only assume the necessary objects and properties in the simplest form instead of assuming a single equivalence relation constructed as a type in the setoid model. Still one can extract and adapt properties and apply them to obtain the same construction.
 
 In a context $\Gamma$, there is a type $A : Ty ~\Gamma$, and a relation $R : A \to A \to \Prop$, the corresponding quotient type is a type $Q$ who shares the same underlying set with $A$ and the setoid equivalence is replaced by $R$. The underlying substitution is the same since it also preserves the relation $R$.
 
@@ -896,43 +896,19 @@ In a context $\Gamma$, there is a type $A : Ty ~\Gamma$, and a relation $R : A \
 \\
 \end{code}
 
-Q-\textbf{Ax} is can be simply proved because the underlying equivalence is definitionally equal to the equvalence relation $R$.
+Q-\textbf{Ax} can be simply proved because the underlying equivalence is definitionally equal to the equvalence relation $R$.
 
 The elimination rule and induction principle for quotient types are also straightforward. Given a function $f : A \to B$ (precisely functors) which respects $R$, we can lift it as a function  $\hat{f} : Q \to B$ whose underlying function is the same as $f$, and it is also functorial because $f$ also respects $R$ which is the internal equivalence relation of $Q$.
 The implementation is quite involved although the idea is clear and simple.
 
-
-\section{Other models}
-
-
-\subsection{Groupoid model}
-
-There are many other relevant models proposed to explain the essence of identity types in Type Theory and to extend Type Theory with different extensional concepts. 
-
-Martin Hofmann and Thomas Streicher's \cite{MR1686862} groupoid model interprets types as groupoids where the identity types endow every type with a groupoid structure. Instead of basic equivalence properties in setoid model, there are five more groupoid laws where $p$ and $q$ are level-$1$ morphisms:
-
-\begin{equation*}
-\begin{array}[b]{l}
-\lambda : id \circ p = p \\
-\rho : p \circ id = p \\
-\alpha : p \circ (q \circ r) = (p \circ q) \circ r \\
-\kappa : p^{-1}\circ p = id \\
-\kappa' : p \circ p^{-1} = id
- \end{array}
-\end{equation*}
-
-In a groupoid model UIP does not hold in general because there can be different inhabitants of the same identity types. In fact, propositional equality is a generalisation of isomorphism. For example to prove that $\bool = \bool$, there are two intensionally different inhabitants: one is given by identity function on $\bool$, the other is given by negation on $\bool$.
-
-
 \section{Summary}
 
-In this chapter we have introduced several models of Type Theory where extensional concepts are derivable. We mainly present an implementation of Altenkirch's setoid model where types are interpreted as setoids. It is then very straightforward to define quotient types in this model by simply replacing the underlying setoid equivalence with a given equivalence relation. 
-We can simplify the setoid model by adopting McBride's heterogeneous
-approach to equality introdced in \cite{alti:ott-conf} where Altenkirch, McBride and Swierstra
- proposed \emph{Observational Type Theory}. They identifies values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. However it only make sense when we can prove the types are the same, in other words, only if two types are definitionally equal, it can be inhabited.
-The heterogeneous equality usually helps us avoid the heavy use of $subst$ which complicates formalisation and reasoning. 
-However it also means that we accept UIP and $K$ in general, which is not the case in groupoid model.
+In this chapter we have introduced the setoid model of Type Theory where types are interpreted as setoids. It is then very straightforward to define quotient types in this model by simply replacing the internal equivalence with a given equivalence relation. 
 
+We can simplify the setoid model by adopting McBride's heterogeneous
+approach to equality in \cite{alti:ott-conf} where Altenkirch, McBride and Swierstra
+ proposed \emph{Observational Type Theory}. They identify values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. However it only makes sense when we can prove the types are the same.
+The heterogeneous equality usually helps us avoid the heavy use of $subst$ which complicates formalisation and reasoning. 
 
 
 

@@ -1,12 +1,12 @@
 --------------------------------------------------
 The basic properties of integers
-
+\AgdaHide{
 \begin{code}
 
 module Data.Integer.Properties.BasicProp where
 
 open import Function
-open import Data.Nat using (ℕ) renaming (suc to nsuc; pred to npre)
+open import Data.Nat using (ℕ; zero) renaming (suc to nsuc; pred to npre ; _+_ to _ℕ+_)
 open import Data.Product
 open import Data.Sign as Sign using (Sign)
 open import Data.Integer'
@@ -25,28 +25,10 @@ open import Relation.Binary.PropositionalEquality hiding ([_])
 open import Relation.Nullary.Core
 open import Symbols
 
-{-
-module ℤ₀O = DecTotalOrder ℤ₀.decTotalOrder
-
-infixl 40 _>≤<_
-
-ℤ₀l-≤resp : ∀ {n x y} → x ∼ y → n ℤ₀≤ x → n ℤ₀≤ y
-ℤ₀l-≤resp = proj₁ ℤ₀O.≤-resp-≈
-
-ℤ₀r-≤resp : ∀ {n x y} → x ∼ y → x ℤ₀≤ n → y ℤ₀≤ n
-ℤ₀r-≤resp = proj₂ ℤ₀O.≤-resp-≈
--}
-\end{code}
-
-p is left inverse of i
-p ∘ i = ℕid
-
-\begin{code}
-
-invertibility   : ∀ n → p (i n)  ≡ n
-invertibility n = refl
+∼trans = _>∼<_
 
 \end{code}
+}
 
 disjoint:
 0 and positive number is not equal to negative number
@@ -69,7 +51,6 @@ small lemma that transform the non-zero condition for ℤ to the one for ℤ₀
 \end{code}
 
 a) stability:
-nf is left inverse of dn
 
 \begin{code}
 
@@ -80,15 +61,15 @@ stable { -suc n } = refl
 \end{code}
 
 b) completeness:
-if it is true, then we can give the proof
 
 \begin{code}
-{-
-compl                   : ∀ {n} → ⌜ [ n ] ⌝ ∼ n
-compl {x , 0}           = refl
-compl {0 , nsuc y}      = refl
-compl {nsuc x , nsuc y} = compl {x , y} >∼<  ⟨ ℕ.sm+n≡m+sn x y ⟩
--}
+
+compl : ∀ n → ⌜ [ n ] ⌝ ∼ n
+compl (x , 0)           = refl
+compl (0 , nsuc y)      = refl
+compl (nsuc x , nsuc y) = ∼trans (compl (x , y)) 
+                          (sym (ℕ.sm+n≡m+sn x))
+
 compl' : ∀ {n} → n ∼  ⌜ [ n ] ⌝
 compl' = zsym (compl _)
 

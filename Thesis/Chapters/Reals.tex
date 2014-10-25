@@ -1,54 +1,156 @@
 \chapter{Real numbers}
 \label{rl}
 
-%If you mean something specific, always write "the"
 
-In the previous chapter, we discussed quotients which are definable via normalisation.
-To encode these types, quotient types are not necessary. However there are some quotients undefinable in the sense of normalisation, for example the set of real numbers, the multisets and the partiality monad. Intuitively they can be interpreted as setoids but there is no normalisation function which returns a canonical choice for each equivalence class, hence no normalisation function.
 
-\section{Real numbers as Cauchy sequences}
-To construction real numbers in Type Theory, there are several different approaches, for example Cauchy sequences, Dedekind cut, decimal representation, etc. Here we use Cauchy construction of real numbers as in \cite{bis:85}:
-%In \cite{hott} it has been proved that Cauchy reals and Dedekind reals are equivalent if excluded middle or countable choice holds.
-\begin{definition}\label{R01}
-$$\R_{0} = \set{s : \N\to\Q \mid \forall\varepsilon
-  :\Q^{+}, \exists m:\N, \forall i:\N, i>m\to \vert  s_i -
-  s_m \vert  <\varepsilon}$$
+In this chapter, we will discuss some other quotients which are not definable via normalisation, for example the set of real numbers as Cauchy sequences of rational numbers \cite{bis:85}, finite multisets represented by lists, and partiality computation which are represented by partiality monad.
+Intuitively speaking there is no definable normalisation function which returns a canonical choice for each equivalence class. 
+For the Cauchy sequences of rational numbers, Nicolai Kraus \cite{non-normal} has shown that all definable endofunctions respect the equivalence relation have to be constant, hence it is impossible to define a normalisation function. We reproduce the proof here and extend it to other cases especially the partiality monad. It has to be noticed that the proof is conducted in basic \mltt and can be generalised to any extension as long as it admits the Brouwer's continuity principle i.e.\ definable functions are continuous \cite{DBLP:journals/bsl/AttenD02}.
+
+
+%\begin{theorem}\label{defcon}Brouwer's continuity principleAll definable functions are continuous.\end{theorem}
+
+
+\section{Definability via normalisation}
+
+Although we have provided the definition of \emph{definable quotients} (see \autoref{defquo}), it is not always the case that the quotient set can be inductively defined so that we can talk about normalisation function as $[\_] : A \to Q$. Therefore, we provide a different characterisation of the property which only talks about a setoid $(A,\sim)$.
+
+\begin{definition}[\textbf{Definable via normalisation}]\label{def:nor}
+Given a setoid $(A,\sim)$, the quotient $\qset{A}$ is definable via normalisation if there is an endofunction $[\_]_0$ which is a \emph{normalisation function}:
+
+\begin{itemize}
+
+\item $[\_]_0 : A \to A$
+
+\item $\sound : \forall (a,b : A) \to a \sim b \to [ a ]_0 = [ b ]_0$
+
+\item $\complete : \forall (a : A) \to [ a ]_0 \sim a$
+
+\end{itemize}
 \end{definition}
 
+It is actually equivalent to say there is a definable quotient:
+First, given $[\_]_0 : A \to A$ specified as above,
 
-This definition is equipped with a proof which can help us guess the real number if the existential quantifier is not truncated. However usually we would like the proof to be truncated so that the Cauchy sequences are proof-irrelevant. 
+\begin{itemize}
+\item The quotient set can be defined as
+  $$Q \defeq \Sigma (a : A), [ a ]_0 = a$$
 
-To avoid this problem, we can use an alternative equivalent definition which is a subset of $\R_{0}$:
+\item The "normalisation function" is
+  $$[a] \defeq ([a]_0, \trefl ) $$
+which is also sound because $[\_]_0$ is sound.
 
-$$\R_0' = \set{f: \N\to\Q \mid \forall k
-  :\PN,\forall m , n > k, \to \vert  f_m -
-  f_n \vert  < \frac{1}{k}}$$ \label{R02}
+\item The embedding function is just first projection
+  $$\emb \defeq \pi_1 $$
 
-The rate of convergence is fixed so that we can guess the number while the condition is propositional.
+\item Stability: given $(a, p) : \Sigma (a : A), [ a ]_0 = a$
+
+$$[\emb(a,p)] \equiv ([a]_0, \trefl )$$
+
+Hence we need to prove $([a]_0, \trefl ) = (a, p)$.
+
+We can prove it by $\J$
+
+$$\J(t,[ a ]_0,a,p) : ([a]_0, \trefl ) = (a, p)$$
+
+where $t(x) \defeq \trefl : (x,\trefl ) = (x,\trefl )$
+
+\item Completeness: given $a : A$, we need to prove $\emb[a] \sim a$ which turns out to be
+
+$$[a]_0 \sim a$$
+
+This is exactly the completeness property in the specification of $[\_]_0$
+
+\end{itemize}
+
+In the other direction, given a definable quotient,
+
+\begin{itemize}
+
+\item $$[\_]_0 \defeq \emb \circ [\_]$$
+
+\item Soundness: given $a,b : A$ such that $a \sim b$, because $[\_]$ is sound, we know
+
+$$[ a ] = [ b ]$$
+
+By congruence rule,
+
+$$\emb[a] = \emb [ b]$$
+
+hence $[\_]_0$ is sound as well.
 
 
-We can slightly modify the definition which is still equivalent,
+\item Completeness: given $a : A$, $\emb[a] \sim a$ is just the completeness property of the definable quotient.
 
-$$\R_0'' = \set{f: \PN\to\Q \mid \forall n ~m
-  :\PN, n > m \to \vert f_n -
-  f_m \vert  < \frac{1}{n}}$$ \label{R03}
+\end{itemize}
 
 
-Cauchy sequences can be added and multiplied point-wisely and the result is still Cauchy sequences.
 
-If the point-wise difference between two Cauchy sequences tends to zero, we say they are equivalent.
+\section{Real numbers as Cauchy sequences}
 
-$$r \sim s \defeq \forall\varepsilon :\Q^{+},\to\exists m:\N,
-\forall i:\N, i>m\to \vert  r_i - s_i \vert <\varepsilon$$
 
-With this equivalence relation, we can define the set of real numbers as long as we have quotient types.
-But different to the set of integers and the set of rational numbers, it is not definable via normalisation, in other words we cannot define a normalisation function $[\_]_0: \R_0 \to R_0$ which returns a canonical choice for each equivalent class.
+The real numbers can be defined as $(\R_0,\sim)$, where $\R_0$ is the set of Cauchy sequences, and 
+two Cauchy sequences are equivalent if and only if their point-wise difference converges to $0$.
+
+
+\begin{definition}\label{R01}
+
+A function $f : \N \to \Q$ is called a \textbf{Cauchy sequence} if 
+
+ \begin{equation}
+ \iscauchy(f) \defeq \forall(\varepsilon
+  :\Q^{+}) \to \exists (m:\N) ~ \forall (i:\N) \to i>m\to \vert  f_i -
+  f_m \vert  <\varepsilon
+\end{equation}
+
+Hence we can define $\R_0$ as
+
+$$\R_0 \defeq \Sigma (f : \N \to \Q) ~\iscauchy(f)$$
+\end{definition}
+
+Two Cauchy sequences are equivalent if and only if their point-wise difference converges to $0$:
+
+$$r \sim s \defeq \forall (\varepsilon :\Q^{+}) \to \exists (m:\N) ~
+\forall (i:\N) \to i>m\to \vert  r_i - s_i \vert <\varepsilon$$
+
+
+%$$\R_{0} = \set{f : \N\to\Q \mid \forall\varepsilon :\Q^{+}, \exists m:\N, \forall i:\N, i>m\to \vert  f_i - f_m \vert  <\varepsilon}$$
+
+To implement this definition, the existential quantifier is usually encoded by $\Sigma$-types so that we can guess the real number from the explicit witness $m$.
+However, usually we would like to keep the proof propositional so that the Cauchy sequences are proof-irrelevant. 
+
+To avoid this problem, we can use an alternative equivalent definition of the property, but the type of $f$ has to be $\PN \to \Q$:
+
+\begin{equation}\label{R02}
+\iscauchy(f) \defeq \forall (k :\PN),\forall (m , n > k) \to \vert  f_m -
+  f_n \vert  < \frac{1}{k}
+\end{equation}
+
+The rate of convergence is fixed so that we can guess the number while the condition is also propositional. Note that we use some shorthand notations in these definitions.
+
+
+We can slightly modify the definition which is still equivalent, 
+
+\begin{equation}\label{R03}
+\iscauchy(f) \defeq \forall (n,m :\PN), n > m \to \vert f_n -
+  f_m \vert  < \frac{1}{n}
+\end{equation}
+
+%$$\R_0'' = \set{f: \PN\to\Q \mid \forall n ~m  :\PN, n > m \to \vert f_n -  f_m \vert  < \frac{1}{n}}$$ \label{R03}
+
 
 \subsection{$\R$ is undefinable via normalisation}
 
-We have made an attempt to prove that the set of reals is undefinable in \cite{aan} which was pointed out wrong by Martín Escardó. He shows an counterexample to prove that there can be no definable function into $\bool$ for two distinguishable terms \footnote{Agda proof can be found in online \cite{martinsproof}}.
+We can define a setoid $(\R_0,\sim)$, but there is no definable normalisation function $[\_]_0: \R_0 \to \R_0$ in the sense of \ref{def:nor}.
 
-$\N_\infty : \Set$ is a decreasing sequence of $\bool$ which is called generic convergent sequence, where $11000\ldots$ represents $2$ and the sequence of $1$, namely $1111\ldots$ is $\infty$, thus it can be seen as $\N + \infty$. For simplicity, we write $s_k$ for the sequence whose first $k$ digits are $1$ and the rest digits are $0$.
+
+We have made an attempt to prove that the set of reals is undefinable in the presence of local continuity (see Section. 5 in \cite{aan}). 
+We claim that two $a,b : A$ are \emph{separable}, if there exists a definable test $P : A \to \bool$ such that $P(a) \neq P(b)$. Then we claim a definable set $A$ is \emph{discrete} if $a \neg b$ always imply $a$ and $b$ are separable. However it has some problems as  Martín Escardó pointed out.
+He provides a counterexample that for two distinguishable terms i.e.\ $a \neg b$ there can be no definable test \cite{martinsproof}. We sketch the proof here:
+
+\begin{proof}
+In the proof, he uses $\N_\infty \defeq \N \to \bool$ which is a decreasing sequence of $\bool$ called \emph{generic convergent sequence}. Intuitively speaking, $11000\ldots$ represents $2$ and the sequence of $1$, namely $1111\ldots$ represents $\infty$, therefore, it can be seen as the disjoint union of natural numbers and infinity i.e.\ $\N + \infty$. 
+For simplicity, we write $s_k$ for the sequence whose first $k$ digits are $1$ and the rest digits are $0$.
 
 From continuity, we know that:
 
@@ -61,15 +163,24 @@ $s^0_k \defeq (s_k, \lambda r \to 0)$ and
 
 $s^1_k \defeq (s_k, \lambda r \to 1)$,
 
-there are two separable terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
+there are two definitional unequal terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
 
 such that for all definable function $f : X \to \bool$, $f(\infty_0) = f(\infty_1)$.
 
 To prove it, assume $f(\infty_0) \not= f(\infty_1)$.
-We can prove that for all $k : N$ ($s_k \not= \infty$), $f(s^0_k) = f(s^1_k)$ because the second part is always the same due to the fact that $s_k \not= \infty$. From continuity, we can deduce that $f(\infty_0) =f(s^0_k) = f(s^1_k) = f(\infty_1)$, which contradicts to the premise.
+We can prove that for all $k : N$ such that ($s_k \not= \infty$), 
+
+$$f(s^0_k) = f(s^1_k)$$ 
+
+because the second part is always the same due to the fact that $s_k \not= \infty$. From continuity, we can deduce that 
+
+$$f(\infty_0) =f(s^0_k) = f(s^1_k) = f(\infty_1)$$
+
+which contradicts our premise.
+\end{proof}
 
 
-In this chapter, we refined our approach to conduct a meta-level reasoning which can be further generalised.
+Here we show a meta-level proof to show that all definable endofunctions are constant, hence no normalisation function is definable. The proof is not original.
 
 %\begin{definition}
 %\textbf{Discrete type}.
@@ -81,15 +192,9 @@ In this chapter, we refined our approach to conduct a meta-level reasoning which
 
 %We have made an attempt in the original version of our \cite{aan} draft, but there is something important problem pointed out by Martin Escardo. Laterly, Nicolai Kraus suggests to fix the proof by proving it as a meta-theoretical property. We will show an adaption of his proof here.
 
-\textbf{Some preliminaries}
+\subsection{Preliminaries}
 
-The proof is mainly conducted using topological tools. Following are some relevant topological concepts.
-
-\begin{definition}
-\textbf{Metric space}. In \maths, a metric space is a set where a notion
-of distance (called a metric) between elements of the set is defined.
-
-A metric space is an ordered pair $(M , d)$ where $M$ is a set and d is a metric on $M$:
+We use some topological notions. Recall that a metric space is a set where a notion of distance (called a metric) between elements of the set is defined. It is an ordered pair $(M , d)$ where $M$ is a set and d is a metric on $M$:
 \begin{enumerate}
 \item $M$ is a set,
 \item and $d : M \times M \rightarrow \R$ s.t.
@@ -97,115 +202,45 @@ A metric space is an ordered pair $(M , d)$ where $M$ is a set and d is a metric
 \item $d(x,y)=d(y,x)$
 \item $d(x,y)+d(y,z) \ge d(x,z)$ 
 \end{enumerate}
-\end{definition}
 
-We usually use the \textbf{discrete spaces} for types like $\bool$, $\N$, $\Q$ etc.
-
-\begin{itemize}
-
-\item $(\bool , h)$ where 
-$h(m,n) =
-\left\{
-	\begin{array}{ll}
-		0  & \mbox{if } m = n \\
-		1 & \mbox{if } m \neq n
-	\end{array}
-\right.
-$
-
-\item $(\N , d)$ where 
-$d(m,n) =
-\left\{
-	\begin{array}{ll}
-		0  & \mbox{if } m = n \\
-		1 & \mbox{if } m \neq n
-	\end{array}
-\right.
-$
-
-\item $(\Q , e)$ where 
-$e(m,n) =
-\left\{
-	\begin{array}{ll}
-		0  & \mbox{if } m = n \\
-		1 & \mbox{if } m \neq n
-	\end{array}
-\right.
-$
-
-\end{itemize}
-
-For Cauchy sequences, recall the third definition of $\R_0$ as \ref{R03}:
-
-\begin{definition}
- We call a function $f : \PN \to \Q$ a \emph{Cauchy sequence} if it satisfies
- \begin{equation}
-  \iscauchy ~f \defeq \forall n~m : \PN, n < m \to |f_n - f_m| < \frac 1 n. \label{eq:prop-property-short}
- \end{equation}
- The type of Cauchy sequences is thus
- \begin{equation*}
-  \R_0 \defeq \Sigma f : \PN \to \Q, \iscauchy ~ f.
- \end{equation*}
-\end{definition}
-
-The canonical distance function for $\R_0$ is
+We can usually give a standard topological structure for sequences over a discrete type. In the case of the sequences over $\R_0$, the distance between two functions $f_1,f_2 : \PN \to \R_0$ can be defined as
 
 \begin{equation}
-g(f_1,f_2) = 2^{-\mathsf{inf}\{k \in \PN \; | \; f_1(k) \not= f_2(k)\}}
+d(f_1,f_2) = 2^{-\mathsf{inf}\{k \in \PN \; | \; f_1(k) \not= f_2(k)\}}
 \end{equation}
 
-and the metric space is not discrete.
+and then $\PN \to \R_0$ is a metric space. 
+%If the type of $\iscauchy(f)$ is not propositional, then it is possible that the distance between two non-equal
 
-Technically, if we define $\R_0$ as \ref{R01}, there would be different proof terms for the same sequence which means the distance between two non-equal elements may be $0$, hence not metric space.
+%Technically, if we define $\R_0$ as \ref{R01}, there would be different proof terms for the same sequence which means the distance between two non-equal elements may be $0$, hence not metric space.
 
-
-\begin{definition}
-\textbf{Continuous function.} Let $(X, d)$ and $(Y, e
-)$ be metric spaces. A function $f : X \to Y$ is called
-continuous if for every $x : X$ and $\epsilon > 0$ there exists a $\delta > 0$ such that
+Given two metric spaces $(X, d)$ and $(Y, e)$, a function $f : X \to Y$ is \emph{continuous} if for every $x : X$ and $\epsilon > 0$ there exists a $\delta > 0$ such that
 
 $$\forall y : X, d(x,y) < \delta \Rightarrow e(f(x),f(y)) < \epsilon$$
-\end{definition}
+
+With the standard topological structures, we say that definable functions are \emph{continuous}.
+Intuitively speaking, for a function $f : (\PN \to \Q) \to \bool$, it only inspects finite many terms of the input sequences to compute the result.
 
 
-Among all these standard metric spaces, It is a folklore that all
-definable functions are continuous.
+We also need an auxiliary definition:
 
-\begin{theorem}\label{defcon}
-All definable functions are continuous.
-\end{theorem}
-
-
-
-
-Let us introduce the following auxiliary definition:
 \begin{definition}
  For a sequence $f : \PN \to \Q$, we say that $f$ is \emph{Cauchy with
    factor $k$}, written as $\iscauchy_k$, for some $k \in \Q^+$, if
  \begin{equation}
   \iscauchy_k ~ f \; \defeq \; \forall n ~m : \PN, n < m \to |f_n - f_m| < \frac 1 {k \cdot n}. \label{eq:cauchy-aux}
  \end{equation}
- The usual Cauchy condition $\iscauchy$ is therefore ``Cauchy with factor $1$''.
 \end{definition}
+
+The usual Cauchy condition $\iscauchy$ is therefore ``Cauchy with factor $1$''.
 
 Now we have enough tools to prove the following proposition.
 
 \begin{proposition} \label{prop:main}
- \textbf{$\R_0 / \sim$ is connected.} It means that any continuous function
- \begin{equation}
-  f : \R_0 \to \bool
- \end{equation} that respects $\sim$ is constant.
+ \textbf{$\R_0 / \sim$ is connected}. In Type Theory, it means that any continuous function
+$$f : \R_0 \to \bool$$
+ which respects $\sim$ (is compatible with $\sim$) is \emph{constant}.
 \end{proposition}
-
-
-
-\begin{remark} If we claim a function $f$ is defined on $\R_0$ that
-  respects $\sim$, it means that we have a proof
-\begin{equation}
- p : \forall c_1 ~ c_2 : \R_0  \to c_1 \sim c_2 \to f(c_1) = f(c_2).
-\end{equation}
-
-\end{remark}
 
 
 \begin{proof}\label{realconnected}
@@ -245,7 +280,7 @@ we can always find another point $x \in U$ such that $x = \clim e$
 %  The slight difference ($\frac 1 n$ is replaced by $\frac 1 {4n}$) will be important.
 %  Without loss of generality, assume $\tometa{f}(c) = \tometa \btrue$. % not needed.
  
- As $f$ is definable (and thereby $\tometa f$ is continuous \autoref{defcon}), for an arbitrary $\epsilon < 1$, there exists $n_0 \in \tometa {\N}$ such that for any Cauchy
+ As $f$ is definable (and thereby $\tometa f$ is continuous, for an arbitrary $\epsilon < 1$, there exists $n_0 \in \tometa {\N}$ such that for any Cauchy
  sequence $c' \in \tometa {\R_0}$, if the first $n_0$ sequence
  elements of $c'$ coincide with those of $c$ (namely the distance
  $g(c, c') = 2^{-\mathsf{inf}\{k \in \N \; | \; c(k) \not= c'(k)\}}
@@ -320,7 +355,7 @@ function $\pi_{n} : \tometa{ \R_0} \to \tometa \Q$. Define a function
 $h_n : \tometa {\R_0} \to \tometa \Q$ as
 
  \begin{equation*}
- h_n(c) \defeq \pi_{n} \circ f
+ h_n \defeq \pi_{n} \circ f
  \end{equation*}
 
 By \autoref{dis:con} we know that $h_n$ is constant, hence $f$
@@ -344,61 +379,11 @@ is constant everywhere, it is enough to show that $f$ is constant.
 
 \begin{corollary}
  There is no definable normalisation function on $\R_0$ in the sense
- of \autoref{def:nor}, namely $\R_0 / \sim$ is not definable via normalisation.
+ of \autoref{def:nor}, namely $\qset{\R_0}$ is not definable via normalisation.
 \end{corollary}
 
 
-
-
-\section{Definability in general}
-
-
-Even though we have proved that $\qset{\R_0}$ is not definable via normalisation, it does not imply that we cannot define the set of real numbers in minimalistic type theory with $\Pi, \Sigma, \mathsf{W}, =,
-\N$. 
-
-The meaning of definability is not clear enough for real numbers. To make it more precise, we define
-it as whether there is a type $Q$ in $\mathsf{TT}$ (minimalistic type
-theory) such that its embedding $\tometa A$ in $\mathsf{TT} + \mathsf{Q}$ (type theory
-extended with quotient types) is isomorphic to $\qset{A}$ (where it is a valid type). 
-
-
-
-We can easily prove that a definable quotient $(Q, [\_], emb)$ is isomorphic to $\qset{A}$ whose term is written as $[ a ]_{~}$ and a lifted function is written as $\hat{f}$.
-
-\begin{proof}
-We can establish the isomorphism with
-
-$\Phi ~q =  [ \emb ~q ]_{\sim}$ and 
-
-$\Psi ~ = \widehat{[\_]}$
-
-To verify it $\Psi \circ \Phi = \text{id}_{Q}$ is given by
-
-$\widehat{[  [ \emb ~q ]_{\sim} ]} = [\emb ~ q] = q$
-
-and $\Phi \circ \Psi = \text{id}_{\qset{A}}$ namely,
-
-$[\emb~\widehat{[s]}]_{\sim} = s$
-
-can be proved using quotient induction principle and $Q-\textbf{Ax}$,
-
-$[\emb~\widehat{[ [a]_{~} ]}]_{\sim} = [\emb~[a]]_{\sim} = [a]_{\sim}$
-
-\end{proof}
-
-
-For $\tometa {\R_0}/ \tometa \sim$, we conjecture that it is still not
-definable.
-
-\begin{proof}
-Assume the set of real numbers is definable, we have a type $A$ and
-its embedding in $\mathsf{TT} + \mathsf{Q}$  is $\tometa A \simeq \tometa {\R_0}/ \tometa \sim$. The isomorphism gives us a "normalisation" function $f : $ and a representative function
-between $\tometa {\R_0}$ and $\tometa A$.
-\end{proof}
-
-
-
-
+Even though there is no definable endofunctions, it does not imply that we cannot define the set of real numbers, although we believe it is the case. In fact, Kraus have made a conjecture that for a definable type $T$ in minimalistic type theory with $\Pi$, $\Sigma$, $\mathsf{W}$, $=$, $\mathbb N$, if $T$ does have two distinguishable elements, then it is not connected. Because $\qset{\R_0}$ is connected, this conjecture implies that the the set of real numbers are not definable.
 
 
 
@@ -410,18 +395,18 @@ equivalence class (i.e.\ real number)? The answer is no.
 
 Recall that if for every Cauchy sequence of \textbf{real} numbers there is a real number as its limit, then we say it is Cauchy complete.
 
-In classic logic, the Cauchy reals are Cauchy complete because the
+In classical logic, the Cauchy reals are Cauchy complete because the
 limit can be built via a kind of diagonalization
 \cite{DBLP:journals/entcs/Lubarsky07}. Also classically Cauchy reals are equivalent to another definition called Dedekind Reals.
-However, in Type Theory both of them fail.
+However, in Type Theory both of them are not representable.
 We cannot find a canonical representative for each equivalence
 class. Intuitively speaking it is easy to find a canonical choice for
 any rational number but it is impossible to find one for any
 irrational number like $\pi$. It has been proved by Robert S. Lubarsky in
-\cite{DBLP:journals/entcs/Lubarsky07}. If we add the axiom of Countable Choice ($AC_{\omega}$) to Type Theory, Cauchy reals become Cauchy complete because it provides us a choice function for equivalence classes which helps us find a canonical choice. The $AC_{\omega}$ is an classical result
+\cite{DBLP:journals/entcs/Lubarsky07}. If we add the axiom of Countable Choice ($AC_{\omega}$) to Type Theory, Cauchy reals become Cauchy complete because it provides us a choice function for equivalence classes which helps us find a canonical choice. The $AC_{\omega}$ is a classical result
 which is stronger than the premise "in classical logic''.
 
-In the HoTT book \cite{hott}, there is a higher inductive definition of Cauchy reals $\R_{C}$ using \textbf{Cauchy approximation}. Briefly speaking, it first embeds rational numbers, and then for each $s : \Q^{+} \to \R_{C}$ we have $lim(s) : R_{C}$ as a limit of Cauchy sequence of real numbers, hence it is Cauchy complete. Higher inductive type is a stronger notion than quotient type which allows us to define \emph{equality} of terms as constructors in inductive definitions, see \autoref{HITs}.
+In the HoTT book \cite{hott}, there is a higher inductive definition of Cauchy reals $\R_{C}$ using \textbf{Cauchy approximation}. Briefly speaking, it first embeds rational numbers, and then for each $s : \Q^{+} \to \R_{C}$ we have $lim(s) : R_{C}$ as a limit of Cauchy sequence of real numbers, hence it is Cauchy complete. Higher inductive type allows us to define \emph{equality} of terms as constructors in inductive definitions, see \autoref{HITs}.
 \end{remark}
 
 
@@ -445,10 +430,10 @@ Intuitively, there is no canonical choice function unless the set $A$ has a deci
 
 %\todo{definable -> split quotient because definable is too general}
 
-A multiset (bag) is a generalisation of set where multiple occurrences is allowed.
+A multiset (bag) is a generalisation of set where multiple occurrences are allowed.
 
 In Type Theory, given a set $A$, the finite multisets of elements in $A$ can be encoded as the setoid $(\text{List}~ A , \sim)$ where two lists are bag equivalent \cite{DBLP:conf/itp/Danielsson12} if they are equal up to reordering. For example, $[1, 2 , 2, 5 ,1]$ is equivalent to
-$[2,2,1,1,5]$ since we can find a bijective mapping between them. We can observe that two such lists are always have the same length so we use length-explicit lists (vectors) here.
+$[2,2,1,1,5]$ since they are permutation of each other. We can observe that two such lists always have the same length so we use length-explicit lists (vectors) here.
 
 Given two lists of length $n$, $p ~ q : \text{Vec} ~A~n$,
 
@@ -457,29 +442,10 @@ $$ p \sim q \defeq \exists ~\phi : \text{Fin}~n \to \text{Fin}~n, \text{Bijectio
 Finite multisets can be seen as unordered n-tuples which is a generalisation of unordered pairs. Therefore,
 the quotient $\qset{\text{List}~ A}$ (or more accurately $\text{Vec}~ A~n$) is also not definable via normalisation function if it has no decidable well-ordering.
 
-
-\subsection{Finite sets}
-
-Considering that the notion multiset is a generalisation of set, it is natural to define finite set by modifying the equivalence relation. Here the length of two equivalent lists is not necessarily equal.
-Given a set $A$ and two lists $l,m : \text{List}~ A$, $l$ is contained inside $m$ iff there is an injection from $l$ to $n$:
-
-
-$$l \subseteq m \defeq \exists ~\phi : \text{Fin}~(\text{length} ~ l) \to \text{Fin}~ (\text{length} ~ m), \forall n : \text{Fin}~(\text{length} ~ l), l_n = m_{\phi (n)}$$
-
-and two lists $l,m : \text{List}~ A$ are equivalent iff they contained the same elements:
-
-$$l \sim m \defeq l \subseteq m \wedge m \subseteq l$$
-
-
-
-
-%In fact a multiset can be defined as a pair of a set $A$ and a occurences counting function $m : A \to \N$. However from a practical perspective, it is not useful because we cannot count the cardinality of the multiset because $A$ is not necessary to be enumerable. But the unoroder list represent is countable.
-
-
 \subsection{Partiality monad}
 
 
-Given a set $A$, the set of partial computations over $A$ is encoded by partiality monad $\AgdaDatatype{Delay} ~\AgdaBound{A}$ (or $A_{\bot}$) with a weak bisimilarity $\AgdaDatatype{\_≈\_}$ ignoring finite delays.
+Given a set $A$, the set of partial computations over $A$ is encoded by the partiality monad $\AgdaDatatype{Delay} ~\AgdaBound{A}$ (or $A_{\bot}$) with a weak bisimilarity $\AgdaDatatype{\_≈\_}$ ignoring finite delays.
 
 The partiality monad is coinductively defined to encode delayed computation:
 
@@ -525,7 +491,7 @@ steps):
 \end{code}
 
 If we ignore the number of steps a computation is postponed, we can define a weaker bisimilarity. 
-Two computation are weakly bisimilar if they terminates with the
+Two computation are weakly bisimilar if they terminate with the
 same value:
 
 \begin{code}
@@ -580,7 +546,7 @@ g(a_1,a_2) = 2^{-\mathsf{inf}\{k \in \N \; | a_1(k) \not= a_2(k)\}}
 
 Similar to the proof in \autoref{realconnected}, we are going to prove $A_{\bot}/\approx$ is connected, i.e.\ any definable (continuous) function $f : A_{\bot} \to \bool$ which respects $\approx$ is constant.
 
-Thus we $f$ is non-constant, there are $a_1 , a_2 : A_{\bot}$ with $f(a_1) \not= f(a_2)$.
+Thus if $f$ is non-constant, there are $a_1 , a_2 : A_{\bot}$ with $f(a_1) \not= f(a_2)$.
 
 Assume $f(\mathsf{never}) = 1$, since $f$ is continuous, there exists $n_0 : \N$ such that for all $a : A_{\bot}$, if there are at least $n_0$ $\mathsf{laters}$ in $a$ (the first $n_0$ elements of sequence of $a$ coincide with those of $\mathsf{never}$), then $f(a) = f(\mathsf{never}) = 1$.
 
@@ -590,26 +556,13 @@ Because $f(a_1) \not= f(a_2)$, one of them must have $k < n_0$ $\mathsf{laters}$
 
 \section{Summary}
 
-To summarize, for a possibly infinite sequences like Cauchy sequence or $A_0$, we have a property called local continuity.
+To summarize, we have shown some quotients which are not definable via normalisation, e.g.\ real numbers as Cauchy sequences of rational numbers, paritial computation as partial monad and finite multisets as lists. 
 
-\begin{definition}
-\textbf{Local continuity}. given type $A$, Local continuity for type $\N \to A$ is the property that 
+In particular, we show that the set of real numbers as $\qset{\R_0}$ is connected which means that any definable (continuous) function on $\R_0 \to \bool$ which respects $\sim$ is constant. It implies that any definable endofunction on $\R_0$ is constant, hence there is no definable normalisation function for the setoid $(\R_0,\sim)$ that can be lifted. 
+We similarly proved that the partiality computations which are represented by partiality monad quotiented by weak bisimilarity is also not defiable via normalisation. We also discussed that unorderd pairs and finite multisets which are pairs or lists quotiented by permutation are only definable via normalisation in general, if we have a decidable total order. 
 
-Given a discrete metric space $(B, g)$,
+We also believe that these quotients are not definable in general, but we have not yet prove it formally.
 
-a definable function $f : (\N \to A) \to B$,
-
-a sequence $s : \N \to A$,
-
-there exists $n_0 : \N$ such that
-
-for all sequences $t : \N \to A$ satisfying that $\forall i < n_0, s_i = t_i$,
-
-we have that $f~s = f~t$
-
-\end{definition}
-
-And from the property that $f$ respects some equivalence relation, we can obtain a contradiction if $f$ is non-constant, which implies that there is no normalisation function for the setoid consisting of these kinds of sequences with given equivalence relations.
 
 
 

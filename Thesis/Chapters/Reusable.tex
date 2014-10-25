@@ -1,3 +1,297 @@
+
+
+
+  lift-op1 : (f : A → A) → (f-sound : ∀ a b → a ~ b → f a ~ f b) → (Q → Q)
+  lift-op1 f sound = [_] ∘ f ∘ emb
+
+
+  lift-op1-resp : ∀ a → (f : A → A) → (f-sound : ∀ a b → a ~ b → f a ~ f b) 
+                → lift-op1 f f-sound [ a ] ≡ [ f a ]
+  lift-op1-resp a f f-sound = [ f-sound _ _ (complete _) ]⁼
+
+  lift-prop : (P : (A : Set) → (f : A → A) → Set)
+              (f : A → A) →
+              (f-sound : ∀ a b → a ~ b → f a ~ f b) →
+              (∀ a → f (f a) ~ a) → (∀ q → (lift-op1 f f-sound) (lift-op1 f f-sound q) ≡ q)
+  lift-prop P f f-sound pa q = trans [ (~-trans (f-sound _ _ (complete _)) (pa (emb q))) ]⁼ (stable q)
+
+
+
+
+\subsection{Finite sets}
+
+Considering that the notion multiset is a generalisation of set, it is natural to define finite set by modifying the equivalence relation. Here the length of two equivalent lists is not necessarily equal.
+Given a set $A$ and two lists $l,m : \text{List}~ A$, $l$ is contained inside $m$ iff there is an injection from $l$ to $n$:
+
+
+$$l \subseteq m \defeq \exists ~\phi : \text{Fin}~(\text{length} ~ l) \to \text{Fin}~ (\text{length} ~ m), \forall n : \text{Fin}~(\text{length} ~ l), l_n = m_{\phi (n)}$$
+
+and two lists $l,m : \text{List}~ A$ are equivalent iff they contained the same elements:
+
+$$l \sim m \defeq l \subseteq m \wedge m \subseteq l$$
+
+
+
+
+%In fact a multiset can be defined as a pair of a set $A$ and a occurences counting function $m : A \to \N$. However from a practical perspective, it is not useful because we cannot count the cardinality of the multiset because $A$ is not necessary to be enumerable. But the unoroder list represent is countable.
+
+
+
+
+To summarize, for a possibly infinite sequences like Cauchy sequence or $A_0$, we have a property called local continuity.
+
+\begin{definition}
+\textbf{Local continuity}. given type $A$, Local continuity for type $\N \to A$ is the property that 
+
+Given a discrete metric space $(B, g)$,
+
+a definable function $f : (\N \to A) \to B$,
+
+a sequence $s : \N \to A$,
+
+there exists $n_0 : \N$ such that
+
+for all sequences $t : \N \to A$ satisfying that $\forall i < n_0, s_i = t_i$,
+
+we have that $f~s = f~t$
+
+\end{definition}
+
+And from the property that $f$ respects some equivalence relation, we can obtain a contradiction if $f$ is non-constant, which implies that there is no normalisation function for the setoid consisting of these kinds of sequences with given equivalence rela
+
+
+
+\section{Definability in general}
+
+
+Even though we have proved that $\qset{\R_0}$ is not definable via normalisation, it does not imply that we cannot define the set of real numbers in minimalistic type theory with $\Pi, \Sigma, \mathsf{W}, =,
+\N$. 
+
+The meaning of definability is not clear enough for real numbers. To make it more precise, we define
+it as whether there is a type $Q$ in $\mathsf{TT}$ (minimalistic type
+theory) such that its embedding $\tometa A$ in $\mathsf{TT} + \mathsf{Q}$ (type theory
+extended with quotient types) is isomorphic to $\qset{A}$ (where it is a valid type). 
+
+
+
+We can easily prove that a definable quotient $(Q, [\_], emb)$ is isomorphic to $\qset{A}$ whose term is written as $[ a ]_{~}$ and a lifted function is written as $\hat{f}$.
+
+\begin{proof}
+We can establish the isomorphism with
+
+$\Phi ~q =  [ \emb ~q ]_{\sim}$ and 
+
+$\Psi ~ = \widehat{[\_]}$
+
+To verify it $\Psi \circ \Phi = \text{id}_{Q}$ is given by
+
+$\widehat{[  [ \emb ~q ]_{\sim} ]} = [\emb ~ q] = q$
+
+and $\Phi \circ \Psi = \text{id}_{\qset{A}}$ namely,
+
+$[\emb~\widehat{[s]}]_{\sim} = s$
+
+can be proved using quotient induction principle and $Q-\textbf{Ax}$,
+
+$[\emb~\widehat{[ [a]_{~} ]}]_{\sim} = [\emb~[a]]_{\sim} = [a]_{\sim}$
+
+\end{proof}
+
+
+For $\tometa {\R_0}/ \tometa \sim$, we conjecture that it is still not
+definable.
+
+\begin{proof}
+Assume the set of real numbers is definable, we have a type $A$ and
+its embedding in $\mathsf{TT} + \mathsf{Q}$  is $\tometa A \simeq \tometa {\R_0}/ \tometa \sim$. The isomorphism gives us a "normalisation" function $f : $ and a representative function
+between $\tometa {\R_0}$ and $\tometa A$.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+ there is usually a standard topological structure, for example 
+
+\begin{itemize}
+
+\item $(\bool , h)$ where 
+$h(m,n) =
+\left\{
+	\begin{array}{ll}
+		0  & \mbox{if } m = n \\
+		1 & \mbox{if } m \neq n
+	\end{array}
+\right.
+$
+
+\item $(\N , d)$ where 
+$d(m,n) =
+\left\{
+	\begin{array}{ll}
+		0  & \mbox{if } m = n \\
+		1 & \mbox{if } m \neq n
+	\end{array}
+\right.
+$
+\end{itemize}
+
+
+
+
+
+
+\subsection{Groupoid model}
+
+There are many other relevant models proposed to explain the essence of identity types in Type Theory and to extend Type Theory with different extensional concepts. 
+
+Martin Hofmann and Thomas Streicher's \cite{MR1686862} groupoid model interprets types as groupoids where the identity types endow every type with a groupoid structure. Instead of basic equivalence properties in setoid model, there are five more groupoid laws where $p$ and $q$ are level-$1$ morphisms:
+
+\begin{equation*}
+\begin{array}[b]{l}
+\lambda : id \circ p = p \\
+\rho : p \circ id = p \\
+\alpha : p \circ (q \circ r) = (p \circ q) \circ r \\
+\kappa : p^{-1}\circ p = id \\
+\kappa' : p \circ p^{-1} = id
+ \end{array}
+\end{equation*}
+
+In a groupoid model UIP does not hold in general because there can be different inhabitants of the same identity types. In fact, propositional equality is a generalisation of isomorphism. For example to prove that $\bool = \bool$, there are two intensionally different inhabitants: one is given by identity function on $\bool$, the other is given by negation on $\bool$.
+
+
+
+embc' : ∀ a a' → ⌜ a' ⌝ ∼ a → [ a ] ≡ a'
+embc' (a1 , zero) (+ n) p = sym (cong +_ (ℕ.+r-cancel 0 p))
+embc' (zero , nsuc a2) (+ n) p = {!!}
+embc' (nsuc a1 , nsuc a2) (+ n) p = {!!}
+embc' (a1 , a2) (-suc n) p = {!!}
+
+sound[_] : ∀ a b → a ∼ b → [ a ] ≡ [ b ]
+sound[_] a b p = embc' a [ b ] (zsym (p >∼< zsym (compl b)))
+
+embc : ∀ a → Universal (λ p → ⌜ p ⌝ ∼ a) -- Σ ℤ (λ p → (⌜ p ⌝ ∼ a) × (∀ q →  ⌜ q ⌝ ∼ a → q ≡ p))
+embc a  = [ a ] , ((compl a) , embc' a)
+
+
+
+Universal : {A : Set}(P : A → Set) → Set
+Universal {A} P = Σ A (λ a → P a × (∀ a' →  P a' → a ≡ a'))
+
+
+
+It is equivalent to \autoref{def:nor} because:
+
+
+\begin{definition}[\textbf{Definable via normalisation}]\label{def:nor}
+Given a setoid $(A,\sim)$, $\qset{A}$ is definable via normalisation if there is a "real" normalisation function with two properties
+\begin{align*}
+[\_]_0 &: A \to A \\
+\text{sound} &: \forall a ~ b : A \to a \sim b \to [ a ]_0 = [ b ]_0\\
+\text{complete} &: \forall a : A \to [ a ]_0 \sim a\\
+\end{align*}
+\end{definition}
+
+the normalisation function can be recovered as 
+
+$[\_]_0 \defeq emb \circ [\_]$. 
+
+In the other way around, $[\_]_0$ gives rise to a set 
+
+$Q \defeq \Sigma c : \R_0, [ c ]_0 = c$ with a function 
+
+$[ c ] \defeq [c]_0 , ~\sound ~ [[c]_0]_0 ~~ [c]_0~~ (\complete ~ c)$
+
+ and then the embedding function is just the first projection. The properties can be verified easily. It has to be noticed that although we call $[\_]$ as a normalisation function, it is only true in a definable quotient structure.
+
+Categorically speaking, a definable quotient is a \emph{split coequalizer}.
+
+\[\xymatrix{
+R\ar@<0.5ex>[r]^{\pi_0}\ar@<-0.5ex>[r]_{\pi_1}& A\ar[r]^{[\_]}
+& Q
+}\]
+
+
+
+
+
+
+
+We first learn equality for numbers in \maths. Generally speaking, it
+expresses the sameness of two mathematical objects such as numbers or sets.
+$1+2=3$ tells us the mathematical object calculated from $1+2$ is the
+same as $3$.
+
+From ages before, mathematicians are arguing about the correct way to
+characterise equality. The most common idea is that equality is just
+identity. Leibniz's law can be seen as a "definition" of
+equality:
+
+Given any $x$ and $y$, $x = y$ if, given any predicate $P$, $P(x)$ if and only
+if $P(y)$.
+
+
+
+
+In Type Theory, the encoding of equality is also contentious. Considering a variety of issues, there are
+several notions of equality in type theory.
+We can compare whether two types are equal or two terms are equal. If two
+expressions can be computed to the same object then we claim they are
+ \emph{definitionally} equal.  
+ We can also internalise definitional equality by defining \emph{identity types}. An inhabitant of identity type is an evidence of the \emph{propositional equality} between two terms or types are equal and is usually denoted as refl. 
+
+In \ett, propositional equality is identified with definitional equality which makes definitional equality undecidable and then type checking undecidable. However in \itt, they are different. Propositional equality is only induced by identity types which captures the definitional equality of terms or types. The equality of functions are usually judged extensionally, and the point-wise equalities of functions are not captured by identity types. For example, $\lambda n \to n$ and $\lambda n \to n + 0$ are intensionally different considering $n+0$ does not reduce to $n$ in the the usual definition of addition.
+The problem arises from the computational difficulties. A type checker can easily decide whether two
+values of inductive types are the same, but not whether two functions
+are extensionally equal. Even suppose we encode the method to compute
+the definitional equality of the outputs for each given input, it can
+only decide the equality for finite types.
+
+\section{Programming in Agda}
+
+In this thesis we use Agda to implement our constructions in \itt. 
+Agda is a dependently typed, functional programming language, which is
+based on the intensional version of \mltt. It is mainly developed by
+Ulf Norell, Nils Anders Danielsson, and Andreas Abel.
+It is a functional language like Haskell, but has dependent types. It has dependent pattern
+matching, type checker, coverage checker and termination checker. It
+supports a bundle of schema of defining data types such as inductive, inductive-recursive, mutually inductive,
+coinductive types. Its syntax is close to Haskell, in addition, it has
+unicode support and mixfix operators. All these features including
+type checker, unicode typing and interactive programming present in
+its Emacs interface. It is quite popular in the field of mathematical reasoning and programs
+verifications. Many researchers implement their work of type theory in
+Agda. It is also one of the popular languages in the community of the recently
+developed field \hott and the library of \hott is under construction.
+The adequate reasoning library code also helps in writing certified programs.
+
+In \autoref{bg} we present a brief introduction to it for someone
+who meet this language for the first time. In \autoref{dq} we use Agda to implement our definable quotient algebraic structures. In \autoref{models} we build a category with families of setoids in Agda. In \autoref{wog}, we implement a syntactic construction of \wog.
+
+Agda wiki\cite{agdawiki:main} is a good reference to it and there are
+several good tutorials to Agda for example Ulf Norell's
+\cite{tutorial}, Ana Bove, Peter Dybjer, and Ulf Norell's \cite{bove2009brief}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 % Reusable code
 
 In set theory quotient set is

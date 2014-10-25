@@ -71,6 +71,20 @@
 
 \RequirePackage[utf8]{inputenc} % Allows the use of international characters (e.g. Umlauts)
 
+
+%----------------------------------------------------------------------------------------
+% MARGINS
+%----------------------------------------------------------------------------------------
+%\setmarginsrb  { 2.0in}  % left margin
+%                        { 1.0in}  % top margin
+%                        { 1.0in}  % right margin
+%                        { 1.0in}  % bottom margin
+%                        {  20pt}  % head height
+%                        {0.25in}  % head sep
+%                        {   9pt}  % foot height
+%                        { 0.3in}  % foot sep
+%----------------------------------------------------------------------------------------
+
 %----------------------------------------------------------------------------------------
 %	MARGINS
 %----------------------------------------------------------------------------------------
@@ -182,7 +196,7 @@
 %	defined as \examname above so you cite it as \examname
 %----------------------------------------------------------------------------------------
 
-\thesistitle{Quotient Types in Type Thoery} % Your thesis title - this is used in the title and abstract
+\thesistitle{Quotient Types in Type Theory} % Your thesis title - this is used in the title and abstract
 %-------------------------------------------------  
 \supervisor{Dr. Thorsten \textsc{Altenkirch} \& Dr. Thomas \textsc{Anberr\'{e}e}} % You supervisor's name - this is used in the title page
 %-------------------------------------------------   
@@ -256,7 +270,7 @@
       \smallskip
       {\LARGE \authornames, BSc. \par}
       \vfill
-      {\large A thesis submitted in partial fulfillment for the \par}
+      {\large A thesis submitted in partial fulfilment for the \par}
       {\large degree of \degreename \par}
       \bigskip
       \bigskip
@@ -289,17 +303,18 @@
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE DESIGN
 %----------------------------------------------------------------------------------------
-\newenvironment{abstract}
+\newenvironment{abstract}[1]
 {
   \btypeout{Abstract Page}
-  \thispagestyle{empty}
-  \null\vfil
+  \pagestyle{plain}
+  %\thispagestyle{empty}
+  %\null\vfil
   \begin{center}
-    \setlength{\parskip}{0pt}
+    %\setlength{\parskip}{0pt}
     %{\normalsize \UNIVNAME \par} % University name in capitals
     %\bigskip
     {\huge{\textit{Abstract}} \par}
-    \bigskip
+    %\bigskip
     %{\normalsize \facname \par} % Faculty name
     %{\normalsize \deptname \par} % Department name
     %\bigskip
@@ -310,11 +325,12 @@
     %{\normalsize by \authornames \par} % Author name
     %\bigskip
   \end{center}
+  {\normalsize #1}
 }
 %----------------------------------------------------------------------------------------
 {
-  \vfil\vfil\vfil\null
-  \cleardoublepage
+  %\vfil\vfil\vfil\null
+  %\cleardoublepage
 }
 \addtocounter{secnumdepth}{1}
 \setcounter{tocdepth}{6}
@@ -324,7 +340,7 @@
 \addcontentsline{toc}{chapter}{#1}}
 \renewcommand\tableofcontents{
 \btypeout{Table of Contents}
-\addtotoc{Contents}
+%\addtotoc{Contents}
 \begin{spacing}{1}{
     \setlength{\parskip}{1pt}
     \if@twocolumn
@@ -411,7 +427,7 @@
 }
 \newcommand\acknowledgements[1]{
 \btypeout{Acknowledgements}
-\addtotoc{Acknowledgements}
+%\addtotoc{Acknowledgements}
 \thispagestyle{plain}
 \begin{center}{\huge{\textit{Acknowledgements}} \par}\end{center}
 {\normalsize #1}

@@ -2,6 +2,7 @@ module nuo3 where
 
 open import Data.Nat
 open import Relation.Nullary
+open import Data.Product
 
 data Id (A : Set) : A → A → Set where
   refl : (a : A) → Id A a a
@@ -35,6 +36,13 @@ lem2 A a b c p = J' A a (λ b' x → Id A a c → Id' A b' c) {!!} b p
 subst' :  (A : Set)(a b : A)(p : Id' A a b)
         (B : A → Set) → B a → B b
 subst' A a b p B ba = J' A a (λ b' _ → B b') ba b p
+
+
+J'' : (A : Set)(a : A) → (P : (b : A) → Id' A a b → Set)
+  → P a refl
+  → (b : A)(p : Id' A a b) → P b p
+J'' A a P re b p = {!!} -- subst' {!!} {!!} {!!}  ? ? -- re
+
 
 JbyJ' : (A : Set)(P : (a b : A) → Id A a b → Set)
     → ((a : A) → P a a (refl a))
@@ -87,9 +95,35 @@ postulate
         → ((x : A) → Id (B x) (f x) (g x)) 
         → Id ((x : A) → B x) f g
 
+B : (ℕ → ℕ) → Set
+B f = ℕ
+
+id' : ℕ → ℕ
+id' n =  n + 0
+
+cong : ∀{A B}{a b} → (f : A → B) → Id _ a b →  Id _ (f a) (f b)
+cong f (refl _) = refl _
+
+prf' : ∀ n → Id _ (id n) (id' n)
+prf' zero = refl _
+prf' (suc n) = cong suc (prf' n)
+
+prf : Id (ℕ → ℕ) id id'
+prf = Ext prf'
+
+postulate exteq : {A : Set}{B : A → Set}{f g : (x : A) → B x}
+                → (p : (x : A) → Id (B x) (f x) (g x)) 
+                → Id _ (Ext p) (refl _)
+
+
+irr' : ℕ
+irr' = subst (ℕ → ℕ) id id' prf B 0
 
 irr : ℕ
 irr = J (ℕ → ℕ) (λ a b x → ℕ) (λ a → 0) (λ x → x) (λ x → x) (Ext refl)
+
+eq : Id ℕ 0 irr'
+eq = refl 0
 
 irr-prf : ∀ n → ¬ Id ℕ irr n
 irr-prf n eqt = {!eqt!}

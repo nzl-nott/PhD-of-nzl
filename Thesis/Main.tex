@@ -4,6 +4,8 @@
 
 
 \documentclass[11pt,a4paper,UKenglish,twoside,openright]{Thesis}
+
+
 \usepackage{etex}
 
 \PassOptionsToPackage{utf8x}{inputenc}
@@ -29,6 +31,7 @@
 \usepackage[greek,english]{babel}
 \usepackage{stmaryrd}
 \usepackage{textgreek}
+
 
 %\usepackage{unicode-math}
 
@@ -97,6 +100,24 @@
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
 
+\usepackage{hyperref}
+
+
+\usepackage{aliascnt}
+
+
+%\theoremstyle{theorem}
+%    \newtheorem{theorem}{Theorem}
+
+\let\definition\relax
+\theoremstyle{definition}
+    \newaliascnt{definition}{theorem}
+    \newtheorem{definition}[definition]{Definition}
+    \aliascntresetthe{definition}
+    \providecommand*{\definitionautorefname}{Definition}
+
+
+%\newcommand{\propositionautorefname}{Proposition}
 
 
 
@@ -133,30 +154,36 @@
 
 \begin{center}
 
-\includegraphics[height=1.5cm,scale=0.1]{Pictures/2000px-University_of_Nottingham.png}\\% Logo instead of name
+%\includegraphics[height=1.5cm,scale=0.1]{Pictures/2000px-University_of_Nottingham.png}\\% Logo instead of name
 %\textsc{\LARGE \univname}\\[1.5cm] % University name
-\textsc{\Large Doctoral Thesis}\\[0.5cm] % Thesis type
 
-\HRule \\[0.4cm] % Horizontal line
-{\huge \bfseries \ttitle}\\[0.4cm] % Thesis title
-\HRule \\[1.5cm] % Horizontal line
+
+%\textsc{\Large Doctoral Thesis}\\[0.5cm] % Thesis type
+
+%\HRule \\[0.4cm] % Horizontal line
+{\huge \bfseries \ttitle}\\[6cm] % Thesis title
+%\HRule \\[1.5cm] % Horizontal line
  
-\begin{minipage}{0.4\textwidth}
-\begin{flushleft} \large
-\emph{Author:}\\
-{\authornames} % Author name - remove the \href bracket to remove the link
-\end{flushleft}
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{flushright} \large
-\emph{Supervisor:} \\
-{\supname} % Supervisor name - remove the \href bracket to remove the link  
-\end{flushright}
-\end{minipage}\\[3cm]
+
+ \large {\authornames, BSc.}
+\\[3cm]
+
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushleft} \large
+%\emph{Author:}\\
+%{\authornames, BSc.} % Author name - remove the \href bracket to remove the link
+%\end{flushleft}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushright} \large
+%\emph{Supervisor:} \\
+%{\supname} % Supervisor name - remove the \href bracket to remove the link  
+%\end{flushright}
+%\end{minipage}\\[3cm]
  
-\large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
-\textit{in the}\\[0.4cm]
-\groupname\\\deptname\\[2cm] % Research group name and department name
+\large \textit{Thesis submitted to the University of Nottingham\\  for the degree of Doctor of Philosophy}\\[4cm] % University requirement text
+%\textit{in the}\\[0.4cm]
+%\groupname\\\deptname\\[2cm] % Research group name and department name
  
 {\large September 2014}\\[4cm] % Date
 %\includegraphics{Logo} % University/department logo - uncomment to place it
@@ -167,18 +194,24 @@
 \end{titlepage}
 
 
-\clearpage % Start a new page
+%\clearpage % Start a new page
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
-\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+%\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+\cleardoublepage
+%\pagestyle{empty}
+%\begin{abstract}
 
+
+%\end{abstract}
 \input{Abstract}
 
 \clearpage % Start a new page
 
+%\pagestyle{empty}
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
@@ -235,7 +268,7 @@
 
 \input{Chapters/QuotientTypes}
 
-\input{Chapters/DefinableQuotients} 
+\input{Chapters/DefinableQuotients}
 
 \input{Chapters/Reals}
 
@@ -260,11 +293,19 @@
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-\input{Appendices/AppendixA}
-
 \chapter{Definable quotient structures}\label{app:dq}
 
+
+\input{Appendices/Codes/latex/Setoids}
+
 \input{Appendices/Codes/latex/Quotient}
+
+\input{Appendices/Codes/latex/PuImpEff}
+
+\input{Appendices/Codes/latex/QInteger}\label{defQInt}
+
+\input{Appendices/Codes/latex/Rational}
+%\input{Appendices/AppendixA}
 
 %\input{Appendices/Codes/latex/GroupoidQuotient}
 

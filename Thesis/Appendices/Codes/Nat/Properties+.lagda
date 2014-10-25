@@ -1,6 +1,6 @@
 \begin{code}
 
-module Data.Nat.Properties+ where
+module Nat.Properties+ where
 
 open import Algebra
 open import Algebra.Structures

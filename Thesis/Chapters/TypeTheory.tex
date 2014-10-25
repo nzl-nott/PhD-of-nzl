@@ -101,7 +101,7 @@ Notice that this version of UIP type checks only if we have \ref{reflection}. In
 
 Due to the addition of \ref{reflection}, the type checking becomes undecidable because it has to respect propositional equality which is not decidable in general. For example, the equality reflection rule implies functional extensionality which is not decidable.
 
-\itt is more widely used by programming languages such as Coq, Agda and Epigram, because its type checking is decidable and terminating.
+\itt is more widely used by programming languages such as Coq, Agda and Epigram, because its definitional equality is decidable, hence its type checking is decidable and programs written in it is terminating.
 
 However in \itt, \textbf{extensional equality} is not available. For example equality of functions, equality of different proofs for the same proposition, and more extensional concepts like quotient types are desirable and reasonable to acquire. However simply axiomatising them can result in non-canonical objects e.g.\ a term of $\N$ which are not reducible to numerals (see \autoref{noncanonical}). 
 
@@ -250,12 +250,12 @@ Identity types is a notion of intensional propositional equality given by the fo
 \begin{multicols}{2}
 \infrule[=-form]{\Gamma \vdash A \andalso \Gamma \vdash a : A, \andalso \Gamma \vdash a' : A}{\Gamma \vdash a =_A a'}
 \columnbreak
-\infrule[=-intro]{\Gamma \vdash a : A}{\Gamma \vdash r(a) : a =_A a}
+\infrule[=-intro]{\Gamma \vdash a : A}{\Gamma \vdash refl(a) : a =_A a}
 \end{multicols}
 
 We use  $a =_{A} a'$ instead of $\text{Id}_A(a, a')$ to denote the identity types, or simply $a = a'$.
 
-\infrule[$\J$]{\Gamma , x : A, y : A, p : x =_A y \vdash C  \andalso \Gamma , x : A \vdash t(a) : C[x,x,r(x)] \\ \andalso \Gamma \vdash a: A \andalso \Gamma \vdash a': A \andalso \Gamma \vdash p : a =_A a'}{\Gamma \vdash \J (t,a,a',p): C[a',a',p]}
+\infrule[$\J$]{\Gamma , x : A, y : A, p : x =_A y \vdash C  \andalso \Gamma , x : A \vdash t(x) : C[x,x,refl(x)] \\ \andalso \Gamma \vdash a: A \andalso \Gamma \vdash a': A \andalso \Gamma \vdash p : a =_A a'}{\Gamma \vdash \J (t,a,a',p): C[a',a',p]}
 
 Its computation rule is,
 
@@ -263,6 +263,23 @@ $$\J (t,a,a,r(a)) \equiv t(a)$$
 
 The \emph{uniqueness of identity proofs} (UIP) is not a consequence of $\J$ but another eliminator called $\K$ (see \autoref{UIPdetail}).
 
+\begin{definition}\label{subst}
+\textbf{"subst" function}.
+
+Given a type family $B : A \to \Set$, and $p : a ={A} a'$, we can easily define a function of type $B(a) \to B(a')$by applying $\J$:
+
+Let 
+
+$$C(x,y,p) \defeq B(x) \to B(y)$$
+
+$$t(x) \defeq \text{id}$$
+
+Thus,
+
+$$\text{subst}(B,p) \defeq : \J (t,a,a',p) : B(a) \to B(a')$$
+
+For simplicity, if we have a term of $b : B(a)$, we write $\text{subst}(B,p,b) : B(a')$ as the result.
+\end{definition}
 
 \textbf{Unit type}
 
@@ -518,7 +535,7 @@ However, the identity type in intensional type theory is not powerful enough for
 
 
 Objects are extensionally equal, if they have same the \emph{observable} behaviours, in other words they  can be substituted by the other in any contexts without changing the meaning of a program. For example point-wise equal functions, different proofs of the same proposition etc. Extensional (propositional) equality is not captured by the identity type which is intensional.
-Thus in the traditional formulation of \itt, extensionality and some other related features of propositional equality like quotient types are not available. These \emph{extensional concepts} has been comprehensively studied by Martin Hofmann \cite{hof:phd} a list of them are given as follows:
+Thus in the traditional formulation of \itt, extensionality and some other related features of propositional equality like quotient types are not available. These \emph{extensional concepts} has been summarised and comprehensively studied by Martin Hofmann \cite{hof:phd} a list of them are given as follows:
 
 
 \begin{itemize}
@@ -526,7 +543,7 @@ Thus in the traditional formulation of \itt, extensionality and some other relat
 \item \textbf{Functional extensionality} 
 
 
-\infrule[fun-ext]{\Gamma \vdash A \andalso \Gamma , x : A \vdash B \andalso \Gamma \vdash f, g : \Pi (x : A) ~B \\ \Gamma, a : A \vdash p: f(a) = g(a)}{\Gamma \vdash \text{ext}(p): f = g}
+\infrule[fun-ext]{\Gamma \vdash A \andalso \Gamma , x : A \vdash B \andalso \Gamma \vdash f, g : (x : A)  \to B(x) \\ \Gamma, a : A \vdash p: f(a) = g(a)}{\Gamma \vdash \text{ext}(p): f = g}
 
  If two (dependent) functions point-wise propositionally equal, they are (extensional) propositionally equal. This is called
 functional extensionality which is not inhabited in traditional formulation \itt \cite{alti:lics99}.
@@ -535,20 +552,54 @@ For example, two functions of type $\N \to \N$, $\lambda n \to n$ and $\lambda n
 %given two types $A$ and $B$, and two functions $f,\,g\,\colon A \to B$,
 
 %\[Ext = \forall\, x\colon A, f x = g x \to f = g\]
-
-It is inhabited in \ett since it is provable from equality reflection rule \ref{reflection}:
- 
-\begin{proof}\label{prf:ertofe}
+In \ett, functional extensionality is inhabited:
+\begin{theorem}\label{prf:ertofe}
+Functional extensionality is derivable from equality reflection rule \ref{reflection}
+\end{theorem}
+\begin{proof}
 Suppose $\Gamma , a : A \vdash p : f \,a = g \,a$, with reflection rule we have $\Gamma ,a : A \vdash f \,a \equiv g \,a$.
 Then using $\xi$-rule, we know that $\Gamma \vdash \lambda a . f \,a \equiv \lambda a . g \,a$.
 From the $\eta$-rule of $\Pi$-types and the transitivity of $\equiv$, we know that $\Gamma \vdash f \equiv g$. Finally we can conclude that $\Gamma \vdash \text{refl}(f) : f = g$.
 \end{proof}
 
-In \itt, if we postulate it, the type theory is not \emph{adequate}, which means canonicity is lost:
+In \itt, since propositional equality is not identified with definitional equality, it is not inhabited.
+If we postulate it, the $\N$-canonicity property (see Definition 2.1.9 in \cite{hof:phd}) of \itt is lost
+, or we can say the theory in no longer \emph{adequate} \cite{alti:lics99}.
 
-\begin{proof}[Non-canonical construction]\label{noncanonical}
-Suppose we define $id \defeq \lambda x . x$ and $id' \defeq \lambda x . x + 0$, recursively it is provable that $p': \forall x , id~ x = id'~x$, from functional extensionality we obtain $\text{ext} ~p' : id = id'$. We can use substitution to construct non-canonical natural numbers, for instance $\text{subst}~ (\lambda f. \N) ~(\text{ext} ~p') ~0$. This is non-canonical because the equality is non-canonical (not refl) so that the expression cannot be normalised.
-With this term, we can construct irreducible terms of any type $A$ by a
+\begin{definition}\label{adequate}
+A type theory is \textbf{adequate} if every term of $\N$ is definitionally equal to a numeral, i.e.\ either $0$ or in the form of $\text{suc}(\ldots)$.
+\end{definition}
+
+\begin{theorem}\label{noncanonical}
+If we introduce functional extensionality into \itt, the theory is not adequate.
+\end{theorem}
+
+\begin{proof} %[Non-canonical construction]
+Suppose we define two functions of type $\N \to \N$
+
+$$\text{id} \defeq \lambda x \to x~\text{and} ~\text{id}' \defeq \lambda x \to x + 0$$
+
+where $+$ is defined recursively as
+
+$0 + n \defeq n$
+$(\text{suc} ~m) + n \defeq \text{suc} ~(m + n)$
+
+The propositional equality $p: \forall (x : \N) \to \text{id}(x) = \text{id}'(x)$ is provable by induction on $x$. By \emph{functional extensionality}, these two functions are propositionally equal
+
+$$\text{ext}(p) : \text{id} = \text{id}'$$
+
+Assume $B : (\N \to \N) \to \Set$ which is defined as
+
+$B(f) \defeq \N$
+
+It is easy to see that $0$ is an element for $B(\text{id})$. By applying subst function (see \autoref{subst}), we can construct an element of $B(\text{id}')$ as
+
+$$\text{subst}(B,(\text{ext}(p),0)  : B(\text{id}')$$
+
+which is also a term of $\N$ by definition of $B$.
+Because the proof $\text{ext}(p)$ is not canonical, namely it can not be reduced to refl, this closed term of natural number is not reduced to either $0$ or in the form of $\text{suc}(\ldots)$.
+
+In fact, with this term, we can construct irreducible terms of arbitrary type $A$ by a
 mapping $f : \N \to A$.
 \end{proof}
 
@@ -573,10 +624,10 @@ UIP is not a consequence of the fundamental eliminator for identity type $\J$ as
 %For all $x:A$ and $p: x =_A x$ we have $p=\text{refl}_{x}$.
 %\end{axiom}
 
-\infrule[$\K$]{\Gamma \vdash a : A \andalso \Gamma, x : a = a \vdash C(x) \\ \Gamma \vdash t : C(r(a)) \andalso \Gamma \vdash p : a = a }{\Gamma \vdash \K (t,p) : C(p)}
+\infrule[$\K$]{\Gamma \vdash a : A \andalso \Gamma, x : a = a \vdash C(x) \\ \Gamma \vdash t : C(refl(a)) \andalso \Gamma \vdash p : a = a }{\Gamma \vdash \K (t,p) : C(p)}
 
 computation rule:
-$$\K (t , r(a)) \equiv t$$
+$$\K (t , refl(a)) \equiv t$$
 
 In programming languages such as Agda and Epigram, UIP and $\K$ are provable using dependent pattern matching. We can add an Agda flag ``--without-K'' to deny pattern matching on $a = a$ if we do not accept UIP in general. 
 Although UIP for arbitrary types is not derivable, types equipped with decidable equality have the property UIP as shown by Michael Hedberg \cite{hed:98}.

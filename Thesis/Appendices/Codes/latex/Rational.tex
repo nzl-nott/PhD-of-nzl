@@ -1,0 +1,378 @@
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{Rational} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{import} \AgdaModule{Data.Rational} \AgdaSymbol{as} \AgdaModule{Rt}\<%
+\\
+\>\AgdaComment{-- open import Data.Rational' as Rt₀ hiding (-\_ ; \_÷\_ ; ∣\_∣)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Integer} \AgdaKeyword{hiding} \AgdaSymbol{(}suc\AgdaSymbol{;} pred\AgdaSymbol{)} \AgdaKeyword{renaming} \AgdaSymbol{(}-[1+\_] \AgdaSymbol{to} -suc\_\AgdaSymbol{;} \_*\_ \AgdaSymbol{to} \_ℤ*\_\AgdaSymbol{;}-\_ \AgdaSymbol{to} ℤ-\_\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{QInteger} \<[22]%
+\>[22]\AgdaKeyword{hiding} \AgdaSymbol{(}\_∼\_\AgdaSymbol{;} [\_]\AgdaSymbol{;} ⌜\_⌝\AgdaSymbol{;} sound \AgdaSymbol{;} stable\AgdaSymbol{)} \AgdaComment{-- as ℤ' hiding (-\_ ; suc ; [\_] ; ∣\_∣; \_◃\_ ; pred ; ⌜\_⌝) renaming (p to ∣\_∣')}\<%
+\\
+\>\AgdaComment{-- import Data.Integer.Properties' as ℤ'}\<%
+\\
+\>\AgdaComment{-- import Data.Integer.Setoid as ℤ₀}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat} \AgdaSymbol{as} \AgdaModule{ℕ} \AgdaKeyword{renaming} \AgdaSymbol{(}\_+\_ \AgdaSymbol{to} \_ℕ+\_ \AgdaSymbol{;} \_*\_ \AgdaSymbol{to} \_ℕ*\_\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat.GCD}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat.Divisibility} \AgdaKeyword{using} \AgdaSymbol{(}\_∣\_ \AgdaSymbol{;} 1∣\_ \AgdaSymbol{;} divides\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Nat.Coprimality}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Unit}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.PropositionalEquality} \AgdaKeyword{hiding} \AgdaSymbol{(}[\_]\AgdaSymbol{)}\<%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Nullary.Decidable}\<%
+\\
+\>\<\end{code}
+}
+
+\section{Rational numbers}
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{ℚ₀} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{\_/suc\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{n} \AgdaSymbol{:} \AgdaDatatype{ℤ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{d} \AgdaSymbol{:} \AgdaDatatype{ℕ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaDatatype{ℚ₀}\<%
+\\
+\>\<\end{code}
+
+\textbf{Extractions}
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{num} \AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
+\\
+\>\AgdaFunction{num} \AgdaSymbol{(}\AgdaBound{n} \AgdaInductiveConstructor{/suc} \AgdaSymbol{\_)} \AgdaSymbol{=} \AgdaBound{n}\<%
+\\
+%
+\\
+\>\AgdaFunction{den} \AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaDatatype{ℕ}\<%
+\\
+\>\AgdaFunction{den} \AgdaSymbol{(\_} \AgdaInductiveConstructor{/suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaInductiveConstructor{suc} \AgdaBound{d}\<%
+\\
+\>\<\end{code}
+
+\textbf{Equivalence relation}
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{infixl} \AgdaNumber{2} \_∼\_\<%
+\\
+%
+\\
+\>\AgdaFunction{\_∼\_} \<[6]%
+\>[6]\AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaBound{n1} \AgdaInductiveConstructor{/suc} \AgdaBound{d1} \AgdaFunction{∼} \AgdaBound{n2} \AgdaInductiveConstructor{/suc} \AgdaBound{d2} \AgdaSymbol{=} \<[27]%
+\>[27]\AgdaBound{n1} \AgdaFunction{ℤ*} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{suc} \AgdaBound{d2}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{n2} \AgdaFunction{ℤ*} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{suc} \AgdaBound{d1}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+Property: a fraction is reduced
+
+i.e. the absolute value of the numerator is comprime to the denominator
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{IsReduced} \AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaFunction{IsReduced} \AgdaSymbol{(}\AgdaBound{n} \AgdaInductiveConstructor{/suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaFunction{True} \AgdaSymbol{(}\AgdaFunction{coprime?} \AgdaFunction{∣} \AgdaBound{n} \AgdaFunction{∣} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{))}\<%
+\\
+\>\<\end{code}
+
+The Definition of $\Q$ which is equivalent to the one in standard library
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{ℚ} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaFunction{ℚ} \AgdaSymbol{=} \AgdaRecord{Σ[} \AgdaBound{q} \AgdaRecord{∶} \AgdaDatatype{ℚ₀} \AgdaRecord{]} \AgdaFunction{IsReduced} \AgdaBound{q}\<%
+\\
+\>\<\end{code}
+
+\textbf{Normalisation function}:
+
+1. Calculate a reduced fraction for $\frac{x}{y}$ with a condition that y is not zero.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{calℚ} \AgdaSymbol{:} \AgdaSymbol{∀(}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaDatatype{ℕ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{y} \AgdaFunction{≢} \AgdaNumber{0} \AgdaSymbol{→} \AgdaFunction{ℚ}\<%
+\\
+\>\AgdaFunction{calℚ} \AgdaBound{x} \AgdaBound{y} \AgdaBound{neo} \AgdaKeyword{with} \AgdaFunction{gcd′} \AgdaBound{x} \AgdaBound{y}\<%
+\\
+\>\AgdaFunction{calℚ} \AgdaSymbol{.(}\AgdaBound{q₁} \AgdaPrimitive{ℕ*} \AgdaBound{di}\AgdaSymbol{)} \AgdaSymbol{.(}\AgdaBound{q₂} \AgdaPrimitive{ℕ*} \AgdaBound{di}\AgdaSymbol{)} \AgdaBound{neo} \<[33]%
+\>[33]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{|} \AgdaBound{di} \AgdaInductiveConstructor{,} \AgdaInductiveConstructor{gcd-*} \AgdaBound{q₁} \AgdaBound{q₂} \AgdaBound{c} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaFunction{numr} \AgdaInductiveConstructor{/suc} \AgdaFunction{pred} \AgdaBound{q₂}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaFunction{iscoprime}\<%
+\\
+\>[2]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaKeyword{where}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{numr} \AgdaSymbol{=} \AgdaInductiveConstructor{+} \AgdaBound{q₁}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{deno} \AgdaSymbol{=} \AgdaInductiveConstructor{suc} \AgdaSymbol{(}\AgdaFunction{pred} \AgdaBound{q₂}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{lzero} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{x} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{x} \AgdaDatatype{≡} \AgdaNumber{0} \AgdaSymbol{→} \AgdaBound{x} \AgdaPrimitive{ℕ*} \AgdaBound{y} \AgdaDatatype{≡} \AgdaNumber{0}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{lzero} \AgdaSymbol{.}\AgdaNumber{0} \AgdaBound{y} \AgdaInductiveConstructor{refl} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{q2≢0} \AgdaSymbol{:} \AgdaBound{q₂} \AgdaFunction{≢} \AgdaNumber{0}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{q2≢0} \AgdaBound{qe} \AgdaSymbol{=} \AgdaBound{neo} \AgdaSymbol{(}\AgdaFunction{lzero} \AgdaBound{q₂} \AgdaBound{di} \AgdaBound{qe}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{invsuc} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{n} \AgdaSymbol{→} \AgdaBound{n} \AgdaFunction{≢} \AgdaNumber{0} \AgdaSymbol{→} \AgdaBound{n} \AgdaDatatype{≡} \AgdaInductiveConstructor{suc} \AgdaSymbol{(}\AgdaFunction{pred} \AgdaBound{n}\AgdaSymbol{)}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{invsuc} \AgdaInductiveConstructor{zero} \AgdaBound{nz} \AgdaKeyword{with} \AgdaBound{nz} \AgdaInductiveConstructor{refl}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{...} \AgdaSymbol{|} \AgdaSymbol{()}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{invsuc} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaBound{nz} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{deno≡q2} \AgdaSymbol{:} \AgdaBound{q₂} \AgdaDatatype{≡} \AgdaFunction{deno}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{deno≡q2} \AgdaSymbol{=} \AgdaFunction{invsuc} \AgdaBound{q₂} \AgdaFunction{q2≢0}\<%
+\\
+%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{copnd} \AgdaSymbol{:} \AgdaFunction{Coprime} \AgdaBound{q₁} \AgdaFunction{deno}\<%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{copnd} \AgdaSymbol{=} \AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Coprime} \AgdaBound{q₁} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{deno≡q2} \AgdaBound{c}\<%
+\\
+%
+\\
+\>[3]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{→} \AgdaRecord{GCD} \AgdaBound{a} \AgdaBound{b} \AgdaNumber{1} \<[33]%
+\>[33]\<%
+\\
+\>[5]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{→} \AgdaFunction{True} \AgdaSymbol{(}\AgdaFunction{coprime?} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaBound{a} \AgdaBound{b} \AgdaBound{gcd1} \AgdaKeyword{with} \AgdaFunction{gcd} \AgdaBound{a} \AgdaBound{b}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaBound{a} \AgdaBound{b} \AgdaBound{gcd1} \AgdaSymbol{|} \AgdaInductiveConstructor{zero} \AgdaInductiveConstructor{,} \AgdaBound{y} \AgdaKeyword{with} \AgdaFunction{GCD.unique} \AgdaBound{gcd1} \AgdaBound{y}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaBound{a} \AgdaBound{b} \AgdaBound{gcd1} \AgdaSymbol{|} \AgdaInductiveConstructor{zero} \AgdaInductiveConstructor{,} \AgdaBound{y} \AgdaSymbol{|} \AgdaSymbol{()}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaBound{a} \AgdaBound{b} \AgdaBound{gcd1} \AgdaSymbol{|} \AgdaInductiveConstructor{suc} \AgdaInductiveConstructor{zero} \AgdaInductiveConstructor{,} \AgdaBound{y} \AgdaSymbol{=} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaBound{a} \AgdaBound{b} \AgdaBound{gcd1} \AgdaSymbol{|} \AgdaInductiveConstructor{suc} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{y} \<[40]%
+\>[40]\<%
+\\
+\>[5]\AgdaIndent{33}{}\<[33]%
+\>[33]\AgdaKeyword{with} \AgdaFunction{GCD.unique} \AgdaBound{gcd1} \AgdaBound{y}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{witProp} \AgdaBound{a} \AgdaBound{b} \AgdaBound{gcd1} \AgdaSymbol{|} \AgdaInductiveConstructor{suc} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{y} \AgdaSymbol{|} \AgdaSymbol{()}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{iscoprime} \AgdaSymbol{:} \AgdaFunction{True} \AgdaSymbol{(}\AgdaFunction{coprime?} \AgdaFunction{∣} \AgdaFunction{numr} \AgdaFunction{∣} \AgdaFunction{deno}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{iscoprime} \AgdaSymbol{=} \AgdaFunction{witProp} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaFunction{coprime-gcd} \AgdaFunction{copnd}\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+2.Negation
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{-\_} \AgdaSymbol{:} \AgdaFunction{ℚ} \AgdaSymbol{→} \AgdaFunction{ℚ}\<%
+\\
+\>\AgdaFunction{-\_} \AgdaSymbol{((}\AgdaBound{n} \AgdaInductiveConstructor{/suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaBound{isC}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaSymbol{((}\AgdaFunction{ℤ-} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaInductiveConstructor{,}\<%
+\\
+\>[0]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaFunction{subst} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{True} \AgdaSymbol{(}\AgdaFunction{coprime?} \AgdaBound{x} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)))} \<[43]%
+\>[43]\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{(}\AgdaFunction{forgetSign} \AgdaBound{n}\AgdaSymbol{)} \AgdaBound{isC}\<%
+\\
+\>[0]\AgdaIndent{3}{}\<[3]%
+\>[3]\AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{forgetSign} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{x} \AgdaFunction{∣} \AgdaDatatype{≡} \AgdaFunction{∣} \<[35]%
+\>[35]\AgdaFunction{ℤ-} \AgdaBound{x} \AgdaFunction{∣}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{forgetSign} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{forgetSign} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaInductiveConstructor{zero}\AgdaSymbol{)} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>[0]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaFunction{forgetSign} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{))} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\<\end{code}
+
+3.Normalisation function
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{[\_]} \AgdaSymbol{:} \AgdaDatatype{ℚ₀} \AgdaSymbol{→} \AgdaFunction{ℚ}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{+} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaSymbol{=} \AgdaFunction{calℚ} \AgdaBound{n} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(λ} \AgdaSymbol{())}\<%
+\\
+\>\AgdaFunction{[} \AgdaSymbol{(}\AgdaInductiveConstructor{-suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaInductiveConstructor{/suc} \AgdaBound{d} \AgdaFunction{]} \AgdaSymbol{=} \AgdaFunction{-} \AgdaFunction{calℚ} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaInductiveConstructor{suc} \AgdaBound{d}\AgdaSymbol{)} \AgdaSymbol{(λ} \AgdaSymbol{())}\<%
+\\
+\>\<\end{code}
+
+Embedding function
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{⌜\_⌝} \AgdaSymbol{:} \AgdaFunction{ℚ} \AgdaSymbol{→} \AgdaDatatype{ℚ₀}\<%
+\\
+\>\AgdaFunction{⌜\_⌝} \AgdaSymbol{=} \AgdaFunction{proj₁}\<%
+\\
+\>\<\end{code}
+
+
+
+\AgdaHide{
+\begin{code}\>\<%
+\\
+\>\AgdaComment{\{-
+GCD′→ℚ : ∀ x y di → y ≢ 0 → C.GCD′ x y di → ℚ
+GCD′→ℚ .(q₁ ℕ* di) .(q₂ ℕ* di) di neo (C.gcd-* q₁ q₂ c) 
+  = record \{ numerator = numr
+           ; denominator-1 = pred q₂
+           ; isCoprime = iscoprime \}
+   where
+     numr = ℤ.+\_ q₁
+     deno = suc (pred q₂)
+     
+     numr≡q1 : ∣ numr ∣ ≡ q₁
+     numr≡q1 = refl
+
+     lzero : ∀ x y → x ≡ 0 → x ℕ* y ≡ 0
+     lzero .0 y refl = refl
+
+     q2≢0 : q₂ ≢ 0
+     q2≢0 qe = neo (lzero q₂ di qe)
+
+     invsuc : ∀ n → n ≢ 0 → suc (pred n) ≡ n
+     invsuc zero nz with nz refl
+     ... | ()
+     invsuc (suc n) nz = refl
+     
+     deno≡q2 : deno ≡ q₂
+     deno≡q2 = invsuc q₂ q2≢0
+     
+     transCop : ∀ \{a b c d\} → c ≡ a → d ≡ b 
+              → C.Coprime a b → C.Coprime c d
+     transCop refl refl c = c
+
+     copnd : C.Coprime ∣ numr ∣ deno
+     copnd = transCop numr≡q1 deno≡q2 c
+
+     witProp : ∀ a b → GCD a b 1 
+             → True (C.coprime? a b)
+     witProp a b gcd1 with gcd a b
+     witProp a b gcd1 | zero , y with GCD.unique gcd1 y
+     witProp a b gcd1 | zero , y | ()
+     witProp a b gcd1 | suc zero , y = tt
+     witProp a b gcd1 | suc (suc n) , y 
+                                 with GCD.unique gcd1 y
+     witProp a b gcd1 | suc (suc n) , y | ()
+
+     iscoprime : True (C.coprime? ∣ numr ∣ deno)
+     iscoprime = witProp ∣ numr ∣ deno 
+                 (C.coprime-gcd copnd)
+}\<\end{code}
+
+2.Negation
+
+\begin{code}\>\AgdaComment{
+-\_ : ℚ → ℚ
+-\_ q = record \{ numerator = ℤ- numr
+              ; denominator-1 = deno-1
+              ; isCoprime = iscoprime- \}
+   where
+     numr = ℚ.numerator q
+     deno-1 = ℚ.denominator-1 q
+
+     iscoprime : True (C.coprime? ∣ numr ∣ (suc deno-1))
+     iscoprime = ℚ.isCoprime q
+
+     forgetSign : ∀ x → ∣ x ∣ ≡ ∣  ℤ- x ∣
+     forgetSign (-suc n) = refl
+     forgetSign (+ zero) = refl
+     forgetSign (+ (suc n)) = refl
+
+     iscoprime- : True (C.coprime? ∣ ℤ- numr ∣ (suc deno-1))
+     iscoprime- = subst (λ x → True (C.coprime? x (suc deno-1))) 
+                  (forgetSign numr) iscoprime
+}\<\end{code}
+
+3.Normalisation function
+
+\begin{code}\>\AgdaComment{
+[\_] : ℚ₀ → ℚ
+[ (+ 0) /suc d ] = ℤ.+\_ 0 ÷ 1
+
+[ (+ (suc n)) /suc d ] with gcd (suc n) (suc d)
+
+[ (+ suc n) /suc d ] | di , g = GCD′→ℚ (suc n) (suc d) 
+                              di (λ ()) (C.gcd-gcd′ g)
+
+[ (-suc n) /suc d ] with gcd (suc n) (suc d)
+... | di , g = - GCD′→ℚ (suc n) (suc d) di (λ ()) 
+             (C.gcd-gcd′ g)
+}\<\end{code}
+
+Embedding function
+
+\begin{code}\>\AgdaComment{
+⌜\_⌝ : ℚ → ℚ₀
+⌜ q ⌝ = (ℚ.numerator q) /suc (ℚ.denominator-1 q)
+-\}}\<%
+\\
+\>\<\end{code}
+
+}

@@ -1,3 +1,6 @@
+
+
+
 \AgdaHide{
 \begin{code}
 
@@ -6,67 +9,79 @@ module Quotient where
 open import Data.Product
 open import Function
 open import Level using (_⊔_)
--- open import Relation.Binary
+import Relation.Binary as RB
 open import Data.Nat hiding (_⊔_)
-open import Setoids
--- Setoid = RB.Setoid Level.zero Level.zero
+
+Setoid = RB.Setoid Level.zero Level.zero
 
 open import Relation.Binary.PropositionalEquality as PE
   hiding ([_])
 
 open import ThomasProperties
 
+
+_respects_ : ∀{α β}{A : Set α}{B : Set β}(f : A → B) 
+           → (_~_ : A → A → Set α) → Set (α ⊔ β)
+f respects _~_ = ∀ {a a'} → a ~ a' → f a ≡ f a'
+
+isProp : (P : Set) → Set
+isProp P =  {p p' : P} → p ≡ p'
+
+isSet : (S : Set) → Set
+isSet S = {a b : S} → isProp (a ≡ b)
+
+subIrr : {S : Set}(isS : isSet S)
+         {A : S → Set}{a b : S}(p q : a ≡ b){m : A a}
+       → subst A p m ≡ subst A q m
+subIrr isS p q = cong (λ p' → subst _ p' _) (isS {p = p} {p' = q})
+
+subIrr2 : {S : Set}{A : Set}{a b : S}(p : a ≡ b){m : A}
+       → subst (λ _ → A) p m ≡ m
+subIrr2 refl = refl
+
+
 \end{code}
 }
 
-We first define the relation that "$f$ respects $\sim$" (f is compatible with $\sim$)
 
-\begin{code}
-_respects_ : {A : Set}{B : Set}(f : A → B) 
-           → (_~_ : A → A → Set) → Set
-f respects _~_ = ∀ {a a'} → a ~ a' → f a ≡ f a'
-\end{code}
+\textbf{Prequotient}
 
-Prequotient
+Given a setoid, we can turn it into a pre-quotient, corresponds to 
+fork (or cofork) in category theory.
 
 \begin{code}
 record pre-Quotient (S : Setoid) : Set₁ where
-  open Setoid S renaming (Carrier to A)
+\end{code}
+\AgdaHide{
+\begin{code}
+  open RB.Setoid S renaming (Carrier to A;
+       _≈_ to _~_ ; refl to ~-refl; 
+       sym to ~-sym;
+       trans to ~-trans)
+\end{code}
+}
+\begin{code}
   field
     Q   : Set
     [_] : A → Q
     [_]⁼ : [_] respects _~_
+    QisSet : isSet Q
 \end{code}
 \AgdaHide{
 \begin{code}
-  open Setoid S public renaming 
-       (Carrier to A 
+  open RB.Setoid S public renaming 
+       (Carrier to A; _≈_ to _~_ 
        ; refl to ~-refl; sym to ~-sym;
        trans to ~-trans)
 \end{code}
 }
 
-We can assume UIP which will only be applied on quotient sets
+\textbf{Quotient}
+
+A prequotient with a dependent eliminator.
 
 \begin{code}
-≡prop : {A : Set}{a b : A} → (p q : a ≡ b) → p ≡ q
-≡prop {A} {a} {.a} refl refl = refl
-
-subIrr : {S : Set}{A : S → Set}{a b : S}(p q : a ≡ b){m : A a}
-       → subst A p m ≡ subst A q m
-subIrr p q with ≡prop p q
-subIrr p .p | refl = refl
-
-subIrr2 : {S : Set}{A : Set}{a b : S}(p : a ≡ b){m : A}
-       → subst (λ _ → A) p m ≡ m
-subIrr2 refl = refl
-\end{code}
-
-Quotient with dependent eliminator
-
-\begin{code}
-record Quotient {S : Setoid}
-       (PQ : pre-Quotient S) : Set₁ where
+record Quotient {S : Setoid}(PQ : pre-Quotient S) : Set₁ where
   open pre-Quotient PQ
   field
     qelim   : {B : Q → Set}
@@ -74,13 +89,14 @@ record Quotient {S : Setoid}
             → (∀ {a a'} → (p : a ~ a') 
             → subst B [ p ]⁼ (f a) ≡ f a')
             → (q : Q) → B q
-    qelim-β : ∀ {B a f}
-            (resp : (∀ {a a'} → (p : a ~ a') 
+    qelim-β : ∀ {B a f}(resp : (∀ {a a'} → (p : a ~ a') 
             → subst B [ p ]⁼ (f a) ≡ f a'))
             → qelim {B} f resp [ a ] ≡ f a
 \end{code}
 
-Quotient (Hofmann's)
+\textbf{Quotient (Hofmann's)}
+
+A prequotient with a non-dependent eliminator (lifting).
 
 \begin{code}
 record Hof-Quotient {S : Setoid}
@@ -96,32 +112,12 @@ record Hof-Quotient {S : Setoid}
            → lift {B} f resp [ a ] ≡ f a
 
     qind   : ∀ (P : Q → Set)
-           → (∀{x} → (p q : P x) → p ≡ q)
+           → (∀{x} → isProp (P x))
            → (∀ a → P [ a ])
            → (∀ x → P x)
 \end{code}
 
-
-\begin{code}
-record Hof-Quotient' {S : Setoid}
-       (PQ : pre-Quotient S) : Set₁ where
-  open pre-Quotient PQ
-  field
-    lift   : {B : Set}
-           → (f : A → B)
-           → f respects _~_
-           → Q → B
-
-    lift-β : ∀ {B a f}(resp : f respects _~_) 
-           → lift {B} f resp [ a ] ≡ f a
-
-    qind   : ∀ (P : Q → Set)
-           → (∀{x} → (p q : P x) → p ≡ q)
-           → (∀ a → P [ a ])
-           → (∀ x → P x)
-\end{code}
-
-Exact quotient
+\textbf{Exact quotient}
 
 \begin{code}
 record exact-Quotient {S : Setoid}
@@ -132,7 +128,8 @@ record exact-Quotient {S : Setoid}
     exact : ∀ {a b : A} → [ a ] ≡ [ b ] → a ~ b
 \end{code}
 
-Definable quotient
+
+\textbf{Definable quotient}
 
 \begin{code}
 record def-Quotient {S : Setoid}
@@ -144,7 +141,7 @@ record def-Quotient {S : Setoid}
     stable   : ∀ q → [ emb q ] ≡ q
 \end{code}
 
-\textbf{Proof :} Definable quotients are exact.
+\textbf{Proof :}\label{DQisExact} Definable quotients are exact.
 
 \begin{code}
   exact : ∀{a b} → [ a ] ≡ [ b ] → a ~ b
@@ -160,8 +157,7 @@ record def-Quotient {S : Setoid}
 
 \AgdaHide{
 \begin{code}
-Σeq : {A : Set}{B : A → Set}{a a' : A}
-      {b : B a}{b' : B a'}(p : a ≡ a') 
+Σeq : {A : Set}{B : A → Set}{a a' : A}{b : B a}{b' : B a'}(p : a ≡ a') 
     → subst B p b ≡ b' → (a , b) ≡ (a' , b')
 Σeq refl refl = refl
 
@@ -177,8 +173,8 @@ ind2dep {Q} {B} f id' q = subst B (id' q) (proj₂ (f q))
 \textbf{Proof :} Hofmann's definition of quotient is equivalent to Quotient.
 
 \begin{code}
-Hof-Quotient→Quotient : {S : Setoid}{PQ : pre-Quotient S} →
-  (Hof-Quotient PQ) → (Quotient PQ)
+Hof-Quotient→Quotient : {S : Setoid} → {PQ : pre-Quotient S}
+       → (Hof-Quotient PQ) → (Quotient PQ)
 Hof-Quotient→Quotient {S} {PQ} QuH = 
   record 
     { qelim   = λ {B} f resp 
@@ -218,21 +214,23 @@ Hof-Quotient→Quotient {S} {PQ} QuH =
            f'-β : {a : A} → f' [ a ] ≡ [ a ] , f a
            f'-β = lift-β _
 
-           isIda : ∀ {a} → id' [ a ] ≡ [ a ]
-           isIda = cong proj₁ f'-β
+           f'-sound : ∀{a} → id' [ a ] ≡ [ a ]
+           f'-sound = cong proj₁ f'-β
 
-           isIdq : ∀ {q} → id' q ≡ q
-           isIdq {q} = qind P ≡prop (λ _ → isIda) q
-
-           f^ : (q : Q) → B q
-           f^ q = subst B isIdq (proj₂ (f' q))
+           f'-sound' : ∀ {q} → id' q ≡ q
+           f'-sound' {q} = qind P QisSet 
+                           (λ _ → f'-sound) q
 
            f'-sound2 : ∀ {a} → 
-                     subst B isIda (proj₂ (f' [ a ])) ≡ f a
+             subst B f'-sound (proj₂ (f' [ a ])) ≡ f a
            f'-sound2 = cong-proj₂ _ _ f'-β
+
+           f^ : (q : Q) → B q
+           f^ q = subst B (f'-sound') (proj₂ (f' q))
            
            f^-β : ∀ {a} → f^ [ a ] ≡ f a
-           f^-β {a} = trans (subIrr isIdq isIda) f'-sound2
+           f^-β {a} = trans (subIrr QisSet 
+                      f'-sound' f'-sound) f'-sound2
 \end{code}
 
 \begin{code}
@@ -247,7 +245,7 @@ Quotient→Hof-Quotient {S} {PQ} QU =
   ; lift-β = λ resp 
              → qelim-β (resp' resp)
   ; qind = λ P isP f 
-           → qelim {P} f (λ _ → isP _ _)
+           → qelim {P} f (λ _ → isP)
   }
   where
     open pre-Quotient PQ
@@ -260,11 +258,11 @@ Quotient→Hof-Quotient {S} {PQ} QU =
           → subst (λ _ → B) [ p ]⁼ (f a) 
           ≡ f a'
     resp' resp p = 
-          trans (subIrr2 [ p ]⁼)
+          trans (subIrr2 [ p ]⁼) 
           (resp p)
 \end{code}
 
-\textbf{Proof :} A definable quotient gives rise to a \emph{quotient}.
+\textbf{Proof :}Definable quotients gives rise to a \emph{Quotient}.
 
 \begin{code}
 def-Quotient→Quotient : 
@@ -275,9 +273,8 @@ def-Quotient→Quotient {S} {PQ} QuD =
          λ {B} f resp q → subst B (stable q) (f (emb q))
          ; qelim-β = 
          λ {B} {a} {f} resp → 
-         trans (subIrr (stable [ a ]) 
+         trans (subIrr QisSet (stable [ a ]) 
          [ complete a ]⁼) (resp (complete a))
-
   }
     where
     open pre-Quotient PQ
@@ -285,7 +282,7 @@ def-Quotient→Quotient {S} {PQ} QuD =
 \end{code}
 
 
-\textbf{Proof :} A definable quotients gives rise to an \emph{exact (effective) quotient}.
+\textbf{Proof :}Definable quotients gives rise to an \emph{exact (effective) quotient}.
 
 \begin{code}
 def-Quotient→exact-Quotient : 
@@ -300,6 +297,7 @@ def-Quotient→exact-Quotient {S} {PQ} QuD =
     open def-Quotient QuD
 \end{code}
 
+\AgdaHide{
 \begin{code}
 def-Quotient→Hof-Quotient 
   : {S : Setoid} 
@@ -326,4 +324,66 @@ def-Quotient→Hof-Quotient' :
 def-Quotient→Hof-Quotient' = 
   Quotient→Hof-Quotient ∘ def-Quotient→Quotient
 \end{code}
+}
 
+\textbf{Proof :}The propositional univalence implies that a quotient is always exact.\label{PUEFagda}
+
+\begin{code}
+
+Prp = Set
+
+_⇔_ : (A B : Prp) → Prp
+A ⇔ B = (A → B) × (B → A)
+\end{code}
+
+\begin{code}
+module PuImpEff
+
+\end{code}
+
+Assume we have the propositional univalence (the other part is trivial),
+
+\begin{code}
+  (PropUni₁ : ∀ {p q : Prp} → (p ⇔ q) → p ≡ q)
+\end{code}
+
+and a quotient (Note that we postulate the lifting function for $B : Set_1$ because for convenience we did not take into account the universe levels in the definition, but it is required in the proof here)
+
+\begin{code}
+  {S : Setoid}
+  {PQ : pre-Quotient S}
+    where
+  open pre-Quotient PQ
+\end{code}
+\begin{code}  
+  postulate 
+    lift₁ : {B : Set₁}  → 
+            (f : A → B) → 
+            (f respects _~_) → 
+             Q → B
+
+  postulate
+    lift-β₁ : ∀ {B a f}{resp : (f respects _~_)} 
+            → lift₁ {B} f resp [ a ]  ≡ f a
+
+  coerce : {A B : Set} → A ≡ B → A → B
+  coerce refl m = m
+
+  exact : ∀ a a' → [ a ] ≡ [ a' ] → a ~ a'
+  exact a a' p = coerce P^-β (~-refl {a})
+        where
+          P : A → Prp
+          P x = a ~ x
+
+          P-resp : P respects _~_
+          P-resp {b} {b'} bb' = 
+            PropUni₁ ((λ ab → ~-trans ab bb') , 
+            (λ ab' → ~-trans ab' (~-sym bb')))
+
+          P^ : Q → Prp
+          P^ = lift₁ P P-resp
+
+          P^-β : P a ≡ P a'
+          P^-β = trans (sym lift-β₁) 
+                 (trans (cong P^ p) lift-β₁)
+\end{code}

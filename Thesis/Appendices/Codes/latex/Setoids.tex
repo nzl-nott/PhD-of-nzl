@@ -1,0 +1,59 @@
+\AgdaHide{
+\begin{code}\>\<%
+\\
+%
+\\
+\>\AgdaKeyword{module} \AgdaModule{Setoids} \AgdaKeyword{where}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Relation.Binary.Core} \AgdaSymbol{as} \AgdaModule{Core} \AgdaKeyword{using} \AgdaSymbol{(}\_≡\_\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaKeyword{import} \AgdaModule{Data.Product}\<%
+\\
+%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Core} \AgdaKeyword{public} \AgdaKeyword{hiding} \AgdaSymbol{(}\_≡\_\AgdaSymbol{;} refl\AgdaSymbol{;} \_≢\_\AgdaSymbol{)}\<%
+\\
+%
+\\
+%
+\\
+\>\AgdaFunction{\_⇔\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>\AgdaBound{A} \AgdaFunction{⇔} \AgdaBound{B} \AgdaSymbol{=} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{→} \AgdaBound{B}\AgdaSymbol{)} \AgdaFunction{×} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{→} \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>\<\end{code}
+}
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Setoid} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{infix} \AgdaNumber{4} \_\textasciitilde\_\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Carrier} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{\_\textasciitilde\_} \<[18]%
+\>[18]\AgdaSymbol{:} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{isEquivalence} \AgdaSymbol{:} \AgdaRecord{IsEquivalence} \AgdaBound{\_\textasciitilde\_}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{open} \AgdaModule{IsEquivalence} \AgdaFunction{isEquivalence} \AgdaKeyword{public}\<%
+\\
+\>\<\end{code}

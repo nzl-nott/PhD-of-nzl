@@ -4,22 +4,22 @@
 \chapter{The setoid Model}\label{models}
 
 
-To introduce extensional concepts in \itt, one can simply postulate them as axioms but the good computational properties of Type Theory will be lost. Therefore it is crucial that these axioms have 
-a computational interpretation. One solution is to construct a model of theses axioms in \itt or in a constructive setting such that extensional concepts like functional extensionality, quotient types, univalence are automatically derivable. Types are usually interpreted as structured objects rather than sets, and the model is named after the structured objects, for example, setoid, groupoid, simplicial sets. 
+To introduce extensional concepts into \itt, one can simply postulate them as axioms but we lose the good computational properties of Type Theory.  It is crucial to construct an intensional model where these extensional concepts like functional extensionality, quotient types are automatically derivable. In the usual set model, types are sets which does not allow us to enforce equalities on types. Therefore it is essential to interpret types with equalities, for example, setoids, groupoids, or $\omega$-groupoids. 
 
 % We can postulate these axioms but then we can not keep the good computational properties. Therefore it is crucial that axioms have a computational interpretation. One solution is 
 
-
-In this chapter, we mainly discuss Altenkirch's setoid model of extensional concepts where quotient types are available. We build a category with families of setoids to accommodate the types theory described in
-\cite{alti:lics99}  and briefly discuss how can we build quotient types inside this model.
+In this chapter, we mainly introduce an implementation of Altenkirch's setoid model  \cite{alti:lics99}  where types are interpreted as setoids. We define the model as categories with families in Agda with h-propositions instead of postulating $\Prop$ universe. We introduce some basic types in the setoid model. It has been shown by Altenkirch \cite{alti:lics99} that functional extensionality is inhabited in this model. More importantly, because types are interpreted as setoids, quotient types can be defined simply by replacing equality in a given setoid.
 
 \section{Introduction}\label{setoidmodel}
 
 
-One of the intensional models of extensional concepts inside \itt is setoid model where types are interpreted as setoids. Martin Hofmann has studied this approach in \cite{hof:phd}, but a naive version of setoid model does not satisfy all definitional equalities. The version in \cite{hof:95:sm} which is a model for quotient types does not allow large eliminations (defining a dependent type by recursion).
+A setoid model of \itt is a model where types are interpreted as setoids i.e.\ every closed type comes with an equivalence relation. It is usually used to introduce extensional concepts, for example, Martin Hofmann has define a setoid model in \cite{hof:phd}. However a naïve version of setoid model does not satisfy all definitional equalities. 
+A simple model for quotient types introduced in \cite{hof:95:sm} is a solution to the problem using a modified interpretation of families, but it does not allow \emph{large eliminations}.
 
-Altenkirch proposes \cite{alti:lics99} a different approach in which the setoid model serves as the metatheory.
+Altenkirch \cite{alti:lics99}  proposes a different approach based on the setoid model.
 He uses an extension of \itt by a universe of propositions $\Prop$ as metatheory, and the $\eta$-rules for $\Pi$-types and $\Sigma$-types hold. 
+
+
 
 %In \cite{DBLP:conf/csl/Hofmann94}, Martin Hofmann first proposes a setoid model where types are interpreted as setoids, and the function are equivalence preserving. Cateogically, a setoid is a special groupoid where every isomorphism is unique, and then functions between two setoids are just functors.
 
@@ -46,7 +46,7 @@ The propositional universe is closed under $\Pi$-types and $\Sigma$-types:
 {\Gamma \vdash \Sigma ~(x : P) ~ Q : \Prop}
 
 
-The metatheory is proved {\cite{alti:lics99}} to be:
+The metatheory has been proved {\cite{alti:lics99}} to be:
 
 \begin{itemize}
 \item \emph{Decidable}. The definitional equality is decidable, hence type checking is decidable.
@@ -56,40 +56,38 @@ The metatheory is proved {\cite{alti:lics99}} to be:
 \item \emph{Adequate}. All terms of type $\N$ are reducible to numerals.
 \end{itemize}
 
+And then Altenkirch constructs an intensional setoid model within this metatheory using categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
+\cite{hof:97}.  It is also decidable and adequate, functional extensionality is inhabited and it permits large elimination. It is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
 
-And then Altenkirch constructs an intensional model within this metatheory which is decidable and adequate, functional extensionality is inhabited and it permits large elimination. 
+\begin{remark}[The category of setoids is not LCCC]
+This model is the category of setoids \textbf{Std} which is a full subcategory of \textbf{Gpd} (the category of small groupoids). Every object of \textbf{Gpd} whose all homsets contain at most one morphism are in this subcategory. 
+
+It is different from a setoid model as an E-category, for instance
+the one introduced by Hofmann \cite{hofmann1995interpretation}. An E-category is a category equipped with
+an equivalence relation for homsets. The E-category of setoids in \mltt forms a locally Cartesian closed category (LCCC) which we call it \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
+gives rise to types and they are Cartesian closed, namely the category is locally
+Cartesian closed.
+
+However not all morphisms in our category of setoids \textbf{Std} give rise to types which means that it is not a LCCC. Every LCCC can serve as a model for categories with
+families but not every category with families has to be a LCCC. 
+ Altenkirch and Klaus have shown that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed in  \cite{Altenkirch12setoidsare}.
+\end{remark}
 
 
 % Within this type theory, introduction of quotient types is straightforward. 
 %The set of functions are naturally quotient types, the hidden information is the definition of the functions and the equivalence relation is the functional extensionality.
 
 
-
-\begin{remark}[The setoid model is not LCCC]
-This model is different from a setoid model as an E-category, for instance
-the one introduced by Hofmann \cite{hofmann1995interpretation}. An E-category is a category equipped with
-an equivalence relation for homsets. To distinguish them, we call this
-category \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
-gives rise to types and they are Cartesian closed, namely it is a a locally
-Cartesian closed category (LCCC). However not all morphisms in our category of setoids give rise to types which means that it is not an LCCC. Every LCCC can serve as a model for categories with
-families but not every category with families has to be a LCCC. 
-
-This setoid model is the category of setoids \textbf{Std} which is a full subcategory of \textbf{Gpd} (the category of small groupoids). Every object of \textbf{Gpd} whose all homsets contain at most one morphism are in this subcategory. Altenkirch and Klaus \cite{Altenkirch12setoidsare} prove that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed.
-\end{remark}
-
-
-\section{Category with families}
-
-
-The setoid model is defined as categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
-\cite{hof:97}. The object theory is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
-
-We construct the setoid model in Agda together with some basic types including quotient types. We will introduce our implementation with real Agda code. We omit some unnecessary part of the code, but the complete code can be found in \autoref{app:cwf}.
+We will introduce the model along with our implementation of it in Agda. 
+For readability, we will omit some unnecessary code. The complete code can be found in \autoref{app:cwf}.
 
 
 \subsection{Metatheory}
 
-We first postulate axioms for metatheory. We define the h-propositions used in \hott replacing the axiomatic proof-irrelevant universe of propositions. It is not exactly the same as the \textbf{Prop} because a set can only be claimed in \textbf{Prop} but not proved to be a \textbf{Prop}. However any set which behaves like a proposition can be encoded as \textbf{HProp} but not in \textbf{Prop}. Another difference is that the uniqueness of identity proof is propositional which complicates the proofs.
+Agda does not fulfil all requirements of the metatheory, in particular, there is no proof-irrelevant universe of propositions $\Prop$. 
+
+To complete the metatheory, we first define the h-propositions used in \hott to replace the axiomatic proof-irrelevant universe of propositions. An $\HProp$ (or \textbf{hProp}) consists a set $\AgdaField{prf}$ and a property that its identity proof is unique. Given an $A : \HProp$ We also use syntactic notation $< A >$ to project out the underlying proof term.
+
 
 \begin{code}\>\<%
 \\
@@ -110,7 +108,35 @@ We first postulate axioms for metatheory. We define the h-propositions used in \
 \>\AgdaKeyword{open} \AgdaModule{HProp} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}prf \AgdaSymbol{to} <\_>\AgdaSymbol{)}\<%
 \end{code}
 
-We also define basic propositions $\top$ and $\bot$ and the universal and existential quantifier, namely it is closed under $\Pi$-types and $\Sigma$-types. Notice that, the $\Pi$-closure requires functional extensionality. Therefore, we lose canonicity in our construction.
+It is not exactly the same as $\Prop$. Because we can claim a set is in $\Prop$ and it has proof-irrelevance property, but we can not prove a set is in \textbf{Prop}. However any set which behaves like a proposition is an \textbf{HProp} . Another difference is that the uniqueness of identity proof is a propositional equality instead of definitional equality which complicates the proofs.
+
+We also define basic propositions $\top$ and $\bot$ simply by unit type and empty type because they behaves like propositions:
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{⊤'} \AgdaSymbol{:} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{⊤'} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaRecord{⊤} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{exUni} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaSymbol{(}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\AgdaSymbol{)} \<[42]%
+\>[42]\<%
+\\
+\>[4]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{→} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{p} \AgdaBound{q} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{p} \AgdaDatatype{≡} \AgdaBound{q}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{exUni} \AgdaBound{f} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{=} \AgdaBound{f} \AgdaBound{p} \AgdaBound{q}\<%
+\\
+%
+\\
+\>\AgdaFunction{⊥'} \AgdaSymbol{:} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{⊥'} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaDatatype{⊥} \AgdaSymbol{(}\AgdaFunction{exUni} \AgdaSymbol{(λ} \AgdaSymbol{()))}\<%
+\\
+\>\<\end{code}
+
+To define the universal and existential quantifier, namely $\HProp$ is closed under $\Pi$-types and $\Sigma$-types, there is a problem proving $\Pi$-closure. It requires functional extensionality to prove the uniqueness which should be considered as proof-irrelevant, although in principle, we lose canonicity.
 
 \begin{code}\>\<
 %
@@ -120,17 +146,65 @@ We also define basic propositions $\top$ and $\bot$ and the universal and existe
 \>\AgdaFunction{∀'} \AgdaBound{A} \AgdaBound{P} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaSymbol{((}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{P} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{ext} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{P} \AgdaBound{x}\AgdaSymbol{)))}\<%
 \>\<\end{code}
 
-Notice that we use a syntactic abbreviation $<\_>$ for projection of proof in $\textbf{HProp}$. Moreover to avoid conflicts with existing code, we sometimes add a $'$ symbol in names. 
+Notice that we use a syntactic abbreviation $<\_>$ for projection of proof in $\textbf{HProp}$.  The symbol $'$ is used to avoid conflicts with existing notations.
 
-The $\eta$-rules for both $\Pi$-types and $\Sigma$-types automatically holds in Agda. This metatheory should be decidable, consistent but not adequate because the introduction of functional extensionality.
+To prove it is closed under $\Sigma$-types, we use an auxiliary function $\mathsf{sig-eq}$ to combine 
+equalities for both parts of a $\Sigma$-type.
+
+\begin{code}\>\<
+%
+\\
+\>\AgdaFunction{Σ'} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaSymbol{:} \AgdaRecord{HProp}\AgdaSymbol{)(}\AgdaBound{Q} \AgdaSymbol{:} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{→} \AgdaRecord{HProp}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{HProp}\<%
+\\
+\>\AgdaFunction{Σ'} \AgdaBound{P} \AgdaBound{Q} \AgdaSymbol{=} \AgdaInductiveConstructor{hProp} \AgdaSymbol{(}\AgdaRecord{Σ} \AgdaFunction{<} \AgdaBound{P} \AgdaFunction{>} \AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{Q} \AgdaBound{x} \AgdaFunction{>}\AgdaSymbol{))} \<[41]%
+\>[41]\<%
+\\
+\>[6]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(λ} \AgdaSymbol{\{}\AgdaBound{p}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{q}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{sig-eq} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaBound{P}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{Uni} \AgdaSymbol{(}\AgdaBound{Q} \AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{q}\AgdaSymbol{))))}\<%
+\\
+\>\<\end{code}
+
+
+The $\eta$-rules for both $\Pi$-types and $\Sigma$-types automatically holds in Agda.
+
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Π-eta} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}(}\AgdaBound{f} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{B} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{→} \<[52]%
+\>[52]\<%
+\\
+\>[-5]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaSymbol{(λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaBound{f} \AgdaBound{x}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{f}\<%
+\\
+\>\AgdaFunction{Π-eta} \AgdaBound{f} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+%
+\\
+\>\AgdaFunction{Σ-eta} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{\}(}\AgdaBound{p} \AgdaSymbol{:} \AgdaRecord{Σ} \AgdaBound{A} \AgdaBound{B}\AgdaSymbol{)} \AgdaSymbol{→} \<[44]%
+\>[44]\<%
+\\
+\>[0]\AgdaIndent{8}{}\<[8]%
+\>[8]\AgdaSymbol{(}\AgdaFunction{proj₁} \AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaFunction{proj₂} \AgdaBound{p}\AgdaSymbol{)} \AgdaDatatype{≡} \AgdaBound{p}\<%
+\\
+\>\AgdaFunction{Σ-eta} \AgdaBound{p} \AgdaSymbol{=} \AgdaInductiveConstructor{refl}\<%
+\\
+\>\<\end{code}
+
+To summarise, this metatheory is still decidable, consistent but not adequate because of the axiom of functional extensionality.
 
 \subsection{Category of setoids}
 
-Then setoids can be defined as follows.
+Because we have $\HProp$ in our metatheory, we modified the definition of setoids by turning the equivalence relation into a propositional one.
 
 \begin{code}\>\<%
 \\
 \>\AgdaKeyword{record} \AgdaRecord{HSetoid} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{\_,\_,\_,\_,\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{infix} \AgdaNumber{4} \_≈h\_ \_≈\_\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
 \>[2]\AgdaKeyword{field}\<%
@@ -154,9 +228,19 @@ Then setoids can be defined as follows.
 \>[4]\AgdaField{trans} \<[12]%
 \>[12]\AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{:} \AgdaBound{Carrier}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaBound{≈h} \AgdaBound{y} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{y} \AgdaBound{≈h} \AgdaBound{z} \AgdaFunction{>} \AgdaSymbol{→} \AgdaFunction{<} \AgdaBound{x} \AgdaBound{≈h} \AgdaBound{z} \AgdaFunction{>}\<%
 \\
-\>\<\end{code}
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{\_≈\_} \AgdaSymbol{:} \AgdaFunction{Carrier} \AgdaSymbol{→} \AgdaFunction{Carrier} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b} \AgdaSymbol{=} \AgdaFunction{<} \AgdaBound{a} \AgdaFunction{≈h} \AgdaBound{b} \AgdaFunction{>}\<%
+\\
+%
+\end{code}
 
-Notice that since \textbf{HProp} is not considered as a sort of types, we simplified the definition by defining the laws non-propositionally, e.g.\ reflexivity.
+We observe that \textbf{HProp} is not considered as a sort of types, so we simplified the definition by defining the laws non-propositionally, e.g.\ reflexivity.
 
 
 

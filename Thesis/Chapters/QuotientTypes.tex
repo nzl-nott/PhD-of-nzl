@@ -4,7 +4,7 @@
 
 
 
-In this chapter, we present a definition of quotient type in an \itt extended with a proof-irrelevant universe of propositions in the sense of \autoref{ittprop}. We prove that given propositional extensionality, all quotients are effective. We also explain the rules of quotient types categorically. A quotient is essentially a coequalizer or given by an adjunction with equality predicate functor \cite{Jacobs94quotientsin}. 
+In this chapter, we present a definition of quotient type in an \itt extended with a proof-irrelevant universe of propositions in the sense of \Cref{ittprop}. We prove that given propositional extensionality, all quotients are effective. We also explain the rules of quotient types categorically. A quotient is essentially a coequalizer or given by an adjunction with equality predicate functor \cite{Jacobs94quotientsin}. 
 Quotient types in our definition are essentially quotient \emph{sets}, if quotients are not interpreted as sets, for example in \hott. 
 We present Voevodsky's impredicative encoding of quotient sets with all essential rules, and also quotient sets defined using higher inductive types. 
 
@@ -99,7 +99,7 @@ Alternatively, a \emph{dependent} eliminator (dependent lifting) serves the same
 
 
 Notice that $\stackrel{p}{=}$ is an abbreviation for propositional equality which requires substitution in the type of the left hand side by $\text{Qax}(p)$ so that both sides have the same type.
-We use the same notation for the two versions of eliminators because they are in fact equivalent (see Proposition \ref{elim-equiv}).
+We use the same notation for the two versions of eliminators because they are in fact equivalent.
 
 \begin{proposition}\label{elim-equiv}
 The \emph{non-dependent eliminator} with the \emph{induction principle} is equivalent to the \emph{dependent eliminator}.
@@ -138,7 +138,7 @@ which has the correct type because $P(q)$ holds. The computation rule is simply 
 
 2. It is easy to find out that the non-dependent eliminator and induction principle are just special cases of dependent eliminator.
 
-A formalised version of this proof in Agda can be found in \autoref{app:dq}.
+A formalised version of this proof in Agda can be found in \Cref{app:dq}.
 \end{proof}
 
 
@@ -230,9 +230,9 @@ Define $B : \qset{A} \to \Set$ as
 
 $$B(q)\defeq \N$$
 
-We can observe that $0 : B([a])$, thus by using subst function (see \autoref{subst}), we can obtain a term of $B([b])$:
+We can observe that $0 : B([a])$, thus by using subst function (see \Cref{subst}), we can obtain a term of $B([b])$:
 
-$$\text{subst}(B,\text{Qax}(p),0) : B([b])$$
+$$\mathsf{subst}(B,\text{Qax}(p),0) : B([b])$$
 
 which is also a term of $\N$ by definition of $B$.
 This term is irreducible to any numeral because $\text{Qax}(p)$ can not be reduced to the canonical term of identity type (refl). Moreover, one can not postulate propositional equality $\text{Qax}(p) = \text{refl}_{[a]}$ or $\text{Qax}(p) = \text{refl}_{[b]}$ because their types are not definitionally equal.
@@ -242,7 +242,7 @@ This term is irreducible to any numeral because $\text{Qax}(p)$ can not be reduc
 
 The rules of quotient types can be characterised in a category-theoretical way.
 
-Categorically speaking, a quotient is a \textbf{coequalizer}. Let us recall the definition.
+Categorically speaking, a quotient is a \textbf{coequalizer} in category $\Set$. Let us recall the definition.
 
 
 \begin{definition}
@@ -257,7 +257,7 @@ Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ ,
 \end{definition}
 
 
-Now we show that in category of sets $\Set$, assume
+Now we show that in $\Set$, assume
 
 $$R \defeq \Sigma (a_1,a_2 : A) ~ a_1 \sim a_2$$
 
@@ -355,7 +355,7 @@ Hence $(a, b)$ is an element of $R$, by definition it means
 $$a \sim b$$
 \end{proof}
 
-In \autoref{dq}, we also introduce two other notions: prequotient and definable quotient.
+In \Cref{dq}, we also introduce two other notions: prequotient and definable quotient.
 
 Cateogorically speaking, a \emph{prequotient} is just a \emph{fork}
 
@@ -380,7 +380,7 @@ In fact, $t$ corresponds to the "complete" property of definable quotients as $t
 
 \section{Quotients as an adjunction}
 
-As Jacobs\cite{Jacobs94quotientsin} suggests, quotient can be described as a left adjoint to an equality functor.
+As Jacobs \cite{Jacobs94quotientsin} suggests, quotient can be described as a left adjoint to an equality functor.
 
 Let us recall the definition first.
 \begin{definition}
@@ -627,12 +627,11 @@ we can define a function $f_{P} : (\Sigma (x : A) ~P(x)) \to B$ simply by
 
 $$f_{P} \defeq f \circ \pi_{1}$$
 
-but our witness $p : \| \Sigma (x : A) ~P(x) \|$ is truncated which can not be applied to $f_{P}$. However we can generate a function 
+but our witness $p : \| \Sigma (x : A) ~P(x) \|$ is truncated which can not be applied to $f_{P}$. However we can generate a function
 
 $$\bar{f_{P}} : \| (\Sigma (x : A) ~P(x)) \| \to B$$
 
-
-from lemma \ref{constantT} if $f_{P}$ is a constant function:
+from \ref{constantT}  if $f_{P}$ is a constant function:
 
 For any two elements of $\Sigma (x : A) ~P(x)$, $(x_1,p_1)$ and $(x_2,p_2)$, by applying one of the property contained in $q$
 
@@ -673,7 +672,7 @@ Given $(a,ex) : \Sigma (a : A) ~ P(a)$, we know
 
 $$[a] = (P,p,q)$$
 
-from lemma \ref{uniquerepresentation}. Thus we can substitute in $h(a) : Q([a])$ to generate a term of type $Q(P,p,q)$. Therefore we have the induction principle. The uniqueness of $\hat{f}$ is simply implied by the induction principle.
+from \ref{uniquerepresentation}. Thus we can substitute in $h(a) : Q([a])$ to generate a term of type $Q(P,p,q)$. Therefore we have the induction principle. The uniqueness of $\hat{f}$ is simply implied by the induction principle.
 \end{proof}
 
 
@@ -727,7 +726,7 @@ $$\bar{g}(|x|) \equiv  \pi_1 (|x|(Y',g'))  \equiv \pi_1 (g' (x)) \equiv g(x)$$
 \end{proof}
 
 
-Furthermore, since propositional extensionality is a special case of univalence, we can prove that the impredicative quotients are effective from \autoref{PUEF}.
+Furthermore, since propositional extensionality is a special case of univalence, we can prove that the impredicative quotients are effective from \Cref{PUEF}.
 
 \begin{theorem}
 In \hott, the impredicative encoding of quotient sets gives rise to all the rules of quotients in the sense of \ref{iqs} including effectiveness.
@@ -760,7 +759,7 @@ is just a discrete category which is equivalent to a set.
 
 Some examples suggest that QITs are more powerful than quotient types.
 
-One example is the definition of real numbers $\R$ which will be discussed in \autoref{rl}. Our construction of reals by Cauchy sequences of rational numbers is not Cauchy complete because not all  equivalence classes have a limit. However, the Cauchy approximation approach in \cite{hott} (see subsection 11.3.1) using quotient inductive types is Cauchy complete due to the fact that the equivalence relation and limits are included in its definition.
+One example is the definition of real numbers $\R$ which will be discussed in \Cref{rl}. Our construction of reals by Cauchy sequences of rational numbers is not Cauchy complete because not all  equivalence classes have a limit. However, the Cauchy approximation approach (see Subsection 11.3.1 in \cite{hott}) using quotient inductive types is Cauchy complete due to the fact that the equivalence relation and limits are included in its definition.
 
 Another example is unordered trees (rooted tree) which are trees connected to a multiset of subtrees, hence there is no ordering on subtrees.
 
@@ -861,9 +860,7 @@ $$\forall (a,b : A) \to E(a,b) \to f(a) = f(b)$$
  in a category of types to define a notion called \emph{squash types},
  which is further discussed by Nogin \cite{nog:02}.
 
-\item Nogin \cite{nog:02} considers a modular approach to axiomatizing quotient types in NuPRL as well. Despite the ease of constructing new types
-from base types, he also discusses some
-problems about quotient types. For example, since the equality is
+\item Nogin \cite{nog:02} considers a modular approach to axiomatizing quotient types in NuPRL as well. He discusses some problems about quotient types. For example, since the equality is
 extensional, we cannot recover the
 witness of the equality.  He suggests including more axioms to
 conceptualise quotients. He decomposes the formalisation of quotient type
@@ -888,7 +885,7 @@ he also shows that \ett is conservative over \itt extended with quotient types \
 
 
 \item Altenkirch \cite{alti:lics99} also provides a different setoid model which is built in an \itt
-extended with proof-irrelevant universes of propositions and $\eta$-rules for $\Pi$-types and $\Sigma$-types. It is decidable, adequate and permits large eliminations. We have implemented this setoid model and interpret quotient types in it (see \autoref{models}).
+extended with proof-irrelevant universes of propositions and $\eta$-rules for $\Pi$-types and $\Sigma$-types. It is decidable, adequate and permits large eliminations. We have implemented this setoid model and interpret quotient types in it (see \Cref{models}).
 
 \item Homeier \cite{hom} also axiomatises quotient types in Higher Order Logic
 (HOL), which is also a theorem prover. He creates a tool package to
@@ -905,8 +902,8 @@ In fact normalised types can be seen as a proper subset of quotient types. We ca
 
 $$a \sim b \defeq [ a ] = [ b ]$$
 
-However not all quotient types have normal forms, for example, the set of real numbers (see \autoref{rl}).
-The notion \emph{definable quotients} we proposed in \autoref{dq} is also similar to it, but does not provide a new type automatically.
+However not all quotient types have normal forms, for example, the set of real numbers (see \Cref{rl}).
+The notion \emph{definable quotients} we proposed in \Cref{dq} is also similar to it, but does not provide a new type automatically.
 
 \item Barthe and Geuvers \cite{bar:96} also propose a new notion called
 \emph{congruence types}, which is also a special class of quotient
@@ -939,7 +936,7 @@ within the containers.
 \item Voevodsky \cite{voe:hset} implements quotients in Coq based on a set
 of axioms of \hott. He firstly implement
 equivalence class and use it to implement quotients which is an
-analogy to the construction of quotient sets in set theory. The details has been given in \autoref{impredicative}.
+analogy to the construction of quotient sets in set theory. The details has been given in \Cref{impredicative}.
 \end{itemize}
 
 

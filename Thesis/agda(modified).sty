@@ -22,8 +22,7 @@
     % http://tex.stackexchange.com/questions/1774/how-to-insert-pipe-symbol-in-latex
     \usepackage[T1]{fontenc}
     \usepackage[utf8x]{inputenc}
-
-    %\usepackage{courier} % !!! 
+    \usepackage{inconsolata} %\usepackage{courier} % !!!
     % FIX: Complete the list and send it upstream to the ucs package devs.
     \DeclareUnicodeCharacter{9657}{$\triangleright$}
     \DeclareUnicodeCharacter{8759}{::}
@@ -43,6 +42,8 @@
 
 % Default font style.
 \newcommand{\AgdaFontStyle}[1]{\textsf{#1}}
+
+%\newcommand{\AgdaFontStyle}[1]{\textsf{#1}}
 
 % String font style.
 \newcommand{\AgdaStringFontStyle}[1]{\texttt{#1}}
@@ -103,7 +104,7 @@
 \newcommand{\AgdaOperator}    [1]{\textcolor{AgdaOperator}{#1}}
 
 % NameKind commands.
-\newcommand{\AgdaBound}    [1]{\AgdaFontStyle{\textcolor{AgdaBound}{#1}}}%[1]{\AgdaBoundFontStyle{\textcolor{AgdaBound}{#1}}}
+\newcommand{\AgdaBound}    [1]{\AgdaFontStyle{\textcolor{AgdaBound}{#1}}}
 \newcommand{\AgdaInductiveConstructor}[1]
     {\AgdaFontStyle{\textcolor{AgdaInductiveConstructor}{#1}}}
 \newcommand{\AgdaCoinductiveConstructor}[1]
@@ -145,9 +146,14 @@
 \fi
 
 \newenvironment{code}%
-{\noindent\ignorespaces\advance\leftskip\mathindent\AgdaCodeStyle\pboxed}%
+{\small\noindent\ignorespaces\advance\leftskip1em\AgdaCodeStyle\pboxed}%
 {\endpboxed\par\noindent%
 \ignorespacesafterend}
 
+%\newenvironment{code}%
+%{\vspace{-0.3cm}\small\noindent\ignorespaces\advance\leftskip1em\AgdaCodeStyle\pboxed}%
+%{\endpboxed\vspace{-0.4cm}\par\noindent%
+%\ignorespacesafterend}
+%\mathindent - was between "\leftskip" and "\AgdaCodeStyle"
 % Default column for polytable.
 \defaultcolumn{l}

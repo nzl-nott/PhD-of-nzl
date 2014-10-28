@@ -100,21 +100,42 @@
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
 
-\usepackage{hyperref}
+
 
 
 \usepackage{aliascnt}
+\usepackage{cleveref}
 
+%\usepackage{hyperref}
+
+\let\lemma\relax
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\crefname{lemma}{lemma}{lemmas}
+
+\let\definition\relax
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\crefname{definition}{definition}{definitions}
+
+
+\let\proposition\relax
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\crefname{proposition}{proposition}{propositions}
 
 %\theoremstyle{theorem}
 %    \newtheorem{theorem}{Theorem}
 
-\let\definition\relax
-\theoremstyle{definition}
-    \newaliascnt{definition}{theorem}
-    \newtheorem{definition}[definition]{Definition}
-    \aliascntresetthe{definition}
-    \providecommand*{\definitionautorefname}{Definition}
+%\let\definition\relax
+%\theoremstyle{definition}
+%    \newaliascnt{definition}{theorem}
+%    \newtheorem{definition}[definition]{Definition}
+%    \aliascntresetthe{definition}
+%    \providecommand*{\definitionautorefname}{Definition}
 
 
 %\newcommand{\propositionautorefname}{Proposition}
@@ -311,15 +332,21 @@
 
 \chapter{Category with families of setoids}\label{app:cwf}
 
-\input{Appendices/Codes/latex/HProp}
+\input{Appendices/Codes/prCWF/latex/CategoryofSetoid}
 
-\input{Appendices/Codes/latex/CategoryOfSetoid}
+\input{Appendices/Codes/prCWF/latex/CwF-setoid}
 
-\input{Appendices/Codes/latex/CwF-setoidwo}
+\input{Appendices/Codes/prCWF/latex/CwF-quotient}
 
-\input{Appendices/Codes/latex/CwF-ctd}
+%\input{Appendices/Codes/latex/HProp}
 
-\input{Appendices/Codes/latex/CwF-quotient}
+%\input{Appendices/Codes/latex/CategoryOfSetoid}
+
+%\input{Appendices/Codes/latex/CwF-setoidwo}
+
+%\input{Appendices/Codes/latex/CwF-ctd}
+
+%\input{Appendices/Codes/latex/CwF-quotient}
 
 \chapter{syntactic \wog}\label{app:wog}
 

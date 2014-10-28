@@ -1,4 +1,36 @@
 
+The type construction is not complete because it also includes lambda abstraction and function application which correspond to introduction and elimination rules respectively. The verification of $\beta$ and $\eta$ laws are also essential, but we have not implemented them in Agda due to technical difficulties. The problem is that type-checking of them results in stack overflow. Hopefully the problems will be fixed by later patches.
+
+
+
+
+
+
+
+Due to the record type mechanism in Agda, given a type $A : \text{Ty} ~\Gamma$, one has to write $\text{substT} ~A$ to use the field. For readability, we adopt a better syntax using renaming of fields to highlight the precise types or terms in the style of $\text{[} ~A ~\text{]substT}$ , but the detailed code is also omitted here. Indeed, an example can be found in the above code where we already adopt the syntax style for internal equivalence of setoids.
+
+
+substLast : {Γ : Con}{A Q : Ty Γ}
+     → (f : Tm (A ⇒ Q)) → (Γ & A) ⇉ (Γ & Q)
+substLast {Γ} {A} {Q} f = record 
+        { fn = λ {(x , a) → x , f' x a}
+        ; resp = λ {x} {y} → λ {(p , q) → p , [ [ Q ]fm _ ]trans ([ Q ]subst* _ {!!}) ([ f ]respt p (proj₂ y))}
+        }
+
+   where
+     f' : (x : ∣ Γ ∣) → ∣ [ A ]fm x ∣ → ∣ [ Q ]fm x ∣ 
+     f' x = prj₁ ([ f ]tm x)
+
+     .f-resp2 : ∀ {x x' y z} → (p : [ Γ ] x' ≈ x) → [ [ Q ]fm x ] 
+      f' x y ≈ f' x ([ A ]subst p z)
+     f-resp2 p = {! [ A ⇒ Q ]subst* p!}
+
+
+
+
+
+
+     
 
 
   lift-op1 : (f : A → A) → (f-sound : ∀ a b → a ~ b → f a ~ f b) → (Q → Q)

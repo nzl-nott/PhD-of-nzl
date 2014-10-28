@@ -1,20 +1,20 @@
-\chapter{Definable quotients}
+\chapter{Definable Quotients}
 \label{dq}
 
 
 %and sometimes we use setoids~\cite{bar:03} instead.
 
-In \itt, quotient type former is not necessary to define all quotients as sets.
+In \itt, the quotient type former is not necessary to define all quotients as sets.
 One of the most basic examples is the set of integers $\Z$. On one hand it can be interpreted as a quotient set $\Z_0 \defeq \qset{\N\times\N}$ in which we use a pair of natural numbers $(a,b)$ to represent the integer as the result of subtraction $a-b$.  On the other hand, from the usual notation of integers, $\Z$ can be inductively defined as natural numbers together with a sign. Given any element $(a,b): \N\times\N$, there must be an element of $c : \Z$ which can be seen as the name of the equivalence class or \textbf{normal form} of $(a,b)$, thereby we can define a \textbf{normalisation function} denoted as $[\_] : \Z_0 \to \Z$.
 
 
-Another example is the set of rational numbers $\R$. Usually rational numbers are represented as fractions e.g.\ $frac{1}{2}$. However different fractions can refer to the same rational numbers, e.g. $frac{1}{2} = frac{2}{4}$. It naturally gives us a quotient definition of rational numbers as \emph{fractions} (or unreduced fractions).
+Another example is the set of rational numbers $\Q$. Usually rational numbers are represented as fractions e.g.\ $\frac{1}{2}$. However different fractions can refer to the same rational numbers, e.g. $\frac{1}{2} = \frac{2}{4}$. It naturally gives us a quotient definition of rational numbers as \emph{fractions} (or unreduced fractions).
 As we know, for one rational number, different fractions for it can only be reduced to a unique one called 
- s \emph{reduced fraction}. Therefore, the set $\R$ can also be defined as $\Sigma$-type consists of a fraction together with a property that it is reduced. Thus, a normalisation function in this case is just an implementation of the reduction process.
+ s \emph{reduced fraction}. Therefore, the set $\Q$ can also be defined as $\Sigma$-type consists of a fraction together with a property that it is reduced. Thus, a normalisation function in this case is just an implementation of the reduction process.
 
 
-For these quotients, they can be encoded as setoids which are unnecessary but helpful.
-We can define operations on $\Z$ like addition and multiplication and prove algebraic properties,
+For these quotients which are definable as a set without treated as quotients, it seems unnecessary to interpret them as setoids. However in practice, the setoid definitions have some advantages compared to the set definition.
+For example, we can define operations on $\Z$ like addition and multiplication and prove algebraic properties,
 such as verifying that the structure is a ring. 
 However, this is quite complicated and uses many unnecessary case
 distinctions due to the cases in the set definition. E.g. the proving of distributivity within this setting
@@ -22,7 +22,7 @@ is not satisfactory since too many cases have to be proven from
 scratch. 
 In the setoid definition $\Z_0$, there is only one case and the algebraic properties are direct consequences
 of the semiring structure of the natural numbers. 
-For rational numbers, it is concievable that operations on unreduced functions are simpler to define because there is no need to make sure the result is reduced in every step. Generally speaking, if we setoid definition usually means there has been a set of functions and properties available.
+For rational numbers, it is also conceivable that operations on unreduced functions are simpler to define because there is no need to make sure the result is reduced in every step.
 
 Although the setoid definitions have some nice features in these cases, it requires us redefine all operations on sets again on setoids, for example $\text{List}_{\text{setoid}} (A,\sim)$.
 Hence we propose to use both the setoid
@@ -41,11 +41,11 @@ It provides us conversions between two representations and so combines the nice 
 
 
 % It also means that the benefits of this framework is also  quotient types in general.
-%For the reader who is interested in the code, see \autoref{app:dq}.
+%For the reader who is interested in the code, see \Cref{app:dq}.
 
 \section{Algebraic structures of quotients}
 
-We first define several algebraic structures for quotients corresponds to the rules of quotient types (see \autoref{iqs}).
+We first define several algebraic structures for quotients corresponds to the rules of quotient types (see \Cref{iqs}).
 
 \begin{definition}
 \textbf{Prequotient}.
@@ -172,7 +172,7 @@ $f(\emb(q)) : B([\emb(q)])$
 
 we can derive a proof of $B(q)$.
 
-It follows from proposition \ref{elim-equiv} that this also gives rise to a quotient.
+It follows from \Cref{elim-equiv} that this also gives rise to a quotient.
 
 
 Finally, assume $[ a ] = [ b ]$ for given $a,b : A$, by completeness property, we obtain that
@@ -185,7 +185,7 @@ and hence $a \sim b$ i.e.\ the quotient is effective.
 
 However a quotient is not enough to build a definable quotient because we can not extract a canonical choice for each equivalence class $q : Q$. 
 
-The definitions of these algebraic structures and proofs about the relations between them have been encoded in Agda (see \autoref{app:dq}).
+The definitions of these algebraic structures and proofs about the relations between them have been encoded in Agda (see \Cref{app:dq}).
 
 Let us investigate some examples of definable quotients.
 
@@ -357,7 +357,7 @@ hence $[\_]$ is \emph{sound} (compatible with $\sim$).
 
 %\end{itemize}
 
-These properties have been verified in Agda (see \autoref{defQInt}), we omit the detailed proofs here.
+These properties have been verified in Agda (see \Cref{defQInt}), we omit the detailed proofs here.
 
 
 \section{Rational numbers}
@@ -445,10 +445,10 @@ The set definition $\Q$ ensures the canonicity of representations, but it compli
 of rational numbers.
 
 To calculate rational numbers using $\Q$, we have to reduce fractions in every step which is unnecessary from our usual experience because operations can be carried out correctly in unreduced forms.
-In fact someone complained this problem\footnote{Discussion on Agda mailing list http://comments.gmane.org/gmane.comp.lang.agda/6372} in practical use.
+In fact someone complained about this problem\footnote{Discussion on Agda mailing list http://comments.gmane.org/gmane.comp.lang.agda/6372} in practical use of unreduced fractions in Agda standard library.
 
-Therefore a definable quotient of rational numbers consisting of both $\R_0$ and $\R$ and conversions between them is very useful.
-We can carry out calculations and proving properties using $\R_0$ and reduce fraction when a canonical form is required.
+Therefore a definable quotient of rational numbers consisting of both $\Q_0$ and $\Q$ and conversions between them is very useful.
+We can carry out calculations and proving properties using $\Q_0$ and reduce fraction when a canonical form is required.
 We believe that it can also improve the computational efficiency, even
 though some people claim that the unreduced numbers can be too large to make it efficient.
 
@@ -614,7 +614,7 @@ Then it is natural to define the normalisation function as
 \\
 \>\<\end{code}
 
-Because $\R$ is just a subset of $\R_0$, the embedding function is just the first projection of the $\Sigma$-types.
+Because $\Q$ is just a subset of $\Q_0$, the embedding function is just the first projection of the $\Sigma$-types.
 
 \begin{code}\>\<%
 \\
@@ -865,9 +865,7 @@ involves plus, minus and multiplication, are intensionally equations about natur
 
 In fact with the help of \emph{ring solver}, it can be proved automatically.
 A \emph{ring solver} is an automatic equation checker for rings e.g.\ the
-ring of integers. It is implemented based on the theory described in
-"Proving Equalities in a Commutative Ring Done Right in Coq" by
-Grégoire and Mahboubi \cite{gregoire2005proving}.
+ring of integers. It is implemented based on the theory described in \cite{gregoire2005proving}.
 
 \begin{code}
 \\
@@ -961,8 +959,12 @@ $\Q$, are turned out to be equations of integers which can be automatically
 solved by ring solver.
 
 
+\section{Related work}
+
+Courtieu \cite{cou:01} considers an extension of calculus of inductive constructions (CIC) which is an intensional type theory by \emph{normalized types} which can be seen as a type former for definable quotients in our sense, namely quotients which have a normalisation function. Therefore, to form a normalised type, a normalisation function is required instead of an equivalence relation. He also provides an example of integers, where the base type has three constructors $0$, $\mathsf{S}$ for successors and $\mathsf{P}$ for predecessors.
 
 
+Cohen \cite{DBLP:dblp_conf/itp/Cohen13} also defines a quotient structure in Coq, which consists of $\mathsf{Q}$ as a quotient type, $\mathsf{T}$ as base type, two mapping $\mathsf{pi} : \mathsf{T} \to \mathsf{Q}$ and $\mathsf{repr} : \mathsf{Q} \to \mathsf{T}$ and a proof that $\mathsf{pi}$ is a left inverse of $\mathsf{repr}$. It is similar to our algebraic structure of definable quotients without an equivalence relation involved, $\mathsf{pi}$ corresponds to $[\_]$, $\mathsf{repr}$ corresponds to $\emb$, and the equivalence relation can be recovered simply: if for any two $s,t: \mathsf{T}$ such that $\mathsf{pi}(s) = \mathsf{pi}(t)$, then they are equivalent.
 
 \section{Summary}
 

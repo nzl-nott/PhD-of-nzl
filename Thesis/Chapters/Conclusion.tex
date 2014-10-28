@@ -1,15 +1,10 @@
-\chapter{Conclusions and future work}
-
-
-mention QUOTIENT IN HOTT
-
-\section{Conclusions}
+\chapter{Conclusion and Future Work}
 
 We have presented the evolution of theories of types especially \mltt (Type Theory) and discussed different variants of it. \ett does have more extensional concepts like functional extensionality, uniqueness of identity proof and quotient types. However the identification of propositional equality and definitional equality makes the type checking undecidable. On the other hand, the usual formulation of \itt lacks extensional concepts but has decidable type checking which makes it preferable to be implemented as programming languages. Therefore extending \itt with extensionality is a crucial task in the development of \mltt.
 
 The notion of quotient types is one of the essential extensional concepts which can facilitate mathematical and programming constructions a lot. We have shown different examples of quotients, some of them can be definable inductively without using a new type former for quotient types, for example the set of integers and the set of rational numbers. For these definable ones, we introduced our definable quotient structures that simulating constructions of quotient types. We also have shown that the applications of these quotient structures have some practical benefits, which are also expected from 
 the applications of quotient types.
-However not all quotients are definable quotients in the sense of \autoref{def:nor}. We have proved that the set of real numbers is not definable via a normalisation function from Cauchy sequences of rational numbers. Therefore quotient type former is essential.
+However not all quotients are definable quotients in the sense of \Cref{def:nor}. We have proved that the set of real numbers is not definable via a normalisation function from Cauchy sequences of rational numbers. Therefore quotient type former is essential.
 
 The solutions to add extensional concepts into \itt without losing good computational properties are various models based on \itt where types are interpreted as structured objects instead of sets. We have shown an implementation of Altenkirch's setoid model and constructed quotient types in it.
 
@@ -18,12 +13,23 @@ Generalising from Hofmann and Streicher's groupoid model, types are interpreted 
 
 \section{Future work}
 
-A potential future project would be to complete the implementation of numbers in Agda with the help of definable quotients. There are also other definable quotients implementable in our algebraic quotient structures. It can enrich the library of Agda for more potential mathematical proofs.
+For definable quotient structures, a potential future project would be to complete the implementation of numbers in Agda with the help of definable quotients. There are also other definable quotients implementable in our algebraic quotient structures. It can enrich the library of Agda for more potential mathematical proofs. We can also extend Agda with normalised types \cite{cou:01}, namely to build a special case of quotient types with respect to a normalisation function in the sense of \Cref{def:nor}. 
+We would like to investigate the the definability of quotients in general. The non-existence of a definable normalisation function can potentially be an evidence but we have not formally verify this conjecture yet. 
 
-It is also worthwhile to extend the setoid model with examples of quotients like the set of real numbers and finite multisets which are not definable via normalisation. The investigation of definability in general is also an open question. 
 
-There is also a lot of work to do within the syntactic framework of \wog. For instance, we would like to investigate the relation between the \tig and a type theory with equality types and $J$ eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the $J$ eliminator syntactically in \tig{} as we mentioned before, the other direction is to derive J using $coh$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
+For the setoid model, there are more details to work out. For example the verification of properties, to define a type for propositions such that we can write the type of equivalence relation using $\Pi$-types. We can also simplify the setoid model by using heterogeneous equality as we discussed in \Cref{models}. We have also considered to use h-propositions in place of the universe of propositions in the meta theory. We decide not to use it because to prove $\Pi$-closure of h-propositions we need functional extensionality, but it is interesting to compare these two methods. It is also worthwhile to extend the setoid model with examples of quotients like the set of real numbers and finite multisets which are not definable via normalisation. 
+Other extensional concepts and coinductive types are also interesting to considered in the setoid model.
+
+
+The notion of quotient types we considered in this thesis refers to the quotients with a \emph{propositional} equivalence relation. In a type theory with higher dimensions, like \hott, it would also be interesting to consider non-propositional quotients, for example, the quotient of a set by a groupoid.
+
+
+The most challenging task would be to find a computation interpretation of \hott where quotient sets are definable, and we have a generalisation of ``quotient types", i.e.\ the higher inductive types.
+As we have discussed in \cite{qthott}, with univalence or higher inductive types, quotient types are definable.
+
+One possible solution would be to build a weak $\omega$-groupoid model based on our syntactic framework of \wog. There are still some potential work to do in the syntactic framework.
+
+For instance, we would like to investigate the relation between the \tig and a type theory with equality types and $J$ eliminator which is called $\mathcal{T}_{eq}$. One direction is to simulate the $\J$ eliminator syntactically in \tig as we mentioned before, the other direction is to derive $\J$ using $\mathsf{coh}$ if we can prove that the $\mathcal{T}_{eq}$ is a weak $\omega$-groupoid. In fact, we can possibly solve this problem by considering Altenkrich's approach \cite{CoherenceProblem} where we have both strict equality and extensional equality at the same time.	
+
+The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps we could solve the problem by instead proving a syntactic result, namely that the theory we have presented here and the theory of equality types with $J$ eliminator are equivalent. 
-
-Finally, the most challenging task is the implementation of \hott in \itt e.g. Agda. 
-If we have a computational model, quotient types are automatically derivable. One of the potential task is to build a \ogs model on our syntactic construction is interesting.

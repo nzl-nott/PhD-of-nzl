@@ -5,7 +5,7 @@ module CoSetoid where
 
 open import Relation.Binary.PropositionalEquality as PE hiding ([_] ; refl; sym ; trans; isEquivalence)
 open import Function
-open import Data.Product --  hiding (∣_∣)
+open import Data.Product
 open import Level
 
 record Subset {a b} (A : Set a) (B : A → Set b) : Set (a ⊔ b) where
@@ -37,8 +37,6 @@ record _⇉_ (A B : Setoid) : Set where
            .([ A ] x ≈ y) → 
            [ B ] fn x ≈ fn y
 open _⇉_ public renaming (fn to [_]fn ; resp to [_]resp)
-
-
 
 
 record Ty (Γ : Setoid) : Set₁ where
@@ -129,52 +127,37 @@ _&_ : (Γ : Setoid) → Ty Γ → Setoid
          ; trans   = λ f g a → [ Bx _ ]trans (f a) (g a)
          }
 
-  ; substT = λ {x} {y} p → λ {(f , rsp) → (λ a → [ B ]subst (p , {!!}) (f ([ A ]subst-inv p a))) , {!!}} -- (λ a → {![ B ]subst ? (prj₁ x₁ a)!}) , {!!}
-
-
-
-{-
-
-                           let y2x = λ a → [ A ]subst ([ Γ ]sym p) a in
-                           let x2y = λ a → [ A ]subst p a in
-                           let p' = λ a → {!!} in -- [ A ]trans-refl in -- p' is different on the paper
-             λ{(f , rsp) →  
-               (λ a → [ B ]subst (p , p' a) (f (y2x a)))                         
-               -- this is g -- g a = [ B ]subst (p , p' a) (f (y2x a))
-               ,                                 
-               (λ a b q → 
+  ; substT = λ {x} {y} p → λ {(f , rsp) →
+                   let y2x = λ a → [ A ]subst ([ Γ ]sym p) a in
+                   let x2y = λ a → [ A ]subst p a in
+             (λ a → [ B ]subst (p , [ A ]tr*) 
+             (f (y2x a))) , 
+             (λ a b q →
                 let a' = y2x a in 
-                let b' = y2x b in {!!})
- --               let q' = [ A ]subst* ([ Γ ]sym p) q in
- --               let H = rsp a' b' ([ A ]subst* ([ Γ ]sym p) q) in
---                let r : [ Γ & A ] (x , b') ≈ (y , b)
---                    r = (p , p' b) in
---                let pre = ? in -- [ B ]subst* (p , p' b) (rsp a' b' ([ A ]subst* ([ Γ ]sym p) q)) in
-                {-
+                let b' = y2x b in
+                let q' = [ A ]subst* ([ Γ ]sym p) q in
+                let H = rsp a' b' ([ A ]subst* ([ Γ ]sym p) q) in
+                let r : [ Γ & A ] (x , b') ≈ (y , b)
+                    r = (p , [ A ]tr*) in
+                let pre = [ B ]subst* r (rsp a' b' ([ A ]subst* ([ Γ ]sym p) q)) in 
                 [ [ B ]fm (y , b) ]trans 
-                ([ B ]trans* _)                 
-                ([ [ B ]fm (y , b) ]trans 
-                ? -- [ B ]subst-pi 
+                ([ B ]trans* _) 
                 ([ [ B ]fm (y , b) ]trans 
                 ([ [ B ]fm (y , b) ]sym ([ B ]trans* _)) 
-                pre))  
-                )     
--}
+                pre))}
 
-             }
-
--}
 
   ; subst* = λ _ q _ → [ B ]subst* _ (q _)
-  ; refl* = {!!} -- λ {x (f , rsp) a →  {!!} } -- [ [ B ]fm _ ]trans [ B ]subst-pi (rsp ([ A ]subst ([ Γ ]sym [ Γ ]refl) a) a [ A ]subst-pi')  }
-  ; trans* = {!!} {- λ {(f , rsp) a →
+  ; refl* = λ {x} {a} ax 
+          → let rsp = prj₂ a in (rsp _ _ [ A ]refl*)
+  ; trans* =  λ {(f , rsp) a →
              [ [ B ]fm _ ]trans 
              ([ [ B ]fm _ ]trans 
              ([ B ]trans* _) 
-             ([ [ B ]fm _ ]sym ?))  -- ([ [ B ]fm _ ]trans ([ B ]trans* _) [ B ]subst-pi))) 
-             ([ B ]subst* _ (rsp _ _ ? )) } -- ([ [ A ]fm _ ]trans ([ A ]trans* _) [ A ]subst-pi))) } 
+             ([ [ B ]fm _ ]sym ([ B ]trans* _)))
+             ([ B ]subst* _ (rsp _ _ ([ A ]trans* _) )) }
 
--}
+
   }
 
 \end{code}

@@ -1,0 +1,1033 @@
+%\chapter{Homotopy Type Theory and higher inductive types}\label{HITs}
+
+
+\chapter{The Setoid Model}\label{models}
+
+
+To introduce extensional concepts into \itt, one can simply postulate them as axioms but we lose the good computational properties of Type Theory.  It is crucial to construct an intensional model where these extensional concepts like functional extensionality, quotient types are automatically derivable. In the usual set model, types are sets which does not allow us to enforce equalities on types. Therefore it is essential to interpret types with equalities, for example, setoids, groupoids, or $\omega$-groupoids. 
+
+% We can postulate these axioms but then we can not keep the good computational properties. Therefore it is crucial that axioms have a computational interpretation. One solution is 
+
+In this chapter, we mainly introduce an implementation of Altenkirch's setoid model  \cite{alti:lics99}  where types are interpreted as setoids. We define the model as categories with families in Agda. There is no proof irrelevance universe $\Prop$ in Agda, but the current version of Agda supports some proof-irrelevance features \cite{prAgda}, for example proof-irrelvant field in record types, proof-irrelvant argument in function types etc. It has been shown by Altenkirch \cite{alti:lics99} that functional extensionality is inhabited in this model. More importantly, because types are interpreted as setoids, quotient types can be defined simply by replacing equality in a given setoid.
+We build some basic types from \cite{alti:lics99} including $\Pi$-types, natural numbers and the simply typed universe. We also extend it to $\Sigma$-types and quotient types which not discussed in Altenkirch's original construction.
+
+\section{Introduction}\label{setoidmodel}
+
+
+A setoid model of \itt is a model where types are interpreted as setoids i.e.\ every closed type comes with an equivalence relation. It is usually used to introduce extensional concepts, for example, Martin Hofmann has define a setoid model in \cite{hof:phd}. However a naïve version of setoid model does not satisfy all definitional equalities. 
+A simple model for quotient types introduced in \cite{hof:95:sm} is a solution to the problem using a modified interpretation of families, but it does not allow \emph{large eliminations}.
+
+Altenkirch \cite{alti:lics99}  proposes a different approach based on the setoid model.
+He uses an extension of \itt by a universe of propositions $\Prop$ as metatheory, and the $\eta$-rules for $\Pi$-types and $\Sigma$-types hold. 
+
+
+
+%In \cite{DBLP:conf/csl/Hofmann94}, Martin Hofmann first proposes a setoid model where types are interpreted as setoids, and the function are equivalence preserving. Cateogically, a setoid is a special groupoid where every isomorphism is unique, and then functions between two setoids are just functors.
+
+
+\infrule[proof-irr]{\Gamma \vdash P : \Prop \andalso \Gamma \vdash p,q : P}{\Gamma \vdash p \equiv q : P}
+
+
+
+ $\Prop$ only contains "propositional'' sets which has at most one
+inhabitant. Notice that it is not a definition of types, which means
+that we cannot conclude a type is of type \textbf{Prop} if we have a
+proof that all inhabitants of it are definitionally equal.
+
+The propositional universe is closed under $\Pi$-types and $\Sigma$-types:
+
+
+
+\infrule[$\Pi$-Prop]{\Gamma \vdash A : \Set \andalso \Gamma, x : A \vdash P : \Prop}
+{\Gamma \vdash \Pi~ (x : A) \to P : \Prop}
+
+
+
+\infrule[$\Sigma$-Prop]{\Gamma \vdash P : \Prop \andalso \Gamma,x : P \vdash Q : \Prop}
+{\Gamma \vdash \Sigma ~(x : P) ~ Q : \Prop}
+
+
+The metatheory has been proved {\cite{alti:lics99}} to be:
+
+\begin{itemize}
+\item \emph{Decidable}. The definitional equality is decidable, hence type checking is decidable.
+
+\item \emph{Consistent}. Not all types are inhabited and not all well typed definitional equalities holds. 
+
+\item \emph{Adequate}. All terms of type $\N$ are reducible to numerals.
+\end{itemize}
+
+And then Altenkirch constructs an intensional setoid model within this metatheory using categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
+\cite{hof:97}.  It is also decidable and adequate, functional extensionality is inhabited and it permits large elimination. It is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
+
+\begin{remark}[The category of setoids is not LCCC]\label{nlccc}
+This model is the category of setoids \textbf{Std} which is a full subcategory of \textbf{Gpd} (the category of small groupoids). Every object of \textbf{Gpd} whose all homsets contain at most one morphism are in this subcategory. 
+
+It is different from a setoid model as an E-category, for instance
+the one introduced by Hofmann \cite{hofmann1994interpretation}. An E-category is a category equipped with
+an equivalence relation for homsets. The E-category of setoids in \mltt forms a locally Cartesian closed category (LCCC) which we call it \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
+gives rise to types and they are Cartesian closed, namely the category is locally
+Cartesian closed.
+
+However not all morphisms in our category of setoids \textbf{Std} give rise to types which means that it is not a LCCC. Every LCCC can serve as a model for categories with
+families but not every category with families has to be a LCCC. 
+ Altenkirch and Kraus \cite{Altenkirch12setoidsare} have shown that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed by giving a morphism, whose pullback functor does not have a right adjoint, as a counterexample.
+\end{remark}
+
+
+% Within this type theory, introduction of quotient types is straightforward. 
+%The set of functions are naturally quotient types, the hidden information is the definition of the functions and the equivalence relation is the functional extensionality.
+
+
+We will introduce the model along with our implementation of it in Agda. 
+For readability, we will omit some unnecessary code. The complete code can be found in \Cref{app:cwf}.
+
+
+\section{Metatheory}
+
+Agda does not fulfil all requirements of the metatheory, in particular, there is no proof-irrelevant universe of propositions $\Prop$. 
+Instead Agda has irrelevancy annotations \cite{prAgda}. For example we can declare an argument of type $A$ is proof-irrelevant by put a small dot in front of it
+
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{f} \AgdaSymbol{:} \AgdaSymbol{.}\AgdaPostulate{A} \AgdaSymbol{→} \AgdaPostulate{B}\<%
+\\
+\>\AgdaFunction{f} \AgdaBound{a} \AgdaSymbol{=} \AgdaPostulate{b}\<%
+\\
+\end{code}
+
+It implies that $f$ does not depend computationally on this argument, hence $f(a) \equiv f(b)$ for any $a, b : A$. It can also used in dependent function types, dependent products (record types). 
+For example, we can define "subset" of $A$ with respect to a predicate $B : A \to Set$ as follows
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Subset} \AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaBound{a}\AgdaSymbol{)} \<[32]%
+\>[32]\<%
+\\
+\>[2]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaBound{A} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaSymbol{(}\AgdaBound{a} \AgdaPrimitive{⊔} \AgdaBound{b}\AgdaSymbol{)} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{\_,\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{prj₁} \AgdaSymbol{:} \AgdaBound{A}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{prj₂} \AgdaSymbol{:} \AgdaBound{B} \AgdaBound{prj₁}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Subset} \AgdaKeyword{public}\<%
+\\
+\>\<\end{code}
+
+Thus, the proposition that the term fulfils the predicate is irrelevant. 
+
+We can also declare a function itself is irrelevant.
+
+\begin{code}
+%
+\\
+\>\AgdaSymbol{.}\AgdaFunction{g} \AgdaSymbol{:} \AgdaPostulate{A} \AgdaSymbol{→} \AgdaPostulate{B}\<%
+\\
+\>\AgdaFunction{g} \AgdaBound{a} \AgdaSymbol{=} \AgdaPostulate{b}\<%
+\\
+\end{code}
+
+There are several restrictions of the annotation.
+
+\begin{itemize}
+
+ \item One cannot declare the result type of a function as irrelevant. 
+
+ \item The irrelevant values cannot be used in non-irrelevant contexts.
+
+ \item We cannot pattern match on irrelevant terms. 
+\end{itemize}
+
+ There is a small problem of irrelevant fields of record types as we will see later: we can not use a irrelevant value to construct a irrelevant field or irrelevant function. For example, we can not simply write $p$ in the place of $?$ in the following function
+
+\begin{code}
+%
+\\
+\>\AgdaSymbol{.}\AgdaFunction{ideq} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{.(}\AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{a} \AgdaDatatype{≡} \AgdaBound{b}\<%
+\\
+\>\AgdaFunction{ideq} \AgdaBound{p} \AgdaSymbol{=} \AgdaPostulate{?}\<%
+\\
+\end{code}
+
+Because the result type cannot declared as irrelevant, although the function (or field) is irrelevant. The problem can be temporarily fixed by using an axiom:
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{postulate}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaPostulate{irrelevant} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{.}\AgdaBound{A} \AgdaSymbol{→} \AgdaBound{A}\<%
+\\
+\>\<\end{code}
+
+This issue is also discussed in \cite{prAgda}, and hopefully can be fixed in the future.
+Fortunately it only affects a small bit of our code, e.g.\ the construction of natural numbers and universes in setoid model.
+
+Compared to $\Prop$ in the original metatheory, we have to make more efforts to imitate it using this annotations. For example  We can simply write $\sim : A \to A \to \Prop$ for a propositional equivalence relation in original metatheory. However in our implementation, we write $\sim : A \to A \to \Set$, but in every occurrence of it we use the irrelevancy annotation, such that it behaves like a term of $\Prop$. 
+
+We can easily observe that it is "closed" under $\Sigma$-types, but is not ``closed'' under $\Pi$-types, because we cannot declare it result type as irrelevant. Instead, we have to declare a $\Pi$-type itself is irrelevant.
+
+This metatheory is still decidable, consistent and should be adequate because the only axiom is irrelevant which can not be used to construct non-canonical terms of $\N$.
+
+\subsection{Category of Setoids: \textbf{Std}}
+
+We can define a setoid as usual, but declare the equivalence properties as irrelevant:
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Setoid} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{infix} \AgdaNumber{4} \_≈\_\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{Carrier} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{\_≈\_} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaBound{Carrier} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{refl} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{x} \AgdaBound{≈} \AgdaBound{x}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{sym} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaBound{y}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{x} \AgdaBound{≈} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{y} \AgdaBound{≈} \AgdaBound{x}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{trans} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaBound{y} \AgdaBound{z}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{x} \AgdaBound{≈} \AgdaBound{y} \AgdaSymbol{→} \AgdaBound{y} \AgdaBound{≈} \AgdaBound{z} \AgdaSymbol{→} \AgdaBound{x} \AgdaBound{≈} \AgdaBound{z}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{Setoid} \AgdaKeyword{public} \AgdaKeyword{renaming} \<[28]%
+\>[28]\<%
+\\
+\>[4]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{(}Carrier \AgdaSymbol{to} ∣\_∣ \AgdaSymbol{;} \_≈\_ \AgdaSymbol{to} [\_]\_≈\_ \AgdaSymbol{;} refl \AgdaSymbol{to} [\_]refl\AgdaSymbol{;}\<%
+\\
+\>[5] trans \AgdaSymbol{to} [\_]trans\AgdaSymbol{;} sym \AgdaSymbol{to} [\_]sym\AgdaSymbol{)} \<[95]%
+\>[95]\<%
+\\
+\>\<\end{code}
+
+Notice that we rename our fields for readability of the code. Usually, to project out the equivalence relation for a setoid $S : \text{Setoid}$, one has to write $\AgdaBound{\_≈\_} ~A ~ a ~b$  which is not readable. By renaming, we can write $[ A ] ~a ~\AgdaBound{≈} ~b$ for a better style. We will also rename some fields for other records types later, but we may omit the code which is unnecessary.
+
+
+Functions between setoids consists of a function on the underlying sets and a property that it respects the equivalence relation:
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{infix} \AgdaNumber{5} \_⇉\_\<%
+\\
+%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{\_⇉\_} \AgdaSymbol{(}\AgdaBound{A} \AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Setoid}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[-1]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{fn:\_resp:\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{fn} \<[9]%
+\>[9]\AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{B} \AgdaFunction{∣}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{resp} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{A} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \<[28]%
+\>[28]\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{→} \<[27]%
+\>[27]\<%
+\\
+\>[4]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]} \AgdaBound{fn} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{fn} \AgdaBound{y}\<%
+\\
+\>\AgdaKeyword{open} \AgdaModule{\_⇉\_} \AgdaKeyword{public} \AgdaKeyword{renaming} \AgdaSymbol{(}fn \AgdaSymbol{to} [\_]fn \AgdaSymbol{;} resp \AgdaSymbol{to} [\_]resp\AgdaSymbol{)}\<%
+\\
+\>\<\end{code}
+
+The category $\textbf{Std}$ has a terminal object which has a unique homomorphism for any object in this category:
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{●} \AgdaSymbol{:} \AgdaRecord{Setoid}\<%
+\\
+\>\AgdaFunction{●} \<[4]%
+\>[4]\AgdaSymbol{=} \AgdaKeyword{record} \AgdaSymbol{\{}\<%
+\\
+\>[1]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaField{Carrier} \AgdaSymbol{=} \AgdaRecord{⊤}\AgdaSymbol{;}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaField{\_≈\_} \<[13]%
+\>[13]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{\_} \AgdaSymbol{→} \AgdaRecord{⊤}\AgdaSymbol{;}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaField{refl} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaInductiveConstructor{tt}\AgdaSymbol{;}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaField{sym} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\AgdaSymbol{;}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaField{trans} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{\_} \AgdaSymbol{→} \AgdaInductiveConstructor{tt} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{⋆} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Δ} \AgdaSymbol{:} \AgdaRecord{Setoid}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{Δ} \AgdaRecord{⇉} \AgdaFunction{●}\<%
+\\
+\>\AgdaFunction{⋆} \AgdaSymbol{=} \AgdaKeyword{record} \<[11]%
+\>[11]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{\{} \AgdaField{fn} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaInductiveConstructor{tt}\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{;} \AgdaField{resp} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaSymbol{→} \AgdaInductiveConstructor{tt} \AgdaSymbol{\}}\<%
+\\
+%
+\\
+\>\AgdaFunction{uniqueHom} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{(}\AgdaBound{Δ} \AgdaSymbol{:} \AgdaRecord{Setoid}\AgdaSymbol{)} \<[27]%
+\>[27]\<%
+\\
+\>[6]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{Δ} \AgdaRecord{⇉} \AgdaFunction{●}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{f} \AgdaDatatype{≡} \AgdaFunction{⋆}\<%
+\\
+\>\AgdaFunction{uniqueHom} \AgdaBound{Δ} \AgdaBound{f} \AgdaSymbol{=} \AgdaInductiveConstructor{PE.refl}\<%
+\\
+\>\<\end{code}
+
+
+Because we do not use categorical construction to build the "categories with families", we do not verify that it forms a setoid here. 
+
+\section{Categories with families}
+
+The setoid model is essentially a category with families:
+
+\begin{definition}\label{cwf:def}
+\textbf{Categories with families}.
+
+\begin{itemize}
+\item A category $\mathsf{C}$ with a terminal object where objects are contexts and morphisms are substitutions.
+
+\item A functor $F : \mathsf{C}^{op} \to Fam$ where $Fam$ is a category of families whose objects are dependent products and morphisms are naturally pairs of functions. The types and terms are projections of this functor: given an object $\Gamma : \mathsf{C}$, we usually write $F(\Gamma) \defeq \Sigma(A : \text{Ty} ~\Gamma) ~ \text{Tm} ~\Gamma ~ A)$, and the substitution of types and terms are just contained in the morphism part of this functor. 
+
+\item A comprehension of $\Gamma$ and $A : \text{Ty}~ \Gamma$ written as $\Gamma, A$ (or  $\Gamma \& A$) is a construction of a new object in $\mathsf{C}$ which expresses the extension of contexts.
+\end{itemize}
+
+\end{definition}
+
+In the setoid model, the category of contexts is just $\textbf{Std}$,
+
+\begin{code}
+%
+\\
+\>\AgdaFunction{Con} \AgdaSymbol{=} \AgdaRecord{Setoid}\<%
+\\
+\end{code}
+
+And the semantic types $\Ty$ and semantic terms $\Tm$ can be interpreted as the functor.
+
+Given a context $\Gamma$, types over it can be defined as functors from $\Gamma$ to $\textbf{Std}$ because since a context is a setoid which are special cases of groupoids. However setoids are not implemented as categories, so we build a semantic type $A : \Ty ~\Gamma$ (a functor) as follows:
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaRecord{Con}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set₁} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{fm} \<[11]%
+\>[11]\AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaRecord{Con}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{substT} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \<[29]%
+\>[29]\<%
+\\
+\>[4]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{.(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[4]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{∣} \AgdaBound{fm} \AgdaBound{x} \AgdaFunction{∣} \AgdaSymbol{→} \<[24]%
+\>[24]\<%
+\\
+\>[4]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{∣} \AgdaBound{fm} \AgdaBound{y} \AgdaFunction{∣}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{subst*} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{\{}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{fm} \AgdaBound{x} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{.(}\AgdaFunction{[} \AgdaBound{fm} \AgdaBound{x} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{fm} \AgdaBound{y} \AgdaFunction{]} \AgdaBound{substT} \AgdaBound{p} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{substT} \AgdaBound{p} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{refl*} \<[12]%
+\>[12]\AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{fm} \AgdaBound{x} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \<[43]%
+\>[43]\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{[} \AgdaBound{fm} \AgdaBound{x} \AgdaFunction{]} \AgdaBound{substT} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]refl}\AgdaSymbol{)} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{a}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{trans*} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaBound{y} \AgdaBound{z} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{\{}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{\{}\AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{y} \AgdaFunction{≈} \AgdaBound{z}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{(}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{fm} \AgdaBound{x} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \<[30]%
+\>[30]\<%
+\\
+\>[0]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{[} \AgdaBound{fm} \AgdaBound{z} \AgdaFunction{]} \AgdaBound{substT} \AgdaBound{q} \AgdaSymbol{(}\AgdaBound{substT} \AgdaBound{p} \AgdaBound{a}\AgdaSymbol{)} \<[44]%
+\>[44]\<%
+\\
+\>[0]\AgdaIndent{12}{}\<[12]%
+\>[12]\AgdaFunction{≈} \AgdaBound{substT} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]trans} \AgdaBound{p} \AgdaBound{q}\AgdaSymbol{)} \AgdaBound{a}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{.}\AgdaFunction{tr*} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
+\\
+\>[2]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\{}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{y} \AgdaFunction{≈} \AgdaBound{x}\AgdaSymbol{\}}\<%
+\\
+\>[2]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\{}\AgdaBound{q} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{\}}\<%
+\\
+\>[2]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\{}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \<[27]%
+\>[27]\<%
+\\
+\>[2]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{[} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{]} \AgdaFunction{substT} \AgdaBound{p} \AgdaSymbol{(}\AgdaFunction{substT} \AgdaBound{q} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{a}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{tr*} \AgdaSymbol{=} \AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{trans*} \AgdaSymbol{\_)} \AgdaFunction{refl*}\<%
+\\
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{substT-inv} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \<[31]%
+\>[31]\<%
+\\
+\>[2]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaSymbol{.(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[2]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{∣} \AgdaFunction{fm} \AgdaBound{y} \AgdaFunction{∣} \AgdaSymbol{→} \<[24]%
+\>[24]\<%
+\\
+\>[2]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{∣} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{∣}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{substT-inv} \AgdaBound{p} \AgdaBound{y} \AgdaSymbol{=} \AgdaFunction{substT} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]sym} \AgdaBound{p}\AgdaSymbol{)} \AgdaBound{y}\<%
+\\
+\>\<\end{code}
+
+$\mathsf{fm}$ is the object part of this functor, $\mathsf{substT}$ is the morphism part which stands for substitution via an equivalence $x \sim y$ for $x , y : \Gamma$. $\mathsf{subst*}$ states that the functions between setoids preserve the equivalence relation. $\mathsf{refl*}$ and $\mathsf{trans*}$ are functor laws up to the equivalence relation. We also prove a lemma $\mathsf{tr*}$ which can be understands as the property that given arbitrary morphisms $f : x \sim x$ and $g : y \sim x$, the composition of them always equal to the identity morphism. $\mathsf{substT\text{-}inv}$ just gives the inverse of $\mathsf{substT}$.
+
+Notice that we mark all occurrences of $\sim$ irrelevant. We also omit some unnecessary syntactic renaming of the fields.
+
+Then terms follow naturally as families of elements in the underlying set of types indexed by $x : \Gamma$,  and it has to respects the equivalent relation as well:
+
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{record} \AgdaRecord{Tm} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{constructor} \AgdaInductiveConstructor{tm:\_resp:\_}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{field}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaField{tm} \<[10]%
+\>[10]\AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{x} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{x} \AgdaFunction{∣}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{.}\AgdaField{respt} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{y} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}} \AgdaSymbol{→} \<[31]%
+\>[31]\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y}\AgdaSymbol{)} \AgdaSymbol{→} \<[30]%
+\>[30]\<%
+\\
+\>[4]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{y} \AgdaFunction{]} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaSymbol{(}\AgdaBound{tm} \AgdaBound{x}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{tm} \AgdaBound{y}\<%
+\\
+\>\<\end{code}
+
+
+
+The substitution of types can be defined simply by composing the underlying objects of types and context morphisms:
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{\_[\_]T} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaRecord{Setoid}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>\AgdaFunction{\_[\_]T} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaBound{f}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{\{} \AgdaField{fm} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaFunction{fm} \AgdaSymbol{(}\AgdaFunction{fn} \AgdaBound{x}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaFunction{substT} \AgdaSymbol{\_}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaFunction{subst*} \AgdaSymbol{(}\AgdaFunction{resp} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{;} \AgdaField{refl*} \<[14]%
+\>[14]\AgdaSymbol{=} \AgdaFunction{refl*}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaFunction{trans*}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaSymbol{\}}\<%
+\\
+\>[2]\AgdaIndent{5}{}\<[5]%
+\>[5]\AgdaKeyword{where} \<[11]%
+\>[11]\<%
+\\
+\>[5]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaKeyword{open} \AgdaModule{Ty} \AgdaBound{A}\<%
+\\
+\>[5]\AgdaIndent{7}{}\<[7]%
+\>[7]\AgdaKeyword{open} \AgdaModule{\_⇉\_} \AgdaBound{f}\<%
+\\
+\>\<\end{code}
+
+$\mathsf{refl*}$ and $\mathsf{trans*}$ can also be verified easily because of proof irrelevance.
+We simplify our definition by open special record types, i.e.\ type $A$ and morphism $f$, which is not ambiguous in the scope.
+
+The substitution of terms is similar:
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{\_[\_]m} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaBound{Δ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{\}\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Δ}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaRecord{Tm} \AgdaBound{A} \<[39]%
+\>[39]\<%
+\\
+\>[0]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaBound{Γ} \AgdaRecord{⇉} \AgdaBound{Δ}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]T}\AgdaSymbol{)}\<%
+\\
+\>\AgdaFunction{\_[\_]m} \AgdaBound{t} \AgdaBound{f} \AgdaSymbol{=} \AgdaKeyword{record} \<[19]%
+\>[19]\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{t} \AgdaFunction{]tm} \AgdaFunction{∘} \AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]fn}\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{t} \AgdaFunction{]respt} \AgdaFunction{∘} \AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]resp} \<[43]%
+\>[43]\<%
+\\
+\>[0]\AgdaIndent{10}{}\<[10]%
+\>[10]\AgdaSymbol{\}}\<%
+\\
+\>\<\end{code}
+
+Empty context is just terminal object of $\textbf{Std}$ as we seen before.
+
+Given a context $\Gamma$ and a type $A : \Ty ~\Gamma$, we can form a new context $\Gamma \& A$ which is usually called \textbf{context comprehension}. Syntactically it corresponds to introducing a new variable of type $A$. We can simply construct it by $\Sigma$-types.
+
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{\_\&\_} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaRecord{Setoid}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ} \AgdaSymbol{→} \AgdaRecord{Setoid}\<%
+\\
+\>\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A} \AgdaSymbol{=} \<[8]%
+\>[8]\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaKeyword{record} \AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaRecord{Σ[} \AgdaBound{x} \AgdaRecord{∶} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣} \AgdaRecord{]} \AgdaFunction{∣} \AgdaFunction{fm} \AgdaBound{x} \AgdaFunction{∣} \<[45]%
+\>[45]\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈\_} \AgdaSymbol{=} \AgdaSymbol{λ\{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{y} \AgdaInductiveConstructor{,} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \<[37]%
+\>[37]\<%
+\\
+\>[9]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaRecord{Σ[} \AgdaBound{p} \AgdaRecord{∶} \AgdaBound{x} \AgdaFunction{≈} \AgdaBound{y} \AgdaRecord{]} \AgdaFunction{[} \AgdaFunction{fm} \AgdaBound{y} \AgdaFunction{]} \AgdaSymbol{(}\AgdaFunction{substT} \AgdaBound{p} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{b} \AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaFunction{refl} \AgdaInductiveConstructor{,} \AgdaFunction{refl*}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \<[18]%
+\>[18]\AgdaSymbol{λ} \AgdaSymbol{\{(}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{sym} \AgdaBound{p}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \<[41]%
+\>[41]\<%
+\\
+\>[9]\AgdaIndent{13}{}\<[13]%
+\>[13]\AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{subst*} \AgdaSymbol{\_} \AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]sym} \AgdaBound{q}\AgdaSymbol{))} \AgdaFunction{tr*} \AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{(}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{m} \AgdaInductiveConstructor{,} \AgdaBound{n}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{trans} \AgdaBound{p} \AgdaBound{m} \AgdaInductiveConstructor{,}\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \<[48]%
+\>[48]\<%
+\\
+\>[0]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{fm} \AgdaSymbol{\_} \AgdaFunction{]sym} \AgdaSymbol{(}\AgdaFunction{trans*} \AgdaSymbol{\_))} \AgdaSymbol{(}\AgdaFunction{subst*} \AgdaSymbol{\_} \AgdaBound{q}\AgdaSymbol{))} \AgdaBound{n}\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaKeyword{where}\<%
+\\
+\>[4]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaKeyword{open} \AgdaModule{Setoid} \AgdaBound{Γ}\<%
+\\
+\>[4]\AgdaIndent{6}{}\<[6]%
+\>[6]\AgdaKeyword{open} \AgdaModule{Ty} \AgdaBound{A}\<%
+\\
+\end{code}
+
+The new relation is also an equivalence following from the properties of $\Gamma$ as a setoid and the properties of $A$.
+Since the context $\Gamma$ and type $A$ as record types are opened in the scope, we can unambiguously use fields such as $fm$ and $subst*$.
+
+We have also defined a few common operations as usual, e.g.\ projections and pairing. The code of them can be found in \Cref{app:cwf}.
+
+\subsection{Type construction in the setoid model}
+
+Dependent function types $\Pi$-types and dependent product types $\Sigma$-types are essential in a dependent type theory. Intuitively, they are just $\Pi$-types and $\Sigma$-types in the metatheory together with the proofs that the setoid equivalence is respected. We have implemented them according to the original construction and reasoning in \cite{alti:lics99} with minor adaptation, but due to the complication of the codes, we keep them in appendix (see \Cref{app:cwf}).
+
+
+We have also built some basic types including natural numbers, a simply typed universe and equality types.
+For natural numbers, equality can be recursively defined as
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{\_≈nat\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{zero} \AgdaFunction{≈nat} \AgdaInductiveConstructor{zero} \AgdaSymbol{=} \AgdaRecord{⊤}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{zero} \AgdaFunction{≈nat} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaSymbol{=} \AgdaDatatype{⊥}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaInductiveConstructor{zero} \AgdaSymbol{=} \AgdaDatatype{⊥}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaSymbol{=} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaBound{n}\<%
+\\
+\end{code}
+
+The problem of irrelevancy annotation arises here: to prove the \emph{irrelevant} field $\mathsf{subst*}$, we can not simply use its \emph{irrelevant} argument because the result type is not declared irrelevant. Therefore we use the \emph{irrelevant} axiom as we mentioned before to fix the problem.
+
+
+\begin{code}
+\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{x} \AgdaSymbol{→} \AgdaPostulate{irrelevant} \AgdaBound{x}\<%
+\end{code}
+
+
+\subsection{Quotient types}
+
+We build our quotient types in an Agda module.
+Given a context $\Gamma$, and a type $A : \Ty~ \Gamma$, 
+
+\begin{code}\>\<%
+\\
+\>\AgdaKeyword{module} \AgdaModule{Q} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaFunction{Con}\AgdaSymbol{)(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+we can build a quotient type if we have an equivalence relation $R$ defined on $A$ which have to respect the underlying equivalence of $A$.
+In principle, the type of $R$ should be $\Tm ~ (\Pi ~A ~ \Pi ~A^{+} ~\Prop)$ where $A^{+} \defeq A ~[\text{fst}]$ and fst corresponds to weakening. However we can not define an object-level $\Prop$ because our definition of setoids does not allow universes as underlying sets, and there is no universe $\Prop$ in meta-theory as well.
+
+ We declare the object part and properties of the relation explicitly. As long as we can define $R$ properly, we can extract objects and properties of $R$ so that this definition of quotient types still works.
+
+The object part of $R$ is a family of binary relation, 
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{(}\AgdaBound{R} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{γ} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+which should be proof-irrelevant. Therefore, the internal equality of the result type should be logical equivalence, hence the $\mathsf{respT}$ property can be interpreted as: for any $(\gamma , \gamma' : | \Gamma |)$ such that $(p : \gamma \approx_{\Gamma} \gamma')$, and $(a, b : | A_{fm}(\gamma)|)$, we have a logical equivalence
+
+
+$$R ((A_{subst}(p,a)),(A_{subst}(p,b))) \iff R_{\gamma}(a,b)$$ 
+
+Here we only use one direction of this equivalence:
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{.(}\AgdaBound{Rrespt} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{γ} \AgdaBound{γ'} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣}\AgdaSymbol{\}}\<%
+\\
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]} \AgdaBound{γ} \AgdaFunction{≈} \AgdaBound{γ'}\AgdaSymbol{)}\<%
+\\
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaSymbol{.(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \<[32]%
+\>[32]\<%
+\\
+\>[9]\AgdaIndent{19}{}\<[19]%
+\>[19]\AgdaBound{R} \AgdaBound{γ'} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst} \AgdaBound{p} \AgdaBound{b}\AgdaSymbol{))}\<%
+\\
+\end{code}
+
+Of course, because it is defined on type $A$, it has to respect equality (equivalence) of $A$.
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{.(}\AgdaBound{Rrsp} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{.(}\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\end{code}
+
+It is an equivalence relation, so we have reflexivity, symmetry and transitivity.
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{.(}\AgdaBound{Rref} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{a}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{.(}\AgdaBound{Rsym} \AgdaSymbol{:} \AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{.(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{b} \AgdaBound{a}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{.(}\AgdaBound{Rtrn} \AgdaSymbol{:} \<[19]%
+\>[19]\AgdaSymbol{(∀} \AgdaSymbol{\{}\AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{c}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaSymbol{.(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>[9]\AgdaIndent{17}{}\<[17]%
+\>[17]\AgdaSymbol{→} \<[20]%
+\>[20]\AgdaSymbol{.(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{b} \AgdaBound{c}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{c}\AgdaSymbol{))}\<%
+\\
+\end{code}
+
+The quotient type $Q$ shares the same underlying set with $A$, but the internal equality is replaced by $R$. 
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧₀} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Γ} \AgdaFunction{∣} \AgdaSymbol{→} \AgdaRecord{Setoid}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧₀} \AgdaBound{γ} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{∣}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈\_} \AgdaSymbol{=} \AgdaBound{R} \AgdaBound{γ}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \AgdaSymbol{=} \AgdaBound{Rref}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \AgdaSymbol{=} \AgdaBound{Rsym}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \AgdaSymbol{=} \AgdaBound{Rtrn}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+The underlying substitution is the same and we can easily verify the properties of $R$.
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦Q⟧} \AgdaSymbol{=} \AgdaKeyword{record} \<[15]%
+\>[15]\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaFunction{⟦Q⟧₀}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{substT} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]subst}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{q} \AgdaSymbol{→} \AgdaBound{Rrespt} \AgdaBound{p} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaBound{q}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{refl*} \AgdaSymbol{=} \AgdaBound{Rrsp} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{;} \AgdaField{trans*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{Rrsp} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]trans*} \AgdaSymbol{\_)}\<%
+\\
+\>[2]\AgdaIndent{4}{}\<[4]%
+\>[4]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+Given a term of $A$, we can introduce a term of $Q$.
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[\_]⟧} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaBound{A} \AgdaSymbol{→} \AgdaRecord{Tm} \AgdaFunction{⟦Q⟧}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[} \AgdaBound{x} \AgdaFunction{]⟧} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]tm}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaSymbol{→} \AgdaBound{Rrsp} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{x} \AgdaFunction{]respt} \AgdaBound{p}\AgdaSymbol{)}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+We can also define a function between type $A$ and $Q$ inside the model.
+
+\begin{code}
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[\_]⟧'} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{⇒} \AgdaFunction{⟦Q⟧}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{⟦[\_]⟧'} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaSymbol{(λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{a}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \<[36]%
+\>[36]\<%
+\\
+\>[11]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{p} \AgdaSymbol{→} \<[29]%
+\>[29]\<%
+\\
+\>[11]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaBound{Rrsp} \AgdaSymbol{(}\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*} \AgdaBound{p}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{p} \AgdaBound{a} \AgdaSymbol{→} \AgdaBound{Rrsp} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]tr*}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+Q-\textbf{Ax} can be simply proved because the new equivalence $R$ respects the old one in $A$:
+
+\begin{code}
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaSymbol{.}\AgdaFunction{Q-Ax} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b} \AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaFunction{⟦Q⟧} \AgdaFunction{]fm} \AgdaSymbol{\_} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{Q-Ax} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{=} \AgdaBound{Rrsp}\<%
+\\
+\end{code}
+
+
+The elimination rule and induction principle for quotient types are also straightforward. Given a function $f : A \to B$ which respects $R$, we can lift it as a function of type $Q \to B$ whose underlying function is the same as $f$. Because it respects $R$, the lifted function is a well-typed. Since we still use the same substitution of $A$ in the definition of $Q$, the $\mathsf{respt}$ property automatically holds.
+
+\begin{code}
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{Q-elim} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[22]%
+\>[22]\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{⇒} \AgdaBound{B}\AgdaSymbol{))}\<%
+\\
+\>[2]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{frespR} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\<%
+\\
+\>[9]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>[9]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaFunction{prj₁} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaBound{a} \<[53]%
+\>[53]\<%
+\\
+\>[18]\AgdaIndent{20}{}\<[20]%
+\>[20]\AgdaFunction{≈} \<[23]%
+\>[23]\AgdaFunction{prj₁} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>[-7]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaFunction{⟦Q⟧} \AgdaFunction{⇒} \AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{Q-elim} \AgdaBound{B} \AgdaBound{f} \AgdaBound{frespR} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{γ} \AgdaSymbol{→} \AgdaFunction{prj₁} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaInductiveConstructor{,} \AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{p} \AgdaSymbol{→} \<[54]%
+\>[54]\<%
+\\
+\>[11]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]fm} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]refl*} \AgdaSymbol{(}\AgdaBound{frespR} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaSymbol{\_} \AgdaBound{p}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{}\AgdaBound{γ}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{γ'}\AgdaSymbol{\}} \AgdaBound{p} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]respt} \AgdaBound{p} \AgdaBound{a}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+
+To prove the inductive principle, first we have to define a substitution which allows us to apply a variable to a predicate $P : Q \to \Set$ in the form of $P([a])$:
+
+\begin{code}\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{substQ} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{)} \AgdaRecord{⇉} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaFunction{⟦Q⟧}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{substQ} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{fn} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaSymbol{\{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{\}}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{resp} \AgdaSymbol{=} \AgdaSymbol{λ\{} \AgdaSymbol{(}\AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaBound{q}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{p} \AgdaInductiveConstructor{,} \AgdaSymbol{(}\AgdaBound{Rrsp} \AgdaBound{q}\AgdaSymbol{)\}}\<%
+\\
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+\end{code}
+
+Given $P$ as a predicate on $Q$, we assume the result type of $P$ is propositional  i.e.\ all terms of the underlying set is equivalent. $h$ is a dependent function, or we can say it is a proof that for all $a : A$, $P([a])$ holds.
+Similar to elimination rule, we still use the same function $h$ in the lifted version.
+The assumption we made about $P$ helps us to prove that $h$ is well-typed. The $\mathsf{respect}$ property is also inherited.
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{Q-ind} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{P} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaFunction{⟦Q⟧}\AgdaSymbol{))}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{isProp} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaSymbol{\{}\AgdaBound{x} \AgdaBound{a}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{r} \AgdaBound{s} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaFunction{[} \AgdaBound{P} \AgdaFunction{]fm} \AgdaSymbol{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \<[59]%
+\>[59]\<%
+\\
+\>[9]\AgdaIndent{22}{}\<[22]%
+\>[22]\AgdaFunction{[} \AgdaFunction{[} \AgdaBound{P} \AgdaFunction{]fm} \AgdaSymbol{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{]} \AgdaBound{r} \AgdaFunction{≈} \AgdaBound{s} \AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{h} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaFunction{Π} \AgdaBound{A} \AgdaSymbol{(}\AgdaBound{P} \AgdaFunction{[} \AgdaFunction{substQ} \AgdaFunction{]T}\AgdaSymbol{)))}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{→} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaFunction{Π} \AgdaFunction{⟦Q⟧} \AgdaBound{P}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{Q-ind} \AgdaBound{P} \AgdaBound{isProp} \AgdaBound{h} \AgdaSymbol{=} \AgdaKeyword{record}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\{} \AgdaField{tm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaFunction{prj₁} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{h} \AgdaFunction{]tm} \AgdaBound{x}\AgdaSymbol{))} \AgdaInductiveConstructor{,} \<[45]%
+\>[45]\<%
+\\
+\>[11]\AgdaIndent{18}{}\<[18]%
+\>[18]\AgdaSymbol{(λ} \AgdaBound{a} \AgdaBound{b} \AgdaBound{p} \AgdaSymbol{→} \AgdaBound{isProp} \AgdaSymbol{\{}\AgdaBound{x}\AgdaSymbol{\}} \AgdaSymbol{\{}\AgdaBound{b}\AgdaSymbol{\}} \AgdaSymbol{\_} \AgdaSymbol{\_)}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{;} \AgdaField{respt} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{h} \AgdaFunction{]respt}\<%
+\\
+\>[0]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{\}}\<%
+\\
+\>\<\end{code}
+
+
+\section{Related work}
+
+
+Barthe, Capretta and Pons \cite{bar:03} has investigated different definitions of setoids, and possible mathematical construction using setoids. The definition of a setoid we used is called a total setoid, while if the internal relation is not required to be reflexive, it is called a partial setoid.
+They have discussed quotients realisation using different approaches of setoids.
+
+In \cite{hofmann1994interpretation} Hofmann has discussed building a model of dependent type theory as categories with attributes from a locally Cartesian closed category (LCCC), for example the E-category of setoids (see \Cref{nlccc}). In that interpretation every morphism gives rise to a function. The E-category of setoids is different to the one used in our model which is not lccc. 
+Hofmann \cite{hof:phd,hof:95:sm} has also proposed a setoid model where types are interpreted as partial setoids. It is built in \itt with a type of propositions $\Prop$ and a type $\text{Prf}(P)$ for each $P : \Prop$. He has provided interpretations of both propositions and quotient types with a choice operator.
+He has also proposed a groupoid model \cite{hof:phd,MR1686862} to interpret type dependency which does not exist in his setoid model. It can be seen as a setoid whose relation $\sim$ becomes proof-relevant, or more precisely $a \sim b$ is a set for each $a, b : A$, hence we lose UIP and $\K$ eliminator. However the groupoid model is not definable in \itt.
+
+
+
+\section{Summary}
+
+In this chapter we have seen an implementation of the Altenkirch's setoid model with a slightly difference in the metatheory. We have used irrelevance feature of Agda to imitate the proof-irrelevance universe of propositions $\Prop$. As we have seen it has a problem which has to be fixed by a postulate. It does not affect most of the implementation and we do not lose canonicity because the postulate is irrelevant so that we cannot construct natural numbers using it. We have implemented the model as a category with families and have introduced various types in it. Most importantly, we have shown that to define quotient types in this model, we can simply replacing the internal equivalence of a type $A$ as a setoid with a given equivalence relation on it. 
+
+We can further simplify the construction of the setoid model by adopting McBride's heterogeneous approach to equality as discussed in Altenkirch, McBride and Swierstra' \emph{Observational Type Theory} \cite{alti:ott-conf}. They identify values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. It can only inhabited if the types are equal. In Agda, it can be defined as
+
+\begin{code}
+ %
+\\
+\>\AgdaKeyword{data} \AgdaDatatype{\_≅\_} \AgdaSymbol{\{}\AgdaBound{A} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{(}\AgdaBound{x} \AgdaSymbol{:} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{:} \AgdaSymbol{∀\{}\AgdaBound{B} \AgdaSymbol{:} \AgdaPrimitiveType{Set}\AgdaSymbol{\}} \AgdaSymbol{→} \AgdaBound{B} \AgdaSymbol{→} \AgdaPrimitiveType{Set} \AgdaKeyword{where}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaBound{x} \AgdaDatatype{≅} \AgdaBound{x}\<%
+\\
+\end{code}
+
+
+However, by defining equality irrelevant with the actual proof of the equality between types, we silently claim that the types are essentially sets which have UIP. Therefore if we do not accept $\K$ or UIP, we cannot use it in general. However we can use heterogeneous equality for types which behaves like sets and it helps us avoid the heavy use of $\mathsf{subst}$ which complicates formalisation and reasoning, for example, in \Cref{sec:het} we use it for syntactic terms.
+
+
+
+
+
+
+
+
+% In \itt, the uniqueness of identity types is not
+% accepted in general, but derivable for types whose propositional
+% equality is decidable. The homotopy interpretation fits
+% nicely by provides higher levels structures which are weaker
+% equivalence relation (compared to strict equality) between identity types.
+
+
+
+%\hott does not only help us model type theory with a focus on the equality, but also provides mathematicians type theoretical tools to study homotopy theory.
+

@@ -194,19 +194,12 @@ Quotient types
 %
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{Q-elim} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[22]%
-\>[22]\<%
+\>[2]\AgdaFunction{Q-elim} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{f} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{⇒} \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{⇒} \AgdaBound{B}\AgdaSymbol{))}\<%
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{(}\AgdaBound{frespR} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
 \\
-\>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{frespR} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\<%
-\\
-\>[9]\AgdaIndent{18}{}\<[18]%
-\>[18]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
-\\
-\>[9]\AgdaIndent{18}{}\<[18]%
+\>[11]\AgdaIndent{18}{}\<[18]%
 \>[18]\AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaFunction{prj₁} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaBound{a} \<[53]%
 \>[53]\<%
 \\

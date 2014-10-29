@@ -290,7 +290,6 @@ Simpler definition for functions
 $\Sigma$-types (object level)
 
 \begin{code}
-
 Σ' : {Γ : Con}(A : Ty Γ)(B : Ty (Γ & A)) → Ty Γ
 Σ' {Γ} A B = record 
         { fm = λ x → let Ax = [ A ]fm x in

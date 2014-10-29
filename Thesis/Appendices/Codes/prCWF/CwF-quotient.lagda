@@ -75,17 +75,15 @@ module Q (Γ : Con)(A : Ty Γ)
   .Q-Ax : ∀ γ a b → [ [ A ]fm γ ] a ≈ b → [ [ ⟦Q⟧ ]fm _ ] a ≈ b
   Q-Ax γ a b = Rrsp
 
-  Q-elim : (B : Ty Γ) 
-         → (f : Tm (A ⇒ B))
-         → (frespR : ∀ γ a b
-                  → (R γ a b)
+  Q-elim : (B : Ty Γ)(f : Tm (A ⇒ B))
+           (frespR : ∀ γ a b → (R γ a b)
                   → [ [ B ]fm γ ] prj₁ ([ f ]tm γ) a 
                     ≈  prj₁ ([ f ]tm γ) b)
          → Tm (⟦Q⟧ ⇒ B)
   Q-elim B f frespR = record
            { tm = λ γ → prj₁ ([ f ]tm γ) , (λ a b p → 
                   [ [ B ]fm _ ]trans [ B ]refl* (frespR _ _ _ p))
-           ; respt = λ {γ} {γ'} p a → [ f ]rspt p a
+           ; respt = λ {γ} {γ'} p a → [ f ]respt p a
            }
 
   

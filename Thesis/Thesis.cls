@@ -75,27 +75,27 @@
 %----------------------------------------------------------------------------------------
 % MARGINS
 %----------------------------------------------------------------------------------------
-%\setmarginsrb  { 2.0in}  % left margin
-%                        { 1.0in}  % top margin
-%                        { 1.0in}  % right margin
-%                        { 1.0in}  % bottom margin
-%                        {  20pt}  % head height
-%                        {0.25in}  % head sep
-%                        {   9pt}  % foot height
-%                        { 0.3in}  % foot sep
+\setmarginsrb  { 1.5in}  % left margin
+                        { 1.0in}  % top margin
+                        { 1.0in}  % right margin
+                        { 1.0in}  % bottom margin
+                        {  20pt}  % head height
+                        {0.25in}  % head sep
+                        {   9pt}  % foot height
+                        { 0.3in}  % foot sep
 %----------------------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------------------
 %	MARGINS
 %----------------------------------------------------------------------------------------
-\setmarginsrb  { 1.5in}  % left margin
-                        { 0.6in}  % top margin
-                        { 1.0in}  % right margin
-                        { 0.8in}  % bottom margin
-                        {  20pt}  % head height
-                        {0.25in}  % head sep
-                        {   9pt}  % foot height
-                        { 0.3in}  % foot sep
+%\setmarginsrb  { 1.5in}  % left margin
+%                        { 0.6in}  % top margin
+%                        { 1.0in}  % right margin
+%                        { 0.8in}  % bottom margin
+%                        {  20pt}  % head height
+%                        {0.25in}  % head sep
+%                        {   9pt}  % foot height
+%                        { 0.3in}  % foot sep
 %----------------------------------------------------------------------------------------
 \raggedbottom
 \setlength{\topskip}{1\topskip \@plus 5\p@}

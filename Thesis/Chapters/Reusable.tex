@@ -1,4 +1,39 @@
 
+record exists (A : Set)(B : A → Set) : Set where
+  field
+    ex : A
+    .st : B ex
+    
+data _≅_ (A B : Setoid) : Set where
+  iso : (f : ∣ A ∣ → ∣ B ∣)
+        .(p : exists (∣ B ∣ → ∣ A ∣)
+        (λ g → (∀ n → f (g n) ≡ n) × 
+                (∀ m → g (f m) ≡ m))) → 
+        A ≅ B
+
+
+
+
+
+
+
+module TyEq  (Γ : Con)(A B : Ty Γ) where
+
+  ⟦TyEq⟧ : Ty Γ
+  ⟦TyEq⟧ = record 
+           { fm = λ γ → let A' =  ∣ [ A ]fm γ ∣ in
+                        let B' =  ∣ [ B ]fm γ ∣ in 
+             record { Carrier = Subset ((A' → B') × (B' → A')) 
+                      (λ {(f , g) → 
+                        (∀ x → f (g x) ≡ x) × (∀ y → g (f y) ≡ y)})
+             ; _≈_ = λ x y → ∀ a → proj₁ (prj₁ x) a ≡ proj₁ (prj₁ y) a
+             ; refl = λ a → PE.refl
+             ; sym = λ x₁ a → PE.sym (x₁ a)
+             ; trans = λ x₁ x₂ a → PE.trans (x₁ a) (x₂ a) }
+           ; substT = λ p x → ((λ x₁ → [ B ]subst {!!} {!!}) , {!!}) , {!!}; subst* = {!!}; refl* = {!!}; trans* = {!!} }
+
+
+
 The type construction is not complete because it also includes lambda abstraction and function application which correspond to introduction and elimination rules respectively. The verification of $\beta$ and $\eta$ laws are also essential, but we have not implemented them in Agda due to technical difficulties. The problem is that type-checking of them results in stack overflow. Hopefully the problems will be fixed by later patches.
 
 

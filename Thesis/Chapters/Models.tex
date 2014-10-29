@@ -877,21 +877,13 @@ Q-\textbf{Ax} can be simply proved because the new equivalence $R$ respects the 
 The elimination rule and induction principle for quotient types are also straightforward. Given a function $f : A \to B$ which respects $R$, we can lift it as a function of type $Q \to B$ whose underlying function is the same as $f$. Because it respects $R$, the lifted function is a well-typed. Since we still use the same substitution of $A$ in the definition of $Q$, the $\mathsf{respt}$ property automatically holds.
 
 \begin{code}
-\\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{Q-elim} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)} \<[22]%
-\>[22]\<%
+\>[2]\AgdaFunction{Q-elim} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{f} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{⇒} \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{f} \AgdaSymbol{:} \AgdaRecord{Tm} \AgdaSymbol{(}\AgdaBound{A} \AgdaFunction{⇒} \AgdaBound{B}\AgdaSymbol{))}\<%
+\>[2]\AgdaIndent{11}{}\<[11]%
+\>[11]\AgdaSymbol{(}\AgdaBound{frespR} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b} \AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
 \\
-\>[2]\AgdaIndent{9}{}\<[9]%
-\>[9]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{frespR} \AgdaSymbol{:} \AgdaSymbol{∀} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\<%
-\\
-\>[9]\AgdaIndent{18}{}\<[18]%
-\>[18]\AgdaSymbol{→} \AgdaSymbol{(}\AgdaBound{R} \AgdaBound{γ} \AgdaBound{a} \AgdaBound{b}\AgdaSymbol{)}\<%
-\\
-\>[9]\AgdaIndent{18}{}\<[18]%
+\>[11]\AgdaIndent{18}{}\<[18]%
 \>[18]\AgdaSymbol{→} \AgdaFunction{[} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]fm} \AgdaBound{γ} \AgdaFunction{]} \AgdaFunction{prj₁} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{f} \AgdaFunction{]tm} \AgdaBound{γ}\AgdaSymbol{)} \AgdaBound{a} \<[53]%
 \>[53]\<%
 \\
@@ -986,12 +978,12 @@ The assumption we made about $P$ helps us to prove that $h$ is well-typed. The $
 \section{Related work}
 
 
-Barthe, Capretta and Pons \cite{bar:03} has investigated different definitions of setoids, and possible mathematical construction using setoids. The definition of a setoid we used is called a total setoid, while if the internal relation is not required to be reflexive, it is called a partial setoid.
+Barthe, Capretta and Pons \cite{bar:03} have investigated different definitions of setoids, and possible mathematical construction using setoids. The definition of a setoid we used is called a total setoid, while if the internal relation is not required to be reflexive, it is called a partial setoid.
 They have discussed quotients realisation using different approaches of setoids.
 
 In \cite{hofmann1994interpretation} Hofmann has discussed building a model of dependent type theory as categories with attributes from a locally Cartesian closed category (LCCC), for example the E-category of setoids (see \Cref{nlccc}). In that interpretation every morphism gives rise to a function. The E-category of setoids is different to the one used in our model which is not lccc. 
 Hofmann \cite{hof:phd,hof:95:sm} has also proposed a setoid model where types are interpreted as partial setoids. It is built in \itt with a type of propositions $\Prop$ and a type $\text{Prf}(P)$ for each $P : \Prop$. He has provided interpretations of both propositions and quotient types with a choice operator.
-He has also proposed a groupoid model \cite{hof:phd,MR1686862} to interpret type dependency which does not exist in his setoid model. It can be seen as a setoid whose relation $\sim$ becomes proof-relevant, or more precisely $a \sim b$ is a set for each $a, b : A$, hence we lose UIP and $\K$ eliminator. However the groupoid model is not definable in \itt.
+He has also proposed a groupoid model \cite{hof:phd,MR1686862} to interpret type dependency which does not exist in his setoid model. It can be seen as a setoid whose relation $\sim$ becomes proof-relevant, or more precisely $a \sim b$ is a set for each $a, b : A$, hence we lose UIP and $\K$ eliminator. However the groupoid model uses \ett as meta-theory.
 
 
 

@@ -1,14 +1,13 @@
 \chapter{Conclusion and Future Work}
 
 We have presented the evolution of theories of types especially \mltt (Type Theory) and discussed different variants of it.  We have compared two versions of Type Theory: \ett (ETT) and \itt (ITT). ITT has decidable type checking but lacks some extensional concepts such as functional extensionality and quotient types. On the other hand,  ETT has equality reflection which gives us these extensional concepts but its type checking is undecidable due to the identification of propositional equality and definitional equality.
-ITT
 
 
-The notion of quotient types is one of the essential extensional concepts which can facilitate mathematical and programming constructions. Because of the good computational properties such as decidable type checking, ITT is usually preferable to be implemented as a programming language compared to ETT and we would like to have quotient types in it. We have presented a definition of quotient types in a type theory with a proof-irrelevant universe, and shown that simply add it into \itt as an axiom makes the theory inadequate, i.e.\ canonicity is lost. We have also made clear its correspondence to coequalizers in $\Set$ and a left adjoint functor in category theory.
+The notion of quotient types is one of the important extensional concepts which can facilitate mathematical and programming constructions. Because of the good computational properties such as decidable type checking, ITT is usually preferable to be implemented as a programming language compared to ETT and we would like to have quotient types in it. We have presented a definition of quotient types in a type theory with a proof-irrelevant universe, and shown that simply add it into \itt as an axiom makes the theory inadequate, i.e.\ canonicity is lost. We have also made clear its correspondence to coequalizers in $\Set$ and a left adjoint functor in category theory.
 
 
 We have discussed the definability of a normalisation function for a given quotient represented as a setoid. For quotients which can be defined inductively with a normalisation function e.g.\ the set of integers and the set of rational numbers, we have proposed an algebraic structure to bridge the setoid representations and set definitions.
-We have shown that the application of definable quotient structure can improve constructions by keeping good properties of both representations by providing some applications. Because it can be seen as a simulation of quotient types, we can also expect similar benefits from the applications of quotient types.
+We have shown that the application of definable quotient structure can improve the constructions by keeping good properties of both representations by providing some applications. Because it can be seen as a simulation of quotient types, we can also expect similar benefits from the applications of quotient types.
 
 
 For definable quotient structures, a potential future project would be to complete the implementation of numbers in Agda with the help of definable quotients. There are also other definable quotients implementable in our algebraic quotient structures. It can enrich the library of Agda for more potential mathematical proofs. We can also extend Agda with normalised types \cite{cou:01}, namely to build a special case of quotient types with respect to a normalisation function in the sense of \Cref{def:nor}. 
@@ -25,7 +24,7 @@ For the setoid model, there are more details to work out. For example the verifi
 Other extensional concepts and coinductive types can also be considered in the setoid model.
 
 
-We also have investigated the new extension of \mltt --  \hott. In \hott, types are interpreted as \wog which is a generalisation of groupoid. We have also discussed quotients in \hott, With univalence, quotients can be defined impredicatively. We can also define quotients using higher inductive types (HITs), and in fact HITs can be seen as "generalised quotient types".
+We have also investigated the new extension of \mltt --  \hott. In \hott, types are interpreted as \wog which is a generalization of a groupoid. We have discussed quotients in \hott, With univalence, quotients can be defined impredicatively. We can also define quotients using higher inductive types (HITs), and in fact HITs can be seen as "generalized quotient types".
 Therefore a computation interpretation of \hott can also been seen as a solution to quotient types in \itt. 
 
 We have shown a syntactic construction of \wog in Agda as a first step to build a weak $\omega$-groupoid model of Type Theory. We have defined a type theory \tig to describe the coherence conditions for a globular set to become a \wogs. We have shown some constructions of the coherences laws, for example groupoid laws inside this theory by using suspensions and replacement techniques. We also use heterogeneous equality for terms to overcome technical issues in implementation.
@@ -35,7 +34,7 @@ For instance, we would like to investigate the relation between the \tig and a t
 The syntax could be simplified by adopting categories with families. An alternative may be to use higher inductive types directly to formalize the syntax of type theory. 
 
 We would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid, but the base set in a globular set is an h-set which is incompatible with $\AgdaFunction{Idω}$. Perhaps as Altenkirch suggests \cite{CoherenceProblem}, we can solve the problem by using a universe with extensional equality, and Agda's propositional equality as strict equality so that we can define $\AgdaFunction{Idω}$ as a globular set in this universe.
-Finally to model Type Theory with weak $\omega$-groupoid model and to eliminate the univalence axiom would be the most challenging task to do in the future.
+Finally to model Type Theory with weak $\omega$-groupoids and to eliminate the univalence axiom would be the most challenging task to do in the future.
 
 It would also be interesting to consider quotient \emph{types} in \hott. 
 The notion of quotient types we considered in this thesis refers to the quotients with a \emph{propositional} equivalence relation. However in a type theory with higher dimensions, like \hott, the notion of quotient types can be more general and we would like to consider non-propositional quotients, for example, the quotient of a set by a groupoid.

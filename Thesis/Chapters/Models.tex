@@ -659,7 +659,7 @@ The problem of irrelevancy annotation arises here: to prove the \emph{irrelevant
 
 
 \begin{code}
-\>[4]\AgdaSymbol{;} \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{x} \AgdaSymbol{→} \AgdaPostulate{irrelevant} \AgdaBound{x}\<%
+\>[4] \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{x} \AgdaSymbol{→} \AgdaPostulate{irrelevant} \AgdaBound{x}\<%
 \end{code}
 
 
@@ -978,14 +978,15 @@ The assumption we made about $P$ helps us to prove that $h$ is well-typed. The $
 \section{Related work}
 
 
-Barthe, Capretta and Pons \cite{bar:03} have investigated different definitions of setoids, and possible mathematical construction using setoids. The definition of a setoid we used is called a total setoid, while if the internal relation is not required to be reflexive, it is called a partial setoid.
+Barthe, Capretta and Pons \cite{bar:03} have considered different definitions of setoids, and possible mathematical construction using setoids. The definition of a setoid we used is called a total setoid, while if the internal relation is not required to be reflexive, it is called a partial setoid.
 They have discussed quotients realisation using different approaches of setoids.
+Palmgren and Wilander \cite{Pal:14} has also shown a formalisation of constructive set theory in terms of setoids in \itt. They has considered it as a solution to the problem that the uniqueness of identity proofs for sets are not derivable from $\J$ eliminator.
+
+The categories with families (CwFs) ware introduced by Dybjer \cite{Dyb:96} as a model of dependent types which can be defined in \itt. Hofmann \cite{hof:97} has also explained the categorical semantics of dependent types provided by CwFs. Clairambault \cite{clairambault2005categories} has shown that categories with families are locally Cartesian closed after some additional structures are added such as $\Pi$-types, $\Sigma$-types, identity types etc.
 
 In \cite{hofmann1994interpretation} Hofmann has discussed building a model of dependent type theory as categories with attributes from a locally Cartesian closed category (LCCC), for example the E-category of setoids (see \Cref{nlccc}). In that interpretation every morphism gives rise to a function. The E-category of setoids is different to the one used in our model which is not lccc. 
 Hofmann \cite{hof:phd,hof:95:sm} has also proposed a setoid model where types are interpreted as partial setoids. It is built in \itt with a type of propositions $\Prop$ and a type $\text{Prf}(P)$ for each $P : \Prop$. He has provided interpretations of both propositions and quotient types with a choice operator.
 He has also proposed a groupoid model \cite{hof:phd,MR1686862} to interpret type dependency which does not exist in his setoid model. It can be seen as a setoid whose relation $\sim$ becomes proof-relevant, or more precisely $a \sim b$ is a set for each $a, b : A$, hence we lose UIP and $\K$ eliminator. However the groupoid model uses \ett as meta-theory.
-
-
 
 \section{Summary}
 

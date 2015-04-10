@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"Sigma",
+				"Sigma	\\Sigma"
+			],
+			[
+				"\\Sigma",
+				"\\Sigma"
+			],
+			[
 				"\\deta",
 				"\\delta"
 			]
@@ -12,42 +20,10 @@
 	"buffers":
 	[
 		{
-			"file": "Main.tex",
+			"file": "/Users/nuoli/Workspace/Sudoku.lhs",
 			"settings":
 			{
-				"buffer_size": 8028,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Chapters/Introduction.tex",
-			"settings":
-			{
-				"buffer_size": 14836,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Chapters/TypeTheory.tex",
-			"settings":
-			{
-				"buffer_size": 39655,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/nuoli/Downloads/latex_example.tex",
-			"settings":
-			{
-				"buffer_size": 2278,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Chapters/QuotientTypes.tex",
-			"settings":
-			{
-				"buffer_size": 24724,
+				"buffer_size": 13397,
 				"line_ending": "Unix"
 			}
 		}
@@ -55,9 +31,17 @@
 	"build_system": "Packages/Makefile/Make.sublime-build",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 227.0,
 		"selected_items":
 		[
+			[
+				"Package Control: pack",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ena",
+				"Package Control: Enable Package"
+			],
 			[
 				"make",
 				"Set Syntax: Makefile"
@@ -96,19 +80,86 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/prCWF",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/prCWF/latex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Pictures"
+	],
 	"file_history":
 	[
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Main.tex",
+		"/Users/nuoli/Downloads/recfun/src/main/scala/recfun/Main.scala",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/agda.sty",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Conclusion.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/DefinableQuotients.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Introduction.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/OGModel.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Abstract.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Reals.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/my.bib",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/TypeTheory.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/QuotientTypes.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Acknowledgements.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Models.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Reusable.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Thesis.cls",
+		"/Users/nuoli/Workspace/latex/testfield.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/mypack.sty",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/prCWF/latex/CwF-quotient.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/prCWF/latex/CategoryofSetoid.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/prCWF/latex/CwF-setoid.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Models(HPropVersion).tex",
+		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/latex/Rational.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/Quotient.lagda",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 Away day Paper/DefinableQuotients.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/Backup.tex",
+		"/Users/nuoli/Downloads/bootstrap-3.2.0-dist/index.html",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/preamble",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 LFMTP Paper/latex/slides.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/GroupoidQuotient.lagda",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/SetoidModel.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/HProp.lagda",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 LFMTP Paper/latex/BasicSyntax.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 LFMTP Paper/BasicSyntax.lagda",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Acknowledgements",
 		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/LaTeX-Plus/LaTeX-Plus.sublime-settings",
+		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 LFMTP Paper/latex/mypack.sty",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 LFMTP Paper/latex/my.bib",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/latex/CwF-setoidwo.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/latex/CwF-quotient.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/latex/HProp.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/Codes/latex/CategoryOfSetoid.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/CWF/latex/CwF-quotient.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/CWF/CwF-setoidwo.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/CWF/CwF-ctd.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/CWF/CategoryOfSetoid.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Appendices/CWF/CwF-quotient.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/CWF/latex/CwF-setoidwo.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/CWF/latex/CategoryOfSetoid.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/CWF/latex/HProp.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/CwF/latex/CwF-setoid.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/CwF/latex/hProp.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/HITs.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 Away day Paper/dq_slides.tex",
+		"/Users/nuoli/Documents/PhD-of-nzl/2014 Away day Paper/mypack.sty",
+		"/Users/nuoli/Downloads/latex_example.tex",
 		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/User/Distraction Free.sublime-settings",
 		"/Users/nuoli/Library/Application Support/Sublime Text 3/Packages/User/LaTeX Extended.sublime-settings",
-		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Thesis.sublime-project",
-		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Chapters/QuotientTypes.tex"
+		"/Users/nuoli/Documents/PhD-of-nzl/Thesis/Thesis.sublime-project"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -122,168 +173,214 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"lambda cal",
-			"Identity type"
+			"Unit type",
+			"semantic weakening",
+			"Altenkri",
+			"autoref",
+			"definable quotient structure",
+			"As we mentioned",
+			"as we mentioned",
+			"One of",
+			"bag",
+			"Bridges",
+			"hott",
+			"lics",
+			"fix the problem",
+			"Ryp",
+			"Berg",
+			"Warren",
+			"France",
+			"Types",
+			"Tabareau",
+			"groupoid",
+			"Batanin",
+			"van2011types",
+			"Weak",
+			"ourse",
+			"If the under",
+			"judgments",
+			"author",
+			"\\autoref",
+			"abstract",
+			"abstractly",
+			"why are we interested",
+			"pursuing",
+			"strong notion",
+			"alti:ott-conf",
+			"uafe",
+			"weak equi",
+			"Obser",
+			"simplfy",
+			"Clairambault",
+			"Clairambault\n",
+			"hof:97",
+			"internal",
+			"Dyb",
+			"Dy",
+			"construction",
+			"Altenk",
+			"but",
+			"we have proved me",
+			"real",
+			"Continuity",
+			"not definable in",
+			"line",
+			"In the previous",
+			"In the prevous",
+			"in the prevous",
+			"related",
+			"title",
+			"Nuo",
+			"quotient inductive",
+			"quotientinductive",
+			"quotient inductive",
+			"quotient induc",
+			"cour",
+			"In fact with ",
+			"In fact some",
+			"Identity type",
+			"sbfm",
+			"streicher",
+			"Nisse",
+			"Cohen",
+			"vv_uf",
+			"plato",
+			"palto",
+			"95:sm",
+			"Jacobs\\c",
+			"jacobs\\c",
+			"In fact, it is",
+			"In fact it is",
+			"In fact",
+			"the semantic wea",
+			"encoding",
+			"we prove that",
+			"we prove ano",
+			"many case",
+			"does not com",
+			"does not",
+			"hinder",
+			"\\ref",
+			"\\autoref",
+			"\\ref",
+			"\\autoref",
+			"\\ref",
+			"from le",
+			"from lemma",
+			"\\ref",
+			"equality reflection rule",
+			"\\ref",
+			"df:inductivetypes",
+			"dtw",
+			"lazyeval",
+			"\\ref",
+			"\\autoref",
+			"hyper",
+			"where Al",
+			"where",
+			"We can cancel",
+			"mathsf",
+			"qset",
+			"setoids",
+			"groupoid",
+			"95:sm",
+			"sm:95",
+			"95:sm",
+			"hof:phd",
+			"hofmann1995interpretation",
+			"\\text{subst}",
+			"subst",
+			"In the HoTT",
+			"book",
+			"In fact,",
+			"In fact Kr",
+			"In fact Kra",
+			"In fact kr",
+			"The proof is ",
+			"neg",
+			"undefinable via",
+			"undefiable",
+			"undefinable"
 		],
-		"highlight": true,
+		"highlight": false,
 		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
 		[
+			"Cref",
+			"judgements",
+			"\\Cref",
+			"hofmann1994interpretation",
+			"\\mathsf{subst}",
+			"{M}artin-{L}\\\"{o}f",
+			"$\\Tm",
+			": \\Ty",
+			"$\\Ty",
+			"realconnected",
+			"\\iscauchy",
+			"\\trefl",
+			"\\iscauchy",
+			"\\trefl",
+			"refl(",
+			"refl(a)",
+			"\\pi",
+			"hof:95:sm",
+			"Type Theory",
+			"\\neg",
+			"computer-aided",
+			"\\maths",
+			"Type Theory",
+			"TT$_I$",
+			"TT$_E$",
+			"$TT_E$",
+			"$TT_I$",
+			"UIP",
+			"infty",
+			"definable via normalisation",
+			"via a normalisation",
+			"Cauchy",
+			"\\lift",
+			"\\defeq"
 		],
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": false,
-		"wrap": true
+		"wrap": false
 	},
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Main.tex",
+					"file": "/Users/nuoli/Workspace/Sudoku.lhs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8028,
+						"buffer_size": 13397,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								356,
-								356
+								1247,
+								1247
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/LaTeX-Plus/LaTeX-Extended/LaTeX Extended.tmLanguage"
+							"syntax": "Packages/Haskell/Literate Haskell.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Chapters/Introduction.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14836,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								837,
-								837
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX-Plus/LaTeX-Extended/LaTeX Extended.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 722.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Chapters/TypeTheory.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 39655,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9546,
-								9546
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX-Plus/LaTeX-Extended/LaTeX Extended.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2505.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/Users/nuoli/Downloads/latex_example.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2278,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX-Plus/LaTeX-Extended/LaTeX Extended.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 708.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Chapters/QuotientTypes.tex",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 24724,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7313,
-								7321
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX-Plus/LaTeX-Extended/LaTeX Extended.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2899.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -328,10 +425,14 @@
 	{
 		"height": 0.0
 	},
+	"output.haskell_sublime_load":
+	{
+		"height": 100.0
+	},
 	"project": "Thesis.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -339,6 +440,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"",
+				"~/Documents/PhD-of-nzl/Thesis/mypack.sty"
+			]
 		],
 		"width": 0.0
 	},
@@ -358,6 +463,7 @@
 		],
 		"width": 0.0
 	},
+	"selected_group": 0,
 	"settings":
 	{
 	},

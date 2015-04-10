@@ -1,4 +1,62 @@
+and also $\Sigma$-types and quotient types are not discussed in Altenkirch's original construction. $\Sigma$-types are intuitively simple, but the construction of it in setoid models still requires a lot of unification proofs due to the type dependency. The more important one is the construction of quotient types.
 
+
+
+The problem of irrelevancy annotation arises here: to prove the \emph{irrelevant} field $\mathsf{subst*}$, we can not simply use its \emph{irrelevant} argument because the result type is not declared irrelevant. Therefore we use the \emph{irrelevant} axiom as we mentioned before to fix the problem.
+
+
+\begin{code}
+\>[4] \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{x} \AgdaSymbol{→} \AgdaPostulate{irrelevant} \AgdaBound{x}\<%
+\end{code}
+
+
+
+
+For natural numbers, equality can be recursively defined as
+
+\begin{code}
+%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaFunction{\_≈nat\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{zero} \AgdaFunction{≈nat} \AgdaInductiveConstructor{zero} \AgdaSymbol{=} \AgdaRecord{⊤}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{zero} \AgdaFunction{≈nat} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaSymbol{=} \AgdaDatatype{⊥}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaInductiveConstructor{zero} \AgdaSymbol{=} \AgdaDatatype{⊥}\<%
+\\
+\>[0]\AgdaIndent{2}{}\<[2]%
+\>[2]\AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaSymbol{=} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaBound{n}\<%
+\\
+\end{code}
+
+
+
+
+\begin{multicols}{2}
+\infrule[$\sim$-\bf{refl}]
+{ \Gamma \vdash a : A}
+{\Gamma \vdash \text{ref}_{\sim}(a) : a \sim a}
+\columnbreak
+\infrule[$\sim$-\bf{sym}]
+{ \Gamma \vdash a : A \andalso \Gamma \vdash b : A \andalso \Gamma \vdash p : a \sim b}
+{\Gamma \vdash \text{sym}_{\sim}(p) : b \sim a}
+\end{multicols}
+
+
+
+
+\infrule[$\sim$-\bf{trans}]
+{ \Gamma \vdash a : A \andalso \Gamma \vdash b : A \andalso \Gamma \vdash c : A \\
+\Gamma \vdash p : a \sim b \andalso \Gamma \vdash q : b \sim c}
+{\Gamma \vdash \text{trn}_{\sim}(p,q) : a \sim c}
+
+
+w
 record exists (A : Set)(B : A → Set) : Set where
   field
     ex : A

@@ -26,9 +26,11 @@ $n$-groupoid is an $n$-category in which morphisms on all levels are
 equivalences. {\wogs} (also called $\infty$-groupoid) is an
 infinite version of $n$-groupoid. 
 
+
  To model Type Theory without UIP we
 also allow the equalities to be non-strict, in other words, they are
 propositional but not necessarily definitional equalities. Finally we should use {\wog} to interpret types and eliminate the univalence axiom.
+
 
 There are several approaches to formalise {\wog} in Type Theory, for instance, Altenkirch and Ryp\'a\v{c}ek \cite{txa:csl}, and Brunerie's notes \cite{gb:wog}.
 
@@ -43,7 +45,7 @@ function to it. All coherence laws of {\wog} are derivable from the
 syntax, we will present some basic ones, for example reflexivity. Everything
 is formalised in Agda. This is the first attempt to formalise this approach in a
 dependently typed language like Agda or Coq. 
-Most of the work has been published in \cite{LFMTP14} by the author, Altenkrich and  Ryp\'a\v{c}ek.
+Most of the work has been published in \cite{LFMTP14} by the author, Altenkirch and  Ryp\'a\v{c}ek.
 
 One of our main contributions is to use heterogeneous
 equality for terms to overcome difficult problems encountered
@@ -106,8 +108,7 @@ dependent on types, context morphisms and contractible contexts.
 \>[19]\AgdaSymbol{:} \AgdaDatatype{Con} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
 \\
 \>\<\end{code}
-Contexts are inductively defined as either an empty context or
-a context with a type in it.
+Contexts are inductively defined. The base case is an empty context $\epsilon$, and given a type $A$ in a context $\Gamma$ we can extend $\Gamma$ with $A$ written as $\Gamma,A$:
 
 \begin{code}\>\<%
 \\
@@ -124,7 +125,7 @@ a context with a type in it.
 \>\<\end{code}
 Types are defined as either $*$ which we
 call $0$-cells, or a equality type between two terms of some type $A$. If the
-type $A$ is an $n$-cell then we call its equality type an $(n+1)$-cell.
+type $A$ is an $n$-cell then we call its equality type an $(n+1)$-cell. For example, for a set $\N$, $*$ is just the same as $\N$ and there are no higher cells because none of any two elements in $\N$ are equal. 
 
 \begin{code}\>\<%
 \\
@@ -163,24 +164,7 @@ Agda type checker to its limits and correctness into question.
 
 The idea of heterogeneous equality (or JM equality) due to McBride
 \cite{mcbride:elimination} used to resolve this issue is to define
-equality for terms of different types, but its inhabitants only for
-terms of definitionally equal types. However, the corresponding
-elimination principle relies on UIP.  In \itt, UIP is not provable
-in general, namely not all types are h-sets (homotopy
-0-types). However every type with decidable equality is an h-set.
-Inductive types with finitary constructors have decidable equality. In
-our case, the types which stand for syntactic objects (contexts,
-types, terms) are all inductive-inductive types with finitary
-constructors. It follows by Hedberg's Theorem \cite{hed:98} that any
-type with decidable equality satisfies UIP and it therefore follows
-that the syntax satisfies UIP. Because, the equality of syntactic
-types is unique, it is safe to use heterogeneous equality and proceed
-without using substitution lemmas which would otherwise be necessary
-to match terms of different types. From a computational perspective,
-it means that every equality of types can be reduced to
-$\mathit{refl}$ and using $\mathit{subst}$ to construct terms is
-proof-irrelevant, which is expressed in the following definition of
-heterogeneous equality for terms.
+equality for terms of different types which are supposed to be propositionally equal.
 
 
 \begin{code}\>\<%
@@ -194,6 +178,26 @@ heterogeneous equality for terms.
 \>[2]\AgdaInductiveConstructor{refl} \AgdaSymbol{:} \AgdaSymbol{(}\AgdaBound{b} \AgdaSymbol{:} \AgdaDatatype{Tm} \AgdaBound{A}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaBound{b} \AgdaDatatype{≅} \AgdaBound{b}\<%
 \\
 \>\<\end{code}
+
+Notice that it only inhabits if $A$ and $B$ are computationally equal.
+It is actually proof-irrelevant on the equality $A = B$, namely the elimination rule of it relies on UIP.
+As we know in \itt, UIP is not provable in general, namely not all types are h-sets (homotopy
+0-types) and indeed we did not assume UIP for all types by adding the special case of heterogeneous equality. It only requires that $Ty ~\Gamma$ to be an h-set. In \itt,
+It is a folklore that inductive types with finitary constructors have decidable equality. In
+our case, the types which stand for syntactic objects (contexts,
+types, terms) are all inductive-inductive types with finitary
+constructors. It follows by Hedberg's Theorem \cite{hed:98} that any
+type with decidable equality is an h-set, satisfies UIP and it therefore follows
+that the syntax satisfies UIP. Because, the equality of syntactic
+types is unique, it is safe to use heterogeneous equality for terms and proceed
+without using substitution lemmas which would otherwise be necessary
+to match terms of different types. 
+From a computational perspective, it means that every equality of types can be reduced to
+$\mathit{refl}$ and using $\mathit{subst}$ to construct terms is
+proof-irrelevant, which is expressed in the following definition of
+heterogeneous equality for terms.
+
+
 Once we have heterogeneous equality for terms, we can define a proof-irrelevant substitution which we call \emph{coercion} since it gives us a term of type $A$ if we have a term of type $B$ and the
 two types are equal. We can also prove that the coerced term is heterogeneously equal to the
 original term. Combining these definitions, it is much
@@ -315,7 +319,7 @@ found by cancelling the rightmost variable along with each $\AgdaInductiveConstr
 \\
 \>\<\end{code}
 
-The coherence constants are the most crucial topic in $wog$. In this syntactic approach, they are primitive terms of the primitive types in \emph{contractible contexts}
+The coherence constants are the most important and contentious issue of \wog. In this syntactic approach, they are primitive terms of the primitive types in \emph{contractible contexts}
 which will be introduced below. Indeed it encodes the fact that any type in a contractible context is inhabited, and so are the types generated by substituting into a contractible context.
 
 \begin{code}\>\<%
@@ -363,6 +367,8 @@ of contexts is defined as follows:
 \>[54]\<%
 \\
 \>\<\end{code}
+
+Notice that $\epsilon$ is not contractible, otherwise * is inhabited (all types in contractible context are inhabited) which is not true in all cases. 
 
 \subsection{Lemmas}
 
@@ -640,7 +646,7 @@ by one level.
 \>[12]\AgdaSymbol{=} \AgdaFunction{ΣC} \AgdaBound{Γ} \AgdaInductiveConstructor{,} \AgdaFunction{ΣT} \AgdaBound{A}\<%
 \\
 \>\<\end{code}
-\noindent The rest of the definitions is straightforward by structural
+\noindent The rest of the definitions are straightforward by structural
 recursion. In particular we suspend variables, terms and context morphisms:
 
 \begin{code}\>\<%
@@ -1337,7 +1343,10 @@ redundant form because the correctness for any other part of the
 syntax follows from the defining equations we have already
 stated. There seems to be no way to avoid this.
 
-If the underlying globular type is not a globular set, we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime example $\AgdaFunction{Idω}$ is not an instance anymore. We should still be able to construct non-trivial globular sets, e.g.\ by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we do not currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed, we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
+If the underlying globular type is not a globular set, we need to add coherence laws, which is not very well understood. On the other hand, restricting ourselves to globular sets means that our prime example $\AgdaFunction{Idω}$ is not an instance anymore because the definition of our $\AgdaFunction{Idω}$ do not have the conditions that every level is a set. We should still be able to construct non-trivial globular sets, e.g.\ by encoding basic topological notions and defining higher homotopies as in a classical framework. However, we do not currently know a simple definition of a globular set which is a weak $\omega$-groupoid. One possibility would be to use the syntax of type theory with equality types. Indeed we believe that this would be an alternative way to formalize weak $\omega$-groupoids.
+
+Altenkirch also suggests a potential solution to fix the problem that our definition of $\AgdaFunction{Idω}$ is not a globular set by using the approach discussed in \cite{CoherenceProblem}. we can define a universe with extensional equality, and use Agda's propositional equality as strict equality so that we can define $\AgdaFunction{Idω}$ as a globular set in this universe. 
+
 
 \section{Related work}
 
@@ -1348,5 +1357,5 @@ Altenkirch and Ryp\'{a}\v{c}ek \cite{txa:csl} have proposed a syntactic formalis
 \section{Summary}
 
 In this chapter, we have introduced an implementation of \wog following Brunerie's suggestion. Briefly speaking, we defined the syntax of the type theory \tig, then a weak $\omega$-groupoid is a globular set with the interpretation of the syntax. To overcome some technical problems, we used heterogeneous equality for terms, some auxiliary functions and loop context in all implementation. We constructed the identity morphisms and verified some groupoid laws in the syntactic framework. The suspensions for all sorts of objects were also defined for other later constructions.
-In the future, we would like to formalise a proof of that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid. As Altenkirch suggests, we can potentially solve the problem that our definition of  $\AgdaFunction{Idω}$ is not a globular set by using the approach discussed in \cite{CoherenceProblem}. Briefly speaking, we can define a universe with extensional equality, and use Agda's propositional equality as strict equality so that we can define $\AgdaFunction{Idω}$ as a globular set in this universe.
-Finally the most challenge task would be to model Type Theory with weak $\omega$-groupoids and to eliminate the univalence axiom.
+In the future, we would like to formalise a proof that $\AgdaFunction{Idω}$ is a weak $\omega$-groupoid. As Altenkirch suggests, we can potentially solve the problem that our definition of  $\AgdaFunction{Idω}$ is not a globular set by using the approach discussed in \cite{CoherenceProblem}. Briefly speaking, we can define a universe with extensional equality, and use Agda's propositional equality as strict equality so that we can define $\AgdaFunction{Idω}$ as a globular set in this universe.
+Finally the most challenging task would be to model Type Theory with weak $\omega$-groupoids and to eliminate the univalence axiom.

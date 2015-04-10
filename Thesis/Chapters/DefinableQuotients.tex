@@ -9,11 +9,10 @@ One of the most basic examples is the set of integers $\Z$. On one hand it can b
 
 
 Another example is the set of rational numbers $\Q$. Usually rational numbers are represented as fractions e.g.\ $\frac{1}{2}$. However different fractions can refer to the same rational numbers, e.g. $\frac{1}{2} = \frac{2}{4}$. It naturally gives us a quotient definition of rational numbers as \emph{fractions} (or unreduced fractions).
-As we know, for one rational number, different fractions for it can only be reduced to a unique one called 
- s \emph{reduced fraction}. Therefore, the set $\Q$ can also be defined as $\Sigma$-type consists of a fraction together with a property that it is reduced. Thus, a normalisation function in this case is just an implementation of the reduction process.
+As we know, for one rational number, different fractions for it can always be reduced to a unique one called \emph{reduced fraction}. Therefore, the set $\Q$ can also be defined as $\Sigma$-type consists of a fraction together with a property that it is reduced. Thus, a normalisation function in this case is just an implementation of the reduction process.
 
 
-For these quotients which are definable as a set without treated as quotients, it seems unnecessary to interpret them as setoids. However in practice, the setoid definitions have some advantages compared to the set definition.
+For these quotients which are definable as a set without being treated as quotients, it seems unnecessary to interpret them as setoids. However in practice, the setoid definitions have some advantages compared to the set definition.
 For example, we can define operations on $\Z$ like addition and multiplication and prove algebraic properties,
 such as verifying that the structure is a ring. 
 However, this is quite complicated and uses many unnecessary case
@@ -24,11 +23,11 @@ In the setoid definition $\Z_0$, there is only one case and the algebraic proper
 of the semiring structure of the natural numbers. 
 For rational numbers, it is also conceivable that operations on unreduced functions are simpler to define because there is no need to make sure the result is reduced in every step.
 
-Although the setoid definitions have some nice features in these cases, it requires us redefine all operations on sets again on setoids, for example $\text{List}_{\text{setoid}} (A,\sim)$.
+Although the setoid definitions have some nice features in these cases, it requires us to redefine all operations on sets again on setoids, for example $\text{List} (A,\sim)$.
 Hence we propose to use both the setoid
 and the associated set, but to use the setoid structure to define
 operations on the quotient set and to reason about it. 
-The setoid definition and set definition can be related by the normalisation function such that we can lift operations and properties in the same manner as quotient types.
+The setoid definition and set definition can be related by the normalisation function so that we can lift operations and properties in the same manner as quotient types.
 
 
 %define the
@@ -37,7 +36,7 @@ The setoid definition and set definition can be related by the normalisation fun
 In this chapter we introduce the formal framework to do this, i.e.\ we provide the definition of quotients as algebraic structures specifying the normalisation function with necessary properties. Indeed, it can be seen as a ``manual construction'' of quotient types, in other words,
 instead of automatically creating a type given a setoid, we
 prove another given type \emph{is} the quotient.
-It provides us conversions between two representations and so combines the nice features of both representations. 
+It provides us with conversions between two representations and so combines the nice features of both representations. 
 
 
 % It also means that the benefits of this framework is also  quotient types in general.
@@ -45,7 +44,7 @@ It provides us conversions between two representations and so combines the nice 
 
 \section{Algebraic structures of quotients}
 
-We first define several algebraic structures for quotients corresponds to the rules of quotient types (see \Cref{iqs}).
+We first define several algebraic structures for quotients corresponding to the rules of quotient types (see \Cref{iqs}).
 
 \begin{definition}
 \textbf{Prequotient}.
@@ -54,7 +53,7 @@ Given a setoid $(A,\sim)$,  a \emph{prequotient} over that setoid consists of
 \begin{enumerate}
 \item \label{enum:Q} a set $Q$,
 \item \label{enum:box}a function $[\_]: A \rightarrow Q$,
-\item \label{enum:sound} a proof \emph{sound} that the function $[\_]$ is compatible with the relation $\sim$,
+\item \label{enum:sound} a proof \emph{sound} that the function $[\_]$ respects the relation $\sim$,
 that is \[\sound\colon (a,b : A) \rightarrow a\sim b \rightarrow [a] = [b],\]
 \end{enumerate}
 \end{definition}
@@ -209,14 +208,14 @@ $$n_1 - n_2 = n_3 - n_4$$
 
 it is easy to find that one integer can be represented by different pairs.
 
-The equivalence relation can not be simply defined as this because subtraction is not closed on natural numbers. We only to transform the equation as
+The equivalence relation can not be simply defined as this because subtraction is not closed on natural numbers. We only need to transform the equation as
 
-$$ n_1 + n_4 = n_3 + n_2$$
+$$ n_1 + n_4 = n_3 + n_2$$.
 
 This gives rise to an equivalence relation:
 
 
-$$(n_1,n_2) \sim (n_3,n_4) \defeq  n_1 + n_4 = n_3 + n_2$$
+$$(n_1,n_2) \sim (n_3,n_4) \defeq  n_1 + n_4 = n_3 + n_2$$.
 
 We can easily verify it is reflexive, symmetric and
 transitive by equation transformations, so the proof is omitted here.
@@ -246,7 +245,7 @@ Thereby the setoid of integers can be formed as:
 
 \subsection{The set definition $\Z$}
 
-The usual notation for a integer is a natural number with a positive
+The usual notation for an integer is a natural number with a positive
 or negative sign in front: 
 
 
@@ -267,7 +266,7 @@ or negative sign in front:
 %\>[2]\AgdaInductiveConstructor{-\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℤ}\<%
 %\end{code}
 
-If we define $\Z$ in this way, $0$ have two intensionally different representations, which is
+If we define $\Z$ in this way, $0$ has two intensionally different representations, which is
 considered harmful because we lose canonicity and it will result in unnecessary troubles.
 We can fix this problem by giving a special constructor for $0$:
 \begin{itemize}
@@ -277,8 +276,8 @@ We can fix this problem by giving a special constructor for $0$:
 \end{itemize}
 
 
-In principle, it is preferable to use less constructors, because there will be less cases to analyse when pattern matching.
-Take into account the embedding of natural numbers into integers, it
+In principle, it is preferable to use fewer constructors, because there will be fewer cases to analyse when doing pattern matching.
+Taking into account the embedding of natural numbers into integers, it
 makes sense to combine the positive integers with $0$:
 
 \begin{code}%
@@ -347,7 +346,7 @@ Apply the lemma $\sound'$, we get
 
 $$[a] = [b]$$
 
-hence $[\_]$ is \emph{sound} (compatible with $\sim$).
+hence $[\_]$ is \emph{sound} (it respects $\sim$).
 
 %\begin{itemize}
 
@@ -394,7 +393,7 @@ Different fractions can represent the same rational numbers.
 
 $$ \frac{a}{b} = \frac{c}{d} $$
 
-However integers are not closed under division, we have to transform the equation into
+However since integers are not closed under division, we have to transform the equation into
 
 $$a \times d = c \times b $$
 
@@ -448,14 +447,14 @@ To calculate rational numbers using $\Q$, we have to reduce fractions in every s
 In fact someone complained about this problem\footnote{Discussion on Agda mailing list http://comments.gmane.org/gmane.comp.lang.agda/6372} in practical use of unreduced fractions in Agda standard library.
 
 Therefore a definable quotient of rational numbers consisting of both $\Q_0$ and $\Q$ and conversions between them is very useful.
-We can carry out calculations and proving properties using $\Q_0$ and reduce fraction when a canonical form is required.
+We can carry out calculations and prove properties using $\Q_0$ and reduce fraction when a canonical form is required.
 We believe that it can also improve the computational efficiency, even
 though some people claim that the unreduced numbers can be too large to make it efficient.
 
 
 We only need to implement the reduction process to be the normalisation function.
 
-We first define an auxiliary function $\AgdaFunction{calℚ}$. It calculate a reduced fraction for a positive rational represented by a pair of natural numbers $x,y : \N$ with a condition that $y$ is not zero. 
+We first define an auxiliary function $\AgdaFunction{calℚ}$. It calculates a reduced fraction for a positive rational represented by a pair of natural numbers $x,y : \N$ with a condition that $y$ is not zero. 
 It uses a library function $\AgdaFunction{gcd′}$ which computes the greatest common divisor $di$, the 
 the new numerator $q_1$, the new denominator $q_2$ such that $q_1*di=x$, $q_2*di=y$ and $q_1$ and $q_2$ are coprime.
 
@@ -624,15 +623,14 @@ Because $\Q$ is just a subset of $\Q_0$, the embedding function is just the firs
 \\
 \>\<\end{code}
 
-To complete the definable quotient, we have to prove all essential properties
-properties. Because of the complicated definitions, we only sketch proofs here:
+To complete the definable quotient, we have to prove all essential properties. Because of the complicated definitions, we only sketch proofs here:
 
 \begin{itemize}
-\item The soundness can be understood as the uniqueness of reduced forms which can be proved from the unique prime factorization of integers. Given the equation $a_1 * b_2 = b_1 * a_2$, we can cancel the two greatest common divisors calculated and it becomes $q_1 * r_2 = r_1 * q_2$ where $(q_1,q_2)$ and $(r_1,r_2)$ are coprime.  The coprime property implies that there are no common prime factors, thus we can deduce that the set of prime factors of $q_1$ is a subset of $r_1$ and vice versa, hence $q_1 = r_1$ and $q_2 = r_2$ for the same reason. In fact this has been implemented in Agda standard library for rational numbers.
+\item The soundness can be understood as the uniqueness of reduced forms which can be proved from the unique prime factorization of integers. Given the equation $a_1 * b_2 = b_1 * a_2$, we can cancel the two greatest common divisors calculated and it becomes $q_1 * r_2 = r_1 * q_2$ where $(q_1,q_2)$ and $(r_1,r_2)$ are the reduced pairs of $(a_1,a_2)$ and $(b_1,b_2)$ and are coprime.  The coprime property implies that there are no common prime factors, thus we can deduce that the set of prime factors of $q_1$ is a subset of $r_1$ and vice versa, hence $q_1 = r_1$ and $q_2 = r_2$ for the same reason. In fact this has been implemented in Agda standard library for rational numbers.
 
 \item The stability means that given a reduced fraction, if we reduce it again, it stays the same. It is the case because from the coprime property we can deduce that their greatest common divisor is $1$, thus the new numerator and denominator are the same as the old ones.
 
-\item The completeness means that if we reduce a fraction $\frac{x}{y}$, whether the reduced one is equivalent to it. This is also easy to verify because in the reducing process we have the explicit proofs of $q_1*di=x$, $q_2*di=y$, to prove $q_1 * (q_2 * di) = (q_1 *di) * q_2$ we can simply cancel the greatest common divisor $di$. We ignore the sign of the fractions because it can be cancelled in those equations.
+\item The completeness means that if we reduce a fraction $\frac{x}{y}$, the reduced one is equivalent to it. This is also easy to verify because in the reducing process we have the explicit proofs of $q_1*di=x$, $q_2*di=y$, to prove $q_1 * (q_2 * di) = (q_1 *di) * q_2$ we can simply cancel the greatest common divisor $di$. We ignore the sign of the fractions because it can be cancelled in those equations.
 \end{itemize}
 
 
@@ -648,7 +646,7 @@ For a unary operator $f$, we can lift them by
 
 $$\text{liftop1}(f) \defeq [\_] \circ f \circ \embd{\_}$$
 
-This approach can be generalised to $n$-ary operators. An operator is compatible with $\sim$ if
+This approach can be generalised to $n$-ary operators. An operator respects $\sim$ if
 
 
 $$a \sim b \to f(a) \sim f(b)$$
@@ -661,7 +659,7 @@ For integers, most of the definition for operators on of $\Z_0$ can be induced f
 
 $$(a_1 - b_1) + (a_2 - b_2) = (a_1 + a_2) - (b_1 + b_2)$$
 
-provides a clear way to define it, which is compatible with $\sim$.
+provides a clear way to define it, which respects $\sim$.
 
 \begin{code}
 \\
@@ -692,7 +690,7 @@ By completeness on $(f \circ \embd{\_}) (q)$, we can prove that
 
 $$ (\embd{\_} \circ [\_] \circ f \circ \embd{\_}) (q) \sim  (f \circ \embd{\_}) (q) $$
 
-Because $f$ is compatible with $\sim$,
+Because $f$ respects $\sim$,
 
 $$ (f \circ \embd{\_} \circ [\_] \circ  f \circ \embd{\_}) (q) \sim  (f \circ f \circ \embd{\_}) (q) $$
 
@@ -701,7 +699,7 @@ By transitivity of $\sim$
 $$(f \circ \embd{\_} \circ [\_] \circ  f \circ \embd{\_}) (q) \sim \embd{q}$$
 
 
-Because $[\_]$ is compatible with $\sim$,
+Because $[\_]$ respects $\sim$,
 
 
 $$([\_] \circ f \circ \embd{\_} \circ [\_] \circ f \circ \embd{\_}) (q) = ([\_] \circ \embd{\_})(q)$$
@@ -713,12 +711,12 @@ $$([\_] \circ f \circ \embd{\_} \circ [\_] \circ f \circ \embd{\_})(q) = q$$
 \end{proof}
 
 
-As we mentioned, One of the important motivations of definable quotients is that the setoid form is simpler such that properties can be proved with less case distinctions. Another advantage is that usually there are functions and properties available for the setoid form which are very useful. 
+As we mentioned, one of the important motivations of definable quotients is that the setoid form is simpler and therefore properties can be proved with less case distinctions. Another advantage is that usually there are functions and properties available for the setoid form that are very useful. 
 
-In \cite{finalyear}, the author has proved all necessary properties which forms a commutative ring of integers.
-In practice, for the set definition of integers, most of the basic operations and simple theorems are not unbearably complicated. However, as we mentioned before, the number of
+In \cite{finalyear}, the author has proved all necessary properties to form a commutative ring of integers in Agda.
+In practice, for the set definition of integers, most of the basic operations and simple theorems are not unbearably complicated. However the number of
 cases grows exponentially when case analysis is unavoidable.
-Although it is possible to prove lemmas which cover several cases, it is still very inefficient in general. We have experienced extremely difficulty in proving the distributivity law within the ring of integers.
+Although it is possible to prove lemmas which cover several cases, it is still very inefficient in general. We have experienced extreme difficulty in proving the distributivity law within the ring of integers.
 
 \paragraph{Case: distributivity proof}
 
@@ -859,9 +857,9 @@ The case analysis is unavoidable here, and we have to prove it from scratch.
 In experience, it is very complicated and inefficient because we can not use meaningful proved theorems to build new proofs.
 
 It is much simpler to prove the distributivity for $Z_0$. As we have mentioned, the defintions of 
-these operators only involves operators for natural
+these operators only involve operators for natural
 numbers. Therefore all these properties which only
-involves plus, minus and multiplication, are intensionally equations about natural numbers with the operators which forms a commutative semiring for natural numbers. We can use these laws to prove distributivity easily.
+involves plus, minus and multiplication, are intensional equations about natural numbers with the operators which forms a commutative semiring for natural numbers. We can use these laws to prove distributivity easily.
 
 In fact with the help of \emph{ring solver}, it can be proved automatically.
 A \emph{ring solver} is an automatic equation checker for rings e.g.\ the
@@ -903,7 +901,7 @@ Instead, we can manually construct the proof terms to improve efficiency of libr
 code, sacrificing some conveniences.
 
 Luckily it is still much simpler than the ones for the set of integers $\Z$.
-First there is only one case of integer and as we know the equations is
+First there is only one case of integer and as we know the equations are
 indeed equations of natural numbers which can be proved using only the
 properties in the commutative semiring of natural numbers. There is no
 need to prove some properties for $\Z$ from scratch like in the

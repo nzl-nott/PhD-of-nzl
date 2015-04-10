@@ -2,16 +2,16 @@
 
 \mltt (or just Type Theory) is a type theory which serves as a foundation of constructive mathematics and is also a dependently typed programming language. Different from other foundations like set theory, it is not based on predicate logic but internalises the BHK interpretation of intuitionistic logic through the Curry-Howard isomorphism. It identifies a proposition with a type such that a proof of it is a term of that type. 
 As a programming language, it means that we can express a specification as a type of the programs satisfying it.
-Moreover, one can write programs and reason about them in it, thus write certified programs. There are a number of implementations of it, such as NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
+Moreover, one can write programs and reason about them in it, thus write certified programs. Here are some implementations of it, such as NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
 
 
-As a foundation of constructive mathematics, there have been a lot of \maths formalised in it, for example a formal proof of the four-colour theorem by Georges Gonthier \cite{gonthier08ams} \footnote{More formalised mathematics can be found in \cite{sbfm}}. The formalisation of mathematics in programming languages not only provides mathematicians a powerful tool to constructively prove theorems with computerised verification, but also helps in program specification and reasoning. 
+As a foundation of constructive mathematics, there have been a lot of \maths formalised in it, for example a formal proof of the four-colour theorem by Georges Gonthier \cite{gonthier08ams} \footnote{More formalised mathematics can be found in \cite{sbfm}}. The formalisation of mathematics in programming languages not only provides mathematicians with a powerful tool to constructively prove theorems with computerised verification, but also helps in program specification and reasoning. 
 
 There are two versions of \mltt, the \emph{intensional} version (\itt or ITT) and the \emph{extensional} version (\ett or ETT).  They differ in the treatment of two notions of equality, \emph{propositional equality} and \emph{definitional equality}.  In ITT, if two expressions can be computed to the same object then we make the judgement that they are definitionally equal. On the other side, we have \emph{identity types} which are types as propositions expressing the equality between two terms of the same type, so it is called propositional equality. Definitional equality implies propositional equality, but not the other way around which is usually called equality reflection.
 In ETT, they are identified, which makes definitional equality and thereby type checking undecidable. 
 
 
-In \itt, the propositional equality is intensional. The extensional propositional equality is not inhabited, for example, equality between two point-wise equal functions, two logically equivalent propositions, and two ``equivalence classes'' of a quotient $[a]$, $[b]$ where $a \sim b$.
+In \itt, the propositional equality is intensional. Some extensional equality such as equality between two point-wise equal functions, equality between two logically equivalent propositions, and equality between two ``equivalence classes'' of a quotient $[a]$, $[b]$ where $a \sim b$, are not inhabited.
 In fact there is a list of extensional concepts (see \Cref{extensionality}) which are useful, justifiable but not available in ITT.
 Nevertheless ITT is still preferable to ETT as the basis for programming languages, because its type checking is decidable so that it has good computational behaviours.
 Therefore, we would like to extend ITT with these extensional concepts, and the notion of quotient types is one of them. 
@@ -59,12 +59,12 @@ The \textbf{quotient set} of $A$ by $\sim$ is just the set of equivalence classe
 Similarly, we can also ``divide'' a group, space, category or another algebraic structure by a given structure-preserving equivalence relation on it.
 
 Naturally one would also expect \textbf{quotient types} in Type Theory. Intuitively speaking, a \emph{quotient type} $\qset{A}$ is a type $A$ whose equality is redefined by an equivalence relation on it. In \ett, it is possible to redefine the equalities of types. 
-For example, in NuPRL which is an implementation of \ett, there is a quotient operator which builds a new type from a given type and an equivalence relation on it \cite{DBLP:books/daglib/0068834}. There are some problems of it: we can recover the witness of the equality between two equal elements in quotient types \cite{nog:02}; we can define functions on quotient types which do not respect the equivalence relation (see \Cref{related}).
+For example, in NuPRL which is an implementation of \ett, there is a quotient operator which builds a new type from a given type and an equivalence relation on it \cite{DBLP:books/daglib/0068834}. There are some problems with it, for example we can not recover the witness of the equality between two equal elements in quotient types \cite{nog:02}.
 
 
 
 Because of the good computational property of \itt, we would like to have quotient types in \itt as well.
-However in traditional formulation of \itt, such a type former does not exist because there is no attached equivalence on each type except definitional equality which can not be changed. Instead \textbf{setoids} are usually used to represent quotients:
+However in the traditional formulation of \itt, such a type former does not exist because there is no attached equivalence on each type except definitional equality which can not be changed. Instead \textbf{setoids} are usually used to represent quotients:
 
 \begin{definition}
 \textbf{Setoid}.
@@ -72,29 +72,29 @@ However in traditional formulation of \itt, such a type former does not exist be
 \begin{enumerate}
 \item a set (type) $A : \Set$,
 \item a binary relation $\sim : A \to A \to \Prop$, and
-\item it is an equivalence, i.e.\ there are proofs that it is reflexive, symmetric and transitive.
+\item a proof that it is an equivalence, i.e.\ there are proofs that it is reflexive, symmetric and transitive.
 \end{enumerate}
 \end{definition}
 
-Notice that this notion is also called a \emph{total setoid}. If the relation of a total setoid is not required to be reflexive, then it becomes a \emph{partial setoid}. In this thesis, the word "setoid" usually refers to a total setoid.
+Notice that this notion is also called a \emph{total setoid}. If the relation of a setoid is not required to be reflexive, then it becomes a \emph{partial setoid}. In this thesis, the word "setoid" usually refers to a total setoid.
 
 
-A function $f : A \to B$ is well-defined on a setoid $(A,\sim)$ only if it respects $\sim$ or it is \emph{compatible} with $\sim$:
+A function $f : A \to B$ is well-defined on a setoid $(A,\sim)$ only if it respects $\sim$:
 
 \begin{definition}\label{compatible}
-We say a function $f : A \to B$ is \textbf{compatible} with $\sim$ if
+We say a function $f : A \to B$ \textbf{respects} $\sim$ if
 
 $$\forall (x, y : A) \to x \sim y \to f(x) =_{B} f(y)$$
 \end{definition}
 
 However using setoids to represents quotients is not an ideal solution. Since it is an alternative representation of sets, everything defined on $\Set$ has to be redefined on $\Setoid$ again. 
-Examples as functions between setoids, equalities on setoids,
-products on setoids, etc. Moreover, considering a quotient $\qset{A}$ whose $A$ is already defined as a setoid, it is essential to define generalised "setoids" on setoids.
+Examples are functions between setoids, equalities on setoids,
+products on setoids, etc.
 In fact, in other branches of mathematics, the quotient object is essentially the same kind of object as the base one.
 Therefore, it is better to have a representation of the quotient $\qset{A}$ which is in the same sort as $A$ is. 
 
-In fact not all quotients have to be defined using a quotient type former. For example integers can be represented as pairs of natural numbers $\N \times \N$ which are equivalent if the subtraction of first number from the second are equal. This gives rise to a quotient. However the set of integers can also be defined inductively from the observation that $\Z \simeq \N + \N$.
-For these quotients, the set definition can be seen as the normal form of "equivalence classes" which is usually described by a mapping from setoid representation to set representation called \textbf{normalisation function}. In this thesis we say that such quotients \emph{definable via a normalisation (function)} (see \Cref{dq}).
+In fact not all quotients have to be defined using a quotient type former. For example integers can be represented as pairs of natural numbers $\N \times \N$ which are equivalent if the subtraction of the first number from the second are equal. This gives rise to a quotient. However the set of integers can also be defined inductively from the observation that $\Z \simeq \N + \N$.
+For these quotients, the set definition can be seen as the normal form of "equivalence classes" which is usually described by a mapping from setoid representation to set representation called \textbf{normalisation function}. In this thesis we say that such quotients are \emph{definable via a normalisation (function)} (see \Cref{dq}).
 
 
 However, there are also some quotients that are not definable via normalisation, for example, the set of real numbers represented by the Cauchy sequences of rational numbers, the finite multisets represented as lists quotiented by permutation equivalence (or bag equivalence \cite{DBLP:conf/itp/Danielsson12}), the non-terminating programs represented by partiality monad quotiented by weak bisimilarity and so on. In these cases, a general schema to define quotient types is essential.
@@ -104,21 +104,21 @@ If we simply introduce quotient types as axioms in \itt, we lose the \emph{canon
 To achieve the goals, we have to "refine" our interpretation of types. Usually a type is treated as a set without attached equality. If a type is interpreted as a \emph{setoid}, in other words internalising propositional equality, quotient types can be defined simply by replacing ``internal'' equality. This is called \emph{setoid interpretation} which is inspired by Bishop's \cite{bishop} definition of sets and 
 some research has been done by Martin Hofmann \cite{hof:phd,hof:95:sm}, and Thorsten Altenkirch \cite{alti:lics99,alti:ott-conf}. Based on this interpretation, we can build a setoid model in \itt which gives us the  computational interpretation of quotient types.
 
-It has been unclear for a long time what identity types are in \itt. Intuitively, the uniqueness of identity proof (UIP), namely two terms of a same identity type are always propositional equal, is valid because there is at most one canonical element expressing the equality between two objects. However UIP is not derivable from the eliminator for identity type $\J$ (see \Cref{typerule}) but an extra eliminator $\K$ suggested by Thomas Streicher \cite{streicherinvestigations}.
-Hofmann and Streicher further \cite{MR1686862} propose a groupoid interpretation of \itt where $\K$ is refuted and then UIP fails. The groupoid interpretation  can be seen as a generalisation of setoid one, where the identity type is not a proposition but a set. 
+It has been unclear for a long time what identity types are in \itt. Intuitively, the uniqueness of identity proof (UIP), stating that two terms of a same identity type are always propositionally equal, is valid because there is at most one canonical element expressing the equality between two objects. However UIP is not derivable from the eliminator for identity type $\J$ (see \Cref{typerule}) but needs an extra eliminator $\K$ suggested by Thomas Streicher \cite{streicherinvestigations}.
+Hofmann and Streicher further \cite{MR1686862} propose a groupoid interpretation of \itt where $\K$ is refuted and then UIP fails. The groupoid interpretation  can be seen as a generalisation of the setoid one, where the identity type is not a proposition but a set. It means that there can be several proofs of the same identity which are not equal.
 
-In fact, it is more accurate to interpret a type as an $\infty$-groupoid which is a generalisation of a groupoid. Since Grothendieck's homotopy hypothesis states that $\infty$-groupoids are spaces \cite{homotopyhyp}, we can interpret types as spaces indeed. In recent years, such an interpretation has been developed into a new field called \hott where types are interpreted as spaces (abstractly).
-Because the coherence conditions like the groupoid laws hold as propositional equality in \itt, it is better to interpret types as \emph{weak} $\omega$-groupoids. However, describing \wog using globular sets seems to be very involved due to coherence conditions. A more commonly used approach is therefore to define them in terms of Kan simplicial sets or cubical sets. 
-Nevertheless, it is possible to build a syntactic type theory to describe \wog in \itt (see \autoref{wog}).
+In fact, the groupoid interpretation of types can be extended to $\omega$-groupoids which are generalisations of groupoids. Roughly speaking, an $\omega$-groupoid consists of objects, morphisms between objects, morphisms between morphisms and infinite levels of morphisms. All of these morphisms are "isomorphisms" called equivalences which holds up to all higher equivalences. An introduction to $\omega$-groupoids is given in \Cref{wogintro}.
+Since Grothendieck's homotopy hypothesis states that $\omega$-groupoids are spaces \cite{homotopyhyp}, we can interpret types as spaces indeed. In recent years, such an interpretation has been developed into a new field called \hott. In \hott, types are interpreted as spaces (abstractly) or as \emph{weak} $\omega$-groupoids. However, it is very difficult to describe all levels of coherence conditions of \emph{weak} $\omega$-groupoid such as groupoid laws. A more commonly used approach is therefore to define them in terms of Kan simplicial sets or cubical sets (See \Cref{cihott}). 
+Nevertheless, it is possible to build a syntactic type theory to describe \wog in \itt (see \Cref{wog}).
 
 %Usually the coherence conditions of \wog are too involved to state as a globular set, it is more popular to describe them using some simpler incarnations  like simplicial sets or cubical sets. However it is still possible to build a syntactic type theory to describe \wog in \itt.
 
-In \hott, the most important axiom is \emph{univalence} which was suggested by Voevodsky \cite{VV}. Roughly speaking, univalence states that identity corresponds to equivalence. Many extensional concepts are derivable including functional extensionality, propositional extensionality, quotient types. For example, Voevodsky has proposed an impredicative encoding of quotient types (see \Cref{impredicative}). However the computational interpretation of univalence remains an open problem.
+In \hott, the most important axiom is \emph{univalence} which was suggested by Voevodsky \cite{VV}. Roughly speaking, univalence states that identity corresponds to equivalence. Many extensional concepts are derivable, including functional extensionality, propositional extensionality, quotient types. For example, Voevodsky has proposed an impredicative encoding of quotient types (see \Cref{impredicative}). The computational interpretation of univalence remains an open problem, but it is likely to be solved by a recently proposed model called \emph{cubical sets model} (Bezem, Coquand and Huber \cite{bezem2013model}) which has some details need to be verified.
 
 
-Quotient types can be applied in both formalisation of mathematics and program verification. As we mentioned, one of the fundamental mathematical notions \emph{real numbers} can be defined by as a quotient where the base set is the Cauchy sequences of rational numbers. 
-From programming perspective,  it also provides more algebraic
-datatypes and enable us to reason about infinite types and
+Quotient types can be applied in both formalisation of mathematics and program verification. As we mentioned before, one of the fundamental mathematical notions, \emph{real numbers} can be defined as a quotient where the base set is the Cauchy sequences of rational numbers. 
+From a programming perspective,  it also provides more algebraic
+datatypes and enables us to reason about infinite types and
 semantics-based verification of concurrent programs as suggested by Hofmann \cite{hof:phd}.
 
 
@@ -129,20 +129,21 @@ semantics-based verification of concurrent programs as suggested by Hofmann \cit
 In \Cref{bg}, we introduce \mltt as the background of our study. We provide a brief
 history of it and some basic rules of it.
 We also introduce the main tool we use -- Agda, which is a dependently typed functional
-programming language based on intensional version of \mltt. Then we discuss the missing extensional concepts in \itt excluding quotient types. We also introduce the new interpretation of \hott, where we have univalence, and higher inductive types which allow constructors for internal equalities. Finally we discuss the extensional concepts in it and the potential computational interpretations of it in \itt.
+programming language based on the intensional version of \mltt. Then we discuss the missing extensional concepts in \itt excluding quotient types. We also introduce the new interpretation of \hott, where we have univalence, and higher inductive types which allow constructors for internal equalities. Finally we discuss the extensional concepts in it and the potential computational interpretations of it in \itt.
 
 
 In \Cref{qt}, we provide the syntactic rules of quotient types together with a discussion of effectiveness. Categorically speaking, a quotient type is a \emph{coequalizer}. We also explain the rules of quotient types given by an adjunction. In \hott because of the different interpretation of sets, the traditional quotient types are just quotient \emph{sets}. We first introduce the Voevodsky's impredicative encoding of quotient sets together with a set of proofs that all essential rules are derivable. We also introduce quotient inductive types (QITs) i.e.\ quotient sets defined using higher inductive types.
  
 
-In \Cref{dq}, we introduce one of our original achievements, the definable quotient algebraic structures. We observe that there are some quotients which are are definable inductively, which means a new type former of quotient is not necessary for them. A definable quotient consists of a setoid representation $(A, \sim)$, a set representation $Q$ and a normalisation function $[\_] : A \to Q$ which gives us the normal form for each "equivalence class".
-As a example, integers can be encoded as the
-quotients types of paired natural numbers over the equivalence
+In \Cref{dq}, we introduce one of our original achievements, the definable quotient algebraic structures. We observe that there are some quotients which are definable inductively so that a new type former of quotient is not necessary for them. A definable quotient consists of a setoid representation $(A, \sim)$, a set representation $Q$ and a normalisation function $[\_] : A \to Q$ which gives us the normal form for each "equivalence class".
+As an example, integers can be encoded as the
+quotient types of paired natural numbers over the equivalence
 relation that two pairs are equal if they share the same result of
 subtraction. Integers can also be defined inductively as a set. The definable quotients abstract the relation between two representations and provide a flexible way of conversions. In fact, it can be seen as a manual construction of the quotient types.
 
 
-In \Cref{rl}, we discuss quotients that are undefinable as an inductive type with a normalisation function, such as the real numbers, finite multisets and partiality monads. We present a proof of the undefinability of real numbers as Cauchy sequences $\qset{R_0}$ with a normalisation function. The proof was mainly conducted by Nicolai Kraus. The proof is based on Brouwer's continuity principle -- all definable functions are continuous, which is not necessarily inhabited in \mltt but holds meta-theoretically. We prove that $\qset{R_0}$ is \emph{connected}, and it implies that all endofunctions that respect the equivalence relation of Cauchy sequences is constant. Therefore there is no definable normalisation endofunction for Cauchy sequences. We also similarly prove that non-terminating programs encoded as partiality monad with weak bisimilarity as equivalence relation is also undefinable with a normalisation function. We can not define normalisation function for finite multisets represented by lists quotiented by permutation, unless the underlying set has a decidable total order so that a sorted list can be the canonical choice for each equivalence relation.
+In \Cref{rl}, we discuss quotients that are undefinable as an inductive type with a normalisation function, such as the real numbers, finite multisets and partiality monads. We present a proof of the undefinability of real numbers as Cauchy sequences ($\qset{R_0}$) with a normalisation function. The proof was mainly conducted by Nicolai Kraus. The proof is based on Brouwer's continuity principle -- all definable functions are continuous, which is inconsistent if we have it within \mltt as shown by Escardo and Xu \cite{incon} but holds meta-theoretically. We prove that $\qset{R_0}$ is \emph{connected}, and it implies that all functions $R_0 \to \qset{R_0}$ that respect the equivalence relation of Cauchy sequences are constant. Therefore there is no definable normalisation endofunction for Cauchy sequences. Similarly we also prove that non-terminating programs encoded using partiality monad quotiented by weak bisimilarity, is also undefinable with a normalisation function. For unordered tuples such as unordered pairs and finite multisets represented by lists quotiented by permutation, it is also impossible for us to find a canonical normalisation function unless the underlying set has a decidable total order.
+
 
 In \Cref{models}, we discussed several models where quotient types are available. We present an implementation on the setoid model approach to encode
 extensional concepts. The work is mainly extending the setoid model
@@ -156,7 +157,7 @@ In \Cref{wog}, we present a new formalisation of the syntax of weak
   suspension and replacement. In particular we show that any type
   forms a groupoid and we outline how to derive higher dimensional
   composition. We present a possible semantics using globular sets and
-  discuss the issues which arise when using globular types instead. The work in the chapter has been published in \cite{LFMTP14} together with Thorsten Altenkich and Ond\v{r}ej Ryp\'{a}\v{c}ek.
+  discuss the issues which arise when using globular types instead. The work in the chapter has been published in \cite{LFMTP14} together with Thorsten Altenkirch and Ond\v{r}ej Ryp\'{a}\v{c}ek.
 
 
-In appendix, we present Agda code for our implementations corresponding to \Cref{dq}, \Cref{models} and \Cref{wog}, which are too complicated to show in text.
+In the Appendices, we shown our Agda code corresponding to the work in \Cref{dq}, \Cref{models} and \Cref{wog}.

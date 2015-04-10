@@ -5,7 +5,7 @@
 
 In this chapter, we will discuss some other quotients which are not definable via normalisation, for example the set of real numbers as Cauchy sequences of rational numbers \cite{bis:85}, finite multisets represented by lists etc.
 Intuitively speaking there is no definable normalisation function which returns a canonical choice for each equivalence class. 
-For the Cauchy sequences of rational numbers, Nicolai Kraus \cite{non-normal} has shown that all definable endofunctions respect the equivalence relation have to be constant, hence it is impossible to define a normalisation function. We reproduce the proof here and extend it to other cases especially the partiality monad. It has to be noticed that the proof is conducted in basic \mltt and can be generalised to any extension as long as it admits the Brouwer's continuity principle i.e.\ definable functions are continuous \cite{DBLP:journals/bsl/AttenD02}.
+For the Cauchy sequences of rational numbers, Nicolai Kraus \cite{non-normal} has shown that all definable endofunctions respecting the equivalence relation have to be constant, hence it is impossible to define a normalisation function. We reproduce the proof here and extend it to other cases especially the partiality monad. It has to be noticed that the proof is conducted in basic \mltt and can be generalised to any extension as long as it admits the Brouwer's continuity principle i.e.\ definable functions are continuous \cite{DBLP:journals/bsl/AttenD02}.
 
 
 %\begin{theorem}\label{defcon}Brouwer's continuity principleAll definable functions are continuous.\end{theorem}
@@ -132,7 +132,7 @@ The rate of convergence is fixed so that we can guess the number while the condi
 We can slightly modify the definition which is still equivalent, 
 
 \begin{equation}\label{R03}
-\iscauchy(f) \defeq \forall (n,m :\PN), n > m \to \vert f_n -
+\iscauchy(f) \defeq \forall (n,m :\PN), n < m \to \vert f_n -
   f_m \vert  < \frac{1}{n}
 \end{equation}
 
@@ -145,12 +145,12 @@ In \itt without quotient types, we can define a setoid $(\R_0,\sim)$ to represen
 
 
 We have made an attempt to prove that the set of reals is undefinable in the presence of local continuity (see Section. 5 in \cite{aan}). 
-We claim that two $a,b : A$ are \emph{separable}, if there exists a definable test $P : A \to \bool$ such that $P(a) \neq P(b)$. Then we claim a definable set $A$ is \emph{discrete} if $a \neq b$ always imply $a$ and $b$ are separable. However it has some problems as  Martín Escardó pointed out.
+We define that two $a,b : A$ are \emph{separable}, if there exists a definable test $P : A \to \bool$ such that $P(a) \neq P(b)$. Then we claim a definable set $A$ is \emph{discrete} if $a \neq b$ always implies that $a$ and $b$ are separable. However it has some problems as  Martín Escardó pointed out.
 He provides a counterexample that for two distinguishable terms i.e.\ $a \neq b$ there can be no definable test \cite{martinsproof}. We sketch the proof here:
 
 \begin{proof}
 In the proof, he uses $\N_\infty \defeq \N \to \bool$ which is a decreasing sequence of $\bool$ called \emph{generic convergent sequence}. Intuitively speaking, $11000\ldots$ represents $2$ and the sequence of $1$, namely $1111\ldots$ represents $\infty$, therefore, it can be seen as the disjoint union of natural numbers and infinity i.e.\ $\N + \infty$. 
-For simplicity, we write $s_k$ for the sequence whose first $k$ digits are $1$ and the rest digits are $0$.
+For simplicity, we write $s_k$ for the sequence whose first $k$ digits are $1$ and whose remaining digits are $0$.
 
 From continuity, we know that:
 
@@ -163,7 +163,7 @@ $s^0_k \defeq (s_k, \lambda r \to 0)$ and
 
 $s^1_k \defeq (s_k, \lambda r \to 1)$,
 
-there are two definitional unequal terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
+there are two definitionally unequal terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
 
 such that for all definable function $f : X \to \bool$, $f(\infty_0) = f(\infty_1)$.
 
@@ -180,7 +180,7 @@ which contradicts our premise.
 \end{proof}
 
 
-Here we show a meta-level proof to show that all definable endofunctions are constant, hence no normalisation function is definable.
+Here we present a meta-level proof to show that all definable endofunctions are constant, hence no normalisation function is definable.
 
 %\begin{definition}
 %\textbf{Discrete type}.
@@ -200,7 +200,7 @@ We use some topological notions.
 Recall that a \textbf{metric space} is a set where a notion of distance (called a metric) between elements of the set is defined. It is an ordered pair $(M , d)$ where $M$ is a set and d is a metric on $M$:
 \begin{enumerate}
 \item $M$ is a set,
-\item and $d : M \times M \rightarrow \R$ s.t.
+\item and $d : M \times M \rightarrow \R^*$ s.t.
 \item $d (x , y) = 0 \iff x = y$
 \item $d(x,y)=d(y,x)$
 \item $d(x,y)+d(y,z) \ge d(x,z)$ 
@@ -286,7 +286,7 @@ $$f : \R_0 \to \bool$$
 
 \begin{proof}
 
-Assume we have a $f$ are which respects $\sim$.
+Assume $f$ which respects $\sim$.
 
 Consider the ``naive'' set model (with ``classical standard \maths'' as meta-theory). It works for a minimalistic type theory with $\Pi$, $\Sigma$, $\mathsf{W}$, $=$, $\mathbb N$.
 The general idea is to interpret our definitions in the set model using function $\tometa{\_}$, and we prove that $\tometa f : \tometa {\R_0} \to \tometa \bool$ is constant in the model, which implies it is also constant in the theory.
@@ -372,15 +372,15 @@ To verify it, the only thing that needs to be checked is whether the two ``parts
 
 Because the first $n_0$ sequence elements of $g$ coincide with those of $c$, we know that $\tometa f (g) = \tometa f(c)$. 
 
-By the definition of $g$, it converges to the same real number as $t$, i.e.\ $\clim g = \clim t$. It is equivalent to say $g \tometa \sim t$ and by the condition $\tometa f$ respects $\tometa \sim$, we can prove that $\tometa f (t) = \tometa f (g) = \tometa f(c)$ and therefore $ x = \clim (t) \in \clim U$. Now we can conclude that $I \subset \clim U$ which is equivalent to say $\clim U$ is a neighbourhood of $m$.
+By the definition of $g$, it converges to the same real number as $t$, i.e.\ $\clim g = \clim t$. It is equivalent to say $g \tometa \sim t$ and by the condition $\tometa f$ respects $\tometa \sim$, we can prove that $\tometa f (t) = \tometa f (g) = \tometa f(c)$ and therefore $ x = \clim t \in \clim U$. Now we can conclude that $I \subset \clim U$ which is equivalent to say $\clim U$ is a neighbourhood of $m$.
 
 However it contradicts to the definition of $m$: in
-\emph{every} neighbourhood of $m$, and thus in particular in $(m - \frac 1 {2n_0} , m+ \frac 1 {2n_0})$),
+\emph{every} neighbourhood of $m$, and thus in particular in $(m - \frac 1 {2n_0} , m+ \frac 1 {2n_0})$,
 we can always find an $x$ such that $x = \clim e$ (for some $e$) with $\tometa f(e) \not= \tometa f(c)$. 
 \end{proof}
 
 
-This approach also is applicable to other discrete types.
+This approach is also applicable to other discrete types.
 
 \begin{corollary}\label{dis:con}
 Any continuous function from $\R_0$ to any discrete type that respects $\sim$ is constant.
@@ -389,7 +389,7 @@ Any continuous function from $\R_0$ to any discrete type that respects $\sim$ is
 
 
 \begin{theorem}
-Any continuous endofunction $f$ on $\R_0$ that respects $\sim$ is constant.
+Any continuous function $f : \R_0 \to \R_0$ that respects $\sim$ is constant.
 \end{theorem}
 
 \begin{proof}
@@ -453,7 +453,7 @@ irrational number like $\pi$. It has been proved by Robert S. Lubarsky in
 \cite{DBLP:journals/entcs/Lubarsky07}. If we add the axiom of Countable Choice ($AC_{\omega}$) to Type Theory, Cauchy reals become Cauchy complete because it provides us a choice function for equivalence classes which helps us find a canonical choice. The $AC_{\omega}$ is a classical result
 which is stronger than the premise "in classical logic''.
 
-In the HoTT book \cite{hott} (see Section 11.3), there is a higher inductive definition of Cauchy reals $\R_{C}$ using \textbf{Cauchy approximation}. Briefly speaking, it first embeds rational numbers, and then for each $s : \Q^{+} \to \R_{C}$ we have $lim(s) : R_{C}$ as a limit of Cauchy sequence of real numbers, hence it is Cauchy complete. Higher inductive type allows us to define \emph{equality} of terms as constructors in inductive definitions, see \Cref{HITs}.
+In the HoTT book \cite{hott} (see Section 11.3), there is a higher inductive definition of Cauchy reals $\R_{C}$ using \textbf{Cauchy approximation}. Briefly speaking, it first embeds rational numbers, and then for each $s : \Q^{+} \to \R_{C}$ we have $lim(s) : \R_{C}$ as a limit of Cauchy sequence of real numbers, hence it is Cauchy complete. Higher inductive types allow us to define \emph{equality} of terms as constructors in inductive definitions, see \Cref{HITs}.
 \end{remark}
 
 
@@ -465,7 +465,7 @@ In Type Theory, given a set $A$, $(a, b) : A \times A$ is an \emph{ordered} pair
 
 $$(a,b)\sim(b,a)$$
 
-Here the condition $a \not= b$ is not required, so the relation is can be reflexive.
+Here the condition $a \not= b$ is not required, so the relation is reflexive.
 
 Intuitively speaking, for an arbitrary order pair $(a,b)$, we can not decide whether $(a,b)$ or $(b,a)$ should be the normal form of the unordered pair they represent. In general, we can not define a normalisation function for $(A \times A, \sim)$, unless the set $A$ has a decidable total order $\leq : A \to A \to \Prop$ equipped with
 
@@ -608,14 +608,21 @@ Similarly, utilising the sequence interpretation of $A_{\bot}$, we can show that
 \end{proof}
 
 
+\section{Related work}
+
+Geuvers and Niqui have shown a construction of the real numbers using Cauchy sequences of the rational numbers based on a set of axioms in Coq. They have also the choice of different ways to define Cauchy properties. They have shown there is a model of these axioms and any two models are isomorphic. They have also discussed the equivalence between their axioms with the ones introduced by Bridges \cite{Bridges199995}.
+
+The formalisation of real numbers in \hott has been discussed in the HoTT book (see Chapter 11 in \cite{hott}). Both Dedekind reals and Cauchy reals have been considered. They provide a higher inductive definition of Cauchy reals using Cauchy approximations so that it is Cauchy complete.
+
+Finite multisets as bag equivalent lists have been considered by Danielsson in \cite{DBLP:conf/itp/Danielsson12}. He has mainly discussed bag equivalence for lists and has also generalised it to arbitrary containers. He has also provided a set equivalence which means that we can represent (finite) sets using the setoid arises from it.
 
 
 \section{Summary}
 
 To summarize, we have shown some quotients which are not definable via normalisation.
 In particular, we show that the set of real numbers as $\qset{\R_0}$ is connected which means that any definable (continuous) function on $\R_0 \to \bool$ which respects $\sim$ is constant. It implies that any definable endofunction on $\R_0$ is constant, hence there is no definable normalisation function for the setoid $(\R_0,\sim)$ that can be lifted. 
-We similarly proved that the partiality computations which are represented by partiality monad quotiented by weak bisimilarity is also not definable via normalisation. For quotients arise from permutations, such as unordered pairs and finite multisets, a normalisation function can be defined if we have a decidable total order. 
-In addition, we believe that these quotients are not definable in general, but we have not yet prove it formally.
+We similarly proved that the partiality computations which are represented by partiality monad quotiented by weak bisimilarity is also not definable via normalisation. For quotients arising from permutations, such as unordered pairs and finite multisets, a normalisation function can be defined if we have a decidable total order. 
+In addition, we believe that these quotients are not definable in general, but we have not yet proved it formally.
 
 
 

@@ -4,17 +4,17 @@
 \chapter{The Setoid Model}\label{models}
 
 
-To introduce extensional concepts into \itt, one can simply postulate them as axioms but we lose the good computational properties of Type Theory.  It is crucial to construct an intensional model where these extensional concepts like functional extensionality, quotient types are automatically derivable. In the usual set model, types are sets which does not allow us to enforce equalities on types. Therefore it is essential to interpret types with equalities, for example, setoids, groupoids, or $\omega$-groupoids. 
+To introduce extensional concepts into \itt, one can simply postulate them as axioms but we lose the good computational properties of Type Theory.  It is crucial to construct an intensional model where these extensional concepts like functional extensionality, quotient types are automatically derivable. In the usual set model, types are sets which do not have internal equalities. Therefore it is essential to enrich the structure of types, hence we can interpret types as setoids, groupoids, or $\omega$-groupoids. 
 
 % We can postulate these axioms but then we can not keep the good computational properties. Therefore it is crucial that axioms have a computational interpretation. One solution is 
 
 In this chapter, we mainly introduce an implementation of Altenkirch's setoid model  \cite{alti:lics99}  where types are interpreted as setoids. We define the model as categories with families in Agda. There is no proof irrelevance universe $\Prop$ in Agda, but the current version of Agda supports some proof-irrelevance features \cite{prAgda}, for example proof-irrelvant field in record types, proof-irrelvant argument in function types etc. It has been shown by Altenkirch \cite{alti:lics99} that functional extensionality is inhabited in this model. More importantly, because types are interpreted as setoids, quotient types can be defined simply by replacing equality in a given setoid.
-We build some basic types from \cite{alti:lics99} including $\Pi$-types, natural numbers and the simply typed universe. We also extend it to $\Sigma$-types and quotient types which not discussed in Altenkirch's original construction.
+We build some basic types from \cite{alti:lics99} including $\Pi$-types, natural numbers and the simply typed universe. We also extend it to $\Sigma$-types and quotient types which are not discussed in Altenkirch's original construction.
 
 \section{Introduction}\label{setoidmodel}
 
 
-A setoid model of \itt is a model where types are interpreted as setoids i.e.\ every closed type comes with an equivalence relation. It is usually used to introduce extensional concepts, for example, Martin Hofmann has define a setoid model in \cite{hof:phd}. However a naïve version of setoid model does not satisfy all definitional equalities. 
+A setoid model of \itt is a model where types are interpreted as setoids i.e.\ every closed type comes with an equivalence relation. It is usually used to introduce extensional concepts, for example, Martin Hofmann has defined a setoid model in \cite{hof:phd}. However a naïve version of setoid model does not satisfy all definitional equalities. 
 A simple model for quotient types introduced in \cite{hof:95:sm} is a solution to the problem using a modified interpretation of families, but it does not allow \emph{large eliminations}.
 
 Altenkirch \cite{alti:lics99}  proposes a different approach based on the setoid model.
@@ -29,7 +29,7 @@ He uses an extension of \itt by a universe of propositions $\Prop$ as metatheory
 
 
 
- $\Prop$ only contains "propositional'' sets which has at most one
+ $\Prop$ only contains "propositional'' sets which have at most one
 inhabitant. Notice that it is not a definition of types, which means
 that we cannot conclude a type is of type \textbf{Prop} if we have a
 proof that all inhabitants of it are definitionally equal.
@@ -52,26 +52,27 @@ The metatheory has been proved {\cite{alti:lics99}} to be:
 \begin{itemize}
 \item \emph{Decidable}. The definitional equality is decidable, hence type checking is decidable.
 
-\item \emph{Consistent}. Not all types are inhabited and not all well typed definitional equalities holds. 
+\item \emph{Consistent}. Not all types are inhabited and not all well-typed definitional equalities hold. 
 
-\item \emph{Adequate}. All terms of type $\N$ are reducible to numerals.
+\item \emph{$\N$-canonical}. All terms of type $\N$ are reducible to numerals.
 \end{itemize}
 
 And then Altenkirch constructs an intensional setoid model within this metatheory using categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
-\cite{hof:97}.  It is also decidable and adequate, functional extensionality is inhabited and it permits large elimination. It is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
+\cite{hof:97}.  It is also decidable and $\N$-canonical, functional extensionality is inhabited and it permits large elimination. It is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
 
 \begin{remark}[The category of setoids is not LCCC]\label{nlccc}
 This model is the category of setoids \textbf{Std} which is a full subcategory of \textbf{Gpd} (the category of small groupoids). Every object of \textbf{Gpd} whose all homsets contain at most one morphism are in this subcategory. 
 
 It is different from a setoid model as an E-category, for instance
 the one introduced by Hofmann \cite{hofmann1994interpretation}. An E-category is a category equipped with
-an equivalence relation for homsets. The E-category of setoids in \mltt forms a locally Cartesian closed category (LCCC) which we call it \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
-gives rise to types and they are Cartesian closed, namely the category is locally
+an equivalence relation for homsets. The E-category of setoids in \mltt forms a locally Cartesian closed category (LCCC) which we call  \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
+give rise to types and they are Cartesian closed, namely the category is locally
 Cartesian closed.
 
-However not all morphisms in our category of setoids \textbf{Std} give rise to types which means that it is not a LCCC. Every LCCC can serve as a model for categories with
+Every LCCC can serve as a model for categories with
 families but not every category with families has to be a LCCC. 
- Altenkirch and Kraus \cite{Altenkirch12setoidsare} have shown that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed by giving a morphism, whose pullback functor does not have a right adjoint, as a counterexample.
+In our category of setoids \textbf{Std}, not all morphisms give rise to types and it is not an LCCC. 
+ Altenkirch and Kraus have shown that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed by giving a morphism, whose pullback functor does not have a right adjoint, as a counterexample (See \cite{Altenkirch12setoidsare}).
 \end{remark}
 
 
@@ -86,7 +87,7 @@ For readability, we will omit some unnecessary code. The complete code can be fo
 \section{Metatheory}
 
 Agda does not fulfil all requirements of the metatheory, in particular, there is no proof-irrelevant universe of propositions $\Prop$. 
-Instead Agda has irrelevancy annotations \cite{prAgda}. For example we can declare an argument of type $A$ is proof-irrelevant by put a small dot in front of it
+Instead Agda has irrelevancy annotations \cite{prAgda}. For example we can declare an argument of type $A$ is proof-irrelevant by putting a small dot in front of it
 
 
 \begin{code}\>\<%
@@ -97,7 +98,7 @@ Instead Agda has irrelevancy annotations \cite{prAgda}. For example we can decla
 \\
 \end{code}
 
-It implies that $f$ does not depend computationally on this argument, hence $f(a) \equiv f(b)$ for any $a, b : A$. It can also used in dependent function types, dependent products (record types). 
+It implies that $f$ does not depend computationally on this argument, hence $f(a) \equiv f(b)$ for any $a, b : A$. It can also be used in dependent function types, dependent products (record types). 
 For example, we can define "subset" of $A$ with respect to a predicate $B : A \to Set$ as follows
 
 \begin{code}\>\<%
@@ -124,9 +125,11 @@ For example, we can define "subset" of $A$ with respect to a predicate $B : A \t
 \\
 \>\<\end{code}
 
-Thus, the proposition that the term fulfils the predicate is irrelevant. 
+(In the code above, the variables $a$, $b$ denote the levels of types.)
 
-We can also declare a function itself is irrelevant.
+Thus, the proposition that the term fulfils the predicate is proof-irrelevant. 
+
+We can also declare  that a function itself is proof-irrelevant
 
 \begin{code}
 %
@@ -137,7 +140,9 @@ We can also declare a function itself is irrelevant.
 \\
 \end{code}
 
-There are several restrictions of the annotation.
+which creates a proof-irrelevant term of the result type $B$.
+
+There are several restrictions of this annotation.
 
 \begin{itemize}
 
@@ -148,7 +153,7 @@ There are several restrictions of the annotation.
  \item We cannot pattern match on irrelevant terms. 
 \end{itemize}
 
- There is a small problem of irrelevant fields of record types as we will see later: we can not use a irrelevant value to construct a irrelevant field or irrelevant function. For example, we can not simply write $p$ in the place of $?$ in the following function
+In most occasions, it can replaces propositions. However there is a small problem of irrelevant fields of record types as we will see later: we can not use an irrelevant value to construct an irrelevant field or irrelevant function. For example, we can not simply write $p$ in the place of $?$ in the following function
 
 \begin{code}
 %
@@ -159,7 +164,7 @@ There are several restrictions of the annotation.
 \\
 \end{code}
 
-Because the result type cannot declared as irrelevant, although the function (or field) is irrelevant. The problem can be temporarily fixed by using an axiom:
+Because the result type cannot be declared as irrelevant, although the function (or field) is proof-irrelevant which means the result is expected to be proof-irrelevant. The problem can be temporarily fixed by adding an axiom:
 
 \begin{code}\>\<%
 \\
@@ -172,12 +177,13 @@ Because the result type cannot declared as irrelevant, although the function (or
 
 This issue is also discussed in \cite{prAgda}, and hopefully can be fixed in the future.
 Fortunately it only affects a small bit of our code, e.g.\ the construction of natural numbers and universes in setoid model.
+Moreover, the axiom itself is proof-irrelevant so that it will not affect $\N$-canonicity property.
 
 Compared to $\Prop$ in the original metatheory, we have to make more efforts to imitate it using this annotations. For example  We can simply write $\sim : A \to A \to \Prop$ for a propositional equivalence relation in original metatheory. However in our implementation, we write $\sim : A \to A \to \Set$, but in every occurrence of it we use the irrelevancy annotation, such that it behaves like a term of $\Prop$. 
 
-We can easily observe that it is "closed" under $\Sigma$-types, but is not ``closed'' under $\Pi$-types, because we cannot declare it result type as irrelevant. Instead, we have to declare a $\Pi$-type itself is irrelevant.
+We can easily observe that it is "closed" under $\Sigma$-types, but is not ``closed'' under $\Pi$-types, because we cannot declare its result type as irrelevant. Instead, we have to declare a $\Pi$-type itself is irrelevant.
 
-This metatheory is still decidable, consistent and should be adequate because the only axiom is irrelevant which can not be used to construct non-canonical terms of $\N$.
+This metatheory is still decidable, consistent and should be $\N$-canonical because the only axiom is irrelevant which can not be used to construct non-canonical terms of $\N$.
 
 \subsection{Category of Setoids: \textbf{Std}}
 
@@ -226,7 +232,7 @@ We can define a setoid as usual, but declare the equivalence properties as irrel
 Notice that we rename our fields for readability of the code. Usually, to project out the equivalence relation for a setoid $S : \text{Setoid}$, one has to write $\AgdaBound{\_≈\_} ~A ~ a ~b$  which is not readable. By renaming, we can write $[ A ] ~a ~\AgdaBound{≈} ~b$ for a better style. We will also rename some fields for other records types later, but we may omit the code which is unnecessary.
 
 
-Functions between setoids consists of a function on the underlying sets and a property that it respects the equivalence relation:
+Functions between setoids consist of a function on the underlying sets and a property that it respects the equivalence relation:
 
 \begin{code}\>\<%
 \\
@@ -325,14 +331,17 @@ The setoid model is essentially a category with families:
 \textbf{Categories with families}.
 
 \begin{itemize}
-\item A category $\mathsf{C}$ with a terminal object where objects are contexts and morphisms are substitutions.
+\item A category $\mathsf{C}$ with a terminal object
 
-\item A functor $F : \mathsf{C}^{op} \to Fam$ where $Fam$ is a category of families whose objects are dependent products and morphisms are naturally pairs of functions. The types and terms are projections of this functor: given an object $\Gamma : \mathsf{C}$, we usually write $F(\Gamma) \defeq \Sigma(A : \text{Ty} ~\Gamma) ~ \text{Tm} ~\Gamma ~ A)$, and the substitution of types and terms are just contained in the morphism part of this functor. 
+\item A functor $F : \mathsf{C}^{op} \to Fam$. $Fam$ is a category of families whose objects are pairs like $(A,A')$ where $A$ is a set and $A'$ is a family of sets indexed over $A$ and morphisms are pairs of functions $(f,f')$ such that if $a : A$ and $a' : A'(a)$ then $f(a) : B$ and $f'(a') : B'(f(a))$
 
 \item A comprehension of $\Gamma$ and $A : \text{Ty}~ \Gamma$ written as $\Gamma, A$ (or  $\Gamma \& A$) is a construction of a new object in $\mathsf{C}$ which expresses the extension of contexts.
 \end{itemize}
 
 \end{definition}
+
+Usually we think of the objects of the category $\mathsf{C}$ as contexts and morphisms as substitutions. The types and terms are projections of the functor $F$ : given an object (context) $\Gamma : \mathsf{C}$, we usually write $F(\Gamma) \defeq \Sigma(A : \text{Ty} ~\Gamma) ~ \text{Tm} ~\Gamma ~ A$, and the substitution of types and terms are just contained in the morphism part of this functor. 
+
 
 In the setoid model, the category of contexts is just $\textbf{Std}$,
 
@@ -343,9 +352,7 @@ In the setoid model, the category of contexts is just $\textbf{Std}$,
 \\
 \end{code}
 
-And the semantic types $\Ty$ and semantic terms $\Tm$ can be interpreted as the functor.
-
-Given a context $\Gamma$, types over it can be defined as functors from $\Gamma$ to $\textbf{Std}$ because since a context is a setoid which are special cases of groupoids. However setoids are not implemented as categories, so we build a semantic type $A : \Ty ~\Gamma$ (a functor) as follows:
+Given a context $\Gamma$, types over it $\text{Ty}~ \Gamma$ can be defined as functors from $\Gamma$ to $\textbf{Std}$ because types are interpreted as setoids and morphisms between setoids are functors. However setoids here are not implemented as categories, so we build a semantic type $A : \Ty ~\Gamma$ (a functor) as follows:
 
 \begin{code}\>\<%
 \\
@@ -459,7 +466,7 @@ Given a context $\Gamma$, types over it can be defined as functors from $\Gamma$
 \\
 \>\<\end{code}
 
-$\mathsf{fm}$ is the object part of this functor, $\mathsf{substT}$ is the morphism part which stands for substitution via an equivalence $x \sim y$ for $x , y : \Gamma$. $\mathsf{subst*}$ states that the functions between setoids preserve the equivalence relation. $\mathsf{refl*}$ and $\mathsf{trans*}$ are functor laws up to the equivalence relation. We also prove a lemma $\mathsf{tr*}$ which can be understands as the property that given arbitrary morphisms $f : x \sim x$ and $g : y \sim x$, the composition of them always equal to the identity morphism. $\mathsf{substT\text{-}inv}$ just gives the inverse of $\mathsf{substT}$.
+$\mathsf{fm}$ is the object part of this functor, $\mathsf{substT}$ is the morphism part which stands for substitution via an equivalence $x \sim y$ for $x , y : \Gamma$. $\mathsf{subst*}$ states that the functions between setoids preserve the equivalence relation. $\mathsf{refl*}$ and $\mathsf{trans*}$ are functor laws up to the equivalence relation. We also prove a lemma $\mathsf{tr*}$ which can be understood as the property that given arbitrary morphisms $p : y \sim x$ and $q : x \sim y$, the composition of them always equal to the identity morphism. $\mathsf{substT\text{-}inv}$ just gives the inverse of $\mathsf{substT}$.
 
 Notice that we mark all occurrences of $\sim$ irrelevant. We also omit some unnecessary syntactic renaming of the fields.
 
@@ -630,37 +637,75 @@ We have also defined a few common operations as usual, e.g.\ projections and pai
 
 \subsection{Type construction in the setoid model}
 
-Dependent function types $\Pi$-types and dependent product types $\Sigma$-types are essential in a dependent type theory. Intuitively, they are just $\Pi$-types and $\Sigma$-types in the metatheory together with the proofs that the setoid equivalence is respected. We have implemented them according to the original construction and reasoning in \cite{alti:lics99} with minor adaptation, but due to the complication of the codes, we keep them in appendix (see \Cref{app:cwf}).
+Dependent function types $\Pi$-types and dependent product types $\Sigma$-types are essential in a dependent type theory. Intuitively, they are just $\Pi$-types and $\Sigma$-types in the metatheory together with the proofs that the setoid equivalence is respected. We have implemented them according to the original construction and reasoning in \cite{alti:lics99} with minor adaptation.
+For example, given a type $A$ in $\Gamma$ and a type $B$ in $\Gamma \& A$, we define $\Pi ~A ~B$ as a type in $\Gamma$. 
+The elements of $\Pi$-types are dependent functions which respect the equivalence relation.
 
-
-We have also built some basic types including natural numbers, a simply typed universe and equality types.
-For natural numbers, equality can be recursively defined as
-\begin{code}
-%
+\begin{code}\>\<%
+\\
+\>\AgdaFunction{Π} \AgdaSymbol{:} \AgdaSymbol{\{}\AgdaBound{Γ} \AgdaSymbol{:} \AgdaRecord{Setoid}\AgdaSymbol{\}(}\AgdaBound{A} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaBound{Γ}\AgdaSymbol{)(}\AgdaBound{B} \AgdaSymbol{:} \AgdaRecord{Ty} \AgdaSymbol{(}\AgdaBound{Γ} \AgdaFunction{\&} \AgdaBound{A}\AgdaSymbol{))} \AgdaSymbol{→} \AgdaRecord{Ty} \AgdaBound{Γ}\<%
+\\
+\>\AgdaFunction{Π} \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}} \AgdaBound{A} \AgdaBound{B} \AgdaSymbol{=} \AgdaKeyword{record} \<[19]%
+\>[19]\<%
 \\
 \>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaFunction{\_≈nat\_} \AgdaSymbol{:} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaDatatype{ℕ} \AgdaSymbol{→} \AgdaPrimitiveType{Set}\<%
+\>[2]\AgdaSymbol{\{} \AgdaField{fm} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{x} \AgdaSymbol{→} \AgdaKeyword{let} \AgdaBound{Ax} \AgdaSymbol{=} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]fm} \AgdaBound{x} \AgdaKeyword{in}\<%
 \\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{zero} \AgdaFunction{≈nat} \AgdaInductiveConstructor{zero} \AgdaSymbol{=} \AgdaRecord{⊤}\<%
+\>[0]\AgdaIndent{15}{}\<[15]%
+\>[15]\AgdaKeyword{let} \AgdaBound{Bx} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]fm} \AgdaSymbol{(}\AgdaBound{x} \AgdaInductiveConstructor{,} \AgdaBound{a}\AgdaSymbol{)} \AgdaKeyword{in}\<%
 \\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{zero} \AgdaFunction{≈nat} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaSymbol{=} \AgdaDatatype{⊥}\<%
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaKeyword{record}\<%
 \\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaInductiveConstructor{zero} \AgdaSymbol{=} \AgdaDatatype{⊥}\<%
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\{} \AgdaField{Carrier} \AgdaSymbol{=} \AgdaRecord{Subset} \AgdaSymbol{((}\AgdaBound{a} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Ax} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{→} \AgdaFunction{∣} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{∣}\AgdaSymbol{)} \AgdaSymbol{(λ} \AgdaBound{fn} \AgdaSymbol{→} \<[62]%
+\>[62]\<%
 \\
-\>[0]\AgdaIndent{2}{}\<[2]%
-\>[2]\AgdaInductiveConstructor{suc} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaInductiveConstructor{suc} \AgdaBound{n} \AgdaSymbol{=} \AgdaBound{m} \AgdaFunction{≈nat} \AgdaBound{n}\<%
+\>[9]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaSymbol{(}\AgdaBound{a} \AgdaBound{b} \AgdaSymbol{:} \AgdaFunction{∣} \AgdaBound{Ax} \AgdaFunction{∣}\AgdaSymbol{)}\<%
+\\
+\>[9]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaSymbol{(}\AgdaBound{p} \AgdaSymbol{:} \AgdaFunction{[} \AgdaBound{Ax} \AgdaFunction{]} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{b}\AgdaSymbol{)} \AgdaSymbol{→}\<%
+\\
+\>[9]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{b} \AgdaFunction{]} \AgdaFunction{[} \AgdaBound{B} \AgdaFunction{]subst} \AgdaSymbol{(}\AgdaFunction{[} \AgdaBound{Γ} \AgdaFunction{]refl} \AgdaInductiveConstructor{,} \<[54]%
+\>[54]\<%
+\\
+\>[9]\AgdaIndent{21}{}\<[21]%
+\>[21]\AgdaFunction{[} \AgdaBound{Ax} \AgdaFunction{]trans} \AgdaFunction{[} \AgdaBound{A} \AgdaFunction{]refl*} \AgdaBound{p}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{fn} \AgdaBound{a}\AgdaSymbol{)} \AgdaFunction{≈} \AgdaBound{fn} \AgdaBound{b}\AgdaSymbol{)}\<%
 \\
 \end{code}
 
-The problem of irrelevancy annotation arises here: to prove the \emph{irrelevant} field $\mathsf{subst*}$, we can not simply use its \emph{irrelevant} argument because the result type is not declared irrelevant. Therefore we use the \emph{irrelevant} axiom as we mentioned before to fix the problem.
-
+The associated equality is pointwise equality of functions. To prove it is an equivalence relation, we can simply exploit the corresponding rules of the equivalence relation within type $B$.
 
 \begin{code}
-\>[4] \AgdaField{subst*} \AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{\_} \AgdaBound{x} \AgdaSymbol{→} \AgdaPostulate{irrelevant} \AgdaBound{x}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{\_≈\_} \<[18]%
+\>[18]\AgdaSymbol{=} \AgdaSymbol{λ\{(}\AgdaBound{f} \AgdaInductiveConstructor{,} \AgdaSymbol{\_)} \AgdaSymbol{(}\AgdaBound{g} \AgdaInductiveConstructor{,} \AgdaSymbol{\_)} \AgdaSymbol{→} \AgdaSymbol{∀} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaBound{a} \AgdaFunction{]} \AgdaBound{f} \AgdaBound{a} \AgdaFunction{≈} \AgdaBound{g} \AgdaBound{a} \AgdaSymbol{\}}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{refl} \<[19]%
+\>[19]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaSymbol{\_} \AgdaFunction{]refl} \<[40]%
+\>[40]\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{sym} \<[19]%
+\>[19]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaSymbol{\_} \AgdaFunction{]sym} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{;} \AgdaField{trans} \<[19]%
+\>[19]\AgdaSymbol{=} \AgdaSymbol{λ} \AgdaBound{f} \AgdaBound{g} \AgdaBound{a} \AgdaSymbol{→} \AgdaFunction{[} \AgdaBound{Bx} \AgdaSymbol{\_} \AgdaFunction{]trans} \AgdaSymbol{(}\AgdaBound{f} \AgdaBound{a}\AgdaSymbol{)} \AgdaSymbol{(}\AgdaBound{g} \AgdaBound{a}\AgdaSymbol{)}\<%
+\\
+\>[0]\AgdaIndent{9}{}\<[9]%
+\>[9]\AgdaSymbol{\}}\<%
+\\
 \end{code}
+
+For the rest of the construction we just follow Altenkirch's work in \cite{alti:lics99} and keep them in appendix (see \Cref{app:cwf}).
+
+
+We also construct some basic types that appeared in Altenkirch's work e.g. a simply typed universe and equality types. Since they have been discussed in \cite{alti:lics99}, we just omit them here and focus on the more important one -- the construction of quotient types.
 
 
 \subsection{Quotient types}
@@ -674,8 +719,8 @@ Given a context $\Gamma$, and a type $A : \Ty~ \Gamma$,
 \\
 \end{code}
 
-we can build a quotient type if we have an equivalence relation $R$ defined on $A$ which have to respect the underlying equivalence of $A$.
-In principle, the type of $R$ should be $\Tm ~ (\Pi ~A ~ \Pi ~A^{+} ~\Prop)$ where $A^{+} \defeq A ~[\text{fst}]$ and fst corresponds to weakening. However we can not define an object-level $\Prop$ because our definition of setoids does not allow universes as underlying sets, and there is no universe $\Prop$ in meta-theory as well.
+we can build a quotient type if we have an equivalence relation $R$ defined on $A$ which has to respect the underlying equivalence of $A$.
+In principle, the type of $R$ should be $\Tm ~ (\Pi ~(a : A ~ \Pi ~A^{+} ~\Prop)$ where $A^{+} \defeq A ~[\text{fst}]$ and fst corresponds to weakening. However we can not define an object-level $\Prop$ because our definition of setoids does not allow universes as underlying sets, and there is no universe $\Prop$ in meta-theory as well.
 
  We declare the object part and properties of the relation explicitly. As long as we can define $R$ properly, we can extract objects and properties of $R$ so that this definition of quotient types still works.
 
@@ -980,7 +1025,7 @@ The assumption we made about $P$ helps us to prove that $h$ is well-typed. The $
 
 Barthe, Capretta and Pons \cite{bar:03} have considered different definitions of setoids, and possible mathematical construction using setoids. The definition of a setoid we used is called a total setoid, while if the internal relation is not required to be reflexive, it is called a partial setoid.
 They have discussed quotients realisation using different approaches of setoids.
-Palmgren and Wilander \cite{Pal:14} has also shown a formalisation of constructive set theory in terms of setoids in \itt. They has considered it as a solution to the problem that the uniqueness of identity proofs for sets are not derivable from $\J$ eliminator.
+Palmgren and Wilander \cite{Pal:14} have also shown a formalisation of constructive set theory in terms of setoids in \itt. They have considered it as a solution to the problem that the uniqueness of identity proofs for sets are not derivable from $\J$ eliminator.
 
 The categories with families (CwFs) ware introduced by Dybjer \cite{Dyb:96} as a model of dependent types which can be defined in \itt. Hofmann \cite{hof:97} has also explained the categorical semantics of dependent types provided by CwFs. Clairambault \cite{clairambault2005categories} has shown that categories with families are locally Cartesian closed after some additional structures are added such as $\Pi$-types, $\Sigma$-types, identity types etc.
 
@@ -990,9 +1035,9 @@ He has also proposed a groupoid model \cite{hof:phd,MR1686862} to interpret type
 
 \section{Summary}
 
-In this chapter we have seen an implementation of the Altenkirch's setoid model with a slightly difference in the metatheory. We have used irrelevance feature of Agda to imitate the proof-irrelevance universe of propositions $\Prop$. As we have seen it has a problem which has to be fixed by a postulate. It does not affect most of the implementation and we do not lose canonicity because the postulate is irrelevant so that we cannot construct natural numbers using it. We have implemented the model as a category with families and have introduced various types in it. Most importantly, we have shown that to define quotient types in this model, we can simply replacing the internal equivalence of a type $A$ as a setoid with a given equivalence relation on it. 
+In this chapter we have seen an implementation of the Altenkirch's setoid model with a slight difference in the metatheory. We have used irrelevance feature of Agda to imitate the proof-irrelevance universe of propositions $\Prop$. As we have seen it has a problem which has to be fixed by a postulate. It does not affect most of the implementation and we do not lose canonicity because the postulate is irrelevant so that we cannot construct natural numbers using it. We have implemented the model as a category with families and have introduced various types in it. Most importantly, we have shown that to define quotient types in this model, we can simply replace the internal equivalence of a type $A$ as a setoid with a given equivalence relation on it. 
 
-We can further simplify the construction of the setoid model by adopting McBride's heterogeneous approach to equality as discussed in Altenkirch, McBride and Swierstra' \emph{Observational Type Theory} \cite{alti:ott-conf}. They identify values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. It can only inhabited if the types are equal. In Agda, it can be defined as
+We can further simplify the construction of the setoid model by adopting McBride's heterogeneous approach to equality as discussed in Altenkirch, McBride and Swierstra' \emph{Observational Type Theory} \cite{alti:ott-conf}. They identify values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. It can only be inhabited if the types are equal. In Agda, it can be defined as
 
 \begin{code}
  %

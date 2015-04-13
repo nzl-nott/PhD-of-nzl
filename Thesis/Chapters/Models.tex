@@ -189,13 +189,11 @@ This issue is also discussed in \cite{prAgda}, and hopefully can be fixed in the
 Fortunately, it only affects small bits of our code, e.g.\ the construction of natural numbers and universes in setoid model.
 Moreover, the axiom itself is proof-irrelevant so that it will not affect the $\N$-canonicity property.
 
-% I read until here. -- Nicolai
-
-Compared to $\Prop$ in the original metatheory, we have to make more efforts to imitate it using this annotations. For example  We can simply write $\sim : A \to A \to \Prop$ for a propositional equivalence relation in original metatheory. However in our implementation, we write $\sim : A \to A \to \Set$, but in every occurrence of it we use the irrelevancy annotation, such that it behaves like a term of $\Prop$. 
+Compared to $\Prop$ in the original metatheory, we have to make more efforts to imitate it using this annotations. For example, we can simply write $\sim : A \to A \to \Prop$ for a propositional equivalence relation in the original metatheory. However, in our implementation, we write $\sim : A \to A \to \Set$, but in every occurrence of it we use the irrelevancy annotation, such that it behaves like a term of $\Prop$. 
 
 We can easily observe that it is "closed" under $\Sigma$-types, but is not ``closed'' under $\Pi$-types, because we cannot declare its result type as irrelevant. Instead, we have to declare a $\Pi$-type itself is irrelevant.
 
-This metatheory is still decidable, consistent and should be $\N$-canonical because the only axiom is irrelevant which can not be used to construct non-canonical terms of $\N$.
+This metatheory is still decidable, consistent and should be $\N$-canonical because the only axiom is irrelevance which can not be used to construct non-canonical terms of $\N$.
 
 \subsection{Category of Setoids: \textbf{Std}}
 
@@ -241,10 +239,10 @@ We can define a setoid as usual, but declare the equivalence properties as irrel
 \\
 \>\<\end{code}
 
-Notice that we rename our fields for readability of the code. Usually, to project out the equivalence relation for a setoid $S : \text{Setoid}$, one has to write $\AgdaBound{\_≈\_} ~A ~ a ~b$  which is not readable. By renaming, we can write $[ A ] ~a ~\AgdaBound{≈} ~b$ for a better style. We will also rename some fields for other records types later, but we may omit the code which is unnecessary.
+Notice that we rename our fields for readability of the code. Usually, to project out the equivalence relation for a setoid $S : \text{Setoid}$, one has to write $\AgdaBound{\_≈\_} ~A ~ a ~b$  which is not readable. By renaming, we can write $[ A ] ~a ~\AgdaBound{≈} ~b$ for better style. We will also rename some fields for other records types later, but we may omit code in case it is not necessary for the understanding.
 
 
-Functions between setoids consist of a function on the underlying sets and a property that it respects the equivalence relation:
+A functions between setoids consists of a function between the underlying sets and a property that it respects the equivalence relation:
 
 \begin{code}\>\<%
 \\
@@ -279,7 +277,7 @@ Functions between setoids consist of a function on the underlying sets and a pro
 \\
 \>\<\end{code}
 
-The category $\textbf{Std}$ has a terminal object which has a unique homomorphism for any object in this category:
+The category $\textbf{Std}$ has a terminal object, that is, a setoid which receives a unique setoid homomorphism from any setoid:
 
 \begin{code}\>\<%
 \\
@@ -333,7 +331,7 @@ The category $\textbf{Std}$ has a terminal object which has a unique homomorphis
 \>\<\end{code}
 
 
-Because we do not use categorical construction to build the "categories with families", we do not verify that it forms a setoid here. 
+Because we do not use a categorical construction to build the "categories with families", we do not verify that it forms a setoid here. 
 
 \section{Categories with families}
 
@@ -343,11 +341,12 @@ The setoid model is essentially a category with families:
 \textbf{Categories with families}.
 
 \begin{itemize}
-\item A category $\mathsf{C}$ with a terminal object
+\item A category $\mathsf{C}$ with a terminal object.
 
-\item A functor $F : \mathsf{C}^{op} \to Fam$. $Fam$ is a category of families whose objects are pairs like $(A,A')$ where $A$ is a set and $A'$ is a family of sets indexed over $A$ and morphisms are pairs of functions $(f,f')$ such that if $a : A$ and $a' : A'(a)$ then $f(a) : B$ and $f'(a') : B'(f(a))$
+\item A functor $F : \mathsf{C}^{op} \to Fam$. $Fam$ is a category of families whose objects are pairs $(A,A')$ where $A$ is a set and $A'$ is a family of sets indexed over $A$. 
+Morphisms are pairs of functions $(f,f')$ such that, for any $a : A$ and $a' : A'(a)$, we have $f(a) : B$ and $f'(a') : B'(f(a))$.
 
-\item A comprehension of $\Gamma$ and $A : \text{Ty}~ \Gamma$ written as $\Gamma, A$ (or  $\Gamma \& A$) is a construction of a new object in $\mathsf{C}$ which expresses the extension of contexts.
+\item A comprehension of $\Gamma$ and $A : \text{Ty}~ \Gamma$, written as $\Gamma, A$ (or  $\Gamma \& A$), is a construction of a new object in $\mathsf{C}$ which expresses the extension of contexts.
 \end{itemize}
 
 \end{definition}
@@ -482,7 +481,7 @@ $\mathsf{fm}$ is the object part of this functor, $\mathsf{substT}$ is the morph
 
 Notice that we mark all occurrences of $\sim$ irrelevant. We also omit some unnecessary syntactic renaming of the fields.
 
-Then terms follow naturally as families of elements in the underlying set of types indexed by $x : \Gamma$,  and it has to respects the equivalent relation as well:
+Then, terms follow naturally as families of elements in the underlying set of types indexed by $x : \Gamma$,  and they have to respects the equivalent relation as well:
 
 
 \begin{code}\>\<%
@@ -556,6 +555,8 @@ The substitution of types can be defined simply by composing the underlying obje
 \>[7]\AgdaKeyword{open} \AgdaModule{\_⇉\_} \AgdaBound{f}\<%
 \\
 \>\<\end{code}
+
+% I read until here. -- Nicolai
 
 $\mathsf{refl*}$ and $\mathsf{trans*}$ can also be verified easily because of proof irrelevance.
 We simplify our definition by open special record types, i.e.\ type $A$ and morphism $f$, which is not ambiguous in the scope.

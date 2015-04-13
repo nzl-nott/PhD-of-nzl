@@ -4,17 +4,21 @@
 \chapter{The Setoid Model}\label{models}
 
 
-To introduce extensional concepts into \itt, one can simply postulate them as axioms but we lose the good computational properties of Type Theory.  It is crucial to construct an intensional model where these extensional concepts like functional extensionality, quotient types are automatically derivable. In the usual set model, types are sets which do not have internal equalities. Therefore it is essential to enrich the structure of types, hence we can interpret types as setoids, groupoids, or $\omega$-groupoids. 
+To introduce extensional concepts into \itt, one can simply postulate them as axioms, but this destroys the good computational properties of Type Theory.  
+It is crucial to construct an intensional model where these extensional concepts like functional extensionality, quotient types are automatically derivable. 
+In the usual set model, types are sets which do not have internal equalities. 
+Therefore it is essential to enrich the structure of types, hence we can interpret types as setoids, groupoids, or $\omega$-groupoids. 
 
 % We can postulate these axioms but then we can not keep the good computational properties. Therefore it is crucial that axioms have a computational interpretation. One solution is 
 
-In this chapter, we mainly introduce an implementation of Altenkirch's setoid model  \cite{alti:lics99}  where types are interpreted as setoids. We define the model as categories with families in Agda. There is no proof irrelevance universe $\Prop$ in Agda, but the current version of Agda supports some proof-irrelevance features \cite{prAgda}, for example proof-irrelvant field in record types, proof-irrelvant argument in function types etc. It has been shown by Altenkirch \cite{alti:lics99} that functional extensionality is inhabited in this model. More importantly, because types are interpreted as setoids, quotient types can be defined simply by replacing equality in a given setoid.
+In this chapter, we mainly introduce an implementation of Altenkirch's setoid model  \cite{alti:lics99}  where types are interpreted as setoids. We define the model as categories with families in Agda. 
+There is no proof irrelevant universe $\Prop$ in Agda, but the current version of Agda supports some proof-irrelevance features \cite{prAgda}, for example proof-irrelevant fields in record types, proof-irrelevant arguments in function types, etc. It has been shown by Altenkirch \cite{alti:lics99} that functional extensionality is inhabited in this model. More importantly, because types are interpreted as setoids, quotient types can be defined simply by replacing equality in a given setoid.
 We build some basic types from \cite{alti:lics99} including $\Pi$-types, natural numbers and the simply typed universe. We also extend it to $\Sigma$-types and quotient types which are not discussed in Altenkirch's original construction.
 
 \section{Introduction}\label{setoidmodel}
 
 
-A setoid model of \itt is a model where types are interpreted as setoids i.e.\ every closed type comes with an equivalence relation. It is usually used to introduce extensional concepts, for example, Martin Hofmann has defined a setoid model in \cite{hof:phd}. However a naïve version of setoid model does not satisfy all definitional equalities. 
+A setoid model of \itt is a model where types are interpreted as setoids i.e.\ every closed type comes with an equivalence relation. It is usually used to introduce extensional concepts, for example, Martin Hofmann has defined a setoid model in \cite{hof:phd}. However a naïve version of the setoid model does not satisfy all definitional equalities. 
 A simple model for quotient types introduced in \cite{hof:95:sm} is a solution to the problem using a modified interpretation of families, but it does not allow \emph{large eliminations}.
 
 Altenkirch \cite{alti:lics99}  proposes a different approach based on the setoid model.
@@ -50,15 +54,17 @@ The propositional universe is closed under $\Pi$-types and $\Sigma$-types:
 The metatheory has been proved {\cite{alti:lics99}} to be:
 
 \begin{itemize}
-\item \emph{Decidable}. The definitional equality is decidable, hence type checking is decidable.
+\item \emph{Decidable}. Definitional equality is decidable, hence type checking is decidable.
 
 \item \emph{Consistent}. Not all types are inhabited and not all well-typed definitional equalities hold. 
 
 \item \emph{$\N$-canonical}. All terms of type $\N$ are reducible to numerals.
 \end{itemize}
 
-And then Altenkirch constructs an intensional setoid model within this metatheory using categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
-\cite{hof:97}.  It is also decidable and $\N$-canonical, functional extensionality is inhabited and it permits large elimination. It is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
+Altenkirch further constructs an intensional setoid model within this metatheory using categories with families as introduced by Dybjer \cite{Dyb:96} and Hofmann
+\cite{hof:97}.  
+It is also decidable and $\N$-canonical, functional extensionality is inhabited and it permits large elimination. 
+It is decidable because its definitional equalities are interpreted by definitional equality in the metatheory which is decidable.
 
 \begin{remark}[The category of setoids is not LCCC]\label{nlccc}
 This model is the category of setoids \textbf{Std} which is a full subcategory of \textbf{Gpd} (the category of small groupoids). Every object of \textbf{Gpd} whose all homsets contain at most one morphism are in this subcategory. 
@@ -66,13 +72,17 @@ This model is the category of setoids \textbf{Std} which is a full subcategory o
 It is different from a setoid model as an E-category, for instance
 the one introduced by Hofmann \cite{hofmann1994interpretation}. An E-category is a category equipped with
 an equivalence relation for homsets. The E-category of setoids in \mltt forms a locally Cartesian closed category (LCCC) which we call  \textbf{E-setoids}.  All morphisms of \textbf{E-setoids}
-give rise to types and they are Cartesian closed, namely the category is locally
+give rise to types and they are Cartesian closed, i.e.\ the category is locally
 Cartesian closed.
 
 Every LCCC can serve as a model for categories with
-families but not every category with families has to be a LCCC. 
+families but not every category with families has to be an LCCC. 
 In our category of setoids \textbf{Std}, not all morphisms give rise to types and it is not an LCCC. 
- Altenkirch and Kraus have shown that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed by giving a morphism, whose pullback functor does not have a right adjoint, as a counterexample (See \cite{Altenkirch12setoidsare}).
+% The following original text is a bit misleading, because this fact was certainly well-known before! So, I change it a bit. -- Nicolai
+% Altenkirch and Kraus have shown that both \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed by giving a morphism, whose pullback functor does not have a right adjoint, as a counterexample (see \cite{Altenkirch12setoidsare}).
+Altenkirch and Kraus have written a short note that explains why \textbf{Gpd} and \textbf{Std} are Cartesian closed but not locally Cartesian closed.
+As a counterexample,
+they give a morphism the pullback functor of which does not have a right adjoint (see \cite{Altenkirch12setoidsare}).
 \end{remark}
 
 
@@ -87,7 +97,7 @@ For readability, we will omit some unnecessary code. The complete code can be fo
 \section{Metatheory}
 
 Agda does not fulfil all requirements of the metatheory, in particular, there is no proof-irrelevant universe of propositions $\Prop$. 
-Instead Agda has irrelevancy annotations \cite{prAgda}. For example we can declare an argument of type $A$ is proof-irrelevant by putting a small dot in front of it
+Instead Agda has irrelevancy annotations \cite{prAgda}. For example we can declare an argument of type $A$ is proof-irrelevant by putting a small dot in front of it: 
 
 
 \begin{code}\>\<%
@@ -153,7 +163,7 @@ There are several restrictions of this annotation.
  \item We cannot pattern match on irrelevant terms. 
 \end{itemize}
 
-In most occasions, it can replaces propositions. However there is a small problem of irrelevant fields of record types as we will see later: we can not use an irrelevant value to construct an irrelevant field or irrelevant function. For example, we can not simply write $p$ in the place of $?$ in the following function
+In most occasions, it replaces propositions. However there is a small problem of irrelevant fields of record types as we will see later: we can not use an irrelevant value to construct an irrelevant field or irrelevant function. For example, we can not simply write $p$ in the place of $?$ in the following function
 
 \begin{code}
 %
@@ -164,7 +174,7 @@ In most occasions, it can replaces propositions. However there is a small proble
 \\
 \end{code}
 
-Because the result type cannot be declared as irrelevant, although the function (or field) is proof-irrelevant which means the result is expected to be proof-irrelevant. The problem can be temporarily fixed by adding an axiom:
+The reason is that the result type cannot be declared as irrelevant, although the function (or field) is proof-irrelevant which means the result is expected to be proof-irrelevant. The problem can be temporarily fixed by adding an axiom:
 
 \begin{code}\>\<%
 \\
@@ -176,8 +186,10 @@ Because the result type cannot be declared as irrelevant, although the function 
 \>\<\end{code}
 
 This issue is also discussed in \cite{prAgda}, and hopefully can be fixed in the future.
-Fortunately it only affects a small bit of our code, e.g.\ the construction of natural numbers and universes in setoid model.
-Moreover, the axiom itself is proof-irrelevant so that it will not affect $\N$-canonicity property.
+Fortunately, it only affects small bits of our code, e.g.\ the construction of natural numbers and universes in setoid model.
+Moreover, the axiom itself is proof-irrelevant so that it will not affect the $\N$-canonicity property.
+
+% I read until here. -- Nicolai
 
 Compared to $\Prop$ in the original metatheory, we have to make more efforts to imitate it using this annotations. For example  We can simply write $\sim : A \to A \to \Prop$ for a propositional equivalence relation in original metatheory. However in our implementation, we write $\sim : A \to A \to \Set$, but in every occurrence of it we use the irrelevancy annotation, such that it behaves like a term of $\Prop$. 
 

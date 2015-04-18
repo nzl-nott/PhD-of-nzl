@@ -556,10 +556,9 @@ The substitution of types can be defined simply by composing the underlying obje
 \\
 \>\<\end{code}
 
-% I read until here. -- Nicolai
-
 $\mathsf{refl*}$ and $\mathsf{trans*}$ can also be verified easily because of proof irrelevance.
-We simplify our definition by open special record types, i.e.\ type $A$ and morphism $f$, which is not ambiguous in the scope.
+We simplify our definition by opening two record types which are not ambiguous in the scope.
+% Not sure if I understand the sentence correctly. -- Nicolai
 
 The substitution of terms is similar:
 
@@ -586,9 +585,11 @@ The substitution of terms is similar:
 \\
 \>\<\end{code}
 
-Empty context is just terminal object of $\textbf{Std}$ as we seen before.
+The empty context is just the terminal object of $\textbf{Std}$ as we have seen before.
 
-Given a context $\Gamma$ and a type $A : \Ty ~\Gamma$, we can form a new context $\Gamma \& A$ which is usually called \textbf{context comprehension}. Syntactically it corresponds to introducing a new variable of type $A$. We can simply construct it by $\Sigma$-types.
+Given a context $\Gamma$ and a type $A : \Ty ~\Gamma$, we can form a new context $\Gamma \& A$ which is usually called \textbf{context comprehension}. 
+Syntactically, it corresponds to introducing a new variable of type $A$. 
+We can simply construct it with a $\Sigma$-type.
 
 \begin{code}\>\<%
 \\
@@ -643,14 +644,14 @@ Given a context $\Gamma$ and a type $A : \Ty ~\Gamma$, we can form a new context
 \\
 \end{code}
 
-The new relation is also an equivalence following from the properties of $\Gamma$ as a setoid and the properties of $A$.
+The new relation is also an equivalence which follows from the properties of $\Gamma$ as a setoid and the properties of $A$.
 Since the context $\Gamma$ and type $A$ as record types are opened in the scope, we can unambiguously use fields such as $fm$ and $subst*$.
 
 We have also defined a few common operations as usual, e.g.\ projections and pairing. The code of them can be found in \Cref{app:cwf}.
 
 \subsection{Type construction in the setoid model}
 
-Dependent function types $\Pi$-types and dependent product types $\Sigma$-types are essential in a dependent type theory. Intuitively, they are just $\Pi$-types and $\Sigma$-types in the metatheory together with the proofs that the setoid equivalence is respected. We have implemented them according to the original construction and reasoning in \cite{alti:lics99} with minor adaptation.
+Dependent function types (i.e.\ $\Pi$-types) and dependent product types (i.e.\ $\Sigma$-types) are essential in a dependent type theory. Intuitively, they are just $\Pi$-types and $\Sigma$-types in the metatheory together with the proofs that the setoid equivalence is respected. We have implemented them according to the original construction and reasoning in \cite{alti:lics99} with minor adaptation.
 For example, given a type $A$ in $\Gamma$ and a type $B$ in $\Gamma \& A$, we define $\Pi ~A ~B$ as a type in $\Gamma$. 
 The elements of $\Pi$-types are dependent functions which respect the equivalence relation.
 
@@ -689,7 +690,7 @@ The elements of $\Pi$-types are dependent functions which respect the equivalenc
 \\
 \end{code}
 
-The associated equality is pointwise equality of functions. To prove it is an equivalence relation, we can simply exploit the corresponding rules of the equivalence relation within type $B$.
+The associated equality is pointwise equality of functions. To prove that it is an equivalence relation, we can simply exploit the corresponding rules of the equivalence relation within the type $B$.
 
 \begin{code}
 \\
@@ -715,10 +716,10 @@ The associated equality is pointwise equality of functions. To prove it is an eq
 \\
 \end{code}
 
-For the rest of the construction we just follow Altenkirch's work in \cite{alti:lics99} and keep them in appendix (see \Cref{app:cwf}).
+For the rest of the construction we just follow Altenkirch's work in \cite{alti:lics99} and keep them in the appendix (see \Cref{app:cwf}).
 
 
-We also construct some basic types that appeared in Altenkirch's work e.g. a simply typed universe and equality types. Since they have been discussed in \cite{alti:lics99}, we just omit them here and focus on the more important one -- the construction of quotient types.
+We also construct some basic types that appeared in Altenkirch's work, e.g.\ a simply typed universe and equality types. Since they have been discussed in \cite{alti:lics99}, we just omit them here and focus on the more important one -- the construction of quotient types.
 
 
 \subsection{Quotient types}
@@ -775,7 +776,7 @@ Here we only use one direction of this equivalence:
 \\
 \end{code}
 
-Of course, because it is defined on type $A$, it has to respect equality (equivalence) of $A$.
+Of course, because it is defined on the type $A$, it has to respect equality (equivalence) of $A$.
 
 \begin{code}
 %
@@ -932,7 +933,7 @@ Q-\textbf{Ax} can be simply proved because the new equivalence $R$ respects the 
 \end{code}
 
 
-The elimination rule and induction principle for quotient types are also straightforward. Given a function $f : A \to B$ which respects $R$, we can lift it as a function of type $Q \to B$ whose underlying function is the same as $f$. Because it respects $R$, the lifted function is a well-typed. Since we still use the same substitution of $A$ in the definition of $Q$, the $\mathsf{respt}$ property automatically holds.
+The elimination rule and induction principle for quotient types are also straightforward. Given a function $f : A \to B$ which respects $R$, we can lift it as a function of type $Q \to B$ whose underlying function is the same as $f$. Because it respects $R$, the lifted function is well-typed. Since we still use the same substitution of $A$ in the definition of $Q$, the $\mathsf{respt}$ property automatically holds.
 
 \begin{code}
 \>[0]\AgdaIndent{2}{}\<[2]%
@@ -991,7 +992,7 @@ To prove the inductive principle, first we have to define a substitution which a
 \\
 \end{code}
 
-Given $P$ as a predicate on $Q$, we assume the result type of $P$ is propositional  i.e.\ all terms of the underlying set is equivalent. $h$ is a dependent function, or we can say it is a proof that for all $a : A$, $P([a])$ holds.
+Given $P$ as a predicate on $Q$, we assume the result type of $P$ is propositional,  i.e.\ all terms of the underlying set is equivalent. $h$ is a dependent function, or we can say it is a proof that for all $a : A$, $P([a])$ holds.
 Similar to elimination rule, we still use the same function $h$ in the lifted version.
 The assumption we made about $P$ helps us to prove that $h$ is well-typed. The $\mathsf{respect}$ property is also inherited.
 
@@ -1048,9 +1049,11 @@ He has also proposed a groupoid model \cite{hof:phd,MR1686862} to interpret type
 
 \section{Summary}
 
-In this chapter we have seen an implementation of the Altenkirch's setoid model with a slight difference in the metatheory. We have used irrelevance feature of Agda to imitate the proof-irrelevance universe of propositions $\Prop$. As we have seen it has a problem which has to be fixed by a postulate. It does not affect most of the implementation and we do not lose canonicity because the postulate is irrelevant so that we cannot construct natural numbers using it. We have implemented the model as a category with families and have introduced various types in it. Most importantly, we have shown that to define quotient types in this model, we can simply replace the internal equivalence of a type $A$ as a setoid with a given equivalence relation on it. 
+In this chapter we have seen an implementation of Altenkirch's setoid model with a slight difference in the metatheory. 
+We have used Agda's irrelevance feature to imitate the proof-irrelevant universe of propositions $\Prop$. 
+As we have seen it has a problem which has to be fixed by a postulate. It does not affect most of the implementation and we do not lose canonicity because the postulate is irrelevant so that we cannot construct natural numbers using it. We have implemented the model as a category with families and have introduced various types in it. Most importantly, we have shown that to define quotient types in this model, we can simply replace the internal equivalence of a type $A$ as a setoid with a given equivalence relation on it. 
 
-We can further simplify the construction of the setoid model by adopting McBride's heterogeneous approach to equality as discussed in Altenkirch, McBride and Swierstra' \emph{Observational Type Theory} \cite{alti:ott-conf}. They identify values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. It can only be inhabited if the types are equal. In Agda, it can be defined as
+We can further simplify the construction of the setoid model by adopting McBride's heterogeneous approach to equality as discussed in Altenkirch, McBride and Swierstra's \emph{Observational Type Theory} \cite{alti:ott-conf}. They identify values up to observation rather than construction which is called \textbf{observational equality}. It is the propositional equality induced by the setoid model.  In general we have a heterogeneous equality which allows us to compare terms of different types. It can only be inhabited if the types are equal. In Agda, it can be defined as
 
 \begin{code}
  %
@@ -1063,7 +1066,9 @@ We can further simplify the construction of the setoid model by adopting McBride
 \end{code}
 
 
-However, by defining equality irrelevant with the actual proof of the equality between types, we silently claim that the types are essentially sets which have UIP. Therefore if we do not accept $\K$ or UIP, we cannot use it in general. However we can use heterogeneous equality for types which behaves like sets and it helps us avoid the heavy use of $\mathsf{subst}$ which complicates formalisation and reasoning, for example, in \Cref{sec:het} we use it for syntactic terms.
+However, by defining equality irrelevant with the actual proof of the equality between types, we silently claim that the types are essentially sets which have UIP. Therefore if we do not accept $\K$ or UIP, we cannot use it in general. However we can use heterogeneous equality for types which actually \emph{are} sets, which helps us avoid the heavy use of $\mathsf{subst}$.
+This is fortunate, as $\mathsf{subst}$ complicates formalisation and reasoning.
+For example, we have used this in \Cref{sec:het} for syntactic terms.
 
 
 

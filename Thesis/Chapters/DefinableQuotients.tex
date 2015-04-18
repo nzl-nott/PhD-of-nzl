@@ -8,23 +8,25 @@ In \itt, the quotient type former is not necessary to define all quotients as se
 One of the most basic examples is the set of integers $\Z$. On one hand it can be interpreted as a quotient set $\Z_0 \defeq \qset{\N\times\N}$ in which we use a pair of natural numbers $(a,b)$ to represent the integer as the result of subtraction $a-b$.  On the other hand, from the usual notation of integers, $\Z$ can be inductively defined as natural numbers together with a sign. Given any element $(a,b): \N\times\N$, there must be an element of $c : \Z$ which can be seen as the name of the equivalence class or \textbf{normal form} of $(a,b)$, thereby we can define a \textbf{normalisation function} denoted as $[\_] : \Z_0 \to \Z$.
 
 
-Another example is the set of rational numbers $\Q$. Usually rational numbers are represented as fractions e.g.\ $\frac{1}{2}$. However different fractions can refer to the same rational numbers, e.g. $\frac{1}{2} = \frac{2}{4}$. It naturally gives us a quotient definition of rational numbers as \emph{fractions} (or unreduced fractions).
-As we know, for one rational number, different fractions for it can always be reduced to a unique one called \emph{reduced fraction}. Therefore, the set $\Q$ can also be defined as $\Sigma$-type consists of a fraction together with a property that it is reduced. Thus, a normalisation function in this case is just an implementation of the reduction process.
+Another example is the set of rational numbers $\Q$. Usually, rational numbers are represented as fractions, e.g.\ $\frac{1}{2}$. However different fractions can refer to the same rational numbers, e.g.\ $\frac{1}{2} = \frac{2}{4}$. It naturally gives us a quotient definition of rational numbers as \emph{fractions} (or unreduced fractions).
+As we know, for one rational number, different fractions for it can always be reduced to a unique one called \emph{reduced fraction}. 
+Therefore, the set $\Q$ can also be defined as a $\Sigma$-type consisting of a fraction together with a proof of the property that it is reduced. 
+Thus, a normalisation function in this case is just an implementation of the reduction process.
 
 
 For these quotients which are definable as a set without being treated as quotients, it seems unnecessary to interpret them as setoids. However in practice, the setoid definitions have some advantages compared to the set definition.
 For example, we can define operations on $\Z$ like addition and multiplication and prove algebraic properties,
 such as verifying that the structure is a ring. 
 However, this is quite complicated and uses many unnecessary case
-distinctions due to the cases in the set definition. E.g. the proving of distributivity within this setting
+distinctions due to the cases in the set definition. E.g.\ the proving of distributivity within this setting
 is not satisfactory since too many cases have to be proven from
 scratch. 
 In the setoid definition $\Z_0$, there is only one case and the algebraic properties are direct consequences
 of the semiring structure of the natural numbers. 
 For rational numbers, it is also conceivable that operations on unreduced functions are simpler to define because there is no need to make sure the result is reduced in every step.
 
-Although the setoid definitions have some nice features in these cases, it requires us to redefine all operations on sets again on setoids, for example $\text{List} (A,\sim)$.
-Hence we propose to use both the setoid
+Although the setoid definitions have some nice features in these cases, they require us to redefine all operations on sets again on setoids, for example $\text{List} (A,\sim)$.
+Hence, we propose to use both the setoid
 and the associated set, but to use the setoid structure to define
 operations on the quotient set and to reason about it. 
 The setoid definition and set definition can be related by the normalisation function so that we can lift operations and properties in the same manner as quotient types.
@@ -150,14 +152,14 @@ To verify the computation rule, assume $a : A$,
 
 $$\lift_B(f,p,[a]) \equiv f(\emb([a]))$$
 
-By completeness we get
+By completeness, we get
 
-$\emb([a]) \sim a$
+$$\emb([a]) \sim a$$
 
 Then by $p : a \sim b \to f(a) = f(b)$, we can prove that
 
 
-$f(\emb([a])) = f(a)$
+$$f(\emb([a])) = f(a)$$
 
 For induction principle, suppose $B : Q \to \Prop$, let $f : (a : A) \to B([a])$ and $q : Q$.
 
@@ -167,7 +169,7 @@ $$[\emb(q)] = q$$
 
 Thereby from
 
-$f(\emb(q)) : B([\emb(q)])$
+$$f(\emb(q)) : B([\emb(q)])$$
 
 we can derive a proof of $B(q)$.
 
@@ -178,11 +180,11 @@ Finally, assume $[ a ] = [ b ]$ for given $a,b : A$, by completeness property, w
 
 $$a \sim \emb [ a ] = \emb [ b ] \sim b$$
 
-and hence $a \sim b$ i.e.\ the quotient is effective.
+and hence $a \sim b$, i.e.\ the quotient is effective.
 
 \end{proof}
 
-However a quotient is not enough to build a definable quotient because we can not extract a canonical choice for each equivalence class $q : Q$. 
+However, a quotient is not enough to build a definable quotient because we can not extract a canonical choice for each equivalence class $q : Q$. 
 
 The definitions of these algebraic structures and proofs about the relations between them have been encoded in Agda (see \Cref{app:dq}).
 
@@ -202,22 +204,22 @@ $$\Z_0 \defeq \N \times \N$$
 
 for example, from the equation $1 - 4 = - 3$, we learn that $- 3$ can be represented by $(1,4)$.
 
-However, from the following equation
+However, from the equation
 
-$$n_1 - n_2 = n_3 - n_4$$
+$$n_1 - n_2 = n_3 - n_4,$$
 
-it is easy to find that one integer can be represented by different pairs.
+it is easy to see that one integer can be represented by different pairs.
 
 The equivalence relation can not be simply defined as this because subtraction is not closed on natural numbers. We only need to transform the equation as
 
-$$ n_1 + n_4 = n_3 + n_2$$.
+$$ n_1 + n_4 = n_3 + n_2.$$
 
 This gives rise to an equivalence relation:
 
 
-$$(n_1,n_2) \sim (n_3,n_4) \defeq  n_1 + n_4 = n_3 + n_2$$.
+$$(n_1,n_2) \sim (n_3,n_4) \defeq  n_1 + n_4 = n_3 + n_2.$$
 
-We can easily verify it is reflexive, symmetric and
+We can easily verify that it is reflexive, symmetric and
 transitive by equation transformations, so the proof is omitted here.
 
 Thereby the setoid of integers can be formed as:
@@ -342,7 +344,7 @@ Given $a \sim b$, by transitivity and symmetry of $\sim$ and completeness, we ca
 
 $$\embd{[a]} \sim a \sim b \sim \embd{[b]}$$
 
-Apply the lemma $\sound'$, we get
+Applying the lemma $\sound'$, we get
 
 $$[a] = [b]$$
 
@@ -363,16 +365,17 @@ These properties have been verified in Agda (see \Cref{defQInt}), we omit the de
 
 \subsection{Setoid: fractions}
 
-In Type Theory, we usually choose fractions to represent rational numbers because he decimal expansion of a rational number can be infinite.
+In Type Theory, we usually choose fractions to represent rational numbers because the decimal expansion of a rational number can be infinite.
 Any rational number can be expressed as a fraction $\frac{m}{n}$ consists of an integer
 $m$ called \emph{numerator} and a non-zero integer $n$ called
 \emph{denominator}.
 
-There are different ways to interpret a fraction: two natural numbers together with a sign; two integers with a condition that the denominator is non-zero; an integer for numerator and a natural number for denominator. It is clear that the last one is simplest,
+There are different ways to interpret a fraction: two natural numbers together with a sign; two integers with a condition that the denominator is non-zero; an integer for numerator and a natural number for denominator. It is clear that the last one is the simplest,
 
-$$\Q_0 = \Z \times \N$$
+$$\Q_0 = \Z \times \N,$$
 
-the sign of rational number is contained in numerator and it is easy to exclude $0$ by viewing $n$ as a denominator $n + 1$, therefore we encode it as follows:
+where the sign of rational number is contained in numerator and it is easy to exclude $0$ by viewing $n$ as a denominator $n + 1$.
+This means that we encode rational numbers as follows:
 
 \begin{code}\>\<%
 \\
@@ -411,7 +414,7 @@ in order to encode it as an equivalence relation as follows:
 
 \subsection{Set: reduced fractions}
 
-A fraction $\frac{a}{b}$ is reduced if and only if $a$ and $b$ are coprime which means if their greatest common divisor is $1$. It is equivalent to say that their absolute values are coprime, thus we can define a predicate of $\Q_0$ as
+A fraction $\frac{a}{b}$ is reduced if and only if $a$ and $b$ are coprime which means if their greatest common divisor is $1$. Equivalently, we can say that their absolute values are coprime, thus we can define a predicate of $\Q_0$ as
 
 \begin{code}\>\<%
 \\
@@ -421,7 +424,7 @@ A fraction $\frac{a}{b}$ is reduced if and only if $a$ and $b$ are coprime which
 \\
 \>\<\end{code}
 
-which decides whether they are coprime or not, if it is the case, it becomes $\top$ otherwise it becomes $\bot$. Therefore it is a propositional set because there is at most one inhabitant.
+which decides whether they are coprime or not, if it is the case, it becomes $\top$, otherwise it becomes $\bot$. Therefore, it is a propositional set (there is at most one inhabitant).
 
 The reduced fractions are canonical representations of rational
 numbers. It is a subset of fractions, so we only need to add the property above to it:
@@ -435,7 +438,7 @@ numbers. It is a subset of fractions, so we only need to add the property above 
 \>\<\end{code}
 
 
-It is equivalent to the definition of $\Q$ in Agda standard library which uses record types.
+This is equivalent to the definition of $\Q$ in Agda standard library which uses record types.
 
 
 \subsection{The definable quotient of rational numbers}
@@ -443,8 +446,8 @@ It is equivalent to the definition of $\Q$ in Agda standard library which uses r
 The set definition $\Q$ ensures the canonicity of representations, but it complicates the manipulation
 of rational numbers.
 
-To calculate rational numbers using $\Q$, we have to reduce fractions in every step which is unnecessary from our usual experience because operations can be carried out correctly in unreduced forms.
-In fact someone complained about this problem\footnote{Discussion on Agda mailing list http://comments.gmane.org/gmane.comp.lang.agda/6372} in practical use of unreduced fractions in Agda standard library.
+To calculate rational numbers using $\Q$, we have to reduce fractions in every step which is unnecessary from our usual experience because operations can be carried out correctly on unreduced forms.
+In fact someone complained about this problem\footnote{Discussion on the Agda mailing list: http://comments.gmane.org/gmane.comp.lang.agda/6372} in practical use of unreduced fractions in Agda standard library.
 
 Therefore a definable quotient of rational numbers consisting of both $\Q_0$ and $\Q$ and conversions between them is very useful.
 We can carry out calculations and prove properties using $\Q_0$ and reduce fraction when a canonical form is required.
@@ -626,23 +629,23 @@ Because $\Q$ is just a subset of $\Q_0$, the embedding function is just the firs
 To complete the definable quotient, we have to prove all essential properties. Because of the complicated definitions, we only sketch proofs here:
 
 \begin{itemize}
-\item The soundness can be understood as the uniqueness of reduced forms which can be proved from the unique prime factorization of integers. Given the equation $a_1 * b_2 = b_1 * a_2$, we can cancel the two greatest common divisors calculated and it becomes $q_1 * r_2 = r_1 * q_2$ where $(q_1,q_2)$ and $(r_1,r_2)$ are the reduced pairs of $(a_1,a_2)$ and $(b_1,b_2)$ and are coprime.  The coprime property implies that there are no common prime factors, thus we can deduce that the set of prime factors of $q_1$ is a subset of $r_1$ and vice versa, hence $q_1 = r_1$ and $q_2 = r_2$ for the same reason. In fact this has been implemented in Agda standard library for rational numbers.
+\item The soundness can be understood as the uniqueness of reduced forms which can be proved from the unique prime factorization of integers. Given the equation $a_1 * b_2 = b_1 * a_2$, we can cancel the two greatest common divisors, and the equation becomes $q_1 * r_2 = r_1 * q_2$ where $(q_1,q_2)$ and $(r_1,r_2)$ are the reduced pairs of $(a_1,a_2)$ and $(b_1,b_2)$, and both pairs are coprime. The coprime property implies that there are no common prime factors, thus we can deduce that the set of prime factors of $q_1$ is a subset of $r_1$ and vice versa, hence $q_1 = r_1$ and $q_2 = r_2$ for the same reason. In fact this has been implemented in Agda standard library for rational numbers.
 
 \item The stability means that given a reduced fraction, if we reduce it again, it stays the same. It is the case because from the coprime property we can deduce that their greatest common divisor is $1$, thus the new numerator and denominator are the same as the old ones.
 
-\item The completeness means that if we reduce a fraction $\frac{x}{y}$, the reduced one is equivalent to it. This is also easy to verify because in the reducing process we have the explicit proofs of $q_1*di=x$, $q_2*di=y$, to prove $q_1 * (q_2 * di) = (q_1 *di) * q_2$ we can simply cancel the greatest common divisor $di$. We ignore the sign of the fractions because it can be cancelled in those equations.
+\item The completeness means that if we reduce a fraction $\frac{x}{y}$, the reduced one is equivalent to it. This is also easy to verify because in the reduction process we have the explicit proofs of $q_1*di=x$, $q_2*di=y$, to prove $q_1 * (q_2 * di) = (q_1 *di) * q_2$ we can simply cancel the greatest common divisor $di$. We ignore the sign of the fractions because it can be cancelled in those equations.
 \end{itemize}
 
 
 \section{The application of definable quotients}
 
 Usually the definable quotient structure is useful when the base type (or carrier) is easier to use.  For example, compared to $\Z$, $\Z_0$ has only one pattern which leads to less case distinctions.
-In  the case of rational numbers, $\Q_0$ does not have coprime property which also reduce the complexity.
-Thus we can define operators and prove properties on setoid representation. Then we can easily lift them by two ways of conversions.
+In  the case of rational numbers, $\Q_0$ does not have the coprime property, which also reduces complexity.
+Thus we can define operators and prove properties on setoid representation. Then, we can easily lift them by two ways of conversions.
 
 \paragraph{Operators}
 
-For a unary operator $f$, we can lift them by 
+We can lift a unary operator $f$ by 
 
 $$\text{liftop1}(f) \defeq [\_] \circ f \circ \embd{\_}$$
 
@@ -655,7 +658,9 @@ $$a \sim b \to f(a) \sim f(b)$$
 It has to be noticed that this property is not required to verify before lifting.
 It allows unsafe lifting but it is simpler. We can verify the properties separately. 
 
-For integers, most of the definition for operators on of $\Z_0$ can be induced from mathematical equations. Because we can only do valid operations on natural numbers ($+$ or $*$) except $-$ which is replaced by pairing operation. For instance, to define the addition operator
+% READ UNTIL HERE -- Nicolai
+
+For integers, most of the definitions for operators on $\Z_0$ can be induced from mathematical equations. Because we can only do valid operations on natural numbers ($+$ or $*$) except $-$ which is replaced by pairing operation. For instance, to define the addition operator
 
 $$(a_1 - b_1) + (a_2 - b_2) = (a_1 + a_2) - (b_1 + b_2)$$
 

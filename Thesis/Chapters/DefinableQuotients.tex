@@ -658,8 +658,6 @@ $$a \sim b \to f(a) \sim f(b)$$
 It has to be noticed that this property is not required to verify before lifting.
 It allows unsafe lifting but it is simpler. We can verify the properties separately. 
 
-% READ UNTIL HERE -- Nicolai
-
 For integers, most of the definitions for operators on $\Z_0$ can be induced from mathematical equations. Because we can only do valid operations on natural numbers ($+$ or $*$) except $-$ which is replaced by pairing operation. For instance, to define the addition operator
 
 $$(a_1 - b_1) + (a_2 - b_2) = (a_1 + a_2) - (b_1 + b_2)$$
@@ -674,20 +672,22 @@ provides a clear way to define it, which respects $\sim$.
 \\
 \end{code}
 
-It has only one case which means that we usually do not need to do case analysis when proving properties about additions. In fact, it is also the case for other operators.
+There is only one case, which means that we usually do not need to do case analysis when proving properties about additions. 
+In fact, the same is true for other operators.
 
 
 
 \paragraph{Properties}
 
-Properties about setoids and operators defined on setoids can be lifted by using soundness of $[\_]$ and operators, completeness, stability and equivalence properties. For example, given a unary operator $f : A \to A$ such that $\forall (a : A) \to f (f (a)) \sim a$, we can prove that $\forall(q : Q) \to \text{liftop1}(f)(\text{liftop1}(f)(q)) = q$ as follows:
+Properties about setoids and operators defined on setoids can be lifted by using soundness of $[\_]$ and operators, completeness, stability and equivalence properties. 
+For example, given a unary operator $f : A \to A$ such that $\forall (a : A) \to f (f (a)) \sim a$, we can prove that $\forall(q : Q) \to \text{liftop1}(f)(\text{liftop1}(f)(q)) = q$ as follows:
 
 \begin{proof}
 By definitional expansion, the property can be rewritten as:
 
 $$([\_] \circ f \circ \embd{\_} \circ [\_] \circ f \circ \embd{\_})(q) = q$$
 
-Applying assumption $\forall (a : A) \to f (f (a)) \sim a$ on $\embd{q}$ we get
+Applying the assumption $\forall (a : A) \to f (f (a)) \sim a$ on $\embd{q}$, we get
 
 $$(f \circ f \circ \embd{\_}) (q) \sim \embd{q}$$
 
@@ -719,9 +719,10 @@ $$([\_] \circ f \circ \embd{\_} \circ [\_] \circ f \circ \embd{\_})(q) = q$$
 As we mentioned, one of the important motivations of definable quotients is that the setoid form is simpler and therefore properties can be proved with less case distinctions. Another advantage is that usually there are functions and properties available for the setoid form that are very useful. 
 
 In \cite{finalyear}, the author has proved all necessary properties to form a commutative ring of integers in Agda.
-In practice, for the set definition of integers, most of the basic operations and simple theorems are not unbearably complicated. However the number of
+In practice, for the set definition of integers, most of the basic operations and simple theorems are not unbearably complicated. However, the number of
 cases grows exponentially when case analysis is unavoidable.
-Although it is possible to prove lemmas which cover several cases, it is still very inefficient in general. We have experienced extreme difficulty in proving the distributivity law within the ring of integers.
+Although it is possible to prove lemmas which cover several cases, it is still very inefficient in general. 
+We have experienced extreme difficulty in proving the distributivity law within the ring of integers.
 
 \paragraph{Case: distributivity proof}
 
@@ -729,7 +730,7 @@ As an example we only discuss the left distributivity
 
 $$ x \times (y + z) = x \times y + x \times z$$
 
-We use the multiplication defined in standard library which calculates signs and absolute values separately:
+We use the multiplication defined in the standard library which calculates signs and absolute values separately:
 
 \begin{code}
 \\
@@ -743,12 +744,14 @@ We use the multiplication defined in standard library which calculates signs and
 \\
 \end{code}
 
-It we split all cases, we will have $2 * 2 * 2$ cases in total which is too complicated. Therefore, we decide to combine several cases.
+If we split all cases, we will have $2 * 2 * 2$ cases in total, which is rather complicated and inconvenient.
+Therefore, we decide to combine several cases.
 
 When all of them are non-negative integers, we can apply apply the left distributivity law of natural
-numbers which are available. In fact it can be applied to all the cases that $y$ and $z$ have the same sign, because signs can be moved out.
+numbers which we assume is available. 
+In fact, it can be applied in all cases in which $y$ and $z$ have the same sign, because signs can be moved out.
 Thus we can write some parts of the proof (Note: $\AgdaFunction{DistributesOverˡ}$ means
-that the distributivity of the first operators over the second one):
+that the first operator distributes over the second one):
 
 \begin{code}
 \\
@@ -856,18 +859,20 @@ To prove these simpler cases we need three lemmas,
 
 However, intuitively speaking, if $y$ and $z$ have different
 signs, it is impossible to apply the left distributivity law for
-natural numbers. There is no rule to turn $x *
+natural numbers. 
+There is no rule to turn $x *
 (y  - z)$ into an expression which only contains natural numbers.
 The case analysis is unavoidable here, and we have to prove it from scratch.
-In experience, it is very complicated and inefficient because we can not use meaningful proved theorems to build new proofs.
+From the author's experience, this is very complicated and inefficient because we can not refer to proved theorems in a meaningful way. 
 
-It is much simpler to prove the distributivity for $Z_0$. As we have mentioned, the defintions of 
+It is much simpler to prove distributivity for $Z_0$. As we have mentioned, the definitions of 
 these operators only involve operators for natural
 numbers. Therefore all these properties which only
-involves plus, minus and multiplication, are intensional equations about natural numbers with the operators which forms a commutative semiring for natural numbers. We can use these laws to prove distributivity easily.
+involve plus, minus and multiplication, are intensional equations about natural numbers with the operators which forms a commutative semiring of natural numbers. 
+We can use these laws to prove distributivity easily.
 
-In fact with the help of \emph{ring solver}, it can be proved automatically.
-A \emph{ring solver} is an automatic equation checker for rings e.g.\ the
+In fact with the help of the \emph{ring solver}, it can be proved automatically.
+The \emph{ring solver} is an automatic equation checker for rings, e.g.\ the
 ring of integers. It is implemented based on the theory described in \cite{gregoire2005proving}.
 
 \begin{code}
@@ -895,22 +900,22 @@ ring of integers. It is implemented based on the theory described in \cite{grego
 \\
 \end{code}
 
-It is not the simplest way to use ring solver since we have to feed
-the type (i.e.\ the equation) to the solver. In fact Agda has a feature called "reflection" which helps us quote the type of the current goal so that the application of ring solver can be automated. There is already some work
+It is not the simplest way to use the ring solver since we have to feed
+the type (i.e.\ the equation) to the solver. In fact Agda has a feature called "reflection" which helps us to quote the type of the current goal so that the application of the ring solver can be automated. There is already some work
 done by van der Walt \cite{van2012reflection}. It can be seen as an
 analogy of the "ring" tactic from Coq.
 
-To form the commutative ring of integers, we can prove all properties using ring solvers. However ring solver has to calculate the proof which takes very long time in type checking from our experience. As
-these basic laws are used a lot in complicated theorems, pragmatically speaking, it is better not to prove them using ring solver.
+To form the commutative ring of integers, we can prove all properties using the ring solver. However, the ring solver has to calculate the proof which takes a very long time to type check from our experience. As
+these basic laws are used a lot in complicated theorems, pragmatically speaking, it is better not to prove them using the ring solver.
 Instead, we can manually construct the proof terms to improve efficiency of library
 code, sacrificing some conveniences.
 
-Luckily it is still much simpler than the ones for the set of integers $\Z$.
-First there is only one case of integer and as we know the equations are
+Luckily, it is still much simpler than the ones for the set of integers $\Z$.
+First, there is only one case of integer and as we know the equations are
 indeed equations of natural numbers which can be proved using only the
 properties in the commutative semiring of natural numbers. There is no
 need to prove some properties for $\Z$ from scratch like in the
-proving of distributivity.
+proof of distributivity.
 
 \begin{code}
 \\
@@ -947,51 +952,54 @@ proving of distributivity.
 \\
 \end{code}
 
-It only needs one special lemma which can be proved by applying distributivity
+We only need one special lemma which can be proved by applying distributivity
 laws for natural numbers. The $\AgdaFunction{swap23}$ is a commonly
 used equation rewriting lemma
 
 $(m + n) + (p + q) = (m + p) + (n + q)$
 
-After all, the application of quotient structure in the integer case
-provides us a general approach to define functions and prove theorems
+After all, the application of the quotient structure in the integer case
+provides a general approach to defining functions and prove theorems
 when the base types are simpler to deal with. To form
-the field of rational numbers, we can also benefit from the setoid representation. There is no extra properties to prove. After embedding the natural numbers
-into integers, any theorems using only the operations in the field
+the field of rational numbers, we can also benefit from the setoid representation. 
+There are no extra properties to prove. 
+After embedding the natural numbers
+into the integers, any theorems using only the operations in the field
 $\Q$, are turned out to be equations of integers which can be automatically
-solved by ring solver.
+solved by the ring solver.
 
 
 \section{Related work}
 
-Courtieu \cite{cou:01} considers an extension of calculus of inductive constructions (CIC) which is an intensional type theory by \emph{normalized types} which can be seen as a type former for definable quotients in our sense, namely quotients which have a normalisation function. Therefore, to form a normalised type, a normalisation function is required instead of an equivalence relation. He also provides an example of integers, where the base type has three constructors $0$, $\mathsf{S}$ for successors and $\mathsf{P}$ for predecessors.
+Courtieu \cite{cou:01} considers an extension of the calculus of inductive constructions (CIC), an intensional type theory, by \emph{normalized types}. 
+Those can be seen as type formers for definable quotients in our sense, namely quotients which have a normalisation function. Therefore, to form a normalised type, a normalisation function is required instead of an equivalence relation. He also provides an example of integers, where the base type has three constructors $0$, $\mathsf{S}$ for successors and $\mathsf{P}$ for predecessors.
 
 
 Cohen \cite{DBLP:dblp_conf/itp/Cohen13} also defines a quotient structure in Coq, which consists of $\mathsf{Q}$ as a quotient type, $\mathsf{T}$ as base type, two mapping $\mathsf{pi} : \mathsf{T} \to \mathsf{Q}$ and $\mathsf{repr} : \mathsf{Q} \to \mathsf{T}$ and a proof that $\mathsf{pi}$ is a left inverse of $\mathsf{repr}$. It is similar to our algebraic structure of definable quotients without an equivalence relation involved, $\mathsf{pi}$ corresponds to $[\_]$, $\mathsf{repr}$ corresponds to $\emb$, and the equivalence relation can be recovered simply: if for any two $s,t: \mathsf{T}$ such that $\mathsf{pi}(s) = \mathsf{pi}(t)$, then they are equivalent.
 
 \section{Summary}
 
-In this chapter, we have shown that 
-although quotient
-types are unavailable, there are some quotients that are
+In this chapter, we have shown that, 
+although we work in a theory in which quotient types are unavailable,
+there are some quotients that are
 themselves definable together with a normalisation function without using quotient types. 
 
-We introduce several
+We introduced several
 algebraic structures for quotients which can be seen as ``manual construction'' of quotient types.
 A \emph{prequotient} gives the basic ingredients for later
 constructions. We give two equivalent definitions of \emph{quotients},
-one has a dependent eliminator and the other given by Hofmann added
+one of which has a dependent eliminator, while the other (as given by Hofmann) adds
  a non-dependent eliminator and an induction principle.
-A \emph{definable quotient} includes an embedding function selecting canonical choice for each
+A \emph{definable quotient} includes an embedding function selecting a canonical choice for each
 equivalence class such that $[\_]$ is correctly specified as a normalisation function. 
-It is very useful in practice.
-It provides us flexible conversions between setoid representations and set representations.
-We can usually benefit from the convenience of simple setoid form and auxiliary functions without losing canonicity of set representation, hence it is not necessary to redefine all kinds of functions and types on sets e.g.\ lists, on setoids again.
+This is very useful in practice.
+It provides us with a flexible conversion between setoid representations and set representations.
+We can usually benefit from the convenience of the simple setoid form and auxiliary functions without losing canonicity of set representation, hence it is not necessary to redefine all kinds of functions and types on sets e.g.\ lists, on setoids again.
 
 To show the application of definable quotients, we
 used two examples, the set of integers and the set of rational
 numbers. Some concrete cases have been given to show how to lift operations and theorems from setoid representations.
-We illustrate the advantages of definable quotients in the comparison between $Z$ and $Z_0$ in proving of distributivity for the commutative ring of integers.
+We illustrated the advantages of definable quotients in the comparison between $Z$ and $Z_0$, using the proof of distributivity for the commutative ring of integers.
 
 
 

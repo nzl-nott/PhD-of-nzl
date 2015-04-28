@@ -26,18 +26,23 @@ in the treatment of two notions of equality, \emph{propositional
   equality} and \emph{definitional equality}.  In ITT, if two
 expressions can be computed to the same object then we make the
 judgement that they are definitionally equal. On the other hand, we
-have the \emph{identity type} which is a type expressing the equality
-between two terms, so it is called propositional
-equality. Definitional equality implies propositional equality, but
-not the other way around which is usually called equality reflection.
-In ETT, they are identified, which makes definitional equality and
-thereby type checking undecidable.
+have the \emph{identity type} or propositional equality which is a
+type expressing the equality of two terms. Definitional equality
+implies propositional equality, but not the other way around which is
+usually called equality reflection. In ETT, they are identified, which
+makes definitional equality and thereby type checking undecidable.
 
 
-In \itt, the propositional equality is intensional. Some extensional equality such as equality between two point-wise equal functions, equality between two logically equivalent propositions, and equality between two ``equivalence classes'' of a quotient $[a]$, $[b]$ where $a \sim b$, are not inhabited.
-In fact there is a list of extensional concepts (see \Cref{extensionality}) which are useful, justifiable but not available in ITT.
-Nevertheless ITT is still preferable to ETT as the basis for programming languages, because its type checking is decidable so that it has good computational behaviours.
-Therefore, we would like to extend ITT with these extensional concepts, and the notion of quotient types is one of them. 
+In \itt, propositional equality is intensional. Some extensional
+equality types such as the equality of two point-wise equal functions,
+the equality of two logically equivalent propositions, and equality of
+two ``equivalence classes'' of a quotient $[a]$, $[b]$ where $a \sim
+b$, are not inhabited. There are several extensional concepts (see
+\Cref{extensionality}) which are useful and justifiable but not
+available in ITT.  Nevertheless ITT is still preferable to ETT as the
+basis for programming languages, because of its good computational
+properties.  Therefore, we would like to extend ITT with these
+extensional concepts, and the notion of quotient types is one of them.
 %For example, $\lambda n \to n$ and $\lambda n \to n + 0$ are intensionally different \footnote{Considering the definition of $+$ where $n+0$ can not be reduced to $n$.} so they are not propositionally equal.
 %Even if we encode the method to compute
 %%the definitional equality of the outputs for each given input, it can
@@ -53,11 +58,16 @@ Therefore, we would like to extend ITT with these extensional concepts, and the 
 \section{Quotient types}
 
 
-\emph{Quotient} is a primitive notion in mathematics. In arithmetic, quotient refers to the result of division
+\emph{Quotient} is a primitive notion in mathematics. In arithmetic,
+quotient refers to the result of a division:
 
-$$8 \div 4 = 2 ~~ \text{or}~~ 8/4 = 2$$
+$$8 \div 4 = 2 ~~ \text{or}~~ 8/4 = 2.$$
 
-The notion is generalised in more abstract branches of mathematics, such as set theory, group theory, topology etc. For example in set theory, given a set $A$ and an equivalence relation $\sim$, the set of all equivalence classes of $\sim$ is called the \emph{quotient set} of $A$ by $\sim$.
+The notion is generalised in more abstract branches of mathematics,
+such as set theory, group theory, topology etc. For example in set
+theory, given a set $A$ and an equivalence relation $\sim$, the set of
+all equivalence classes of $\sim$ is called the \emph{quotient set} of
+$A$ by $\sim$.
 
 An \textbf{equivalence relation} is a binary relation which is 
 
@@ -67,7 +77,8 @@ An \textbf{equivalence relation} is a binary relation which is
 \item transitive: $\forall a ~ b~ c \in A, a \sim b \to b \sim c \to a \sim c$.
 \end{itemize}
 
-The \textbf{equivalence class} of an element $a$ is a subset of $A$ which contains all elements equivalent to $a$:
+The \textbf{equivalence class} of an element $a$ is a subset of $A$
+which contains all elements equivalent to $a$:
 
 \begin{equation*}
 [a] = \{x \in A \;| \; a \sim x \}
@@ -79,15 +90,27 @@ The \textbf{quotient set} of $A$ by $\sim$ is just the set of equivalence classe
 \qset{A} = \{ [ a ] \;|\; a : A \}
 \end{equation*}
 
-Similarly, we can also ``divide'' a group, space, category or another algebraic structure by a given structure-preserving equivalence relation on it.
+Similarly, we can also ``divide'' a group, space, category or another
+algebraic structure by a given structure-preserving equivalence
+relation on it.
 
-Naturally one would also expect \textbf{quotient types} in Type Theory. Intuitively speaking, a \emph{quotient type} $\qset{A}$ is a type $A$ whose equality is redefined by an equivalence relation on it. In \ett, it is possible to redefine the equalities of types. 
-For example, in NuPRL which is an implementation of \ett, there is a quotient operator which builds a new type from a given type and an equivalence relation on it \cite{DBLP:books/daglib/0068834}. There are some problems with it, for example we can not recover the witness of the equality between two equal elements in quotient types \cite{nog:02}.
+Naturally one would also expect \textbf{quotient types} in Type
+Theory. Intuitively speaking, a \emph{quotient type} $\qset{A}$ is a
+type $A$ whose equality is redefined by an equivalence relation on
+it. In \ett, it is possible to redefine the equalities of types.  For
+example, in NuPRL which is an implementation of \ett, there is a
+quotient operator which builds a new type from a given type and an
+equivalence relation on it \cite{DBLP:books/daglib/0068834}. However
+it is not possible to recover the witness of the equality between two
+equal elements in quotient types \cite{nog:02}.
 
 
-
-Because of the good computational property of \itt, we would like to have quotient types in \itt as well.
-However in the traditional formulation of \itt, such a type former does not exist because there is no attached equivalence on each type except definitional equality which can not be changed. Instead \textbf{setoids} are usually used to represent quotients:
+Because of the good computational properties, we would like to have
+quotient types in \itt as well.  However in the traditional
+formulation of \itt, such a type former does not exist because there
+is no attached equivalence on each type except definitional equality
+which can not be changed. Instead \textbf{setoids} are usually used to
+represent quotients:
 
 \begin{definition}
 \textbf{Setoid}.
@@ -95,11 +118,14 @@ However in the traditional formulation of \itt, such a type former does not exis
 \begin{enumerate}
 \item a set (type) $A : \Set$,
 \item a binary relation $\sim : A \to A \to \Prop$, and
-\item a proof that it is an equivalence, i.e.\ there are proofs that it is reflexive, symmetric and transitive.
+\item a proof that it is an equivalence, i.e.\ reflexive, symmetric and transitive.
 \end{enumerate}
 \end{definition}
 
-Notice that this notion is also called a \emph{total setoid}. If the relation of a setoid is not required to be reflexive, then it becomes a \emph{partial setoid}. In this thesis, the word "setoid" usually refers to a total setoid.
+Notice that this notion is also called a \emph{total setoid}. If the
+relation of the setoid is not required to be reflexive it is called a
+\emph{partial setoid}. In this thesis, the word "setoid" refers to a
+total setoid.
 
 
 A function $f : A \to B$ is well-defined on a setoid $(A,\sim)$ only if it respects $\sim$:
@@ -110,22 +136,56 @@ We say a function $f : A \to B$ \textbf{respects} $\sim$ if
 $$\forall (x, y : A) \to x \sim y \to f(x) =_{B} f(y)$$
 \end{definition}
 
-However using setoids to represents quotients is not an ideal solution. Since it is an alternative representation of sets, everything defined on $\Set$ has to be redefined on $\Setoid$ again. 
+However using setoids to represent quotients is not an ideal
+solution. Since it is an alternative representation of sets,
+everything defined on $\Set$ has to be redefined on $\Setoid$ again.
 Examples are functions between setoids, equalities on setoids,
-products on setoids, etc.
-In fact, in other branches of mathematics, the quotient object is essentially the same kind of object as the base one.
-Therefore, it is better to have a representation of the quotient $\qset{A}$ which is in the same sort as $A$ is. 
+products on setoids, etc.  In fact, in other branches of mathematics,
+the quotient object is essentially the same kind of object as the base
+one.  Therefore, it is better to have a representation of the quotient
+$\qset{A}$ which is in the same sort as $A$ is.
 
-In fact not all quotients have to be defined using a quotient type former. For example integers can be represented as pairs of natural numbers $\N \times \N$ which are equivalent if the subtraction of the first number from the second are equal. This gives rise to a quotient. However the set of integers can also be defined inductively from the observation that $\Z \simeq \N + \N$.
-For these quotients, the set definition can be seen as the normal form of "equivalence classes" which is usually described by a mapping from setoid representation to set representation called \textbf{normalisation function}. In this thesis we say that such quotients are \emph{definable via a normalisation (function)} (see \Cref{dq}).
+In fact not all quotients have to be defined using a quotient type
+former. For example integers are usually represented as pairs of
+natural numbers $\N \times \N$ which are equivalent if subtracting
+first number from the second gives the same result. This gives rise to
+a quotient. However the set of integers can also be defined
+inductively from the observation that $\Z \simeq \N + \N$.  For such
+quotients, the set definition can be seen as a normal form of the
+equivalence classes. There is a mapping from the setoid representation
+to the set representation called the \textbf{normalisation
+  function}. In this thesis we say that such quotients are
+\emph{definable via a normalisation (function)} (see \Cref{dq}).
 
 
-However, there are also some quotients that are not definable via normalisation, for example, the set of real numbers represented by the Cauchy sequences of rational numbers, the finite multisets represented as lists quotiented by permutation equivalence (or bag equivalence \cite{DBLP:conf/itp/Danielsson12}), the non-terminating programs represented by partiality monad quotiented by weak bisimilarity and so on. In these cases, a general schema to define quotient types is essential.
+Some quotients are not definable via normalisation, for example the
+set of real numbers represented by Cauchy sequences of rational
+numbers, the finite multisets represented as lists quotiented by
+permutation equivalence (or bag equivalence
+\cite{DBLP:conf/itp/Danielsson12}), the non-terminating programs
+represented by the partiality monad quotiented by weak bisimilarity
+and so on. In these cases, a general schema to define quotient types
+is essential.
 
-If we simply introduce quotient types as axioms in \itt, we lose the \emph{canonicity} property, in other words, we can construct non-canonical terms of $\N$ which can not be reduced to numerals (see \Cref{quotientcanonicity}). In fact, similar issues arise when adding other extensional concepts as axioms e.g.\ functional extensionality. Therefore it is essential to find a computational interpretation of these extensional concepts including quotient types.
+If we simply introduce quotient types as axioms in \itt, we lose the
+\emph{canonicity} property, in other words, we can construct
+non-canonical terms of $\N$ which can not be reduced to numerals (see
+\Cref{quotientcanonicity}). In fact, similar issues arise when adding
+other extensional concepts as axioms e.g.\ functional
+extensionality. Therefore it is essential to find a computational
+interpretation of these extensional concepts including quotient types.
 
-To achieve the goals, we have to "refine" our interpretation of types. Usually a type is treated as a set without attached equality. If a type is interpreted as a \emph{setoid}, in other words internalising propositional equality, quotient types can be defined simply by replacing ``internal'' equality. This is called \emph{setoid interpretation} which is inspired by Bishop's \cite{bishop} definition of sets and 
-some research has been done by Martin Hofmann \cite{hof:phd,hof:95:sm}, and Thorsten Altenkirch \cite{alti:lics99,alti:ott-conf}. Based on this interpretation, we can build a setoid model in \itt which gives us the  computational interpretation of quotient types.
+To achieve these goals, we have to "refine" our interpretation of
+types. Usually a type is treated as a set without attached
+equality. If a type is interpreted as a \emph{setoid}, in other words
+internalising propositional equality, quotient types can be defined
+simply by replacing ``internal'' equality. This is called \emph{setoid
+  interpretation} which is inspired by Bishop's \cite{bishop}
+definition of sets and has been studied by Martin Hofmann
+\cite{hof:phd,hof:95:sm} and Thorsten Altenkirch
+\cite{alti:lics99,alti:ott-conf}. Based on this interpretation, we can
+build a setoid model in \itt which gives us the computational
+interpretation of quotient types.
 
 It has been unclear for a long time what identity types are in \itt. Intuitively, the uniqueness of identity proof (UIP), stating that two terms of a same identity type are always propositionally equal, is valid because there is at most one canonical element expressing the equality between two objects. However UIP is not derivable from the eliminator for identity type $\J$ (see \Cref{typerule}) but needs an extra eliminator $\K$ suggested by Thomas Streicher \cite{streicherinvestigations}.
 Hofmann and Streicher further \cite{MR1686862} propose a groupoid interpretation of \itt where $\K$ is refuted and then UIP fails. The groupoid interpretation  can be seen as a generalisation of the setoid one, where the identity type is not a proposition but a set. It means that there can be several proofs of the same identity which are not equal.

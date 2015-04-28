@@ -1,14 +1,37 @@
 \chapter{Introduction}
 
-\mltt (or just Type Theory) is a type theory which serves as a foundation of constructive mathematics and is also a dependently typed programming language. Different from other foundations like set theory, it is not based on predicate logic but internalises the BHK interpretation of intuitionistic logic through the Curry-Howard isomorphism. It identifies a proposition with a type such that a proof of it is a term of that type. 
-As a programming language, it means that we can express a specification as a type of the programs satisfying it.
-Moreover, one can write programs and reason about them in it, thus write certified programs. Here are some implementations of it, such as NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma etc.
+\mltt (or just Type Theory) is a type theory which serves as a
+foundation of constructive mathematics and is also a dependently typed
+programming language. Different from other foundations like set
+theory, it is not based on predicate logic but internalises the BHK
+interpretation of intuitionistic logic through the Curry-Howard
+isomorphism. It identifies propositions with types such that proofs of
+a proposition become terms of the corresponding type. Viewed as a
+programming language, this means that we can express a specification
+as a type, and a program of that type will satisfy the
+specification. Moreover, one can write programs and reason about them
+in the same language resulting in certified programs. Implementations
+of Type Theory include NuPRL, LEGO, Coq, Agda, Epigram, Pi-Sigma.
 
 
-As a foundation of constructive mathematics, there have been a lot of \maths formalised in it, for example a formal proof of the four-colour theorem by Georges Gonthier \cite{gonthier08ams} \footnote{More formalised mathematics can be found in \cite{sbfm}}. The formalisation of mathematics in programming languages not only provides mathematicians with a powerful tool to constructively prove theorems with computerised verification, but also helps in program specification and reasoning. 
+Viewed as a foundation for mathematics, Type Theory is a powerful tool
+for constructively proving theorems with computerised verification. An
+example is the formal proof of the four-colour theorem by Georges
+Gonthier \cite{gonthier08ams} \footnote{More formalised mathematics
+  can be found in \cite{sbfm}.}.
 
-There are two versions of \mltt, the \emph{intensional} version (\itt or ITT) and the \emph{extensional} version (\ett or ETT).  They differ in the treatment of two notions of equality, \emph{propositional equality} and \emph{definitional equality}.  In ITT, if two expressions can be computed to the same object then we make the judgement that they are definitionally equal. On the other side, we have \emph{identity types} which are types as propositions expressing the equality between two terms of the same type, so it is called propositional equality. Definitional equality implies propositional equality, but not the other way around which is usually called equality reflection.
-In ETT, they are identified, which makes definitional equality and thereby type checking undecidable. 
+There are two versions of \mltt, the \emph{intensional} version (\itt
+or ITT) and the \emph{extensional} version (\ett or ETT).  They differ
+in the treatment of two notions of equality, \emph{propositional
+  equality} and \emph{definitional equality}.  In ITT, if two
+expressions can be computed to the same object then we make the
+judgement that they are definitionally equal. On the other hand, we
+have the \emph{identity type} which is a type expressing the equality
+between two terms, so it is called propositional
+equality. Definitional equality implies propositional equality, but
+not the other way around which is usually called equality reflection.
+In ETT, they are identified, which makes definitional equality and
+thereby type checking undecidable.
 
 
 In \itt, the propositional equality is intensional. Some extensional equality such as equality between two point-wise equal functions, equality between two logically equivalent propositions, and equality between two ``equivalence classes'' of a quotient $[a]$, $[b]$ where $a \sim b$, are not inhabited.

@@ -4,21 +4,23 @@
 
 
 
-In this chapter, we present a definition of quotient type in an \itt extended with a proof-irrelevant universe of propositions in the sense of \Cref{ittprop}. We prove that given propositional extensionality, all quotients are effective. We also explain the rules of quotient types categorically. A quotient is essentially a coequalizer or given by an adjunction with equality predicate functor \cite{Jacobs94quotientsin}. 
-Quotient types in our definition are essentially quotient \emph{sets}. In \hott where types are not interpreted as sets, we discuss Voevodsky's impredicative encoding of quotient sets with all essential rules, and also quotient sets defined using higher inductive types. 
+In this chapter, we present a definition of quotient types in an \itt extended with a proof-irrelevant universe of propositions in the sense of \Cref{ittprop}. We prove that, given propositional extensionality, all quotients are effective. 
+We also explain the rules of quotient types categorically. 
+A quotient is essentially a coequalizer or given by an adjunction with equality predicate functor \cite{Jacobs94quotientsin}. 
+Quotient types in our definition are essentially quotient \emph{sets}. In \hott, where types are not interpreted as sets, we discuss Voevodsky's impredicative encoding of quotient sets with all essential rules, and also quotient sets defined using higher inductive types. 
 
 \section{Quotients in Type Theory}
 
 \subsection{Rules for quotients}\label{iqs}
 
-The quotient types are defined by the following rules as described in \cite{Jacobs94quotientsin,hof:95:sm}. 
+Quotient types can be defined by the following rules as described in \cite{Jacobs94quotientsin,hof:95:sm}. 
 
 
 \infrule[Q-\bf{Form}]
 { \Gamma \vdash A  \andalso \Gamma ,x : A , y : A \vdash x \sim y : \bf{Prop} \andalso \sim~\text{is an equivalence}}
 {\Gamma \vdash \qset{A}}
 
-Given a type $A$ with a binary equivalence relation $\sim$ on $A$, we can form the quotient $\qset{A}$. Here we use an infix notation for readability.
+Given a type $A$ with a binary equivalence relation $\sim$ on $A$, we can form the quotient $\qset{A}$. Here, we use infix notation for readability.
 
 The equivalence properties are
 
@@ -29,7 +31,7 @@ The equivalence properties are
 \end{itemize}
 
 \begin{remark}
-Notice that the formation rule is different to Hofmann's version \cite{hof:95:sm} where $\sim$ is not required to be only equivalence relation. In fact his version is just more general which accepts non equivalence relation $R : A \to A \to \Prop$, but $A/R$ has to be understood as the quotient of $A$ by the equivalence closure of $R$.
+Notice that the formation rule is different to Hofmann's version \cite{hof:95:sm} where $\sim$ is not required to be an equivalence relation. In fact his version is just more general which accepts non-equivalence relations $R : A \to A \to \Prop$, but $A/R$ has to be understood as the quotient of $A$ by the equivalence closure of $R$.
 \end{remark}
 
 \begin{multicols}{2}
@@ -44,7 +46,7 @@ Notice that the formation rule is different to Hofmann's version \cite{hof:95:sm
 We introduce an ``equivalence class'' for each element of $A$. It is usually denoted as $[ a ]$, or $[ a ]_{\sim}$ for $\sim$ if it is unclear which relation it refers to. 
  Qax states that the ``equivalence classes'' of two terms which are related by $\sim$ are (propositionally) equal.
 
- Notice that the notation of terms $[a]$ can be confused with the substitution notation like $B[a]$ or $B [a/x]$. So for a $\Pi$-type $B : (x : A) \to \Set$ and $a : A$, we write $B(a) : \Set$ for $B [a/x]$ where order of the arguments in brackets matches its definition.
+ Notice that the notation of terms $[a]$ should not be confused with notation for substitution such as $B[a]$ or $B [a/x]$. For a $\Pi$-type $B : (x : A) \to \Set$ and $a : A$, we therefore write $B(a) : \Set$ for $B [a/x]$ where order of the arguments in brackets matches its definition.
 
 % $for any possibly ambiguous occurrence, we use full notations i.e.\ $[a]_{\sim}$  for terms and $B[a/x]$ for substitution.$
 
@@ -122,7 +124,7 @@ $$\pi_2 ~(\hat{f'}(q))$$
 
 which has the correct type because $P(q)$ holds. The computation rule is simply derivable from \ref{f'comp}.
 
-2. It is easy to find out that the non-dependent eliminator and induction principle are just special cases of dependent eliminator.
+2. It is easy to check that the non-dependent eliminator and induction principle are just special cases of the dependent eliminator.
 
 A formalised version of this proof in Agda can be found in \Cref{app:dq}.
 \end{proof}
@@ -134,7 +136,8 @@ Additionally, a quotient is effective (or exact) if an "equivalence class" only 
 {\Gamma \vdash a :  A \andalso \Gamma \vdash b :  A  \andalso p : [a] =_{\qset{A}} [b] }
 {\text{eff}(p) : a \sim b}
 
-In fact all quotients defined with \emph{equivalence} relation are effective, if we have propositional extensionality which has been proved by Hofmann (See Section 5.1.6.4 in \cite{hof:phd}).
+In fact all quotients defined with \emph{equivalence} relations are effective if we have propositional extensionality.
+This has been proved by Hofmann (See Section 5.1.6.4 in \cite{hof:phd}).
 
 \begin{theorem}\label{PUEF}
 With propositional extensionality, we can prove that all quotient types are effective.
@@ -168,9 +171,9 @@ is just
 
 $$a \sim a  = a \sim b$$ 
 
-Finally with eliminator $J$ and $\text{ref}(a) : a \sim a$ we can easily prove
+Finally, with the eliminator $J$ and $\text{refl}(a) : a \sim a$, we can easily prove
 
-$$a \sim b$$.
+$$a \sim b.$$
 
 \end{proof}
 
@@ -199,7 +202,7 @@ $$a \sim b$$.
 %effective.
 %\end{proof}
 
-Similar to other extensional concepts like functional extensionality, simply adding quotient types into \itt as axioms can also result in \emph{non-canonical construction}.
+Similar to other extensional concepts like functional extensionality, simply adding quotient types to \itt as axioms can also result in \emph{non-canonical constructions}.
 
 \begin{theorem}\label{quotientcanonicity}
 If we postulate the rules of quotient types, the $\N$-canonicity property is lost.
@@ -221,19 +224,20 @@ We can observe that $0 : B([a])$, thus by using subst function (see \Cref{subst}
 $$\mathsf{subst}(B,\text{Qax}(p),0) : B([b])$$
 
 which is also a term of $\N$ by definition of $B$.
-This term is irreducible to any numeral because $\text{Qax}(p)$ can not be reduced to the canonical term of identity type (refl). Moreover, one can not postulate propositional equality $\text{Qax}(p) = \text{refl}_{[a]}$ or $\text{Qax}(p) = \text{refl}_{[b]}$ because their types are not definitionally equal.
+This term is irreducible to any numeral because $\text{Qax}(p)$ can not be reduced to the canonical term of the identity type (i.e.\ refl). 
+Moreover, one can not postulate propositional equality $\text{Qax}(p) = \text{refl}_{[a]}$ or $\text{Qax}(p) = \text{refl}_{[b]}$ because their types are not definitionally equal.
 \end{proof}
 
 \section{Quotients are coequalizers}
 
 The rules of quotient types can be characterised in a category-theoretical way.
 
-Categorically speaking, a quotient is a \textbf{coequalizer} in category $\Set$. Let us recall the definition.
+Categorically speaking, a quotient is a \textbf{coequalizer} in the category $\Set$. Let us recall the definition.
 
 
 \begin{definition}
 \textbf{Coequalizer}.
-Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ , a coequalizer is an object $Q$ with a morphism $q : \morph{Y}{Q}$ such that $q \circ f = q \circ g$ and it is universal: any pair $(Q' , q')$ satisfying $q' \circ f = q' \circ g$ has a unique factorisation $u$ such that $q' = u \circ q$:
+Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$, a coequalizer is an object $Q$ with a morphism $q : \morph{Y}{Q}$ such that $q \circ f = q \circ g$ and it is universal: any pair $(Q' , q')$ satisfying $q' \circ f = q' \circ g$ has a unique factorisation $u$ such that $q' = u \circ q$:
 \begin{displaymath}
     \xymatrix{X \ar@<0.5ex>[rr]^f \ar@<-0.5ex>[rr]_g && Y \ar[rr]^q
       \ar[ddrr]_{q'} && Q
@@ -243,15 +247,14 @@ Given two objects $X$ and $Y$ and two parallel morphisms $f, g : \morph{X}{Y}$ ,
 \end{definition}
 
 
-Now we show that in $\Set$, assume
+Now, we show that in $\Set$, assuming
 
 $$R \defeq \Sigma (a_1,a_2 : A) ~ a_1 \sim a_2$$
 
 %$$R = \{(a_1,a_2) : A \times A ~|~ a_1 \sim a_2\}$$
 
-and the two projections are two parallel morphisms $\pi_1,\pi_2 : \morph{R}{A}$,
-
-A quotient corresponds to the coequalizer $(\qset{A},[\_])$:
+with the two projections being two parallel morphisms $\pi_1,\pi_2 : \morph{R}{A}$,
+a quotient corresponds to the coequalizer $(\qset{A},[\_])$:
 \begin{displaymath}
     \xymatrix{R \ar@<0.5ex>[rr]^{\pi_1} \ar@<-0.5ex>[rr]_{\pi_2} && A \ar[rr]^{ [\_]}
       \ar[ddrr]_{f} && \qset{A}
@@ -259,7 +262,7 @@ A quotient corresponds to the coequalizer $(\qset{A},[\_])$:
 & &&& B}
 \end{displaymath}
 
-The factorisation $\hat{\_}$ is just the eliminator, the computation rule and induction principle corresponds to the universal property of it. 
+The factorisation $\hat{\_}$ is just the eliminator, the computation rule and induction principle correspond to the universal property of it. 
 
 \begin{proposition}
 The induction principle implies uniqueness, and is also derivable from the definition of coequalizer.
@@ -286,7 +289,7 @@ we can observe that
 \pi_1 \circ h' = [\_]
 \end{equation}
 
-By universal property, there is a unique $\hat{h'}$ s.t. 
+By the universal property, there is a unique $\hat{h'}$ s.t. 
 
 \begin{equation}\label{eq2}
 \hat{h'} \circ [\_] = h'
@@ -314,12 +317,12 @@ Thus from \ref{eq3}, we prove that
 
 $$\pi_1 \circ \hat{h'} = id$$
 
-which implies that any $q : \qset{A}$, the type of $\pi_2(\hat{h'}(q))$ is
+which implies that for any $q : \qset{A}$, the type of $\pi_2(\hat{h'}(q))$ is
 
 $P(\pi_1(\hat{h'}(q))) = P(q)$
 
 as expected, hence we derive the induction principle. 
-In fact, following the same procedure, a dependent eliminator is also derivable.
+In fact, following the same procedure, the dependent eliminator is also derivable.
 \end{proof}
 
 The coequalizer (quotient) is effective if the following diagram is a \emph{pullback}
@@ -362,7 +365,7 @@ and a \emph{definable quotient} corresponds to a \emph{split coequalizer} which 
 
 \end{itemize}
 
-And we can deduce that $t(a) = (\emb [ a ] , a)$ which gives the $t$gives the proof that each element is related to the representative of its class, namely the "complete" property of definable quotients.
+Further, we can deduce that $t(a) = (\emb [ a ] , a)$, which gives the proof that each element is related to the representative of its class, namely the "completeness" property of definable quotients.
 
 \section{Quotients as an adjunction}
 
@@ -371,7 +374,7 @@ As Jacobs \cite{Jacobs94quotientsin} suggests, quotients can be described as a l
 Let us recall the definition first.
 \begin{definition}
 \textbf{Adjunction}.
-Given two categories $A$ $B$, a functor $F : A \to B$ is left adjoint
+Given two categories $A$ and $B$, a functor $F : A \to B$ is left adjoint
 to $G : B \to A$ if we have a natural isomorphism
 $\Phi : \text{hom}_{B}(F ~\_ , \_) \to hom_{A}(\_, G ~\_)$
 \end{definition}

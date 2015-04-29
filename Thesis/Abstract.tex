@@ -1,8 +1,54 @@
 \abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
 
 
-Martin-L\"{o}f's intuitionistic type theory (Type Theory) is a formal system that serves as not only a foundation of constructive mathematics but also as a dependently typed programming language. Dependent types are types that depend on values of other types. Type Theory is based on the Curry-Howard isomorphism which relates computer programs with mathematical proofs so that we can do computer-aided formal reasoning and write certified programs in programming languages like Agda, Epigram etc. Martin L\"{o}f proposed two kinds of variants of Type Theory which are differentiated on the treatment of equalities. In \itt, propositional equality defined by identity types does not imply definitional equality, and the type checking is decidable. In \ett, propositional equality is identified with definitional equality which makes type checking undecidable. Because of the good computational properties, \itt is usually more popular, however there are some important extensional concepts missing, such as functional extensionality and quotient types etc.
+Martin-L\"{o}f's intuitionistic type theory (Type Theory) is a formal
+system that serves not only as a foundation of constructive
+mathematics but also as a dependently typed programming
+language. Dependent types are types that depend on values of other
+types. Type Theory is based on the Curry-Howard isomorphism which
+relates computer programs with mathematical proofs so that we can do
+computer-aided formal reasoning and write certified programs in
+programming languages like Agda, Epigram etc. Martin L\"{o}f proposed
+two variants of Type Theory which are differentiated by the treatment
+of equality. In \itt, propositional equality defined by identity types
+does not imply definitional equality, and type checking is
+decidable. In \ett, propositional equality is identified with
+definitional equality which makes type checking undecidable. Because
+of the good computational properties, \itt is more popular, however it
+lacks some important extensional concepts such as functional
+extensionality and quotient types.
 
-This thesis is about quotient types. A quotient type is a new type whose equality is redefined by an given equivalence relation. However, in the usual formulation of \itt, there is no type former to create a quotient. We will also lose canonicity if we add quotient types into Intensional Type Theory as axioms. In this thesis, we first investigate what are the syntax of quotient types we expect to have, and explain the syntax with categorical counterparts. For quotients which can be represented as a setoid as well as defined as a set without a quotient type former, we propose to define an algebraic structure of quotients called \emph{definable quotients}. It relates the setoid interpretation and the set one via a normalisation function which returns a normal form (canonical choice) for each equivalence class. It can be seen as a simulation of quotient types and it helps theorem proving because we can benefit from both representations. However it is only a compromise approach since it does not apply to all quotients. It seems that we can not define a normalisation function for some quotients in Type Theory, e.g.\ Cauchy reals and finite multisets. Quotient types are indeed essential for formalisation of mathematics and reasoning of programs. Then we consider some models of Type Theory where types are interpreted as structured objects such as setoids, groupoids or \wog. In these models equalities are internalised into types which means that it is possible to redefine equalities. We present an implementation of Altenkirch's \cite{alti:lics99} setoid model  and show that quotient types can be defined within this model. We also investigate a new extension of \mltt called \hott where types are interpreted as \wog. It can be seen as a generalisation of groupoid model and the extensional concepts including quotient types are available. We also introduce a syntactic encoding of \wog which is considered as a first step to build a \wog model in \itt. All these implementations have been done in the dependently typed programming language Agda which is based on intensional \mltt.
+This thesis is about quotient types. A quotient type is a new type
+whose equality is redefined by a given equivalence relation. However,
+in the usual formulation of \itt, there is no type former to create a
+quotient. We also lose canonicity if we add quotient types into
+Intensional Type Theory as axioms. In this thesis, we first
+investigate the expected syntax of quotient types and explain it with
+categorical notions. For quotients which can be represented as a
+setoid as well as defined as a set without a quotient type former, we
+propose to define an algebraic structure of quotients
+called \emph{definable quotients}. It relates the setoid
+interpretation and the set definition via a normalisation function
+which returns a normal form (canonical choice) for each equivalence
+class. It can be seen as a simulation of quotient types and it helps
+theorem proving because we can benefit from both
+representations. However this approach cannot be used for all
+quotients. It seems that we cannot define a normalisation function for
+some quotients in Type Theory, e.g.\ Cauchy reals and finite
+multisets. Quotient types are indeed essential for formalisation of
+mathematics and reasoning of programs. Then we consider some models of
+Type Theory where types are interpreted as structured objects such as
+setoids, groupoids or \wog. In these models equalities are
+internalised into types which means that it is possible to redefine
+equalities. We present an implementation of
+Altenkirch's \cite{alti:lics99} setoid model and show that quotient
+types can be defined within this model. We also describe a new
+extension of \mltt called \hott where types are interpreted
+as \wog. It can be seen as a generalisation of the groupoid model
+which makes extensional concepts including quotient types
+available. We also introduce a syntactic encoding of \wog which can be
+seen as a first step towards building a \wog model in \itt. All of
+these implementations were performed in the dependently typed
+programming language Agda which is based on intensional \mltt.
 
 }

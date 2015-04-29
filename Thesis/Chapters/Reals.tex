@@ -3,9 +3,9 @@
 
 
 
-In this chapter, we will discuss some other quotients which are not definable via normalisation, for example the set of real numbers as Cauchy sequences of rational numbers \cite{bis:85}, finite multisets represented by lists etc.
-Intuitively speaking there is no definable normalisation function which returns a canonical choice for each equivalence class. 
-For the Cauchy sequences of rational numbers, Nicolai Kraus \cite{non-normal} has shown that all definable endofunctions respecting the equivalence relation have to be constant, hence it is impossible to define a normalisation function. We reproduce the proof here and extend it to other cases especially the partiality monad. It has to be noticed that the proof is conducted in basic \mltt and can be generalised to any extension as long as it admits the Brouwer's continuity principle i.e.\ definable functions are continuous \cite{DBLP:journals/bsl/AttenD02}.
+In this chapter, we will discuss some other quotients which are not definable via normalisation, for example the set of real numbers as Cauchy sequences of rational numbers \cite{bis:85} and finite multisets represented by lists.
+We say that a quotient is undefinable if there is no definable normalisation function which returns a canonical choice for each equivalence class. 
+For the Cauchy sequences of rational numbers, Nicolai Kraus \cite{non-normal} has shown that all definable endofunctions respecting the equivalence relation have to be constant, hence it is impossible to define a normalisation function. We reproduce the proof here and extend it to other cases especially, the partiality monad. It has to be noticed that the proof is conducted in basic \mltt and can be generalised to any extension as long as it admits the Brouwer's continuity principle, i.e.\ definable functions are continuous \cite{DBLP:journals/bsl/AttenD02}.
 
 
 %\begin{theorem}\label{defcon}Brouwer's continuity principleAll definable functions are continuous.\end{theorem}
@@ -13,7 +13,8 @@ For the Cauchy sequences of rational numbers, Nicolai Kraus \cite{non-normal} ha
 
 \section{Definability via normalisation}
 
-Although we have provided the definition of \emph{definable quotients} (see \Cref{defquo}), it is not always the case that the quotient set can be inductively defined so that we can talk about normalisation function as $[\_] : A \to Q$. Therefore, we provide a different characterisation of the property which only talks about a setoid $(A,\sim)$.
+Although we have provided the definition of \emph{definable quotients} (see \Cref{defquo}), it is not always the case that the quotient set can be defined inductively and we are able to talk about a normalisation function as $[\_] : A \to Q$. 
+Therefore, we provide a different characterisation of the property which only talks about a setoid $(A,\sim)$.
 
 \begin{definition}[\textbf{Definable via normalisation}]\label{def:nor}
 Given a setoid $(A,\sim)$, the quotient $\qset{A}$ is definable via normalisation if there is an endofunction $[\_]_0$ which is a \emph{normalisation function}:
@@ -29,7 +30,7 @@ Given a setoid $(A,\sim)$, the quotient $\qset{A}$ is definable via normalisatio
 \end{itemize}
 \end{definition}
 
-It is actually equivalent to say there is a definable quotient:
+It is actually equivalent to say the quotient is definable:
 First, given $[\_]_0 : A \to A$ specified as above,
 
 \begin{itemize}
@@ -49,7 +50,7 @@ $$[\emb(a,p)] \equiv ([a]_0, \trefl )$$
 
 Hence we need to prove $([a]_0, \trefl ) = (a, p)$.
 
-We can prove it by $\J$
+We can prove it by $\J$,
 
 $$\J(t,[ a ]_0,a,p) : ([a]_0, \trefl ) = (a, p)$$
 
@@ -59,7 +60,7 @@ where $t(x) \defeq \trefl : (x,\trefl ) = (x,\trefl )$
 
 $$[a]_0 \sim a$$
 
-This is exactly the completeness property in the specification of $[\_]_0$
+This is exactly the completeness property in the specification of $[\_]_0$.
 
 \end{itemize}
 
@@ -73,7 +74,7 @@ In the other direction, given a definable quotient,
 
 $$[ a ] = [ b ]$$
 
-By congruence rule,
+By the congruence rule,
 
 $$\emb[a] = \emb [ b]$$
 
@@ -89,16 +90,18 @@ hence $[\_]_0$ is sound as well.
 \section{Real numbers as Cauchy sequences}
 
 
-The real numbers can be defined as $(\R_0,\sim)$, where $\R_0$ is the set of Cauchy sequences, and 
-two Cauchy sequences are equivalent if and only if their point-wise difference converges to $0$.
+One attempt to define the real numbers is via the set $\R_0$ of Cauchy sequences.
+We can define an equivalence relation $\sim$ on $\R_0 \times \R_0$, where two Cauchy sequences are equivalent if and only if their point-wise differences converges to $0$.
+This defines a setoid $(\R_0, \sim)$.
+We give the definitions in detail below:
 
 
 \begin{definition}\label{R01}
 
 A function $f : \N \to \Q$ is called a \textbf{Cauchy sequence} if 
 
- \begin{equation}
- \iscauchy(f) \defeq \forall(\varepsilon
+\begin{equation}
+  \iscauchy(f) \defeq \forall(\varepsilon
   :\Q^{+}) \to \exists (m:\N) ~ \forall (i:\N) \to i>m\to \vert  f_i -
   f_m \vert  <\varepsilon
 \end{equation}
@@ -116,10 +119,10 @@ $$r \sim s \defeq \forall (\varepsilon :\Q^{+}) \to \exists (m:\N) ~
 
 %$$\R_{0} = \set{f : \N\to\Q \mid \forall\varepsilon :\Q^{+}, \exists m:\N, \forall i:\N, i>m\to \vert  f_i - f_m \vert  <\varepsilon}$$
 
-To implement this definition, the existential quantifier is usually encoded by $\Sigma$-types so that we can guess the real number from the explicit witness $m$.
-However, usually we would like to keep the proof propositional so that the Cauchy sequences are proof-irrelevant. 
+To implement this definition, the existential quantifier is usually encoded as a $\Sigma$-type so that we can guess the real number from the explicit witness $m$.
+However, we would like to keep the proof propositional so that the property of being a Cauchy sequence is proof-irrelevant. 
 
-To avoid this problem, we can use an alternative equivalent definition of the property, but the type of $f$ has to be $\PN \to \Q$:
+To combine these two things, we can use an alternative equivalent definition of the property, where we change the type of $f$ to be $\PN \to \Q$ so that we can write:
 
 \begin{equation}\label{R02}
 \iscauchy(f) \defeq \forall (k :\PN),\forall (m , n > k) \to \vert  f_m -
@@ -129,7 +132,7 @@ To avoid this problem, we can use an alternative equivalent definition of the pr
 The rate of convergence is fixed so that we can guess the number while the condition is also propositional. Note that we use some shorthand notations in these definitions.
 
 
-We can slightly modify the definition which is still equivalent, 
+A slight modification of the definition which is still equivalent is
 
 \begin{equation}\label{R03}
 \iscauchy(f) \defeq \forall (n,m :\PN), n < m \to \vert f_n -
@@ -145,11 +148,13 @@ In \itt without quotient types, we can define a setoid $(\R_0,\sim)$ to represen
 
 
 We have made an attempt to prove that the set of reals is undefinable in the presence of local continuity (see Section. 5 in \cite{aan}). 
-We define that two $a,b : A$ are \emph{separable}, if there exists a definable test $P : A \to \bool$ such that $P(a) \neq P(b)$. Then we claim a definable set $A$ is \emph{discrete} if $a \neq b$ always implies that $a$ and $b$ are separable. However it has some problems as  Martín Escardó pointed out.
-He provides a counterexample that for two distinguishable terms i.e.\ $a \neq b$ there can be no definable test \cite{martinsproof}. We sketch the proof here:
+We say that two $a,b : A$ are \emph{separable}, if there exists a definable test $P : A \to \bool$ such that $P(a) \neq P(b)$. 
+Then, we claim that a definable set $A$ is \emph{discrete} in the sense that $a \neq b$ always implies that $a$ and $b$ are separable. However, this is not the case, as  Martín Escardó pointed out.
+He provides a counterexample in which he shows that, for two distinguishable terms (i.e.\ $a \neq b$), there is no definable test \cite{martinsproof}. We sketch the proof here:
 
 \begin{proof}
-In the proof, he uses $\N_\infty \defeq \N \to \bool$ which is a decreasing sequence of $\bool$ called \emph{generic convergent sequence}. Intuitively speaking, $11000\ldots$ represents $2$ and the sequence of $1$, namely $1111\ldots$ represents $\infty$, therefore, it can be seen as the disjoint union of natural numbers and infinity i.e.\ $\N + \infty$. 
+In the proof, he uses $\N_\infty \defeq \N \to \bool$ which is a decreasing sequence of $\bool$ called \emph{generic convergent sequence}. Intuitively speaking, $11000\ldots$ represents $2$ and the sequence of $1$, namely $1111\ldots$ represents $\infty$.
+% , therefore, it can be seen as the disjoint union of natural numbers and infinity i.e.\ $\N + \infty$. -- NOOO, this is a very important point, you can NOT view it like this. Not even with LEM you get this (if I am not mistaken)! -- Nicolai 
 For simplicity, we write $s_k$ for the sequence whose first $k$ digits are $1$ and whose remaining digits are $0$.
 
 From continuity, we know that:
@@ -163,7 +168,9 @@ $s^0_k \defeq (s_k, \lambda r \to 0)$ and
 
 $s^1_k \defeq (s_k, \lambda r \to 1)$,
 
-there are two definitionally unequal terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
+there are two 
+% definitionally  -- No, it's not only definitionally unequal, this would not be enough for a contradiction! So I just remove this word. -- Nicolai
+unequal terms of $X$, $\infty_0 = s^0_\infty$ and $\infty_1 = s^1_\infty$,
 
 such that for all definable function $f : X \to \bool$, $f(\infty_0) = f(\infty_1)$.
 
@@ -461,11 +468,12 @@ In the HoTT book \cite{hott} (see Section 11.3), there is a higher inductive def
 
 \subsection{Unordered pairs}
 
-In Type Theory, given a set $A$, $(a, b) : A \times A$ is an \emph{ordered} pair. Unordered pair can be interpreted as the setoid $(A \times A, \sim)$ where
+In Type Theory, given a set $A$, $(a, b) : A \times A$ is an \emph{ordered} pair. Unordered pair can be interpreted as the setoid $(A \times A, \sim)$, where $\sim$ is generated by % I added the last half-sentence -- Nicolai
 
 $$(a,b)\sim(b,a)$$
 
-Here the condition $a \not= b$ is not required, so the relation is reflexive.
+% Here the condition $a \not= b$ is not required, so the relation is reflexive.
+% -- I think this is not enough, you still will not get (a,b) ~ (a,b). You can only get (a,a) ~ (a,a) this way! So, I have fixed this above. -- Nicolai
 
 Intuitively speaking, for an arbitrary order pair $(a,b)$, we can not decide whether $(a,b)$ or $(b,a)$ should be the normal form of the unordered pair they represent. In general, we can not define a normalisation function for $(A \times A, \sim)$, unless the set $A$ has a decidable total order $\leq : A \to A \to \Prop$ equipped with
 
@@ -612,7 +620,8 @@ Similarly, utilising the sequence interpretation of $A_{\bot}$, we can show that
 
 Geuvers and Niqui have shown a construction of the real numbers using Cauchy sequences of the rational numbers based on a set of axioms in Coq. They have also the choice of different ways to define Cauchy properties. They have shown there is a model of these axioms and any two models are isomorphic. They have also discussed the equivalence between their axioms with the ones introduced by Bridges \cite{Bridges199995}.
 
-The formalisation of real numbers in \hott has been discussed in the HoTT book (see Chapter 11 in \cite{hott}). Both Dedekind reals and Cauchy reals have been considered. They provide a higher inductive definition of Cauchy reals using Cauchy approximations so that it is Cauchy complete.
+The formalisation of real numbers in \hott has been discussed in the HoTT book (see Chapter 11 in \cite{hott}). Both Dedekind reals and Cauchy reals have been considered. 
+They define the Cauchy reals via a higher inductive type, which makes them Cauchy complete.
 
 Finite multisets as bag equivalent lists have been considered by Danielsson in \cite{DBLP:conf/itp/Danielsson12}. He has mainly discussed bag equivalence for lists and has also generalised it to arbitrary containers. He has also provided a set equivalence which means that we can represent (finite) sets using the setoid arises from it.
 
@@ -620,9 +629,11 @@ Finite multisets as bag equivalent lists have been considered by Danielsson in \
 \section{Summary}
 
 To summarize, we have shown some quotients which are not definable via normalisation.
-In particular, we show that the set of real numbers as $\qset{\R_0}$ is connected which means that any definable (continuous) function on $\R_0 \to \bool$ which respects $\sim$ is constant. It implies that any definable endofunction on $\R_0$ is constant, hence there is no definable normalisation function for the setoid $(\R_0,\sim)$ that can be lifted. 
-We similarly proved that the partiality computations which are represented by partiality monad quotiented by weak bisimilarity is also not definable via normalisation. For quotients arising from permutations, such as unordered pairs and finite multisets, a normalisation function can be defined if we have a decidable total order. 
-In addition, we believe that these quotients are not definable in general, but we have not yet proved it formally.
+In particular, we show that the set of real numbers as $\qset{\R_0}$ is connected which means that any definable (continuous) function on $\R_0 \to \bool$ which respects $\sim$ is constant. 
+This implies that any definable endofunction on $\R_0$ is constant, hence there is no definable normalisation function for the setoid $(\R_0,\sim)$ that can be lifted. 
+We similarly proved that the partiality computations which are represented by partiality monad quotiented by weak bisimilarity is also not definable via normalisation. 
+For quotients arising from permutations, such as unordered pairs and finite multisets, a normalisation function can be defined if we have a decidable total order. 
+In addition, we believe that these quotients are not definable (in the sense that there is a carrier $Q$ with the properties stated in \Cref{defquo}), but we have not yet proved it formally.
 
 
 

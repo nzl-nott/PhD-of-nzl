@@ -960,14 +960,8 @@ $(m + n) + (p + q) = (m + p) + (n + q)$
 
 After all, the application of the quotient structure in the integer case
 provides a general approach to defining functions and prove theorems
-when the base types are simpler to deal with. To form
-the field of rational numbers, we can also benefit from the setoid representation. 
-There are no extra properties to prove. 
-After embedding the natural numbers
-into the integers, any theorems using only the operations in the field
-$\Q$, are turned out to be equations of integers which can be automatically
-solved by the ring solver.
-
+when the base types are simpler to deal with.
+When working with the field of rational numbers, we can benefit from the setoid representation. We use $\Z$ and $\N$ for the definition of $\Q$, and $\Z$ itself uses only $\N$. Therefore, any equation of rational numbers amounts to an equation of natural numbers, allowing us to apply the ring solver.
 
 \section{Related work}
 
